@@ -30,6 +30,7 @@ dependencies:
   http: ^0.13.4
   html: ^0.15.0
   gbk2utf8: ^1.0.1
+  path_provider: ^2.0.6
   flutter:
     sdk: flutter
 

@@ -4,18 +4,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:gbk2utf8/gbk2utf8.dart';
-import 'package:glutnnbox/widget/sliverappbar.dart';
+import 'package:glutnnbox/common/global.dart';
+import 'package:glutnnbox/widget/appbars.dart';
 import 'package:glutnnbox/widget/sliverlist.dart';
 import 'package:html/dom.dart' as Dom;
 import 'package:html/parser.dart' show parse;
 import 'package:http/http.dart';
 
-class MaterialAppPageControl extends StatefulWidget {
-  const MaterialAppPageControl({Key? key}) : super(key: key);
-
-  @override
-  MaterialAppBottomNavigationBar createState() => MaterialAppBottomNavigationBar();
-}
 
 class MaterialAppPageBody extends StatefulWidget {
   const MaterialAppPageBody({Key? key}) : super(key: key);
@@ -33,101 +28,43 @@ class MaterialAppHome extends StatelessWidget {
       backgroundColor: Colors.white,
       body: MaterialAppPageBody(),
       appBar: null,
-      bottomNavigationBar: MaterialAppPageControl(),
-    );
-  }
-}
-
-class MaterialAppBottomNavigationBar extends State<MaterialAppPageControl> {
-  int _index = 0;
-
-  @override
-  Widget build(BuildContext context) {
-    return CupertinoTabBar(
-      border: const Border(
-          top: BorderSide(
-        color: Colors.white,
-      )),
-      backgroundColor: Colors.white,
-      currentIndex: _index,
-      onTap: (index) {
-        setState(() {
-          _index = index;
-        });
-      },
-      items: const [
-        BottomNavigationBarItem(
-            tooltip: '',
-            icon: Icon(
-              Icons.home,
-            ),
-            label: ''),
-        BottomNavigationBarItem(
-            tooltip: '',
-            icon: Icon(
-              Icons.business,
-            ),
-            label: ''),
-        BottomNavigationBarItem(
-            tooltip: '',
-            icon: Icon(
-              Icons.mood,
-            ),
-            label: ''),
-      ],
+      bottomNavigationBar: PageControl(),
     );
   }
 }
 
 class MaterialAppBody extends State<MaterialAppPageBody> {
-  Map<String, String> _cookie = Map();
-  late Uint8List _imgUrl;
-  TextEditingController _textFieldController = new TextEditingController();
-  final _url = Uri.http("jw.glutnn.cn", "/academic/getCaptcha.do");
-  final _url2 = Uri.http("jw.glutnn.cn", "/academic/j_acegi_security_check");
-  final _url3 = Uri.http("jw.glutnn.cn", "/academic/index_new.jsp");
-  final _weekUrl = Uri.http("jw.glutnn.cn", "/academic/listLeft.do");
+  final TextEditingController _textFieldController = TextEditingController();
 
-  // final _studentOwnScoreUrl =
-  //     Uri.http("jw.glutnn.cn", "/academic/manager/score/studentOwnScore.do");
+  late Uint8List _codeImgSrc;
   Map<String, String> headers = {"cookie": ""};
   num _week = 12;
-  Map<String, Map<String, Map<String, List>>> KBtest = {
-    //第一周
-    "1": {
-      //周一
-      "1": {
-        //第一节课
-        "1": ['课名', '老师', '地点'],
-        "2": ['课名', '老师', '地点'],
-      }
-    }
-  };
-  Map<String, Map<String, Map<String, List>>> kb = {};
 
   @override
   void initState() {
     super.initState();
     _getCode();
+    print(DateTime
+        .now()
+        .weekday);
   }
 
-  Future<Map<String, dynamic>> _getCode() async {
+  void _getCode() async {
     Map<String, String> headers = {};
     try {
       print("_getCode");
-      var response = await get(_url, headers: headers).timeout(const Duration(milliseconds: 6000));
+      var response = await get(Global.getCodeUrl, headers: headers)
+          .timeout(const Duration(milliseconds: 6000));
       _parseRawCookies(response.headers['set-cookie']);
       setState(() {
-        _imgUrl = response.bodyBytes;
+        _codeImgSrc = response.bodyBytes;
       });
-      var data = {'image': response.bodyBytes};
-      return {'success': true, 'data': data};
     } catch (e) {
-      return {'success': false, 'data': e};
+      print(e);
     }
   }
 
-  Future<dynamic> _codeCheck() async {
+  void _codeCheck() async {
     final _url4 = Uri.http("jw.glutnn.cn", "/academic/checkCaptcha.do",
         {"captchaCode": _textFieldController.text.toString()});
     var postData = {
@@ -167,24 +104,13 @@ class MaterialAppBody extends State<MaterialAppPageBody> {
         "j_password": "sr20000923++",
         "j_captcha": _textFieldController.text.toString()
       };
-      var response = await post(_url2, body: postData, headers: {"cookie": mapCookieToString()})
+      var response =
+      await post(Global.loginUrl, body: postData, headers: {"cookie": mapCookieToString()})
           .timeout(const Duration(milliseconds: 6000));
       if (response.headers['location'] == "/academic/index_new.jsp") {
         // 获取新令牌
         Scaffold.of(context).removeCurrentSnackBar();
-        Scaffold.of(context).showSnackBar(SnackBar(
-          duration: Duration(seconds: 2),
-          content: Row(
-            children: const <Widget>[
-              Icon(
-                Icons.mood,
-                color: Colors.green,
-              ),
-              Text('登录成功')
-            ],
-          ),
-          behavior: SnackBarBehavior.floating,
-        ));
+        Scaffold.of(context).showSnackBar(Global.jwSuccessSnackBar);
         setState(() {
           _textFieldController.text = "";
         });
@@ -192,19 +118,7 @@ class MaterialAppBody extends State<MaterialAppPageBody> {
         _loginJW2();
       } else {
         Scaffold.of(context).removeCurrentSnackBar();
-        Scaffold.of(context).showSnackBar(SnackBar(
-          duration: Duration(seconds: 2),
-          content: Row(
-            children: const <Widget>[
-              Icon(
-                Icons.mood_bad,
-                color: Colors.red,
-              ),
-              Text('请重试')
-            ],
-          ),
-          behavior: SnackBarBehavior.floating,
-        ));
+        Scaffold.of(context).showSnackBar(Global.jwErrorReSnackBar);
         setState(() {
           _textFieldController.text = "";
         });
@@ -212,19 +126,7 @@ class MaterialAppBody extends State<MaterialAppPageBody> {
       }
     } catch (e) {
       Scaffold.of(context).removeCurrentSnackBar();
-      Scaffold.of(context).showSnackBar(SnackBar(
-        duration: Duration(seconds: 2),
-        content: Row(
-          children: <Widget>[
-            Icon(
-              Icons.mood_bad,
-              color: Colors.red,
-            ),
-            Text('教务系统服务器瘫痪')
-          ],
-        ),
-        behavior: SnackBarBehavior.floating,
-      ));
+      Scaffold.of(context).showSnackBar(Global.jwErrorSnackBar);
       _getCode();
       setState(() {
         _textFieldController.text = "";
@@ -256,27 +158,30 @@ class MaterialAppBody extends State<MaterialAppPageBody> {
     }
   }
 
-  Future<dynamic> _loginJW2() async {
+  void _loginJW2() async {
     print("_loginJW2");
     // var response = await get(_url3, headers: {"cookie": mapCookieToString()})
     //     .timeout(const Duration(milliseconds: 6000));
-    _getLeftList();
+    _getWeek();
   }
 
-  Future _getLeftList() async {
+  Future _getWeek() async {
     print("_getLeftList");
-    var response =
-        await get(_weekUrl, headers: {"cookie": ''}).timeout(const Duration(milliseconds: 6000));
+    var response = await get(Global.getWeekUrl, headers: {"cookie": ''})
+        .timeout(const Duration(milliseconds: 6000));
     Dom.Document document = parse(gbk.decode(response.bodyBytes));
     String weekHtml = document.querySelector("#date p span")!.innerHtml.trim();
-    setState(() => {
-          _week =
-              int.parse(weekHtml.substring(weekHtml.indexOf("第") + 1, weekHtml.indexOf("周")).trim())
-        });
+    setState(() =>
+    {
+      _week =
+          int.parse(weekHtml.substring(weekHtml.indexOf("第") + 1, weekHtml.indexOf("周")).trim())
+    });
     _getKB();
   }
 
-  Future<dynamic> _getKB() async {
+  List<List<List<List<String>>>> kb = [];
+
+  void _getKB() async {
     print("_getKB");
     final _courseUrl = Uri.http("jw.glutnn.cn", "/academic/student/currcourse/currcourse.jsdo",
         {"year": "41", "term": "1"});
@@ -285,19 +190,31 @@ class MaterialAppBody extends State<MaterialAppPageBody> {
     Dom.Document document = parse(gbk.decode(response.bodyBytes));
     var list = document.querySelectorAll(".infolist_common");
     //时间,地点 querySelectorAll("table.none>tbody>tr")
-    num listLength = document.querySelectorAll(".infolist_common").length - 23;
-    List weekList = ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日'];
+    num listLength = document
+        .querySelectorAll(".infolist_common")
+        .length - 23;
+    Map<String, dynamic> weekList = {
+      "星期一": 1,
+      "星期二": 2,
+      "星期三": 3,
+      "星期四": 4,
+      "星期五": 5,
+      "星期六": 6,
+      "星期日": 7
+    };
     for (var i = 1; i < 21; i++) {
-      kb[i.toString()] = {};
+      kb[i] = [];
       for (var j = 1; j < 8; j++) {
-        kb[i.toString()]![weekList[j - 1]] = {};
+        kb[i][j] = [];
         for (var k = 1; k < 12; k++) {
-          kb[i.toString()]![weekList[j - 1]]![k.toString()] = [null, null, null];
+          kb[i][j][k] = ["null", "null", "null"];
         }
       }
     }
     for (var i = 0; i < listLength; i++) {
-      for (var j = 0; j < list[i].querySelectorAll("table.none>tbody>tr").length; j++) {
+      for (var j = 0; j < list[i]
+          .querySelectorAll("table.none>tbody>tr")
+          .length; j++) {
         //课节
         String kj = list[i]
             .querySelectorAll("table.none>tbody>tr")[j]
@@ -330,37 +247,44 @@ class MaterialAppBody extends State<MaterialAppPageBody> {
             if (zcList.length > 1) {
               for (var l = int.parse(zcList[0]); l < int.parse(zcList[1]) + 1; l++) {
                 setState(() {
-                  kb[l.toString()]![list[i]
+                  kb[l][int.parse(weekList[list[i]
                       .querySelectorAll("table.none>tbody>tr")[j]
                       .querySelectorAll("td")[1]
                       .innerHtml
-                      .trim()]![k.toString()] = [
+                      .trim()
+                      .toString()])][k] = [
                     //课程名
                     list[i].querySelectorAll("a.infolist")[0].innerHtml.trim(),
                     //老师名字
-                    list[i].querySelectorAll("a.infolist").length > 1
+                    list[i]
+                        .querySelectorAll("a.infolist")
+                        .length > 1
                         ? list[i].querySelectorAll("a.infolist")[1].innerHtml.trim()
-                        : null,
+                        : "null",
                     //上课地点
-                    area != "&nbsp" ? area : null
+                    area != "&nbsp" ? area : "null"
                   ];
                 });
               }
             } else {
               setState(() {
-                kb[zc]![list[i]
+                kb[int.parse(zc.substring(kj.indexOf("第") + 1, zc.length - 1))][int.parse(weekList[
+                list[i]
                     .querySelectorAll("table.none>tbody>tr")[j]
                     .querySelectorAll("td")[1]
                     .innerHtml
-                    .trim()]![k.toString()] = [
+                    .trim()
+                    .toString()])][k] = [
                   //课程名
                   list[i].querySelectorAll("a.infolist")[0].innerHtml.trim(),
                   //老师名字
-                  list[i].querySelectorAll("a.infolist").length > 1
+                  list[i]
+                      .querySelectorAll("a.infolist")
+                      .length > 1
                       ? list[i].querySelectorAll("a.infolist")[1].innerHtml.trim()
-                      : null,
+                      : "null",
                   //上课地点
-                  area != "&nbsp" ? area : null
+                  area != "&nbsp" ? area : "null"
                 ];
               });
             }
@@ -368,12 +292,15 @@ class MaterialAppBody extends State<MaterialAppPageBody> {
         }
       }
     }
-    print(kb['10']!['星期三']);
+    // final directory = await getApplicationDocumentsDirectory();
+    // print(directory.path);
+
+    print(kb[10][4][1]);
   }
 
   String mapCookieToString() {
     String result = '';
-    _cookie.forEach((key, value) {
+    Global.cookie.forEach((key, value) {
       result += '$key=$value; ';
     });
     return result;
@@ -382,190 +309,248 @@ class MaterialAppBody extends State<MaterialAppPageBody> {
   void _parseRawCookies(dynamic rawCookie) {
     for (var item in rawCookie.split(',')) {
       List<String> cookie = item.split(';')[0].split('=');
-      _cookie[cookie[0]] = cookie[1];
+      Global.cookie[cookie[0]] = cookie[1];
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return PageView(scrollDirection: Axis.horizontal, children: [
-      Container(
-          color: Colors.white,
-          margin: const EdgeInsets.fromLTRB(0, 0, 0, 16),
-          child: CustomScrollView(
-            physics: BouncingScrollPhysics(),
-            slivers: [
-              MaterialAppSliverAppBar(),
-              SliverToBoxAdapter(
-                  child: Container(
-                width: double.infinity,
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    verticalDirection: VerticalDirection.down,
-                    textDirection: TextDirection.ltr,
-                    children: [
-                      InkWell(
-                        child: Image.memory(_imgUrl,height: 25),
-                        onTap: () {
-                          _getCode();
-                        },
-                      ),
-                      TextField(
-                        controller: _textFieldController,
-                      ),
-                      FlatButton(
-                        child: const Text('提交'),
-                        onPressed: () {
-                          _codeCheck();
-                        },
-                      ),
-                      Container(
-                        height: 100,
-                        decoration: const BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(6.0)),
-                          color: Colors.blue,
-                        ),
-                        child: Stack(children: [
-                          Align(
-                            alignment: Alignment.centerRight,
-                            child: Container(
-                              margin: EdgeInsets.fromLTRB(0, 0, 18, 0),
-                              child: SizedBox(
-                                //限制进度条的高度
-                                height: 60.0,
-                                //限制进度条的宽度
-                                width: 60,
-                                child: CircularProgressIndicator(
-                                    strokeWidth: 8,
-                                    //0~1的浮点数，用来表示进度多少;如果 value 为 null 或空，则显示一个动画，否则显示一个定值
-                                    value: _weekProgressDouble(),
-                                    //背景颜色
-                                    backgroundColor: Color.fromARGB(128, 255, 255, 255),
-                                    //进度颜色
-                                    valueColor: const AlwaysStoppedAnimation<Color>(Colors.white)),
-                              ),
-                            ),
-                          ),
-                          Align(
-                              alignment: Alignment.centerRight,
-                              child: Container(
-                                margin: EdgeInsets.fromLTRB(0, 0, 32, 0),
-                                child: Text(_weekProgressText(),
-                                    style: TextStyle(color: Colors.white)),
-                              )),
-                          Align(
-                            alignment: Alignment.topRight,
-                            child: Container(
-                              margin: EdgeInsets.fromLTRB(0, 24, 90, 0),
-                              child: Text(
-                                "第$_week周",
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 18, fontWeight: FontWeight.w900),
-                              ),
-                            ),
-                          ),
-                          Align(
-                              alignment: Alignment.bottomRight,
-                              child: Container(
-                                margin: EdgeInsets.fromLTRB(0, 0, 90, 24),
-                                child: Text(_weekText(), style: TextStyle(color: Colors.white)),
-                              )),
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Container(
-                                height: 40,
-                                width: 40,
+    return PageView(physics: NeverScrollableScrollPhysics(), controller: Global.pageControl,
+        // onPageChanged: (int index) {
+        //   setState(() {
+        //     if (Global.pageIndex != index) Global.pageIndex = index;
+        //   });
+        //   print(Global.pageIndex);
+        // },
+        children: [
+          Container(
+              color: Colors.white,
+              margin: const EdgeInsets.fromLTRB(0, 0, 0, 16),
+              child: CustomScrollView(
+                physics: const BouncingScrollPhysics(),
+                slivers: [
+                  indexZeroAppBar,
+                  SliverToBoxAdapter(
+                      child: Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                        child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            verticalDirection: VerticalDirection.down,
+                            textDirection: TextDirection.ltr,
+                            children: [
+                              // InkWell(
+                              //   child: Image.memory(_codeImgSrc, height: 25),
+                              //   onTap: () {
+                              //     _getCode();
+                              //   },
+                              // ),
+                              // TextField(
+                              //   controller: _textFieldController,
+                              // ),
+                              // FlatButton(
+                              //   child: const Text('提交'),
+                              //   onPressed: () {
+                              //     _codeCheck();
+                              //   },
+                              // ),
+                              Container(
+                                height: 100,
                                 decoration: const BoxDecoration(
                                   borderRadius: BorderRadius.all(Radius.circular(6.0)),
-                                  color: Color.fromARGB(32, 0, 0, 0),
+                                  color: Colors.blue,
                                 ),
-                                margin: const EdgeInsets.fromLTRB(12, 0, 0, 0),
-                                child: const Icon(
-                                  Icons.create,
-                                  color: Colors.white,
-                                )),
-                          )
-                        ]),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Container(
-                            margin: const EdgeInsets.fromLTRB(0, 8, 4, 16),
-                            height: 100,
-                            width: MediaQuery.of(context).size.width / 3 - 48 / 3,
-                            decoration: const BoxDecoration(
-                                borderRadius: BorderRadius.all(Radius.circular(6.0)),
-                                color: Color(0xfffafafa)),
-                            child: Stack(children: [
-                              Align(
-                                  alignment: Alignment.center,
-                                  child: Container(
-                                      margin: EdgeInsets.fromLTRB(0, 0, 0, 24),
-                                      child: Icon(
-                                        Icons.create,
-                                        color: Colors.blue,
-                                      ))),
-                              Align(
-                                  alignment: Alignment.center,
-                                  child: Container(
-                                      margin: EdgeInsets.fromLTRB(0, 24, 0, 0),
-                                      child: Text("课程修改")))
+                                child: Stack(children: [
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Container(
+                                      margin: EdgeInsets.fromLTRB(0, 0, 18, 0),
+                                      child: SizedBox(
+                                        //限制进度条的高度
+                                        height: 60.0,
+                                        //限制进度条的宽度
+                                        width: 60,
+                                        child: CircularProgressIndicator(
+                                            strokeWidth: 8,
+                                            //0~1的浮点数，用来表示进度多少;如果 value 为 null 或空，则显示一个动画，否则显示一个定值
+                                            value: _weekProgressDouble(),
+                                            //背景颜色
+                                            backgroundColor: Color.fromARGB(128, 255, 255, 255),
+                                            //进度颜色
+                                            valueColor:
+                                            const AlwaysStoppedAnimation<Color>(Colors.white)),
+                                      ),
+                                    ),
+                                  ),
+                                  Align(
+                                      alignment: Alignment.centerRight,
+                                      child: Container(
+                                        margin: EdgeInsets.fromLTRB(0, 0, 32, 0),
+                                        child: Text(_weekProgressText(),
+                                            style: TextStyle(color: Colors.white)),
+                                      )),
+                                  Align(
+                                    alignment: Alignment.topRight,
+                                    child: Container(
+                                      margin: EdgeInsets.fromLTRB(0, 24, 90, 0),
+                                      child: Text(
+                                        "第$_week周",
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w900),
+                                      ),
+                                    ),
+                                  ),
+                                  Align(
+                                      alignment: Alignment.bottomRight,
+                                      child: Container(
+                                        margin: EdgeInsets.fromLTRB(0, 0, 90, 24),
+                                        child: Text(
+                                            _weekText(), style: TextStyle(color: Colors.white)),
+                                      )),
+                                  Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Container(
+                                        // height: 40,
+                                          width: 60,
+                                          // decoration: const BoxDecoration(
+                                          //   borderRadius: BorderRadius.all(Radius.circular(6.0)),
+                                          //   color: Color.fromARGB(32, 0, 0, 0),
+                                          // ),
+                                          margin: const EdgeInsets.fromLTRB(12, 0, 0, 0),
+                                          child: Center(
+                                              child: Text(DateTime
+                                                  .now()
+                                                  .weekday
+                                                  .toString(),
+                                                  style: const TextStyle(
+                                                      color: Colors.white,
+                                                      fontWeight: FontWeight.w900,
+                                                      fontSize: 14)))))
+                                ]),
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisSize: MainAxisSize.max,
+                                children: [
+                                  Container(
+                                    margin: const EdgeInsets.fromLTRB(0, 8, 4, 16),
+                                    height: 100,
+                                    width: MediaQuery
+                                        .of(context)
+                                        .size
+                                        .width / 3 - 48 / 3,
+                                    decoration: const BoxDecoration(
+                                        borderRadius: BorderRadius.all(Radius.circular(6.0)),
+                                        color: Color(0xfffafafa)),
+                                    child: Stack(children: [
+                                      Align(
+                                          alignment: Alignment.center,
+                                          child: Container(
+                                              margin: EdgeInsets.fromLTRB(0, 0, 0, 24),
+                                              child: Icon(
+                                                Icons.create,
+                                                color: Colors.blue,
+                                              ))),
+                                      Align(
+                                          alignment: Alignment.center,
+                                          child: Container(
+                                              margin: EdgeInsets.fromLTRB(0, 24, 0, 0),
+                                              child: Text("课程修改")))
+                                    ]),
+                                  ),
+                                  Container(
+                                    margin: const EdgeInsets.fromLTRB(4, 8, 4, 16),
+                                    height: 100,
+                                    width: MediaQuery
+                                        .of(context)
+                                        .size
+                                        .width / 3 - 48 / 3,
+                                    decoration: const BoxDecoration(
+                                        borderRadius: BorderRadius.all(Radius.circular(6.0)),
+                                        color: Color(0xfffafafa)),
+                                    child: Stack(children: [
+                                      Align(
+                                          alignment: Alignment.center,
+                                          child: Container(
+                                              margin: EdgeInsets.fromLTRB(0, 0, 0, 24),
+                                              child: Icon(
+                                                Icons.create,
+                                                color: Colors.blue,
+                                              ))),
+                                      Align(
+                                          alignment: Alignment.center,
+                                          child: Container(
+                                              margin: EdgeInsets.fromLTRB(0, 24, 0, 0),
+                                              child: Text("考试一览")))
+                                    ]),
+                                  ),
+                                  Container(
+                                    margin: const EdgeInsets.fromLTRB(4, 8, 0, 16),
+                                    height: 100,
+                                    width: MediaQuery
+                                        .of(context)
+                                        .size
+                                        .width / 3 - 48 / 3,
+                                    decoration: const BoxDecoration(
+                                        borderRadius: BorderRadius.all(Radius.circular(6.0)),
+                                        color: Color(0xfffafafa)),
+                                    child: Stack(children: [
+                                      Align(
+                                          alignment: Alignment.center,
+                                          child: Container(
+                                              margin: const EdgeInsets.fromLTRB(0, 0, 0, 24),
+                                              child: const Icon(
+                                                Icons.library_books_sharp,
+                                                color: Colors.blue,
+                                              ))),
+                                      Align(
+                                          alignment: Alignment.center,
+                                          child: Container(
+                                              margin: const EdgeInsets.fromLTRB(0, 24, 0, 0),
+                                              child: const Text("我的考试")))
+                                    ]),
+                                  )
+                                ],
+                              ),
+                              const Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text("接下来",
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.black54,
+                                        decoration: TextDecoration.none)),
+                              )
                             ]),
-                          ),
-                          Container(
-                            margin: const EdgeInsets.fromLTRB(4, 8, 4, 16),
-                            height: 100,
-                            width: MediaQuery.of(context).size.width / 3 - 48 / 3,
-                            decoration: const BoxDecoration(
-                                borderRadius: BorderRadius.all(Radius.circular(6.0)),
-                                color: Color(0xfffafafa)),
-                          ),
-                          Container(
-                            margin: const EdgeInsets.fromLTRB(4, 8, 0, 16),
-                            height: 100,
-                            width: MediaQuery.of(context).size.width / 3 - 48 / 3,
-                            decoration: const BoxDecoration(
-                                borderRadius: BorderRadius.all(Radius.circular(6.0)),
-                                color: Color(0xfffafafa)),
-                          )
-                        ],
-                      ),
-                      const Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text("接下来",
-                            style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.black54,
-                                decoration: TextDecoration.none)),
-                      )
-                    ]),
+                      )),
+                  MaterialAppSliverList(),
+                  SliverToBoxAdapter(
+                      child: Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                        child: const Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text("明天",
+                              style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.black54,
+                                  decoration: TextDecoration.none)),
+                        ),
+                      )),
+                  MaterialAppSliverList(),
+                ],
               )),
-              MaterialAppSliverList(),
-              SliverToBoxAdapter(
-                  child: Container(
-                width: double.infinity,
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                child: const Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text("明天",
-                      style: TextStyle(
-                          fontSize: 14, color: Colors.black54, decoration: TextDecoration.none)),
-                ),
-              )),
-              MaterialAppSliverList(),
-            ],
-          )),
-      Container(
-        color: Colors.blue,
-        child: Text("2"),
-      ),
-      Container(
-        color: Colors.red,
-        child: Text("3"),
-      )
-    ]);
+          Container(
+            color: Colors.blue,
+            margin: const EdgeInsets.fromLTRB(0, 0, 0, 16),
+            child: Text("2"),
+          ),
+          Container(
+            color: Colors.red,
+            margin: const EdgeInsets.fromLTRB(0, 0, 0, 16),
+            child: Text("3"),
+          )
+        ]);
   }
 }
