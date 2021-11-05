@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:glutnnbox/common/global.dart';
+import 'package:glutnnbox/config.dart';
 
 Widget indexZeroAppBar = SliverAppBar(
   pinned: true,
@@ -42,8 +42,10 @@ class BottomNavBar extends State<PageControl> {
         color: Colors.white,
       )),
       backgroundColor: Colors.white,
-      activeColor: Colors.blue, // 图标高亮颜色
-      inactiveColor: Colors.grey, // 图
+      activeColor: Colors.blue,
+      // 图标高亮颜色
+      inactiveColor: Colors.grey,
+      // 图
       currentIndex: Global.pageIndex,
       onTap: (int index) {
         setState(() {
@@ -78,4 +80,23 @@ class BottomNavBar extends State<PageControl> {
       ],
     );
   }
+}
+
+SnackBar jwSnackBar(bool result, String text, [int hideSnackBarSeconds = 2]) {
+  Widget resultIcon = result
+      ? const Icon(
+          Icons.mood,
+          color: Colors.green,
+        )
+      : const Icon(
+          Icons.mood_bad,
+          color: Colors.red,
+        );
+  return SnackBar(
+    duration: Duration(seconds: hideSnackBarSeconds),
+    content: Row(
+      children: <Widget>[resultIcon, Text(text)],
+    ),
+    behavior: SnackBarBehavior.floating,
+  );
 }

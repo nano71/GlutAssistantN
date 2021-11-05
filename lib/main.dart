@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'common/global.dart';
+import 'config.dart';
 import 'widget/materialapphome.dart';
 
 main() {
