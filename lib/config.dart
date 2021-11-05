@@ -5,7 +5,6 @@ class Global {
   static String appTitle = "桂工助手";
   static bool logined = false;
   static int pageIndex = 0;
-  static int weekDay = 0;
   static PageController pageControl = PageController(
     initialPage: 0,
     keepPage: true,
@@ -19,5 +18,13 @@ class Global {
   static Uri getScoreUrl = Uri.http(jwUrl, "/academic/manager/score/studentOwnScore.do");
   static List<String> getScheduleUrl = [jwUrl, "/academic/student/currcourse/currcourse.jsdo"];
   static List<String> codeCheckUrl = [jwUrl, "/academic/checkCaptcha.do"];
-
+  static Map<String, Map<String, Map<String, List>>> schedule = {};
+  static Map writeData = {
+    "time": "2021-11-5",
+    "week": "1",
+    "username": "",
+    "password": ""
+  };
+  static bool todaySchedule = true;
+  static bool tomorrowSchedule = true;
 }

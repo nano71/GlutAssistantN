@@ -4,12 +4,14 @@ import 'package:http/http.dart';
 import '../config.dart';
 
 Future<String> codeCheck(String code) async {
+  print("codeCheck...");
   final _url = Uri.http(Global.codeCheckUrl[0], Global.codeCheckUrl[1], {"captchaCode": code});
   var postData = {
     "captchaCode": code,
   };
   var response = await post(_url, body: postData, headers: {"cookie": mapCookieToString()})
       .timeout(const Duration(milliseconds: 6000));
+  print(response.body);
   String result = "success";
   if (response.body != "true") result = "fail";
   return result;
