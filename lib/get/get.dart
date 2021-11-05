@@ -15,14 +15,13 @@ Future<int> getWeek() async {
       .timeout(const Duration(milliseconds: 6000));
   dom.Document document = parse(gbk.decode(response.bodyBytes));
   String weekHtml = document.querySelector("#date p span")!.innerHtml.trim();
-  int weekDay =
-      int.parse(weekHtml.substring(weekHtml.indexOf("第") + 1, weekHtml.indexOf("周")).trim());
-  return weekDay;
+  int week = int.parse(weekHtml.substring(weekHtml.indexOf("第") + 1, weekHtml.indexOf("周")).trim());
+  writeConfig(week.toString());
+  return week;
 }
 
 getSchedule() async {
   print("getSchedule...");
-
   Map<String, Map<String, Map<String, List>>> _schedule = {};
   Map<String, String> _weekList = {
     "星期一": "1",
@@ -120,8 +119,6 @@ getSchedule() async {
         }
       }
     }
-    print(_schedule['10']?['3']);
-    String json = jsonEncode(_schedule);
-    writeString(json);
+    writeSchedule(jsonEncode(_schedule));
   }
 }

@@ -1,5 +1,9 @@
+import 'dart:convert';
 import 'dart:io';
+
 import 'package:path_provider/path_provider.dart';
+
+import '../config.dart';
 
 // /// 获取文档目录文件
 // Future<File> _getLocalDocumentFile() async {
@@ -13,20 +17,56 @@ import 'package:path_provider/path_provider.dart';
 //   return File('${dir.path}/table.json');
 // }
 
-/// 获取应用程序目录文件
-Future<File> _getLocalSupportFile() async {
+Future<File> scheduleLocalSupportFile() async {
   final dir = await getApplicationSupportDirectory();
-  return File('${dir.path}/table.json');
+  return File('${dir.path}/schedule.json');
 }
 
-/// 写入数据
-Future<void> writeString(String str) async {
-  final file = await _getLocalSupportFile();
-  await file.writeAsString(str);
+Future<void> writeSchedule(String str) async {
+  final file = await scheduleLocalSupportFile();
+  try {
+    await file.writeAsString(str);
+  } catch (e) {
+    await file.create(recursive: true);
+  }
 }
 
-Future readString() async {
-    final file = await _getLocalSupportFile();
-    final result  = await file.readAsString();
-    return result;
+Future<Map> readSchedule() async {
+  final file = await scheduleLocalSupportFile();
+  try {
+    final result = await file.readAsString();
+    return jsonDecode(result);
+  } catch (e) {
+    await file.create(recursive: true);
+    return jsonDecode('{"message":"fail"}');
+  }
+}
+
+Future<File> configLocalSupportFile() async {
+  final dir = await getApplicationSupportDirectory();
+  return File('${dir.path}/config.json');
+}
+
+Future<void> writeConfig(String week) async {
+  Global.writeData["time"] = "${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}";
+  Global.writeData["week"] = week;
+  String str = jsonEncode(Global.writeData);
+  final file = await configLocalSupportFile();
+  try {
+    await file.writeAsString(str);
+  } catch (e) {
+    await file.create(recursive: true);
+  }
+}
+
+Future<void> readConfig() async {
+  final file = await scheduleLocalSupportFile();
+  try {
+    final result = await file.readAsString();
+    if (result.length > 1) {
+      Global.writeData = jsonDecode(result);
+    }
+  } catch (e) {
+    await file.create(recursive: true);
+  }
 }
