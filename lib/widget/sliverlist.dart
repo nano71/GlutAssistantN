@@ -21,7 +21,7 @@ class TomorrowCourse extends StatefulWidget {
 class ToDayCourseList extends State<ToDayCourse> {
   Map _schedule = {};
   var toDay = [];
-  String _week = "1";
+  String _week = Global.writeData["week"];
   final List _startTimeList = [
     [8, 40],
     [9, 25],
@@ -40,6 +40,7 @@ class ToDayCourseList extends State<ToDayCourse> {
     [10, 20],
     [11, 05],
     [11, 50],
+    [15, 10],
     [15, 55],
     [16, 45],
     [17, 30],
@@ -70,7 +71,7 @@ class ToDayCourseList extends State<ToDayCourse> {
   }
 
   void _getWeek() async {
-    await getWeek().then((int day) => setState(() => _week = day.toString()));
+    // await getWeek().then((int day) => setState(() => _week = day.toString()));
     _listInit();
   }
 
@@ -78,7 +79,6 @@ class ToDayCourseList extends State<ToDayCourse> {
     _schedule[_week][DateTime.now().weekday.toString()].forEach((k, v) => {
           if (v[1] != null) {v.add(k), toDay.add(v)}
         });
-    print(toDay.isNotEmpty);
     if (toDay.isNotEmpty) {
       setState(() {
         Global.todaySchedule = true;
@@ -88,7 +88,6 @@ class ToDayCourseList extends State<ToDayCourse> {
         Global.todaySchedule = false;
       });
     }
-    _getStartTime(10);
   }
 
   List _getStartTime(index) {
@@ -101,22 +100,48 @@ class ToDayCourseList extends State<ToDayCourse> {
     var d = DateTime.now().day;
     var h = DateTime.now().hour;
     var mm = DateTime.now().minute;
-    DateTime d4 = DateTime(y, m, d, h, mm);
-    DateTime d5 = DateTime(y, m, d, startH, startM);
-    var difference = d5.difference(d4);
-    int returnM =
-        difference.inMinutes < 0 ? difference.inMinutes % 60 - 60 : difference.inMinutes % 60;
-    List returnList = [difference.inDays, difference.inHours, returnM];
+    var difference = DateTime(y, m, d, startH, startM).difference(DateTime(y, m, d, h, mm));
+    var difference2 = DateTime(y, m, d, endH, endM).difference(DateTime(y, m, d, h, mm));
     bool studying = false;
+    List returnList = [
+      difference.inDays,
+      difference.inHours,
+      difference.inMinutes < 0 ? difference.inMinutes % 60 - 60 : difference.inMinutes % 60
+    ];
     for (int i = 0; i < returnList.length; i++) {
       studying = returnList[i] < 0;
       if (returnList[0] == returnList[1] && returnList[0] == returnList[2]) studying = true;
     }
     if (studying) {
-      var difference2 = DateTime(y, m, d, endH, endM).difference(DateTime(y, m, d, h, mm));
-      return [difference2.inDays, difference2.inHours, difference2.inMinutes];
+      return [
+        difference2.inDays,
+        difference2.inHours,
+        difference2.inMinutes < 0 ? difference2.inMinutes % 60 - 60 : difference2.inMinutes % 60,
+        "after"
+      ];
     } else {
+      returnList.add("before");
       return returnList;
+    }
+  }
+
+  IconData _icon(result) {
+    if (result == "before") {
+      return Icons.attachment;
+    } else {
+      return Icons.check;
+    }
+  }
+
+  String _timeText(List value) {
+    if (value[0] >= 1) {
+      return "";
+    } else if (value[1] >= 4) {
+      return "";
+    } else if (value[1] >= 1) {
+      return "还有${value[1]}小时";
+    } else {
+      return "${value[2]}分钟后";
     }
   }
 
@@ -127,51 +152,63 @@ class ToDayCourseList extends State<ToDayCourse> {
         return Container(
             margin: EdgeInsets.fromLTRB(24, 16, 24, 16),
             // height: 50,
-            child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-              Container(
-                margin: EdgeInsets.fromLTRB(0, 0, 8, 0),
-                child: Icon(
-                  Icons.attachment,
-                  color: Colors.blue,
-                ),
-              ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.start,
+            child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+              Row(
                 children: [
-                  Row(
-                    children: [
-                      Text(toDay[index][2],
-                          style: const TextStyle(
-                              decoration: TextDecoration.none,
-                              fontSize: 14,
-                              color: Color(0xff333333))),
-                      Text(toDay[index][0],
-                          style: const TextStyle(
-                              decoration: TextDecoration.none,
-                              fontSize: 16,
-                              color: Color(0xff333333))),
-                    ],
+                  Container(
+                    margin: EdgeInsets.fromLTRB(0, 0, 8, 0),
+                    child: Icon(
+                      _icon(_getStartTime(int.parse(toDay[index][3]))[3]),
+                      color: Colors.blue,
+                    ),
                   ),
-                  Row(
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('第${toDay[index][3]}节 | ',
-                          style: const TextStyle(
-                              decoration: TextDecoration.none,
-                              fontSize: 12,
-                              color: Color(0xff999999))),
-                      Text(toDay[index][1],
-                          style: const TextStyle(
-                              decoration: TextDecoration.none,
-                              fontSize: 12,
-                              color: Color(0xff999999))),
+                      Row(
+                        children: [
+                          Text(toDay[index][2],
+                              style: const TextStyle(
+                                  decoration: TextDecoration.none,
+                                  fontSize: 14,
+                                  color: Color(0xff333333))),
+                          Text(toDay[index][0],
+                              style: const TextStyle(
+                                  decoration: TextDecoration.none,
+                                  fontSize: 16,
+                                  color: Color(0xff333333))),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Text('第${toDay[index][3]}节 | ',
+                              style: const TextStyle(
+                                  decoration: TextDecoration.none,
+                                  fontSize: 12,
+                                  color: Color(0xff999999))),
+                          Text(toDay[index][1],
+                              style: const TextStyle(
+                                  decoration: TextDecoration.none,
+                                  fontSize: 12,
+                                  color: Color(0xff999999))),
+                        ],
+                      ),
                     ],
                   ),
                 ],
               ),
-              const Text("",
-                  style: TextStyle(
-                      decoration: TextDecoration.none, fontSize: 12, color: Color(0xff333333))),
+              Stack(
+                alignment: Alignment.centerRight,
+                children: [
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Text(_timeText(_getStartTime(int.parse(toDay[index][3]))),
+                        style: const TextStyle(
+                            decoration: TextDecoration.none, fontSize: 14, color: Colors.red)),
+                  )
+                ],
+              ),
             ]));
       }, childCount: toDay.length),
     );
@@ -181,7 +218,7 @@ class ToDayCourseList extends State<ToDayCourse> {
 class TomorrowCourseList extends State<TomorrowCourse> {
   Map _schedule = {};
   var tomorrow = [];
-  String _week = "1";
+  String _week = Global.writeData["week"];
 
   @override
   void initState() {
@@ -205,13 +242,13 @@ class TomorrowCourseList extends State<TomorrowCourse> {
   }
 
   void _getWeek() async {
-    await getWeek().then((int day) => setState(() => _week = day.toString()));
+    // await getWeek().then((int day) => setState(() => _week = day.toString()));
     _listInit();
   }
 
   String _getWeekDay() {
-    if (DateTime.now().weekday < 7) {
-      return (DateTime.now().weekday + 1).toString();
+    if (DateTime.now().weekday <= 6) {
+      return (DateTime.now().weekday).toString();
     } else {
       return "1";
     }
@@ -221,7 +258,6 @@ class TomorrowCourseList extends State<TomorrowCourse> {
     _schedule[_week][_getWeekDay()].forEach((k, v) => {
           if (v[1] != null) {v.add(k), tomorrow.add(v)}
         });
-    print(tomorrow.isNotEmpty);
     if (tomorrow.isNotEmpty) {
       setState(() {
         Global.tomorrowSchedule = true;

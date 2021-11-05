@@ -41,7 +41,7 @@ class MaterialAppBody extends State<MaterialAppPageBody> {
   Uint8List _codeImgSrc = const Base64Decoder().convert(
       "iVBORw0KGgoAAAANSUhEUgAAAEgAAAAeCAYAAACPOlitAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAHYcAAB2HAY/l8WUAAABYSURBVGhD7dChAcAgEMDAb/ffGSpqIQvcmfg86zMcvX85MCgYFAwKBgWDgkHBoGBQMCgYFAwKBgWDgkHBoGBQMCgYFAwKBgWDgkHBoGBQMCgYFAwKBl3NbAiZBDiX3e/AAAAAAElFTkSuQmCC");
   Map<String, String> headers = {"cookie": ""};
-  int _week = 1;
+  int _week = 0;
 
   @override
   void initState() {
@@ -102,7 +102,6 @@ class MaterialAppBody extends State<MaterialAppPageBody> {
       }
     }
 
-    print(_textFieldController.text.toString());
     await login("5191963403", "sr20000923++", _textFieldController.text.toString())
         .then((String value) => _next(value));
   }
@@ -110,14 +109,14 @@ class MaterialAppBody extends State<MaterialAppPageBody> {
   void _getWeek() async {
     setState(() {
       _textFieldController.text = "";
+      _week = int.parse(Global.writeData["week"]);
     });
     print("_getWeek...");
-    await getWeek().then((int day) => setState(() => _week = day));
+
     getSchedule();
   }
 
   String _tomorrowText() {
-    print(Global.tomorrowSchedule);
     return Global.tomorrowSchedule ? "明天" : "明天没课哦";
   }
 

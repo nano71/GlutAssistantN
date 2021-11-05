@@ -11,7 +11,6 @@ Future<String> codeCheck(String code) async {
   };
   var response = await post(_url, body: postData, headers: {"cookie": mapCookieToString()})
       .timeout(const Duration(milliseconds: 6000));
-  print(response.body);
   String result = "success";
   if (response.body != "true") result = "fail";
   return result;
