@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:glutnnbox/get/get.dart';
 
 class Global {
   static String appTitle = "桂工助手";
@@ -20,8 +21,9 @@ class Global {
   static List<String> codeCheckUrl = [jwUrl, "/academic/checkCaptcha.do"];
   static Map<String, Map<String, Map<String, List>>> schedule = {};
   static Map writeData = {
-    "time": "2021-11-5",
+    "time": "",
     "week": "1",
+    "weekDay": "",
     "username": "",
     "password": ""
   };

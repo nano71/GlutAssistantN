@@ -9,15 +9,19 @@ import 'package:http/http.dart';
 
 import '../config.dart';
 
-Future<int> getWeek() async {
-  print("getWeek...");
-  var response = await get(Global.getWeekUrl, headers: {"cookie": ''})
-      .timeout(const Duration(milliseconds: 6000));
-  dom.Document document = parse(gbk.decode(response.bodyBytes));
-  String weekHtml = document.querySelector("#date p span")!.innerHtml.trim();
-  int week = int.parse(weekHtml.substring(weekHtml.indexOf("第") + 1, weekHtml.indexOf("周")).trim());
-  writeConfig(week.toString());
-  return week;
+Future<void> getWeek() async {
+  try {
+    print("getWeek...");
+    var response = await get(Global.getWeekUrl, headers: {"cookie": ''})
+        .timeout(const Duration(milliseconds: 6000));
+    dom.Document document = parse(gbk.decode(response.bodyBytes));
+    String weekHtml = document.querySelector("#date p span")!.innerHtml.trim();
+    int week =
+        int.parse(weekHtml.substring(weekHtml.indexOf("第") + 1, weekHtml.indexOf("周")).trim());
+    await writeConfig(week.toString());
+  } catch (e) {
+    readConfig();
+  }
 }
 
 getSchedule() async {

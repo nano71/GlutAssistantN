@@ -1,18 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:glutnnbox/common/io.dart';
+import 'package:glutnnbox/get/get.dart';
 
 import 'config.dart';
 import 'widget/materialapphome.dart';
 
-main() {
+main() async {
   SystemUiOverlayStyle systemUiOverlayStyle =
       const SystemUiOverlayStyle(statusBarColor: Colors.white);
   SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
   print("--start--");
+  await getWeek();
   runApp(const MyApp());
-  readConfig();
 }
 
 class MyApp extends StatelessWidget {

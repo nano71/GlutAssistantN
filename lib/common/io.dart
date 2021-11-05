@@ -48,24 +48,33 @@ Future<File> configLocalSupportFile() async {
 }
 
 Future<void> writeConfig(String week) async {
+  print("writeConfig");
   Global.writeData["time"] = "${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}";
   Global.writeData["week"] = week;
   String str = jsonEncode(Global.writeData);
   final file = await configLocalSupportFile();
   try {
     await file.writeAsString(str);
+    readConfig();
   } catch (e) {
     await file.create(recursive: true);
   }
 }
 
+int daysBetweenDay(DateTime a, DateTime b) {
+  int v = a.millisecondsSinceEpoch - b.millisecondsSinceEpoch;
+  return v ~/ 86400000;
+}
+
 Future<void> readConfig() async {
-  final file = await scheduleLocalSupportFile();
+  print("readConfig");
+  final file = await configLocalSupportFile();
   try {
     final result = await file.readAsString();
-    if (result.length > 1) {
-      Global.writeData = jsonDecode(result);
-    }
+    print(result);
+    Global.writeData = jsonDecode(result);
+    List timeList = Global.writeData["time"].split("-");
+    print(timeList);
   } catch (e) {
     await file.create(recursive: true);
   }

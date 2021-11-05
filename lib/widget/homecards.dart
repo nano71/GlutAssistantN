@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:glutnnbox/get/get.dart';
+
+import '../config.dart';
 
 class HomeCard extends StatefulWidget {
   const HomeCard({Key? key}) : super(key: key);
@@ -10,7 +11,7 @@ class HomeCard extends StatefulWidget {
 }
 
 class HomeCardState extends State<HomeCard> with AutomaticKeepAliveClientMixin {
-  int _week = 1;
+  int _week = 0;
 
   @override
   void initState() {
@@ -19,7 +20,7 @@ class HomeCardState extends State<HomeCard> with AutomaticKeepAliveClientMixin {
   }
 
   String _weekProgressText() {
-    return (_week * 5).toString() + "%";
+    return _week * 5 > 10 ? (_week * 5).toString() + "%" : "05%";
   }
 
   double _weekProgressDouble() {
@@ -42,7 +43,10 @@ class HomeCardState extends State<HomeCard> with AutomaticKeepAliveClientMixin {
 
   void _getWeek() async {
     print("_getWeek...");
-    await getWeek().then((int day) => setState(() => _week = day));
+    // await getWeek().then((int day) => setState(() => _week = day));
+    setState(() {
+      _week = int.parse(Global.writeData["week"]);
+    });
   }
 
   @override
@@ -138,20 +142,21 @@ class HomeCardsState extends State<HomeCards> {
           height: 100,
           width: MediaQuery.of(context).size.width / 3 - 48 / 3,
           decoration: const BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(6.0)), color: Color(0xfffafafa)),
+              borderRadius: BorderRadius.all(Radius.circular(6.0)),
+              color: Color.fromARGB(42, 199, 229, 253)),
           child: Stack(children: [
             Align(
                 alignment: Alignment.center,
                 child: Container(
-                    margin: const EdgeInsets.fromLTRB(0, 0, 0, 24),
+                    margin: const EdgeInsets.fromLTRB(0, 0, 0, 32),
                     child: const Icon(
-                      Icons.create,
+                      Icons.refresh,
                       color: Colors.blue,
                     ))),
             Align(
                 alignment: Alignment.center,
                 child: Container(
-                    margin: const EdgeInsets.fromLTRB(0, 24, 0, 0), child: const Text("课程修改")))
+                    margin: const EdgeInsets.fromLTRB(0, 32, 0, 0), child: const Text("课表刷新")))
           ]),
         ),
         Container(
@@ -159,32 +164,35 @@ class HomeCardsState extends State<HomeCards> {
           height: 100,
           width: MediaQuery.of(context).size.width / 3 - 48 / 3,
           decoration: const BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(6.0)), color: Color(0xfffafafa)),
+              borderRadius: BorderRadius.all(Radius.circular(6.0)),
+              color: Color.fromARGB(42, 199, 229, 253)),
           child: Stack(children: [
             Align(
                 alignment: Alignment.center,
                 child: Container(
-                    margin: const EdgeInsets.fromLTRB(0, 0, 0, 24),
+                    margin: const EdgeInsets.fromLTRB(0, 0, 0, 32),
                     child: const Icon(
                       Icons.create,
                       color: Colors.blue,
                     ))),
             Align(
                 alignment: Alignment.center,
-                child: Container(margin: EdgeInsets.fromLTRB(0, 24, 0, 0), child: Text("考试一览")))
+                child: Container(
+                    margin: const EdgeInsets.fromLTRB(0, 32, 0, 0), child: const Text("课程修改")))
           ]),
         ),
         Container(
           margin: const EdgeInsets.fromLTRB(4, 8, 0, 16),
           height: 100,
           width: MediaQuery.of(context).size.width / 3 - 48 / 3,
-          decoration: const BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(6.0)), color: Color(0xfffafafa)),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(6.0)),
+              color: Color.fromARGB(42, 199, 229, 253)),
           child: Stack(children: [
             Align(
                 alignment: Alignment.center,
                 child: Container(
-                    margin: const EdgeInsets.fromLTRB(0, 0, 0, 24),
+                    margin: const EdgeInsets.fromLTRB(0, 0, 0, 32),
                     child: const Icon(
                       Icons.library_books_sharp,
                       color: Colors.blue,
@@ -192,7 +200,7 @@ class HomeCardsState extends State<HomeCards> {
             Align(
                 alignment: Alignment.center,
                 child: Container(
-                    margin: const EdgeInsets.fromLTRB(0, 24, 0, 0), child: const Text("我的考试")))
+                    margin: const EdgeInsets.fromLTRB(0, 32, 0, 0), child: const Text("我的考试")))
           ]),
         )
       ],
