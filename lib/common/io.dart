@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:glutnnbox/common/init.dart';
+import 'package:glutnnbox/get/get.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../data.dart';
@@ -63,7 +64,6 @@ Future<File> configLocalSupportFile() async {
 }
 
 Future<void> writeConfig(String week) async {
-  print("writeConfig");
   writeData["time"] = "${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}";
   writeData["week"] = week;
   String str = jsonEncode(writeData);
@@ -82,7 +82,6 @@ Future<void> writeConfig(String week) async {
 }
 
 Future<void> readConfig() async {
-  print("readConfig");
   final file = await configLocalSupportFile();
   bool dirBool = await file.exists();
   if (!dirBool) {
@@ -90,8 +89,12 @@ Future<void> readConfig() async {
   }
   try {
     final result = await file.readAsString();
-    writeData = jsonDecode(result);
-    List timeList = writeData["time"].split("-");
+    Map _writeData = jsonDecode(result);
+    List _timeList = _writeData["time"].toString().split("-");
+    int y = DateTime.now().year;
+    int m = DateTime.now().month;
+    int d = DateTime.now().day;
+    print(getLocalWeek(DateTime(y, m, d), DateTime(int.parse(_timeList[0]), int.parse(_timeList[1]), int.parse(_timeList[2]))));
     print("readConfig End");
   } catch (e) {
     print(e);

@@ -1,4 +1,3 @@
-import 'package:http/http.dart';
 import 'dart:convert';
 
 import 'package:gbk2utf8/gbk2utf8.dart';
@@ -6,6 +5,7 @@ import 'package:glutnnbox/common/cookie.dart';
 import 'package:glutnnbox/common/io.dart';
 import 'package:html/dom.dart' as dom;
 import 'package:html/parser.dart';
+import 'package:http/http.dart';
 
 import '../config.dart';
 import '../data.dart';
@@ -115,4 +115,10 @@ getSchedule() async {
     }
     writeSchedule(jsonEncode(_schedule));
   }
+}
+
+int getLocalWeek(DateTime nowDate, DateTime pastDate) {
+  int day = nowDate.difference(pastDate).inDays;
+  int week = day ~/ 7;
+  return week;
 }

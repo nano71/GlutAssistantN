@@ -30,7 +30,7 @@ initTodaySchedule() {
     todayScheduleTitle = "今天的";
     todaySchedule = toDay;
   } else {
-    todayScheduleTitle = "今天没课哦";
+    todayScheduleTitle = "今天没课";
   }
 }
 
@@ -54,5 +54,6 @@ initTomorrowSchedule() {
     tomorrowSchedule = tomorrow;
   } else {
     tomorrowScheduleTitle = "明天没课嗷";
+    if(todayScheduleTitle == "今天没课")tomorrowScheduleTitle = "明天也没课🤣";
   }
 }
