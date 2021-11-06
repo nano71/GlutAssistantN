@@ -1,8 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:glutnnbox/view/init.dart';
-
+import 'package:glutnnbox/pages/init.dart';
 import 'config.dart';
 
 main() {
@@ -10,7 +9,7 @@ main() {
       const SystemUiOverlayStyle(statusBarColor: Colors.white);
   SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
   print("--start--");
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -21,6 +20,6 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: ThemeData(fontFamily: 'SourceHanSansCN'),
         title: Global.appTitle,
-        home:InitPage());
+        home:const InitPage());
   }
 }

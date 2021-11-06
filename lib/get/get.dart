@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:gbk2utf8/gbk2utf8.dart';
 import 'package:glutnnbox/common/cookie.dart';
 import 'package:glutnnbox/common/io.dart';
@@ -23,7 +24,7 @@ Future<void> getWeek() async {
   }
 }
 
-getSchedule() async {
+Future<void> getSchedule() async {
   print("getSchedule...");
   Map _schedule = schedule;
   Map<String, String> _weekList = {

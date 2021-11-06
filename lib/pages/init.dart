@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:glutnnbox/common/init.dart';
 import 'package:glutnnbox/common/io.dart';
 import 'package:glutnnbox/get/get.dart';
-import 'package:glutnnbox/widget/materialapphome.dart';
+import 'package:glutnnbox/widget/index.dart';
 
 class CustomRoute extends PageRouteBuilder {
   final Widget widget;
@@ -11,7 +11,7 @@ class CustomRoute extends PageRouteBuilder {
       : super(
             //父类的方法
             //设置动画持续的时间，建议再1和2之间
-            transitionDuration: const Duration(seconds: 1),
+            transitionDuration: const Duration(seconds: 2),
             //页面的构造器
             pageBuilder: (
               BuildContext context,
@@ -31,7 +31,7 @@ class CustomRoute extends PageRouteBuilder {
                     // 给他个透明度的动画   CurvedAnimation：设置动画曲线
                     .animate(CurvedAnimation(
                         parent: animation,
-                        curve: Curves.easeOutQuint)),
+                        curve: Curves.ease)),
                 child: child,
               );
             });
@@ -61,7 +61,7 @@ class InitPageState extends State<InitPage> {
     Navigator.push(
         context,
         CustomRoute(
-          MaterialAppHome(),
+          const Index(),
         ));
   }
 

@@ -45,6 +45,7 @@ class HomeCardState extends State<HomeCard> with AutomaticKeepAliveClientMixin {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Container(
       height: 100,
       decoration: const BoxDecoration(

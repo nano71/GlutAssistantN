@@ -89,19 +89,17 @@ Future<void> readConfig() async {
   }
   try {
     final result = await file.readAsString();
-    Map _writeData = jsonDecode(result);
-    List _timeList = _writeData["time"].toString().split("-");
+    writeData = jsonDecode(result);
+    List _timeList = writeData["time"].toString().split("-");
     int y = DateTime.now().year;
     int m = DateTime.now().month;
     int d = DateTime.now().day;
-    print(getLocalWeek(DateTime(y, m, d), DateTime(int.parse(_timeList[0]), int.parse(_timeList[1]), int.parse(_timeList[2]))));
+    int _nowWeek = int.parse(writeData["week"]) +
+        getLocalWeek(DateTime(y, m, d),
+            DateTime(int.parse(_timeList[0]), int.parse(_timeList[1]), int.parse(_timeList[2])));
+    writeData["week"] = _nowWeek.toString();
     print("readConfig End");
   } catch (e) {
     print(e);
   }
-}
-
-int daysBetweenDay(DateTime a, DateTime b) {
-  int v = a.millisecondsSinceEpoch - b.millisecondsSinceEpoch;
-  return v ~/ 86400000;
 }
