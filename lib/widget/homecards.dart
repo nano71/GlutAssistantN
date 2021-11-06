@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../config.dart';
+import '../data.dart';
 
 class HomeCard extends StatefulWidget {
   const HomeCard({Key? key}) : super(key: key);
@@ -11,12 +11,12 @@ class HomeCard extends StatefulWidget {
 }
 
 class HomeCardState extends State<HomeCard> with AutomaticKeepAliveClientMixin {
-  int _week = 0;
+  final int _week = int.parse(writeData["week"]);
 
   @override
   void initState() {
     super.initState();
-    _getWeek();
+    // _getWeek();
   }
 
   String _weekProgressText() {
@@ -41,14 +41,6 @@ class HomeCardState extends State<HomeCard> with AutomaticKeepAliveClientMixin {
     }
   }
 
-  void _getWeek() async {
-    print("_getWeek...");
-    // await getWeek().then((int day) => setState(() => _week = day));
-    setState(() {
-      _week = int.parse(Global.writeData["week"]);
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -61,7 +53,7 @@ class HomeCardState extends State<HomeCard> with AutomaticKeepAliveClientMixin {
         Align(
           alignment: Alignment.centerRight,
           child: Container(
-            margin: EdgeInsets.fromLTRB(0, 0, 18, 0),
+            margin: const EdgeInsets.fromLTRB(0, 0, 18, 0),
             child: SizedBox(
               //限制进度条的高度
               height: 60.0,
@@ -133,6 +125,16 @@ class HomeCards extends StatefulWidget {
 class HomeCardsState extends State<HomeCards> {
   @override
   Widget build(BuildContext context) {
+    double _iconSize = 36;
+    List _icons = [Icons.refresh, Icons.child_friendly, Icons.library_books_sharp];
+    List _iconTexts = ["课表刷新", "学习生涯", "我的考试"];
+    EdgeInsetsGeometry _textMargin = const EdgeInsets.fromLTRB(0, 44, 0, 0);
+    EdgeInsetsGeometry _iconMargin = const EdgeInsets.fromLTRB(0, 0, 0, 32);
+    Decoration? _cardDecoration = const BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(6.0)),
+        color: Color.fromARGB(42, 199, 229, 253));
+    double _width = MediaQuery.of(context).size.width;
+    TextStyle _textStyle = const TextStyle(color: Colors.black54);
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       mainAxisSize: MainAxisSize.max,
@@ -140,67 +142,62 @@ class HomeCardsState extends State<HomeCards> {
         Container(
           margin: const EdgeInsets.fromLTRB(0, 8, 4, 16),
           height: 100,
-          width: MediaQuery.of(context).size.width / 3 - 48 / 3,
-          decoration: const BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(6.0)),
-              color: Color.fromARGB(42, 199, 229, 253)),
+          width: _width / 3 - 48 / 3,
+          decoration: _cardDecoration,
           child: Stack(children: [
             Align(
-                alignment: Alignment.center,
                 child: Container(
-                    margin: const EdgeInsets.fromLTRB(0, 0, 0, 32),
-                    child: const Icon(
-                      Icons.refresh,
+                    margin: _iconMargin,
+                    child: Icon(
+                      _icons[0],
                       color: Colors.blue,
+                      size: _iconSize,
                     ))),
             Align(
-                alignment: Alignment.center,
                 child: Container(
-                    margin: const EdgeInsets.fromLTRB(0, 32, 0, 0), child: const Text("课表刷新")))
+                    margin: _textMargin,
+                    child: Text(
+                      _iconTexts[0],
+                      style: _textStyle,
+                    )))
           ]),
         ),
         Container(
           margin: const EdgeInsets.fromLTRB(4, 8, 4, 16),
           height: 100,
-          width: MediaQuery.of(context).size.width / 3 - 48 / 3,
-          decoration: const BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(6.0)),
-              color: Color.fromARGB(42, 199, 229, 253)),
+          width: _width / 3 - 48 / 3,
+          decoration: _cardDecoration,
           child: Stack(children: [
             Align(
-                alignment: Alignment.center,
                 child: Container(
-                    margin: const EdgeInsets.fromLTRB(0, 0, 0, 32),
-                    child: const Icon(
-                      Icons.create,
+                    margin: _iconMargin,
+                    child: Icon(
+                      _icons[1],
                       color: Colors.blue,
+                      size: _iconSize,
                     ))),
             Align(
-                alignment: Alignment.center,
-                child: Container(
-                    margin: const EdgeInsets.fromLTRB(0, 32, 0, 0), child: const Text("课程修改")))
+                child:
+                    Container(margin: _textMargin, child: Text(_iconTexts[1], style: _textStyle)))
           ]),
         ),
         Container(
           margin: const EdgeInsets.fromLTRB(4, 8, 0, 16),
           height: 100,
-          width: MediaQuery.of(context).size.width / 3 - 48 / 3,
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(6.0)),
-              color: Color.fromARGB(42, 199, 229, 253)),
+          width: _width / 3 - 48 / 3,
+          decoration: _cardDecoration,
           child: Stack(children: [
             Align(
-                alignment: Alignment.center,
                 child: Container(
-                    margin: const EdgeInsets.fromLTRB(0, 0, 0, 32),
-                    child: const Icon(
-                      Icons.library_books_sharp,
+                    margin: _iconMargin,
+                    child: Icon(
+                      _icons[2],
                       color: Colors.blue,
+                      size: _iconSize,
                     ))),
             Align(
-                alignment: Alignment.center,
-                child: Container(
-                    margin: const EdgeInsets.fromLTRB(0, 32, 0, 0), child: const Text("我的考试")))
+                child:
+                    Container(margin: _textMargin, child: Text(_iconTexts[2], style: _textStyle)))
           ]),
         )
       ],
