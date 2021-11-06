@@ -48,7 +48,7 @@ Future<void> readSchedule() async {
   }
   try {
     final result = await file.readAsString();
-    if (result.length>0) {
+    if (result.isNotEmpty) {
       schedule = jsonDecode(result);
       print("readSchedule End");
     } else {

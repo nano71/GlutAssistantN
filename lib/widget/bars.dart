@@ -66,7 +66,6 @@ class BottomNavBarState extends State<BottomNavBar> {
             //     duration: const Duration(milliseconds: 300), curve: Curves.easeOutCirc);
             Global.pageControl.jumpToPage(index);
             Global.pageIndex = index;
-            print(Global.pageIndex);
           }
         });
       },
