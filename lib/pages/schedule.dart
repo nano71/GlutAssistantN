@@ -10,9 +10,6 @@ class SchedulePage extends StatefulWidget {
   SchedulePageState createState() => SchedulePageState();
 }
 
-double numRowWidth = 50.0; //单个表宽
-double numRowHeight = 100; //表格高
-
 class SchedulePageState extends State<SchedulePage> {
   @override
   Widget build(BuildContext context) {
@@ -23,84 +20,103 @@ class SchedulePageState extends State<SchedulePage> {
         children: [
           scheduleTopBar,
           Container(
-              child: Column(children: [
-            Table(children: <TableRow>[
-              tableHeader(),
-            ])
-          ])),
+            child: _rowHeader(),
+          ),
           Expanded(
-              child: SingleChildScrollView(
-                  scrollDirection: Axis.vertical,
-                  child: Container(
-                    child: Table(children: _buildTableRow()),
-                  )))
+            child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+              scrollDirection: Axis.vertical,
+              child: Container(
+                color: Colors.white,
+                child: Column(
+                  children: _loopRow(),
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );
   }
 }
 
-//创建tableRows
-List<TableRow> _buildTableRow() {
-  List<TableRow> returnList = [];
-  for (int i = 0; i < 11; i++) {
-    returnList.add(_buildSingleRow(i + 1));
-  }
-  return returnList;
+Widget _row(int index) {
+  return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisSize: MainAxisSize.min,
+      children: _loopRowGrid(index.toString()));
 }
 
-//创建第一列tableRow
-
-//创建一行tableRow
-TableRow _buildSingleRow(int index) {
-  return TableRow(
-      //第一行样式 添加背景色
-      children: [
-        _buildSideBox("$index", 1),
-        _buildSideBox("45", 2),
-        _buildSideBox("45", 3),
-        _buildSideBox("45", 4),
-        _buildSideBox("45", 5),
-        _buildSideBox("45", 6),
-        _buildSideBox("45", 7),
-        _buildSideBox("45", 8),
-      ]);
-}
-
-//创建单个表格
-Widget _buildSideBox(String title, int index) {
-  return SizedBox(
-      height: numRowHeight,
-      width: (index == 1 ? 10 : 50),
-      child: Container(
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-              border: Border.all(
-                color: const Color(0xFF000000),
-                width: 1.0,
-                style: BorderStyle.solid,
-              ),
-              color: Colors.white),
-          child: Text(
-            title,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(fontSize: 12, color: (index == 1 ? Colors.blue : Colors.grey)),
-          )));
-}
-
-TableRow tableHeader() {
-  return const TableRow(
-    //  decoration: ,
-    children: <Widget>[
-      Text(""),
-      Text("周一"),
-      Text("周二"),
-      Text("周三"),
-      Text("周四"),
-      Text("周五"),
-      Text("周六"),
-      Text("周日"),
-    ],
+Widget _grid(String title, int weekDay) {
+  return Container(
+    height: 75,
+    alignment: Alignment.center,
+    child: Text(
+      title,
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+      style: const TextStyle(fontSize: 12, color: Colors.grey),
+    ),
   );
+}
+
+Widget _leftGrid(String title) {
+  return Container(
+    width: 20,
+    height: 75,
+    alignment: Alignment.center,
+    decoration: BoxDecoration(color: Colors.white),
+    child: Text(
+      title,
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+      style: TextStyle(fontSize: 12, color: Colors.blue),
+    ),
+  );
+}
+
+Widget _rowHeader() {
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    //  decoration: ,
+    children: _loopRowHeader(),
+  );
+}
+
+List<Widget> _loopRowHeader() {
+  List _weekDayList = ["一", "二", "三", "四", "五", "六", "日"];
+  List<Widget> list = [];
+  for (int i = 0; i < 8; i++) {
+    if (i == 0) {
+      list.add(const SizedBox(width: 20));
+    } else {
+      list.add(Expanded(
+          child: Center(
+              child: Text(
+        "周${_weekDayList[i - 1]}",
+        style: TextStyle(color: ((i) == DateTime.now().weekday ? Colors.blue : Colors.grey)),
+      ))));
+    }
+  }
+  return list;
+}
+
+List<Widget> _loopRow() {
+  List<Widget> list = [];
+  for (int i = 0; i < 11; i++) {
+    list.add(_row(i + 1));
+  }
+  return list;
+}
+
+List<Widget> _loopRowGrid(String firstTitle) {
+  List<Widget> list = [];
+  for (int i = 0; i < 8; i++) {
+    if (i == 0) {
+      list.add(_leftGrid(firstTitle));
+    } else {
+      list.add(Expanded(child: _grid("45", i)));
+    }
+  }
+  return list;
 }

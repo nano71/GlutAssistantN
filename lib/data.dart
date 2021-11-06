@@ -10,7 +10,8 @@ Map writeData = {
   "password": ""
 };
 List todaySchedule = [];
-List tomorrowSchedule =[] ;
+List tomorrowSchedule = [];
+
 String todayScheduleTitle = "";
 String tomorrowScheduleTitle = "";
 final List startTimeList = [
