@@ -20,22 +20,24 @@ class HomeCardState extends State<HomeCard> with AutomaticKeepAliveClientMixin {
   }
 
   String _weekProgressText() {
-    return _week * 5 > 10 ? (_week * 5).toString() + "%" : "05%";
+    return ((_week * 5) + (DateTime.now().weekday / 7 * 5)).toInt().toString() + "%";
   }
 
   double _weekProgressDouble() {
-    return _week * 5 / 100;
+    return (_week * 5 / 100) + (DateTime.now().weekday / 7 * 5 / 100);
   }
 
   String _weekText() {
-    if (_week >= 10) {
-      return "学期过半,珍惜当下";
+    if (_week == 20) {
+      return "学期即将结束";
     } else if (_week >= 17) {
       return "期末来临,复习为重";
+    } else if (_week >= 10) {
+      return "学期过半,珍惜当下";
+    } else if (_week >= 5) {
+      return "已过小半,集中精力";
     } else if (_week >= 1) {
       return "开学不久,好好玩吧";
-    } else if (_week == 20) {
-      return "学期即将结束";
     } else {
       return "";
     }
