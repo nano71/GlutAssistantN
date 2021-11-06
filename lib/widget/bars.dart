@@ -2,7 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:glutnnbox/config.dart';
 
-Widget homeTopBar = SliverAppBar(
+import '../data.dart';
+
+SliverAppBar homeTopBar = SliverAppBar(
   pinned: true,
   collapsedHeight: 56.00,
   primary: true,
@@ -25,6 +27,15 @@ Widget homeTopBar = SliverAppBar(
         ],
       ),
       titlePadding: const EdgeInsets.fromLTRB(16, 0, 16, 12)),
+);
+AppBar scheduleTopBar = AppBar(
+  automaticallyImplyLeading: false,
+  elevation: 0.3,
+  backgroundColor: Colors.white,
+  title: Text(
+    "第 ${writeData['week']} 周",
+    style: const TextStyle(color: Colors.black),
+  ),
 );
 
 class BottomNavBar extends StatefulWidget {

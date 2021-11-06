@@ -3,28 +3,30 @@ import 'dart:convert';
 import '../data.dart';
 import 'io.dart';
 
-initSchedule() {
+initSchedule() async {
+  print("initSchedule");
   Map _schedule = {};
   for (var i = 1; i < 21; i++) {
     _schedule[i.toString()] = {};
     for (var j = 1; j < 8; j++) {
-      _schedule[i.toString()]?[(j - 1).toString()] = {};
+      _schedule[i.toString()]?[j.toString()] = {};
       for (var k = 1; k < 12; k++) {
-        _schedule[i.toString()]?[(j - 1).toString()]?[k.toString()] = ["null", "null", "null"];
+        _schedule[i.toString()]?[j.toString()]?[k.toString()] = ["null", "null", "null"];
       }
     }
   }
   schedule = _schedule;
   print("initSchedule End");
-  writeSchedule(jsonEncode(schedule));
+  await writeSchedule(jsonEncode(schedule));
 }
 
 initTodaySchedule() {
+  print("initTodaySchedule");
   final String _week = writeData["week"].toString();
   Map _schedule = schedule;
   List toDay = [];
   _schedule[_week][DateTime.now().weekday.toString()].forEach((k, v) => {
-        if (v[1] != null) {v.add(k), toDay.add(v)}
+        if (v[1] != "null") {v.add(k), toDay.add(v)}
       });
   if (toDay.isNotEmpty) {
     todayScheduleTitle = "今天的";
@@ -32,9 +34,11 @@ initTodaySchedule() {
   } else {
     todayScheduleTitle = "今天没课";
   }
+  print("initTodaySchedule End");
 }
 
 initTomorrowSchedule() {
+  print("initTomorrowSchedule");
   final String _week = writeData["week"].toString();
   Map _schedule = schedule;
   List tomorrow = [];
@@ -46,8 +50,9 @@ initTomorrowSchedule() {
     }
   }
 
+  print(_schedule[_week][_getWeekDay()]);
   _schedule[_week][_getWeekDay()].forEach((k, v) => {
-        if (v[1] != null) {v.add(k), tomorrow.add(v)}
+        if (v[1] != "null") {v.add(k), tomorrow.add(v)}
       });
   if (tomorrow.isNotEmpty) {
     tomorrowScheduleTitle = "明天的";
@@ -56,4 +61,5 @@ initTomorrowSchedule() {
     tomorrowScheduleTitle = "明天没课嗷";
     if (todayScheduleTitle == "今天没课") tomorrowScheduleTitle = "明天也没课🤣";
   }
+  print("initTomorrowSchedule End");
 }

@@ -25,6 +25,7 @@ Future<File> scheduleLocalSupportFile() async {
 }
 
 Future<void> writeSchedule(String str) async {
+  print("writeSchedule");
   final file = await scheduleLocalSupportFile();
   bool dirBool = await file.exists();
   if (!dirBool) {
@@ -39,6 +40,7 @@ Future<void> writeSchedule(String str) async {
 }
 
 Future<void> readSchedule() async {
+  print("readSchedule");
   final file = await scheduleLocalSupportFile();
   bool dirBool = await file.exists();
   if (!dirBool) {
@@ -46,12 +48,11 @@ Future<void> readSchedule() async {
   }
   try {
     final result = await file.readAsString();
-    Map _schedule = jsonDecode(result);
-    if (_schedule.length == 20) {
+    if (result.length>0) {
       schedule = jsonDecode(result);
       print("readSchedule End");
     } else {
-      initSchedule();
+      await initSchedule();
     }
   } catch (e) {
     print(e);
@@ -64,6 +65,7 @@ Future<File> configLocalSupportFile() async {
 }
 
 Future<void> writeConfig(String week) async {
+  print("writeConfig");
   writeData["time"] = "${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}";
   writeData["week"] = week;
   String str = jsonEncode(writeData);
@@ -75,13 +77,14 @@ Future<void> writeConfig(String week) async {
   try {
     await file.writeAsString(str);
     print("writeConfig End");
-    readConfig();
+    await readConfig();
   } catch (e) {
     print(e);
   }
 }
 
 Future<void> readConfig() async {
+  print("readConfig");
   final file = await configLocalSupportFile();
   bool dirBool = await file.exists();
   if (!dirBool) {

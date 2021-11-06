@@ -13,6 +13,7 @@ import '../data.dart';
 
 Future<void> getWeek() async {
   try {
+    print("getWeek");
     var response = await get(Global.getWeekUrl);
     dom.Document document = parse(gbk.decode(response.bodyBytes));
     String weekHtml = document.querySelector("#date p span")!.innerHtml.trim();
