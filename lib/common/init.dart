@@ -40,7 +40,7 @@ initTomorrowSchedule() {
   List tomorrow = [];
   String _getWeekDay() {
     if (DateTime.now().weekday <= 6) {
-      return (DateTime.now().weekday).toString();
+      return (DateTime.now().weekday + 1).toString();
     } else {
       return "1";
     }
@@ -54,6 +54,6 @@ initTomorrowSchedule() {
     tomorrowSchedule = tomorrow;
   } else {
     tomorrowScheduleTitle = "明天没课嗷";
-    if(todayScheduleTitle == "今天没课")tomorrowScheduleTitle = "明天也没课🤣";
+    if (todayScheduleTitle == "今天没课") tomorrowScheduleTitle = "明天也没课🤣";
   }
 }

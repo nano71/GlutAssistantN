@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:glutnnbox/config.dart';
 
-Widget indexZeroAppBar = SliverAppBar(
+Widget homeTopBar = SliverAppBar(
   pinned: true,
   collapsedHeight: 56.00,
   primary: true,
@@ -10,6 +10,7 @@ Widget indexZeroAppBar = SliverAppBar(
   stretch: true,
   expandedHeight: 125.0,
   elevation: 0.3,
+  automaticallyImplyLeading: false,
   flexibleSpace: FlexibleSpaceBar(
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -26,14 +27,14 @@ Widget indexZeroAppBar = SliverAppBar(
       titlePadding: const EdgeInsets.fromLTRB(16, 0, 16, 12)),
 );
 
-class PageControl extends StatefulWidget {
-  const PageControl({Key? key}) : super(key: key);
+class BottomNavBar extends StatefulWidget {
+  const BottomNavBar({Key? key}) : super(key: key);
 
   @override
-  BottomNavBar createState() => BottomNavBar();
+  BottomNavBarState createState() => BottomNavBarState();
 }
 
-class BottomNavBar extends State<PageControl> {
+class BottomNavBarState extends State<BottomNavBar> {
   @override
   Widget build(BuildContext context) {
     return CupertinoTabBar(
@@ -55,7 +56,6 @@ class BottomNavBar extends State<PageControl> {
             Global.pageControl.jumpToPage(index);
             Global.pageIndex = index;
             print(Global.pageIndex);
-
           }
         });
       },
