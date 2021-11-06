@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:glutnnbox/common/io.dart';
-import 'package:glutnnbox/get/get.dart';
 
-import '../config.dart';
+import '../data.dart';
 
 class ToDayCourse extends StatefulWidget {
   const ToDayCourse({Key? key}) : super(key: key);
@@ -19,9 +17,6 @@ class TomorrowCourse extends StatefulWidget {
 }
 
 class ToDayCourseList extends State<ToDayCourse> {
-  Map _schedule = {};
-  var toDay = [];
-  String _week = Global.writeData["week"];
   final List _startTimeList = [
     [8, 40],
     [9, 25],
@@ -52,42 +47,6 @@ class ToDayCourseList extends State<ToDayCourse> {
   @override
   void initState() {
     super.initState();
-    _getSchedule();
-  }
-
-  void _getSchedule() async {
-    _next(Map value) {
-      if (value["message"] != "fail") {
-        setState(() {
-          _schedule = value;
-        });
-        _getWeek();
-      } else {
-        print(value["message"]);
-      }
-    }
-
-    await readSchedule().then((Map value) => _next(value));
-  }
-
-  void _getWeek() async {
-    // await getWeek().then((int day) => setState(() => _week = day.toString()));
-    _listInit();
-  }
-
-  _listInit() {
-    _schedule[_week][DateTime.now().weekday.toString()].forEach((k, v) => {
-          if (v[1] != null) {v.add(k), toDay.add(v)}
-        });
-    if (toDay.isNotEmpty) {
-      setState(() {
-        Global.todaySchedule = true;
-      });
-    } else {
-      setState(() {
-        Global.todaySchedule = false;
-      });
-    }
   }
 
   List _getStartTime(index) {
@@ -158,7 +117,7 @@ class ToDayCourseList extends State<ToDayCourse> {
                   Container(
                     margin: EdgeInsets.fromLTRB(0, 0, 8, 0),
                     child: Icon(
-                      _icon(_getStartTime(int.parse(toDay[index][3]))[3]),
+                      _icon(_getStartTime(int.parse(todaySchedule[index][3]))[3]),
                       color: Colors.blue,
                     ),
                   ),
@@ -168,12 +127,12 @@ class ToDayCourseList extends State<ToDayCourse> {
                     children: [
                       Row(
                         children: [
-                          Text(toDay[index][2],
+                          Text(todaySchedule[index][2],
                               style: const TextStyle(
                                   decoration: TextDecoration.none,
                                   fontSize: 14,
                                   color: Color(0xff333333))),
-                          Text(toDay[index][0],
+                          Text(todaySchedule[index][0],
                               style: const TextStyle(
                                   decoration: TextDecoration.none,
                                   fontSize: 16,
@@ -182,12 +141,12 @@ class ToDayCourseList extends State<ToDayCourse> {
                       ),
                       Row(
                         children: [
-                          Text('第${toDay[index][3]}节 | ',
+                          Text('第${todaySchedule[index][3]}节 | ',
                               style: const TextStyle(
                                   decoration: TextDecoration.none,
                                   fontSize: 12,
                                   color: Color(0xff999999))),
-                          Text(toDay[index][1],
+                          Text(todaySchedule[index][1],
                               style: const TextStyle(
                                   decoration: TextDecoration.none,
                                   fontSize: 12,
@@ -203,70 +162,22 @@ class ToDayCourseList extends State<ToDayCourse> {
                 children: [
                   Align(
                     alignment: Alignment.centerRight,
-                    child: Text(_timeText(_getStartTime(int.parse(toDay[index][3]))),
+                    child: Text(_timeText(_getStartTime(int.parse(todaySchedule[index][3]))),
                         style: const TextStyle(
                             decoration: TextDecoration.none, fontSize: 14, color: Colors.red)),
                   )
                 ],
               ),
             ]));
-      }, childCount: toDay.length),
+      }, childCount: todaySchedule.length),
     );
   }
 }
 
 class TomorrowCourseList extends State<TomorrowCourse> {
-  Map _schedule = {};
-  var tomorrow = [];
-  String _week = Global.writeData["week"];
-
   @override
   void initState() {
     super.initState();
-    _getSchedule();
-  }
-
-  void _getSchedule() async {
-    _next(Map value) {
-      if (value["message"] != "fail") {
-        setState(() {
-          _schedule = value;
-        });
-        _getWeek();
-      } else {
-        print(value["message"]);
-      }
-    }
-
-    await readSchedule().then((Map value) => _next(value));
-  }
-
-  void _getWeek() async {
-    // await getWeek().then((int day) => setState(() => _week = day.toString()));
-    _listInit();
-  }
-
-  String _getWeekDay() {
-    if (DateTime.now().weekday <= 6) {
-      return (DateTime.now().weekday).toString();
-    } else {
-      return "1";
-    }
-  }
-
-  _listInit() {
-    _schedule[_week][_getWeekDay()].forEach((k, v) => {
-          if (v[1] != null) {v.add(k), tomorrow.add(v)}
-        });
-    if (tomorrow.isNotEmpty) {
-      setState(() {
-        Global.tomorrowSchedule = true;
-      });
-    } else {
-      setState(() {
-        Global.tomorrowSchedule = false;
-      });
-    }
   }
 
   @override
@@ -286,12 +197,12 @@ class TomorrowCourseList extends State<TomorrowCourse> {
                 children: [
                   Row(
                     children: [
-                      Text(tomorrow[index][2],
+                      Text(tomorrowSchedule[index][2],
                           style: const TextStyle(
                               decoration: TextDecoration.none,
                               fontSize: 14,
                               color: Color(0xff333333))),
-                      Text(tomorrow[index][0],
+                      Text(tomorrowSchedule[index][0],
                           style: const TextStyle(
                               decoration: TextDecoration.none,
                               fontSize: 16,
@@ -300,12 +211,12 @@ class TomorrowCourseList extends State<TomorrowCourse> {
                   ),
                   Row(
                     children: [
-                      Text('第${tomorrow[index][3]}节' '|',
+                      Text('第${tomorrowSchedule[index][3]}节' '|',
                           style: const TextStyle(
                               decoration: TextDecoration.none,
                               fontSize: 12,
                               color: Color(0xff999999))),
-                      Text(tomorrow[index][1],
+                      Text(tomorrowSchedule[index][1],
                           style: const TextStyle(
                               decoration: TextDecoration.none,
                               fontSize: 12,
@@ -318,7 +229,7 @@ class TomorrowCourseList extends State<TomorrowCourse> {
                   style: TextStyle(
                       decoration: TextDecoration.none, fontSize: 12, color: Color(0xff333333))),
             ]));
-      }, childCount: tomorrow.length),
+      }, childCount: tomorrowSchedule.length),
     );
   }
 }

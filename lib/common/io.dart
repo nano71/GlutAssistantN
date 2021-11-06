@@ -1,9 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:glutnnbox/common/init.dart';
 import 'package:path_provider/path_provider.dart';
 
-import '../config.dart';
+import '../data.dart';
 
 // /// 获取文档目录文件
 // Future<File> _getLocalDocumentFile() async {
@@ -24,21 +25,35 @@ Future<File> scheduleLocalSupportFile() async {
 
 Future<void> writeSchedule(String str) async {
   final file = await scheduleLocalSupportFile();
+  bool dirBool = await file.exists();
+  if (!dirBool) {
+    await file.create(recursive: true);
+  }
   try {
     await file.writeAsString(str);
+    print("writeSchedule End");
   } catch (e) {
-    await file.create(recursive: true);
+    print(e);
   }
 }
 
-Future<Map> readSchedule() async {
+Future<void> readSchedule() async {
   final file = await scheduleLocalSupportFile();
+  bool dirBool = await file.exists();
+  if (!dirBool) {
+    await file.create(recursive: true);
+  }
   try {
     final result = await file.readAsString();
-    return jsonDecode(result);
+    Map _schedule = jsonDecode(result);
+    if (_schedule.length == 20) {
+      schedule = jsonDecode(result);
+      print("readSchedule End");
+    } else {
+      initSchedule();
+    }
   } catch (e) {
-    await file.create(recursive: true);
-    return jsonDecode('{"message":"fail"}');
+    print(e);
   }
 }
 
@@ -49,33 +64,41 @@ Future<File> configLocalSupportFile() async {
 
 Future<void> writeConfig(String week) async {
   print("writeConfig");
-  Global.writeData["time"] = "${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}";
-  Global.writeData["week"] = week;
-  String str = jsonEncode(Global.writeData);
+  writeData["time"] = "${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}";
+  writeData["week"] = week;
+  String str = jsonEncode(writeData);
   final file = await configLocalSupportFile();
+  bool dirBool = await file.exists();
+  if (!dirBool) {
+    await file.create(recursive: true);
+  }
   try {
     await file.writeAsString(str);
+    print("writeConfig End");
     readConfig();
   } catch (e) {
+    print(e);
+  }
+}
+
+Future<void> readConfig() async {
+  print("readConfig");
+  final file = await configLocalSupportFile();
+  bool dirBool = await file.exists();
+  if (!dirBool) {
     await file.create(recursive: true);
+  }
+  try {
+    final result = await file.readAsString();
+    writeData = jsonDecode(result);
+    List timeList = writeData["time"].split("-");
+    print("readConfig End");
+  } catch (e) {
+    print(e);
   }
 }
 
 int daysBetweenDay(DateTime a, DateTime b) {
   int v = a.millisecondsSinceEpoch - b.millisecondsSinceEpoch;
   return v ~/ 86400000;
-}
-
-Future<void> readConfig() async {
-  print("readConfig");
-  final file = await configLocalSupportFile();
-  try {
-    final result = await file.readAsString();
-    print(result);
-    Global.writeData = jsonDecode(result);
-    List timeList = Global.writeData["time"].split("-");
-    print(timeList);
-  } catch (e) {
-    await file.create(recursive: true);
-  }
 }

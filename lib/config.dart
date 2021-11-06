@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:glutnnbox/get/get.dart';
 
 class Global {
   static String appTitle = "桂工助手";
@@ -19,14 +18,5 @@ class Global {
   static Uri getScoreUrl = Uri.http(jwUrl, "/academic/manager/score/studentOwnScore.do");
   static List<String> getScheduleUrl = [jwUrl, "/academic/student/currcourse/currcourse.jsdo"];
   static List<String> codeCheckUrl = [jwUrl, "/academic/checkCaptcha.do"];
-  static Map<String, Map<String, Map<String, List>>> schedule = {};
-  static Map writeData = {
-    "time": "",
-    "week": "1",
-    "weekDay": "",
-    "username": "",
-    "password": ""
-  };
-  static bool todaySchedule = true;
-  static bool tomorrowSchedule = true;
+
 }

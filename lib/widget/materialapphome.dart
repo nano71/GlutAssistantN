@@ -12,6 +12,7 @@ import 'package:glutnnbox/widget/appbars.dart';
 import 'package:glutnnbox/widget/sliverlist.dart';
 import 'package:http/http.dart';
 
+import '../data.dart';
 import 'homecards.dart';
 
 class MaterialAppPageBody extends StatefulWidget {
@@ -41,12 +42,12 @@ class MaterialAppBody extends State<MaterialAppPageBody> {
   Uint8List _codeImgSrc = const Base64Decoder().convert(
       "iVBORw0KGgoAAAANSUhEUgAAAEgAAAAeCAYAAACPOlitAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAHYcAAB2HAY/l8WUAAABYSURBVGhD7dChAcAgEMDAb/ffGSpqIQvcmfg86zMcvX85MCgYFAwKBgWDgkHBoGBQMCgYFAwKBgWDgkHBoGBQMCgYFAwKBgWDgkHBoGBQMCgYFAwKBl3NbAiZBDiX3e/AAAAAAElFTkSuQmCC");
   Map<String, String> headers = {"cookie": ""};
-  int _week = 0;
+  int _week = int.parse(writeData["week"]);
 
   @override
   void initState() {
     super.initState();
-    _getCode();
+    // _getCode();
   }
 
   void _getCode() async {
@@ -109,34 +110,21 @@ class MaterialAppBody extends State<MaterialAppPageBody> {
   void _getWeek() async {
     setState(() {
       _textFieldController.text = "";
-      _week = int.parse(Global.writeData["week"]);
+      _week = int.parse(writeData["week"]);
     });
-    print("_getWeek...");
-
+    // print("_getWeek...");
     getSchedule();
   }
 
-  String _tomorrowText() {
-    return Global.tomorrowSchedule ? "明天" : "明天没课哦";
-  }
-
-  String _todayText() {
-    return Global.todaySchedule ? "今天的" : "今天没课哦";
-  }
-
   TextStyle _tomorrowAndTodayTextStyle() {
-    return const TextStyle(fontSize: 14, color: Colors.black54, decoration: TextDecoration.none);
+    return const TextStyle(fontSize: 14, color: Colors.black, decoration: TextDecoration.none);
   }
 
   @override
   Widget build(BuildContext context) {
-    return PageView(physics: const NeverScrollableScrollPhysics(), controller: Global.pageControl,
-        // onPageChanged: (int index) {
-        //   setState(() {
-        //     if (Global.pageIndex != index) Global.pageIndex = index;
-        //   });
-        //   print(Global.pageIndex);
-        // },
+    return PageView(
+        physics: const NeverScrollableScrollPhysics(),
+        controller: Global.pageControl,
         children: [
           Container(
               color: Colors.white,
@@ -182,7 +170,7 @@ class MaterialAppBody extends State<MaterialAppPageBody> {
                           Container(
                               child: Align(
                             alignment: Alignment.centerLeft,
-                            child: Text(_todayText(), style: _tomorrowAndTodayTextStyle()),
+                            child: Text(todayScheduleTitle, style: _tomorrowAndTodayTextStyle()),
                           ))
                         ]),
                   )),
@@ -192,7 +180,7 @@ class MaterialAppBody extends State<MaterialAppPageBody> {
                     padding: EdgeInsets.fromLTRB(16, 16, 16, 16),
                     child: Align(
                         alignment: Alignment.centerLeft,
-                        child: Text(_tomorrowText(), style: _tomorrowAndTodayTextStyle())),
+                        child: Text(tomorrowScheduleTitle, style: _tomorrowAndTodayTextStyle())),
                   )),
                   TomorrowCourse(),
                 ],

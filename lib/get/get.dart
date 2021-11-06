@@ -1,3 +1,4 @@
+import 'package:http/http.dart';
 import 'dart:convert';
 
 import 'package:gbk2utf8/gbk2utf8.dart';
@@ -5,15 +6,13 @@ import 'package:glutnnbox/common/cookie.dart';
 import 'package:glutnnbox/common/io.dart';
 import 'package:html/dom.dart' as dom;
 import 'package:html/parser.dart';
-import 'package:http/http.dart';
 
 import '../config.dart';
+import '../data.dart';
 
 Future<void> getWeek() async {
   try {
-    print("getWeek...");
-    var response = await get(Global.getWeekUrl, headers: {"cookie": ''})
-        .timeout(const Duration(milliseconds: 6000));
+    var response = await get(Global.getWeekUrl);
     dom.Document document = parse(gbk.decode(response.bodyBytes));
     String weekHtml = document.querySelector("#date p span")!.innerHtml.trim();
     int week =
@@ -26,7 +25,7 @@ Future<void> getWeek() async {
 
 getSchedule() async {
   print("getSchedule...");
-  Map<String, Map<String, Map<String, List>>> _schedule = {};
+  Map _schedule = schedule;
   Map<String, String> _weekList = {
     "星期一": "1",
     "星期二": "2",
@@ -46,15 +45,6 @@ getSchedule() async {
     dom.Document document = parse(gbk.decode(response.bodyBytes));
     var list = document.querySelectorAll(".infolist_common");
     num listLength = document.querySelectorAll(".infolist_common").length - 23;
-    for (var i = 1; i < 21; i++) {
-      _schedule[i.toString()] = {};
-      for (var j = 1; j < 8; j++) {
-        _schedule[i.toString()]?[(j - 1).toString()] = {};
-        for (var k = 1; k < 12; k++) {
-          _schedule[i.toString()]?[(j - 1).toString()]?[k.toString()] = [null, null, null];
-        }
-      }
-    }
     for (var i = 0; i < listLength; i++) {
       for (var j = 0; j < list[i].querySelectorAll("table.none>tbody>tr").length; j++) {
         //课节
