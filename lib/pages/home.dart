@@ -109,7 +109,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
         Scaffold.of(context).showSnackBar(jwSnackBar(false, "你这也太快了吧..."));
       } else if (_goTopInitCount == 1) {
         Scaffold.of(context).removeCurrentSnackBar();
-        Scaffold.of(context).showSnackBar(jwSnackBar(true, "已经刷新..."));
+        Scaffold.of(context).showSnackBar(jwSnackBar(true, "开始刷新..."));
       }
       _scrollController.animateTo(
         _scrollController.position.minScrollExtent,
