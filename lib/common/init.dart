@@ -22,9 +22,11 @@ initSchedule() async {
 
 initTodaySchedule() {
   print("initTodaySchedule");
+  print(writeData["week"]);
   final String _week = writeData["week"].toString();
   Map _schedule = schedule;
   List toDay = [];
+
   _schedule[_week][DateTime.now().weekday.toString()].forEach((k, v) => {
         if (v[1] != "null") {v.add(k), toDay.add(v)}
       });
@@ -50,7 +52,6 @@ initTomorrowSchedule() {
     }
   }
 
-  print(_schedule[_week][_getWeekDay()]);
   _schedule[_week][_getWeekDay()].forEach((k, v) => {
         if (v[1] != "null") {v.add(k), tomorrow.add(v)}
       });

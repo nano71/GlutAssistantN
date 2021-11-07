@@ -20,15 +20,11 @@ class HomeCardState extends State<HomeCard> with AutomaticKeepAliveClientMixin {
   }
 
   String _weekProgressText() {
-    return ((_week * 5) + (DateTime
-        .now()
-        .weekday / 7 * 5)).toInt().toString() + "%";
+    return ((_week * 5) + (DateTime.now().weekday / 7 * 5)).toInt().toString() + "%";
   }
 
   double _weekProgressDouble() {
-    return (_week * 5 / 100) + (DateTime
-        .now()
-        .weekday / 7 * 5 / 100);
+    return (_week * 5 / 100) + (DateTime.now().weekday / 7 * 5 / 100);
   }
 
   String _weekText() {
@@ -90,7 +86,7 @@ class HomeCardState extends State<HomeCard> with AutomaticKeepAliveClientMixin {
             child: Text(
               "第$_week周",
               style:
-              const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w900),
+                  const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w900),
             ),
           ),
         ),
@@ -103,7 +99,7 @@ class HomeCardState extends State<HomeCard> with AutomaticKeepAliveClientMixin {
         Align(
             alignment: Alignment.centerLeft,
             child: Container(
-              // height: 40,
+                // height: 40,
                 width: 60,
                 // decoration: const BoxDecoration(
                 //   borderRadius: BorderRadius.all(Radius.circular(6.0)),
@@ -111,10 +107,7 @@ class HomeCardState extends State<HomeCard> with AutomaticKeepAliveClientMixin {
                 // ),
                 margin: const EdgeInsets.fromLTRB(12, 0, 0, 0),
                 child: Center(
-                    child: Text(DateTime
-                        .now()
-                        .weekday
-                        .toString(),
+                    child: Text(DateTime.now().weekday.toString(),
                         style: const TextStyle(
                             color: Colors.white, fontWeight: FontWeight.w900, fontSize: 14)))))
       ]),
@@ -125,51 +118,47 @@ class HomeCardState extends State<HomeCard> with AutomaticKeepAliveClientMixin {
   bool get wantKeepAlive => true;
 }
 
-Widget homeCard2(double width) {
-  return Container(
-    margin: const EdgeInsets.fromLTRB(4, 8, 4, 16),
-    height: 100,
-    width: width / 3 - 48 / 3,
-    decoration: HomeCardsState.cardDecoration,
-    child: Stack(children: [
-      Align(
-          child: Container(
-              margin: HomeCardsState.iconMargin,
-              child: Icon(
-                HomeCardsState.icons[1],
-                color: Colors.blue,
-                size: HomeCardsState.iconSize,
-              ))),
-      Align(
-          child: Container(
-              margin: HomeCardsState.textMargin,
-              child: Text(HomeCardsState.iconTexts[1], style: HomeCardsState.textStyle)))
-    ]),
-  );
-}
+Widget homeCard2 = Stack(
+  children: [
+    Align(
+      child: Container(
+        margin: HomeCardsState.iconMargin,
+        child: Icon(
+          HomeCardsState.icons[1],
+          color: Colors.blue,
+          size: HomeCardsState.iconSize,
+        ),
+      ),
+    ),
+    Align(
+      child: Container(
+        margin: HomeCardsState.textMargin,
+        child: Text(HomeCardsState.iconTexts[1], style: HomeCardsState.textStyle),
+      ),
+    ),
+  ],
+);
 
-Widget homeCard3(double width) {
-  return Container(
-    margin: const EdgeInsets.fromLTRB(4, 8, 0, 16),
-    height: 100,
-    width: width / 3 - 48 / 3,
-    decoration: HomeCardsState.cardDecoration,
-    child: Stack(children: [
-      Align(
-          child: Container(
-              margin: HomeCardsState.iconMargin,
-              child: Icon(
-                HomeCardsState.icons[2],
-                color: Colors.blue,
-                size: HomeCardsState.iconSize,
-              ))),
-      Align(
-          child: Container(
-              margin: HomeCardsState.textMargin,
-              child: Text(HomeCardsState.iconTexts[2], style: HomeCardsState.textStyle)))
-    ]),
-  );
-}
+Widget homeCard3 = Stack(
+  children: [
+    Align(
+      child: Container(
+        margin: HomeCardsState.iconMargin,
+        child: Icon(
+          HomeCardsState.icons[2],
+          color: Colors.blue,
+          size: HomeCardsState.iconSize,
+        ),
+      ),
+    ),
+    Align(
+      child: Container(
+        margin: HomeCardsState.textMargin,
+        child: Text(HomeCardsState.iconTexts[2], style: HomeCardsState.textStyle),
+      ),
+    ),
+  ],
+);
 
 class HomeCardsState {
   static double iconSize = 36;
@@ -178,8 +167,9 @@ class HomeCardsState {
   static EdgeInsetsGeometry textMargin = const EdgeInsets.fromLTRB(0, 44, 0, 0);
   static EdgeInsetsGeometry iconMargin = const EdgeInsets.fromLTRB(0, 0, 0, 32);
   static Decoration? cardDecoration = const BoxDecoration(
-      borderRadius: BorderRadius.all(Radius.circular(6.0)),
-      color: Color.fromARGB(42, 199, 229, 253));
+    borderRadius: BorderRadius.all(Radius.circular(6.0)),
+    color: Color.fromARGB(42, 199, 229, 253),
+  );
   static double width = double.infinity;
   static TextStyle textStyle = const TextStyle(color: Colors.black54);
 }

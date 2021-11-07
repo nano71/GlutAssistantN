@@ -12,7 +12,7 @@ class Index extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return   const Scaffold(
+    return const Scaffold(
       backgroundColor: Colors.white,
       body: Body(),
       bottomNavigationBar: BottomNavBar(),
@@ -20,18 +20,8 @@ class Index extends StatelessWidget {
   }
 }
 
-class Body extends StatefulWidget {
+class Body extends StatelessWidget {
   const Body({Key? key}) : super(key: key);
-
-  @override
-  BodyState createState() => BodyState();
-}
-
-class BodyState extends State<Body> {
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {

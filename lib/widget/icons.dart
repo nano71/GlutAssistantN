@@ -1,16 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class IconWidget extends StatefulWidget {
+
+
+class RefreshIconWidgetDynamic extends StatefulWidget {
   final Key key;
-
-  IconWidget(this.key);
-
+  RefreshIconWidgetDynamic(this.key);
   @override
-  State<StatefulWidget> createState() => IconWidgetState();
+  State<StatefulWidget> createState() => RefreshIconWidgetDynamicState();
 }
 
-class IconWidgetState extends State<IconWidget> {
+class RefreshIconWidgetDynamicState extends State<RefreshIconWidgetDynamic> {
   double _angle = 0.0;
 
   @override

@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:glutnnbox/common/cookie.dart';
+import 'package:glutnnbox/common/init.dart';
 import 'package:glutnnbox/get/get.dart';
 import 'package:glutnnbox/login/login.dart';
 import 'package:glutnnbox/widget/bars.dart';
@@ -24,41 +25,72 @@ class HomePage extends StatefulWidget {
   HomePageState createState() => HomePageState();
 }
 
-class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin {
+class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   late Animation<double> animation;
   late AnimationController controller;
-
   final ScrollController _scrollController = ScrollController();
-  GlobalKey<IconWidgetState> iconKey = GlobalKey();
+  GlobalKey<RefreshIconWidgetDynamicState> iconKey = GlobalKey();
   bool _timeOutBool = true;
   double offset_ = 0.0;
+  late AnimationController _animationControllerForHomeCards1;
+  late AnimationController _animationControllerForHomeCards2;
+  late AnimationController _animationControllerForHomeCards3;
+  late Animation _animationForHomeCards1;
+  late Animation _animationForHomeCards2;
+  late Animation _animationForHomeCards3;
+  ColorTween homeCardsColorTween = ColorTween(
+      begin: const Color.fromARGB(42, 199, 229, 253),
+      end: const Color.fromARGB(110, 199, 229, 253));
 
   @override
   void initState() {
     super.initState();
     _getCode();
+    _animationControllerForHomeCards1 = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 150),
+    )..addListener(() {
+        setState(() {});
+      });
+    _animationControllerForHomeCards2 = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 150),
+    )..addListener(() {
+        setState(() {});
+      });
+    _animationControllerForHomeCards3 = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 150),
+    )..addListener(() {
+        setState(() {});
+      });
 
-    _scrollController.addListener(() {
-      if (_timeOutBool) {
-        int _offset = _scrollController.position.pixels.toInt();
-        print(_offset);
-        _offset < 0 ? iconKey.currentState!.onPressed((_offset / 25.0).abs()) : "";
-        if (_offset < 0) {
-          if ((_offset / 25.0).abs() >= 6.0) {
-            final double __offset = (_offset / 25.0).abs();
-            if (__offset == (_offset / 25.0).abs() || __offset + 0.25 < (_offset / 25.0).abs()) {
-              Future.delayed(const Duration(milliseconds: 200), () {
-                if (_timeOutBool) {
-                  offset_ = (_offset / 25.0).abs();
-                  _goTop();
-                }
-                _timeOutBool = false;
-              });
-            }
+    _animationForHomeCards1 = homeCardsColorTween.animate(_animationControllerForHomeCards1);
+    _animationForHomeCards2 = homeCardsColorTween.animate(_animationControllerForHomeCards2);
+    _animationForHomeCards3 = homeCardsColorTween.animate(_animationControllerForHomeCards3);
+
+    _scrollController.addListener(_scrollControllerListener);
+  }
+
+  void _scrollControllerListener() {
+    if (_timeOutBool) {
+      int _offset = _scrollController.position.pixels.toInt();
+      _offset < 0 ? iconKey.currentState!.onPressed((_offset / 25.0).abs()) : "";
+      if (_offset < 0) {
+        if ((_offset / 25.0).abs() >= 6.0) {
+          final double __offset = (_offset / 25.0).abs();
+          if (__offset == (_offset / 25.0).abs() || __offset + 0.25 < (_offset / 25.0).abs()) {
+            Future.delayed(const Duration(milliseconds: 200), () {
+              if (_timeOutBool) {
+                offset_ = (_offset / 25.0).abs();
+                _goTop();
+              }
+              _timeOutBool = false;
+            });
           }
         }
       }
-    });
+    }
   }
 
   void _goTop() async {
@@ -66,8 +98,11 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin 
     Scaffold.of(context).removeCurrentSnackBar();
     Scaffold.of(context).showSnackBar(jwSnackBar(true, "刷新"));
     int _count = 0;
-    const period = const Duration(milliseconds: 10);
-    print(DateTime.now().toString());
+    const period = Duration(milliseconds: 10);
+    initTodaySchedule();
+    initTomorrowSchedule();
+    todayCourseListKey.currentState!.reSate();
+    tomorrowCourseListKey.currentState!.reSate();
     Timer.periodic(period, (timer) {
       // print(DateTime.now().toString());
       _count++;
@@ -192,61 +227,120 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin 
               verticalDirection: VerticalDirection.down,
               textDirection: TextDirection.ltr,
               children: [
-// InkWell(
-//   child: _codeImgSrc.length > 1
-//       ? Image.memory(_codeImgSrc, height: 25)
-//       : Container(
-//           height: 25,
-//         ),
-//   onTap: () {
-//     _getCode();
-//   },
-// ),
-// TextField(
-//   controller: _textFieldController,
-// ),
-// FlatButton(
-//   child: const Text('提交'),
-//   onPressed: () {
-//     if (Global.logined) {
-//       _getWeek();
-//     } else {
-//       _codeCheck();
-//     }
-//   },
-// ),
+                InkWell(
+                  child: _codeImgSrc.length > 1
+                      ? Image.memory(_codeImgSrc, height: 25)
+                      : Container(
+                          height: 25,
+                        ),
+                  onTap: () {
+                    _getCode();
+                  },
+                ),
+                TextField(
+                  controller: _textFieldController,
+                ),
+                InkWell(
+                  child: const Text('提交'),
+                  onTap: () {
+                    if (Global.logined) {
+                      _getWeek();
+                    } else {
+                      _codeCheck();
+                    }
+                  },
+                ),
                 const HomeCard(),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   mainAxisSize: MainAxisSize.max,
                   children: [
-                    Container(
-                      margin: const EdgeInsets.fromLTRB(0, 8, 4, 16),
-                      height: 100,
-                      width: width / 3 - 48 / 3,
-                      decoration: HomeCardsState.cardDecoration,
-                      child: Stack(
-                        children: [
-                          Align(
-                            child: Container(
-                              margin: HomeCardsState.iconMargin,
-                              child: IconWidget(iconKey),
-                            ),
-                          ),
-                          Align(
-                            child: Container(
-                              margin: HomeCardsState.textMargin,
-                              child: Text(
-                                HomeCardsState.iconTexts[0],
-                                style: HomeCardsState.textStyle,
+                    GestureDetector(
+                      onTapCancel: () {
+                        _animationControllerForHomeCards1.reverse();
+                      },
+                      onTapUp: (d) {
+                        Future.delayed(const Duration(milliseconds: 100), () {
+                          _goTop();
+                          _animationControllerForHomeCards1.reverse();
+                        });
+                      },
+                      onTapDown: (d) {
+                        _animationControllerForHomeCards1.forward();
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.fromLTRB(0, 8, 4, 16),
+                        height: 100,
+                        width: width / 3 - 48 / 3,
+                        decoration: BoxDecoration(
+                            borderRadius: const BorderRadius.all(Radius.circular(6.0)),
+                            color: _animationForHomeCards1.value),
+                        child: Stack(
+                          children: [
+                            Align(
+                              child: Container(
+                                margin: HomeCardsState.iconMargin,
+                                child: RefreshIconWidgetDynamic(iconKey),
                               ),
                             ),
-                          ),
-                        ],
+                            Align(
+                              child: Container(
+                                margin: HomeCardsState.textMargin,
+                                child: Text(
+                                  HomeCardsState.iconTexts[0],
+                                  style: HomeCardsState.textStyle,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                    homeCard2(width),
-                    homeCard3(width),
+                    GestureDetector(
+                      onTapCancel: () {
+                        _animationControllerForHomeCards2.reverse();
+                      },
+                      onTapUp: (d) {
+                        Future.delayed(const Duration(milliseconds: 100), () {
+                          _animationControllerForHomeCards2.reverse();
+                        });
+                      },
+                      onTapDown: (d) {
+                        _animationControllerForHomeCards2.forward();
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.fromLTRB(4, 8, 4, 16),
+                        height: 100,
+                        width: width / 3 - 48 / 3,
+                        decoration: BoxDecoration(
+                            borderRadius: const BorderRadius.all(Radius.circular(6.0)),
+                            color: _animationForHomeCards2.value),
+                        child: homeCard2,
+                      ),
+                    ),
+                    GestureDetector(
+                      onTapCancel: () {
+                        _animationControllerForHomeCards3.reverse();
+                      },
+                      onTapUp: (d) {
+                        Future.delayed(const Duration(milliseconds: 100), () {
+                          _animationControllerForHomeCards3.reverse();
+                        });
+                      },
+                      onTapDown: (d) {
+                        print(9);
+                        _animationControllerForHomeCards3.forward();
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.fromLTRB(4, 8, 0, 16),
+                        height: 100,
+                        width: width / 3 - 48 / 3,
+                        decoration: BoxDecoration(
+                            borderRadius: const BorderRadius.all(Radius.circular(6.0)),
+                            color: _animationForHomeCards3.value),
+                        child: homeCard3,
+                      ),
+                    ),
                   ],
                 ),
                 Align(
@@ -256,7 +350,9 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin 
               ],
             ),
           )),
-          const ToDayCourse(),
+          TodayCourseList(
+            key: todayCourseListKey,
+          ),
           SliverToBoxAdapter(
               child: Container(
             padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
@@ -264,7 +360,9 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin 
                 alignment: Alignment.centerLeft,
                 child: Text(tomorrowScheduleTitle, style: _tomorrowAndTodayTextStyle())),
           )),
-          const TomorrowCourse(),
+          TomorrowCourseList(
+            key: tomorrowCourseListKey,
+          ),
         ],
       ),
     );
