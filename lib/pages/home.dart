@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
@@ -45,7 +44,6 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   int _goTopInitCount = 0;
   bool _bk = true;
   Timer? _time;
-  Timer? _time2;
 
   @override
   void initState() {
@@ -120,6 +118,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
       print(_time);
       _time = Timer(const Duration(seconds: 5), () {
         print("init");
+        getWeek();
         initTodaySchedule();
         initTomorrowSchedule();
         todayCourseListKey.currentState!.reSate();
@@ -130,16 +129,11 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
       int _count = 0;
       const period = Duration(milliseconds: 10);
-      int next(int min, int max) {
-        int res = min + Random().nextInt(max - min + 1);
-        return res;
-      }
-
       Timer.periodic(period, (timer) {
         _count++;
         offset_ += 0.15;
         iconKey.currentState!.onPressed(offset_);
-        if (_count >= next(100, 200)) {
+        if (_count >= randomInt(100, 200)) {
           timer.cancel();
         }
       });

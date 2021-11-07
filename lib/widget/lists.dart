@@ -3,13 +3,7 @@ import 'package:flutter/widgets.dart';
 
 import '../data.dart';
 
-String _courseText(String value) {
-  if (value.contains("毛泽东思想和中国特色社会主义理论体系概论")) {
-    return value.replaceAll("毛泽东思想和中国特色社会主义理论体系概论", "毛概");
-  }
 
-  return value;
-}
 
 List _getStartTime(index) {
   var startH = startTimeList[index][0];
@@ -181,7 +175,7 @@ class TodayCourseListState extends State<TodayCourseList> {
                           Text(_todaySchedule[index][2] + " ",
                               style: TextStyle(
                                   decoration: TextDecoration.none, color: _textColorsTop(index))),
-                          Text(_courseText(_todaySchedule[index][0]),
+                          Text(courseLongText2ShortName(_todaySchedule[index][0]),
                               style: TextStyle(
                                   decoration: TextDecoration.none, color: _textColorsTop(index))),
                         ],
@@ -273,7 +267,7 @@ class TomorrowCourseListState extends State<TomorrowCourseList> {
                                   color: (_tomorrowSchedule[index][3] == "1" && index == 0
                                       ? Colors.orange[900]
                                       : const Color(0xff333333)))),
-                          Text(_courseText(_tomorrowSchedule[index][0]),
+                          Text(courseLongText2ShortName(_tomorrowSchedule[index][0]),
                               style: TextStyle(
                                   decoration: TextDecoration.none,
                                   fontSize: 16,

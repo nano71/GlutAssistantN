@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:gbk2utf8/gbk2utf8.dart';
@@ -14,13 +16,19 @@ import '../data.dart';
 Future<void> getWeek() async {
   try {
     print("getWeek");
-    var response = await get(Global.getWeekUrl);
+    var response = await get(Global.getWeekUrl).timeout(const Duration(seconds: 3));
     dom.Document document = parse(gbk.decode(response.bodyBytes));
     String weekHtml = document.querySelector("#date p span")!.innerHtml.trim();
     int week =
         int.parse(weekHtml.substring(weekHtml.indexOf("第") + 1, weekHtml.indexOf("周")).trim());
     await writeConfig(week.toString());
-  } catch (e) {
+  } on TimeoutException catch (e) {
+    print(e);
+    print("超时");
+    readConfig();
+  } on SocketException catch (e) {
+    print(e);
+    print("超时");
     readConfig();
   }
 }
@@ -37,13 +45,12 @@ Future<void> getSchedule() async {
     "星期六": "6",
     "星期日": "7"
   };
-  Uri _url =
-      Uri.http(Global.getScheduleUrl[0], Global.getScheduleUrl[1], {"year": "41", "term": "1"});
-  var response = await get(_url, headers: {"cookie": mapCookieToString()})
-      .timeout(const Duration(milliseconds: 6000));
-  if (response.contentLength == 5175) {
-    Global.logined = false;
-  } else {
+  try {
+    Uri _url =
+        Uri.http(Global.getScheduleUrl[0], Global.getScheduleUrl[1], {"year": "41", "term": "1"});
+    var response = await get(_url, headers: {"cookie": mapCookieToString()})
+        .timeout(const Duration(seconds: 3));
+
     dom.Document document = parse(gbk.decode(response.bodyBytes));
     var list = document.querySelectorAll(".infolist_common");
     num listLength = document.querySelectorAll(".infolist_common").length - 23;
@@ -114,10 +121,11 @@ Future<void> getSchedule() async {
           }
         }
       }
-
     }
 
     writeSchedule(jsonEncode(_schedule));
+  } on SocketException catch (e) {
+    print("超时");
   }
 }
 
