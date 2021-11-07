@@ -28,6 +28,28 @@ SliverAppBar homeTopBar = SliverAppBar(
       ),
       titlePadding: const EdgeInsets.fromLTRB(16, 0, 16, 12)),
 );
+SliverAppBar mineTopBar = SliverAppBar(
+  pinned: true,
+  collapsedHeight: 56.00,
+  primary: true,
+  backgroundColor: Colors.white,
+  stretch: true,
+  expandedHeight: 125.0,
+  elevation: 0.3,
+  automaticallyImplyLeading: false,
+  flexibleSpace: FlexibleSpaceBar(
+      title: Row(
+        children:  [
+          Text(
+            (writeData["name"]!=""?"Hi! "+writeData["name"]:"请先登录教务"),
+            style: const TextStyle(
+              color: Colors.black,
+            ),
+          ),
+        ],
+      ),
+      titlePadding: const EdgeInsets.fromLTRB(16, 0, 16, 12)),
+);
 AppBar scheduleTopBar = AppBar(
   automaticallyImplyLeading: false,
   elevation: 0.3,

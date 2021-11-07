@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -11,12 +14,33 @@ class HomeCard extends StatefulWidget {
 }
 
 class HomeCardState extends State<HomeCard> with AutomaticKeepAliveClientMixin {
+  GlobalKey<CircularProgressDynamicState> indicatorKey = GlobalKey();
+  GlobalKey<TextProgressDynamicState> textKey = GlobalKey();
   final int _week = int.parse(writeData["week"]);
 
   @override
   void initState() {
     super.initState();
     // _getWeek();
+    _weekProgressAnimation();
+  }
+
+  void _weekProgressAnimation() {
+    double _count = 0.0;
+    const period = Duration(milliseconds: 10);
+    int next(int min, int max) {
+      int res = min + Random().nextInt(max - min + 1);
+      return res;
+    }
+
+    Timer.periodic(period, (timer) {
+      _count += 0.01;
+      indicatorKey.currentState!.onPressed(_count);
+      textKey.currentState!.onPressed((_count * 100).toInt());
+      if (_count >= _weekProgressDouble()) {
+        timer.cancel();
+      }
+    });
   }
 
   String _weekProgressText() {
@@ -62,14 +86,7 @@ class HomeCardState extends State<HomeCard> with AutomaticKeepAliveClientMixin {
               height: 60.0,
               //限制进度条的宽度
               width: 60,
-              child: CircularProgressIndicator(
-                  strokeWidth: 8,
-                  //0~1的浮点数，用来表示进度多少;如果 value 为 null 或空，则显示一个动画，否则显示一个定值
-                  value: _weekProgressDouble(),
-                  //背景颜色
-                  backgroundColor: const Color.fromARGB(128, 255, 255, 255),
-                  //进度颜色
-                  valueColor: const AlwaysStoppedAnimation<Color>(Colors.white)),
+              child: CircularProgressDynamic(indicatorKey),
             ),
           ),
         ),
@@ -77,7 +94,7 @@ class HomeCardState extends State<HomeCard> with AutomaticKeepAliveClientMixin {
             alignment: Alignment.centerRight,
             child: Container(
               margin: const EdgeInsets.fromLTRB(0, 0, 32, 0),
-              child: Text(_weekProgressText(), style: const TextStyle(color: Colors.white)),
+              child: TextProgressDynamic(textKey),
             )),
         Align(
           alignment: Alignment.topRight,
@@ -99,12 +116,7 @@ class HomeCardState extends State<HomeCard> with AutomaticKeepAliveClientMixin {
         Align(
             alignment: Alignment.centerLeft,
             child: Container(
-                // height: 40,
                 width: 60,
-                // decoration: const BoxDecoration(
-                //   borderRadius: BorderRadius.all(Radius.circular(6.0)),
-                //   color: Color.fromARGB(32, 0, 0, 0),
-                // ),
                 margin: const EdgeInsets.fromLTRB(12, 0, 0, 0),
                 child: Center(
                     child: Text(DateTime.now().weekday.toString(),
@@ -162,8 +174,8 @@ Widget homeCard3 = Stack(
 
 class HomeCardsState {
   static double iconSize = 36;
-  static List icons = [Icons.refresh, Icons.child_friendly, Icons.library_books_sharp];
-  static List iconTexts = ["课表刷新", "学习生涯", "我的考试"];
+  static List icons = [Icons.refresh, Icons.saved_search, Icons.library_books_sharp];
+  static List iconTexts = ["课表刷新", "教室查询", "我的考试"];
   static EdgeInsetsGeometry textMargin = const EdgeInsets.fromLTRB(0, 44, 0, 0);
   static EdgeInsetsGeometry iconMargin = const EdgeInsets.fromLTRB(0, 0, 0, 32);
   static Decoration? cardDecoration = const BoxDecoration(
@@ -172,4 +184,56 @@ class HomeCardsState {
   );
   static double width = double.infinity;
   static TextStyle textStyle = const TextStyle(color: Colors.black54);
+}
+
+class CircularProgressDynamic extends StatefulWidget {
+  final Key key;
+
+  CircularProgressDynamic(this.key);
+
+  @override
+  State<StatefulWidget> createState() => CircularProgressDynamicState();
+}
+
+class CircularProgressDynamicState extends State<CircularProgressDynamic> {
+  double _value = 0.0;
+
+  @override
+  Widget build(BuildContext context) {
+    return CircularProgressIndicator(
+      strokeWidth: 8,
+      //0~1的浮点数，用来表示进度多少;如果 value 为 null 或空，则显示一个动画，否则显示一个定值
+      value: _value,
+      //背景颜色
+      backgroundColor: const Color.fromARGB(128, 255, 255, 255),
+      //进度颜色
+      valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
+    );
+  }
+
+  void onPressed(double value) {
+    setState(() => _value = value);
+  }
+}
+
+class TextProgressDynamic extends StatefulWidget {
+  final Key key;
+
+  TextProgressDynamic(this.key);
+
+  @override
+  State<StatefulWidget> createState() => TextProgressDynamicState();
+}
+
+class TextProgressDynamicState extends State<TextProgressDynamic> {
+  int _value = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text((_value.toString() + "%"), style: const TextStyle(color: Colors.white));
+  }
+
+  void onPressed(int value) {
+    setState(() => _value = value);
+  }
 }
