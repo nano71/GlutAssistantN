@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
@@ -41,6 +42,10 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   ColorTween homeCardsColorTween = ColorTween(
       begin: const Color.fromARGB(42, 199, 229, 253),
       end: const Color.fromARGB(110, 199, 229, 253));
+  int _goTopInitCount = 0;
+  bool _bk = true;
+  Timer? _time;
+  Timer? _time2;
 
   @override
   void initState() {
@@ -75,7 +80,8 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   void _scrollControllerListener() {
     if (_timeOutBool) {
       int _offset = _scrollController.position.pixels.toInt();
-      _offset < 0 ? iconKey.currentState!.onPressed((_offset / 25.0).abs()) : "";
+
+      _offset < 0 ? iconKey.currentState!.onPressed((_offset / 25.0).abs() + offset_) : "";
       if (_offset < 0) {
         if ((_offset / 25.0).abs() >= 6.0) {
           final double __offset = (_offset / 25.0).abs();
@@ -93,34 +99,65 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
     }
   }
 
-  void _goTop() async {
-    print("刷新${DateTime.now()}");
-    Scaffold.of(context).removeCurrentSnackBar();
-    Scaffold.of(context).showSnackBar(jwSnackBar(true, "刷新"));
-    int _count = 0;
-    const period = Duration(milliseconds: 10);
-    initTodaySchedule();
-    initTomorrowSchedule();
-    todayCourseListKey.currentState!.reSate();
-    tomorrowCourseListKey.currentState!.reSate();
-    Timer.periodic(period, (timer) {
-      // print(DateTime.now().toString());
-      _count++;
-      offset_ += 0.15;
-      iconKey.currentState!.onPressed(offset_);
-      if (_count >= 500) {
-        timer.cancel();
+  void _goTop() {
+    print(_goTopInitCount);
+    if (_goTopInitCount < 8) {
+      print("刷新${DateTime.now()}");
+      _goTopInitCount++;
+      if (_goTopInitCount == 7) {
+        Scaffold.of(context).removeCurrentSnackBar();
+        Scaffold.of(context).showSnackBar(jwSnackBar(false, "你这也太快了吧..."));
+      } else if (_goTopInitCount == 1) {
+        Scaffold.of(context).removeCurrentSnackBar();
+        Scaffold.of(context).showSnackBar(jwSnackBar(true, "已经刷新..."));
       }
-    });
-    await _scrollController.animateTo(
-      _scrollController.position.minScrollExtent,
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.linear,
-    );
-    if (!_timeOutBool) {
-      Future.delayed(const Duration(milliseconds: 5000), () {
+      _scrollController.animateTo(
+        _scrollController.position.minScrollExtent,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.linear,
+      );
+      _time?.cancel();
+      print(_time);
+      _time = Timer(const Duration(seconds: 5), () {
+        print("init");
+        initTodaySchedule();
+        initTomorrowSchedule();
+        todayCourseListKey.currentState!.reSate();
+        tomorrowCourseListKey.currentState!.reSate();
         _timeOutBool = true;
+        _goTopInitCount = 0;
       });
+
+      int _count = 0;
+      const period = Duration(milliseconds: 10);
+      int next(int min, int max) {
+        int res = min + Random().nextInt(max - min + 1);
+        return res;
+      }
+
+      Timer.periodic(period, (timer) {
+        _count++;
+        offset_ += 0.15;
+        iconKey.currentState!.onPressed(offset_);
+        if (_count >= next(100, 200)) {
+          timer.cancel();
+        }
+      });
+    } else {
+      if (_bk) {
+        _bk = false;
+        Scaffold.of(context).removeCurrentSnackBar();
+        Scaffold.of(context).showSnackBar(jwSnackBar(false, "你好快啊,求求你给我休息会吧..."));
+        _time?.cancel();
+        print(_time);
+        _time = Timer(const Duration(seconds: 5), () {
+          Future.delayed(const Duration(seconds: 5), () {
+            _timeOutBool = true;
+            _bk = true;
+            _goTopInitCount = 0;
+          });
+        });
+      }
     }
   }
 
@@ -227,29 +264,29 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
               verticalDirection: VerticalDirection.down,
               textDirection: TextDirection.ltr,
               children: [
-                InkWell(
-                  child: _codeImgSrc.length > 1
-                      ? Image.memory(_codeImgSrc, height: 25)
-                      : Container(
-                          height: 25,
-                        ),
-                  onTap: () {
-                    _getCode();
-                  },
-                ),
-                TextField(
-                  controller: _textFieldController,
-                ),
-                InkWell(
-                  child: const Text('提交'),
-                  onTap: () {
-                    if (Global.logined) {
-                      _getWeek();
-                    } else {
-                      _codeCheck();
-                    }
-                  },
-                ),
+                // InkWell(
+                //   child: _codeImgSrc.length > 1
+                //       ? Image.memory(_codeImgSrc, height: 25)
+                //       : Container(
+                //           height: 25,
+                //         ),
+                //   onTap: () {
+                //     _getCode();
+                //   },
+                // ),
+                // TextField(
+                //   controller: _textFieldController,
+                // ),
+                // InkWell(
+                //   child: const Text('提交'),
+                //   onTap: () {
+                //     if (Global.logined) {
+                //       _getWeek();
+                //     } else {
+                //       _codeCheck();
+                //     }
+                //   },
+                // ),
                 const HomeCard(),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,

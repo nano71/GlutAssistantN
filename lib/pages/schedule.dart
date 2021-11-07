@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:glutnnbox/data.dart';
 import 'package:glutnnbox/widget/bars.dart';
 
 class SchedulePage extends StatefulWidget {
@@ -50,11 +51,12 @@ Widget _row(int index) {
 Widget _grid(String title, int weekDay) {
   return Container(
     height: 75,
+    padding: EdgeInsets.only(left: 6,right: 6),
     alignment: Alignment.center,
     child: Text(
       title,
-      maxLines: 1,
-      overflow: TextOverflow.ellipsis,
+      textAlign: TextAlign.center,
+      softWrap: true,
       style: const TextStyle(fontSize: 12, color: Colors.grey),
     ),
   );
@@ -115,7 +117,12 @@ List<Widget> _loopRowGrid(String firstTitle) {
     if (i == 0) {
       list.add(_leftGrid(firstTitle));
     } else {
-      list.add(Expanded(child: _grid("45", i)));
+      if (schedule[writeData["week"]][i.toString()][firstTitle][0] != "null") {
+        list.add(Expanded(
+            child: _grid(schedule[writeData["week"]][i.toString()][firstTitle][0].toString(), i)));
+      } else {
+        list.add(Expanded(child: _grid("", i)));
+      }
     }
   }
   return list;

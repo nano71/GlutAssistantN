@@ -104,8 +104,10 @@ SnackBar jwSnackBar(bool result, String text, [int hideSnackBarSeconds = 2]) {
           color: Colors.red,
         );
   return SnackBar(
+    elevation: 2,
     duration: Duration(seconds: hideSnackBarSeconds),
     content: Row(
+      mainAxisAlignment :MainAxisAlignment.spaceBetween,
       children: <Widget>[resultIcon, Text(text)],
     ),
     behavior: SnackBarBehavior.floating,
