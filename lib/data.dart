@@ -1,3 +1,7 @@
+import 'dart:math';
+
+import 'package:flutter/material.dart';
+
 Map schedule = {};
 Map writeData = {
   //时间
@@ -41,3 +45,28 @@ final List endTimeList = [
   [20, 55],
   [21, 40]
 ];
+List colorList = [
+  Colors.red,
+  Colors.amber,
+  Colors.blue,
+  Colors.green,
+  Colors.purple,
+  Colors.orange,
+  Colors.lightGreen,
+  Colors.redAccent,
+  Colors.blueAccent,
+  Colors.deepOrangeAccent,
+  Colors.deepPurpleAccent,
+];
+
+Color randomColors() {
+  return colorList[randomInt(0, colorList.length - 1)];
+}
+
+int randomInt(int min, int max) {
+  return min + Random().nextInt(max - min + 1);
+}
+
+String courseLongText2ShortName(String value) {
+  return value.replaceAll("（", "(").replaceAll("）", ")").replaceAll("毛泽东思想和中国特色社会主义理论体系概论", "毛概");
+}

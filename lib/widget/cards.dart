@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -28,10 +27,6 @@ class HomeCardState extends State<HomeCard> with AutomaticKeepAliveClientMixin {
   void _weekProgressAnimation() {
     double _count = 0.0;
     const period = Duration(milliseconds: 10);
-    int next(int min, int max) {
-      int res = min + Random().nextInt(max - min + 1);
-      return res;
-    }
 
     Timer.periodic(period, (timer) {
       _count += 0.01;
@@ -43,9 +38,6 @@ class HomeCardState extends State<HomeCard> with AutomaticKeepAliveClientMixin {
     });
   }
 
-  String _weekProgressText() {
-    return ((_week * 5) + (DateTime.now().weekday / 7 * 5)).toInt().toString() + "%";
-  }
 
   double _weekProgressDouble() {
     return (_week * 5 / 100) + (DateTime.now().weekday / 7 * 5 / 100);
