@@ -32,6 +32,7 @@ Future<void> writeSchedule(String str) async {
     await file.create(recursive: true);
   }
   try {
+    await file.writeAsString("");
     await file.writeAsString(str);
     print("writeSchedule End");
   } catch (e) {

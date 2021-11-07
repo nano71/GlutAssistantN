@@ -114,7 +114,9 @@ Future<void> getSchedule() async {
           }
         }
       }
+
     }
+
     writeSchedule(jsonEncode(_schedule));
   }
 }

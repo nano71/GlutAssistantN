@@ -62,24 +62,35 @@ String _timeText(int index) {
   }
 }
 
-class ToDayCourse extends StatefulWidget {
-  const ToDayCourse({Key? key}) : super(key: key);
+class TodayCourseList extends StatefulWidget {
+  const TodayCourseList({Key? key}) : super(key: key);
 
   @override
-  ToDayCourseList createState() => ToDayCourseList();
+  TodayCourseListState createState() => TodayCourseListState();
 }
 
-class TomorrowCourse extends StatefulWidget {
-  const TomorrowCourse({Key? key}) : super(key: key);
+class TomorrowCourseList extends StatefulWidget {
+  const TomorrowCourseList({Key? key}) : super(key: key);
 
   @override
-  TomorrowCourseList createState() => TomorrowCourseList();
+  TomorrowCourseListState createState() => TomorrowCourseListState();
 }
 
-class ToDayCourseList extends State<ToDayCourse> {
+GlobalKey<TodayCourseListState> todayCourseListKey = GlobalKey();
+GlobalKey<TomorrowCourseListState> tomorrowCourseListKey = GlobalKey();
+
+class TodayCourseListState extends State<TodayCourseList> {
+  List _todaySchedule = todaySchedule;
+
   @override
   void initState() {
     super.initState();
+  }
+
+  reSate() {
+    setState(() {
+      _todaySchedule = todaySchedule;
+    });
   }
 
   IconData _icon(int index) {
@@ -141,22 +152,22 @@ class ToDayCourseList extends State<ToDayCourse> {
                     children: [
                       Row(
                         children: [
-                          Text(todaySchedule[index][2] + " ",
+                          Text(_todaySchedule[index][2] + " ",
                               style: TextStyle(
                                   decoration: TextDecoration.none, color: _textColorsTop(index))),
-                          Text(_courseText(todaySchedule[index][0]),
+                          Text(_courseText(_todaySchedule[index][0]),
                               style: TextStyle(
                                   decoration: TextDecoration.none, color: _textColorsTop(index))),
                         ],
                       ),
                       Row(
                         children: [
-                          Text('第${todaySchedule[index][3]}节 | ',
+                          Text('第${_todaySchedule[index][3]}节 | ',
                               style: TextStyle(
                                   decoration: TextDecoration.none,
                                   fontSize: 12,
                                   color: _textColorsDown(index))),
-                          Text(todaySchedule[index][1],
+                          Text(_todaySchedule[index][1],
                               style: TextStyle(
                                   decoration: TextDecoration.none,
                                   fontSize: 12,
@@ -182,15 +193,23 @@ class ToDayCourseList extends State<ToDayCourse> {
                 ],
               ),
             ]));
-      }, childCount: todaySchedule.length),
+      }, childCount: _todaySchedule.length),
     );
   }
 }
 
-class TomorrowCourseList extends State<TomorrowCourse> {
+class TomorrowCourseListState extends State<TomorrowCourseList> {
+  List _tomorrowSchedule = tomorrowSchedule;
+
   @override
   void initState() {
     super.initState();
+  }
+
+  reSate() {
+    setState(() {
+      _tomorrowSchedule = tomorrowSchedule;
+    });
   }
 
   @override
@@ -210,7 +229,7 @@ class TomorrowCourseList extends State<TomorrowCourse> {
                     margin: const EdgeInsets.fromLTRB(0, 0, 8, 0),
                     child: Icon(
                       Icons.attachment,
-                      color: (tomorrowSchedule[index][3] == "1" && index == 0
+                      color: (_tomorrowSchedule[index][3] == "1" && index == 0
                           ? Colors.orange[900]
                           : Colors.blue),
                     ),
@@ -221,12 +240,12 @@ class TomorrowCourseList extends State<TomorrowCourse> {
                     children: [
                       Row(
                         children: [
-                          Text(tomorrowSchedule[index][2] + " ",
+                          Text(_tomorrowSchedule[index][2] + " ",
                               style: const TextStyle(
                                   decoration: TextDecoration.none,
                                   fontSize: 14,
                                   color: Color(0xff333333))),
-                          Text(_courseText(tomorrowSchedule[index][0]),
+                          Text(_courseText(_tomorrowSchedule[index][0]),
                               style: const TextStyle(
                                   decoration: TextDecoration.none,
                                   fontSize: 16,
@@ -235,12 +254,12 @@ class TomorrowCourseList extends State<TomorrowCourse> {
                       ),
                       Row(
                         children: [
-                          Text('第${tomorrowSchedule[index][3]}节 | ',
+                          Text('第${_tomorrowSchedule[index][3]}节 | ',
                               style: const TextStyle(
                                   decoration: TextDecoration.none,
                                   fontSize: 12,
                                   color: Color(0xff999999))),
-                          Text(tomorrowSchedule[index][1],
+                          Text(_tomorrowSchedule[index][1],
                               style: const TextStyle(
                                   decoration: TextDecoration.none,
                                   fontSize: 12,
@@ -254,12 +273,12 @@ class TomorrowCourseList extends State<TomorrowCourse> {
               Stack(alignment: Alignment.centerRight, children: [
                 Align(
                   alignment: Alignment.centerRight,
-                  child: Text((tomorrowSchedule[index][3] == "1" && index == 0 ? "别睡懒觉😅" : ""),
+                  child: Text((_tomorrowSchedule[index][3] == "1" && index == 0 ? "别睡懒觉😅" : ""),
                       style: TextStyle(fontSize: 14, color: Colors.orange[900])),
                 )
               ]),
             ]));
-      }, childCount: tomorrowSchedule.length),
+      }, childCount: _tomorrowSchedule.length),
     );
   }
 }
