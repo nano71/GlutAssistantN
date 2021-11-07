@@ -47,6 +47,8 @@ List _getStartTime(index) {
 }
 
 String _timeText(int index) {
+  if (index == -1) return "-1";
+
   List value = _getStartTime(int.parse(todaySchedule[index][3]));
   if (value[0] >= 1) {
     return "";
@@ -56,9 +58,17 @@ String _timeText(int index) {
     if (value[2] == 0) return "${value[1]}小时后";
     return "${value[1]}小时${value[2]}分后";
   } else if (value[3] == "after") {
-    return "已结束";
+    if (value[2] < 46 && value[2] > 0) {
+      if (value[1] == 0) {
+        return "${value[2]}分后下课";
+      } else {
+        return "已结束";
+      }
+    } else {
+      return "已结束";
+    }
   } else {
-    return "${value[2]}分钟后";
+    return "${value[2]}分后上课";
   }
 }
 
@@ -96,9 +106,13 @@ class TodayCourseListState extends State<TodayCourseList> {
   IconData _icon(int index) {
     String result = _getStartTime(int.parse(todaySchedule[index][3]))[3];
     if (result == "before") {
-      return Icons.attachment;
+      return Icons.access_time;
     } else {
-      return Icons.check;
+      if (_timeText(index).contains("下课")) {
+        return Icons.menu_book;
+      } else {
+        return Icons.check;
+      }
     }
   }
 
@@ -107,7 +121,11 @@ class TodayCourseListState extends State<TodayCourseList> {
     if (result == "before") {
       return Colors.blue;
     } else {
-      return Colors.black26;
+      if (_timeText(index).contains("下课")) {
+        return Colors.teal;
+      } else {
+        return Colors.black26;
+      }
     }
   }
 
@@ -116,7 +134,11 @@ class TodayCourseListState extends State<TodayCourseList> {
     if (result == "before") {
       return const Color(0xff333333);
     } else {
-      return Colors.black26;
+      if (_timeText(index).contains("下课")) {
+        return Colors.teal;
+      } else {
+        return Colors.black26;
+      }
     }
   }
 
@@ -125,7 +147,11 @@ class TodayCourseListState extends State<TodayCourseList> {
     if (result == "before") {
       return const Color(0xff999999);
     } else {
-      return Colors.black26;
+      if (_timeText(index).contains("下课")) {
+        return Colors.teal;
+      } else {
+        return Colors.black26;
+      }
     }
   }
 
@@ -184,7 +210,7 @@ class TodayCourseListState extends State<TodayCourseList> {
                   Align(
                       alignment: Alignment.centerRight,
                       child: Text(
-                        _timeText(index),
+                        (_timeText(index - 1).contains("后") ? "" : _timeText(index)),
                         style: TextStyle(
                             decoration: TextDecoration.none,
                             fontSize: 14,
@@ -241,29 +267,37 @@ class TomorrowCourseListState extends State<TomorrowCourseList> {
                       Row(
                         children: [
                           Text(_tomorrowSchedule[index][2] + " ",
-                              style: const TextStyle(
+                              style: TextStyle(
                                   decoration: TextDecoration.none,
                                   fontSize: 14,
-                                  color: Color(0xff333333))),
+                                  color: (_tomorrowSchedule[index][3] == "1" && index == 0
+                                      ? Colors.orange[900]
+                                      : const Color(0xff333333)))),
                           Text(_courseText(_tomorrowSchedule[index][0]),
-                              style: const TextStyle(
+                              style: TextStyle(
                                   decoration: TextDecoration.none,
                                   fontSize: 16,
-                                  color: Color(0xff333333))),
+                                  color: (_tomorrowSchedule[index][3] == "1" && index == 0
+                                      ? Colors.orange[900]
+                                      : const Color(0xff333333)))),
                         ],
                       ),
                       Row(
                         children: [
                           Text('第${_tomorrowSchedule[index][3]}节 | ',
-                              style: const TextStyle(
+                              style: TextStyle(
                                   decoration: TextDecoration.none,
                                   fontSize: 12,
-                                  color: Color(0xff999999))),
+                                  color: (_tomorrowSchedule[index][3] == "1" && index == 0
+                                      ? Colors.orange[900]
+                                      : const Color(0xff999999)))),
                           Text(_tomorrowSchedule[index][1],
-                              style: const TextStyle(
+                              style: TextStyle(
                                   decoration: TextDecoration.none,
                                   fontSize: 12,
-                                  color: Color(0xff999999))),
+                                  color: (_tomorrowSchedule[index][3] == "1" && index == 0
+                                      ? Colors.orange[900]
+                                      : const Color(0xff999999)))),
                         ],
                       ),
                     ],

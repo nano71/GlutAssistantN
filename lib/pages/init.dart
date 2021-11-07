@@ -7,6 +7,7 @@ import 'package:glutnnbox/widget/index.dart';
 
 class CustomRoute extends PageRouteBuilder {
   final Widget widget;
+
   CustomRoute(this.widget)
       : super(
             //父类的方法
@@ -29,9 +30,7 @@ class CustomRoute extends PageRouteBuilder {
                 // 过度的透明的效果
                 opacity: Tween(begin: 0.0, end: 1.0)
                     // 给他个透明度的动画   CurvedAnimation：设置动画曲线
-                    .animate(CurvedAnimation(
-                        parent: animation,
-                        curve: Curves.ease)),
+                    .animate(CurvedAnimation(parent: animation, curve: Curves.ease)),
                 child: child,
               );
             });
@@ -58,11 +57,15 @@ class InitPageState extends State<InitPage> {
     await initTodaySchedule();
     await initTomorrowSchedule();
     print("initSchedule End");
-    Navigator.push(
-        context,
-        CustomRoute(
-          const Index(),
-        ));
+    //跳转并关闭当前页面
+
+    Navigator.pushAndRemoveUntil(
+      context,
+      CustomRoute(
+        const Index(),
+      ),
+      (route) => false,
+    );
   }
 
   @override
