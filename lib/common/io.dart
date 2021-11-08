@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:glutnnbox/common/init.dart';
-import 'package:glutnnbox/get/get.dart';
+import 'package:glutnnbox/common/get.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../data.dart';

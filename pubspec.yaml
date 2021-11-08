@@ -31,6 +31,7 @@ dependencies:
   html: ^0.15.0
   gbk2utf8: ^1.0.1
   path_provider: ^2.0.6
+  event_bus: ^1.1.1
   flutter:
     sdk: flutter
 

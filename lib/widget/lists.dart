@@ -3,13 +3,11 @@ import 'package:flutter/widgets.dart';
 
 import '../data.dart';
 
-
-
 List _getStartTime(index) {
-  var startH = startTimeList[index][0];
-  var endH = endTimeList[index][0];
-  var startM = startTimeList[index][1];
-  var endM = endTimeList[index][1];
+  var startH = startTimeList[index - 1][0];
+  var endH = endTimeList[index - 1][0];
+  var startM = startTimeList[index - 1][1];
+  var endM = endTimeList[index - 1][1];
   var y = DateTime.now().year;
   var m = DateTime.now().month;
   var d = DateTime.now().day;
@@ -42,7 +40,6 @@ List _getStartTime(index) {
 
 String _timeText(int index) {
   if (index == -1) return "-1";
-
   List value = _getStartTime(int.parse(todaySchedule[index][3]));
   if (value[0] >= 1) {
     return "";
@@ -53,7 +50,7 @@ String _timeText(int index) {
     return "${value[1]}小时${value[2]}分后";
   } else if (value[3] == "after") {
     if (value[2] < 46 && value[2] > 0) {
-      if (value[1] == 0) {
+      if (value[1] == 0.0) {
         return "${value[2]}分后下课";
       } else {
         return "已结束";

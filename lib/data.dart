@@ -34,7 +34,7 @@ final List startTimeList = [
 ];
 final List endTimeList = [
   [9, 20],
-  [10, 20],
+  [10, 05],
   [11, 05],
   [11, 50],
   [15, 10],

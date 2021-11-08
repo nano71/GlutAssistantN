@@ -7,8 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:glutnnbox/common/cookie.dart';
 import 'package:glutnnbox/common/init.dart';
-import 'package:glutnnbox/get/get.dart';
-import 'package:glutnnbox/login/login.dart';
+import 'package:glutnnbox/common/get.dart';
+import 'package:glutnnbox/common/login.dart';
 import 'package:glutnnbox/widget/bars.dart';
 import 'package:glutnnbox/widget/cards.dart';
 import 'package:glutnnbox/widget/icons.dart';
@@ -44,9 +44,6 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   int _goTopInitCount = 0;
   bool _bk = true;
   Timer? _time;
-  var lh ;
-  String? lh2;
-  late String lh3;
 
   @override
   void initState() {
@@ -86,7 +83,9 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
         if ((_offset / 25.0).abs() >= 6.0) {
           final double __offset = (_offset / 25.0).abs();
           if (__offset == (_offset / 25.0).abs() || __offset + 0.25 < (_offset / 25.0).abs()) {
-            Future.delayed( const Duration(milliseconds: 200), () {
+            Future.delayed(
+              const Duration(milliseconds: 200),
+              () {
                 if (_timeOutBool) {
                   offset_ = (_offset / 25.0).abs();
                   _goTop();
@@ -251,7 +250,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
         controller: _scrollController,
         physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
         slivers: [
-          homeTopBar,
+          const HomeTopBar(),
           SliverToBoxAdapter(
               child: Container(
             width: double.infinity,
@@ -284,7 +283,12 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 //     }
                 //   },
                 // ),
-                const HomeCard(),
+                InkWell(
+                  onTap: () {
+                    pageBus.fire(SetPageIndex(1));
+                  },
+                  child: const HomeCard(),
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   mainAxisSize: MainAxisSize.max,
@@ -314,7 +318,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                             Align(
                               child: Container(
                                 margin: HomeCardsState.iconMargin,
-                                child: RefreshIconWidgetDynamic(key:iconKey),
+                                child: RefreshIconWidgetDynamic(key: iconKey),
                               ),
                             ),
                             Align(
@@ -362,7 +366,6 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         });
                       },
                       onTapDown: (d) {
-                        print(9);
                         _animationControllerForHomeCards3.forward();
                       },
                       child: Container(
