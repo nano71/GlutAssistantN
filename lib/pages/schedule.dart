@@ -249,20 +249,20 @@ List<Widget> _loopWeekDayColGrid(String week, String weekDay) {
 
     if (courseName != "null") {
       if (i == 1) {
-        print(courseName + " start${i}");
+        // print(courseName + " start${i}");
         s = i;
       } else if (courseName == courseLongText2ShortName(_schedule[(i - 1).toString()][0])) {
         if (i == 11) {
-          print(courseName + " end${i}");
+          // print(courseName + " end${i}");
           list.add(_grid(
               courseName, studyArea, randomColors(), Global.schedulePageGridHeight * (i - s + 1)));
         } else if (courseName != courseLongText2ShortName(_schedule[(i + 1).toString()][0])) {
-          print(courseName + " end${i}");
+          // print(courseName + " end${i}");
           list.add(_grid(
               courseName, studyArea, randomColors(), Global.schedulePageGridHeight * (i - s + 1)));
         }
       } else {
-        print(courseName + " start${i}");
+        // print(courseName + " start${i}");
         s = i;
       }
     } else {

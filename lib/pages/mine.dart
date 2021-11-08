@@ -1,7 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:glutnnbox/pages/career.dart';
+import 'package:glutnnbox/pages/query.dart';
+import 'package:glutnnbox/pages/setting.dart';
 import 'package:glutnnbox/widget/bars.dart';
 import 'package:glutnnbox/widget/icons.dart';
+
+import 'info.dart';
+import 'login.dart';
 
 class MinePage extends StatefulWidget {
   const MinePage({Key? key}) : super(key: key);
@@ -27,15 +33,52 @@ class MinePageState extends State<MinePage> {
               child: Column(
                 textDirection: TextDirection.ltr,
                 children: [
-                  mineItem(
-                      Icons.account_box_outlined, const EdgeInsets.fromLTRB(16, 14, 0, 14), "登录教务"),
-                  mineItem(
-                      Icons.workspaces_outline, const EdgeInsets.fromLTRB(16, 14, 0, 14), "课程生涯"),
-                  mineItem(
-                      Icons.list_alt_rounded, const EdgeInsets.fromLTRB(16, 14, 0, 14), "成绩查询"),
+                  InkWell(
+                    onTap: () {
+                      Navigator.of(context).push(
+                          // 在FormPage()里传入参数
+                          MaterialPageRoute(builder: (context) => const LoginPage()));
+                    },
+                    child: mineItem(Icons.account_box_outlined,
+                        const EdgeInsets.fromLTRB(16, 14, 0, 14), "登录教务"),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      Navigator.of(context).push(
+                          // 在FormPage()里传入参数
+                          MaterialPageRoute(builder: (context) => const CareerPage()));
+                    },
+                    child: mineItem(
+                        Icons.workspaces_outline, const EdgeInsets.fromLTRB(16, 14, 0, 14), "课程生涯"),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      Navigator.of(context).push(
+                          // 在FormPage()里传入参数
+                          MaterialPageRoute(builder: (context) => const QueryPage()));
+                    },
+                    child: mineItem(
+                        Icons.list_alt_rounded, const EdgeInsets.fromLTRB(16, 14, 0, 14), "成绩查询"),
+                  ),
                   topLine,
-                  mineItem(Icons.info_outline, const EdgeInsets.fromLTRB(16, 14, 0, 14), "说明"),
-                  mineItem(Icons.settings_outlined, const EdgeInsets.fromLTRB(16, 14, 0, 14), "设置"),
+                  InkWell(
+                    onTap: () {
+                      Navigator.of(context).push(
+                          // 在FormPage()里传入参数
+                          MaterialPageRoute(builder: (context) => const InfoPage()));
+                    },
+                    child: mineItem(
+                        Icons.info_outline, const EdgeInsets.fromLTRB(16, 14, 0, 14), "说明"),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      Navigator.of(context).push(
+                          // 在FormPage()里传入参数
+                          MaterialPageRoute(builder: (context) => const SettingPage(title: "设置2")));
+                    },
+                    child: mineItem(
+                        Icons.settings_outlined, const EdgeInsets.fromLTRB(16, 14, 0, 14), "设置"),
+                  ),
                 ],
               ),
             )),

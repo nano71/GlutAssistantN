@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
-class LoginPage extends StatefulWidget {
+class SettingPage extends StatefulWidget {
   final String title;
 
-  const LoginPage({Key? key, this.title = "表单"}) : super(key: key);
+  const SettingPage({Key? key, this.title = "返回"}) : super(key: key);
 
   @override
-  State<LoginPage> createState() => LoginPageState();
+  State<SettingPage> createState() => _SettingPageState();
 }
 
-class LoginPageState extends State<LoginPage> {
+class _SettingPageState extends State<SettingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
