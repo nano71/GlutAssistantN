@@ -1,4 +1,5 @@
-# GlutnnAssistant
+# GlutAssistantN
+
 适用于 桂林理工大学空港校区(分校) 的桂工助手N
 
 2021/11/02 01:21 项目创建
