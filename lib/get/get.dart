@@ -23,12 +23,10 @@ Future<void> getWeek() async {
         int.parse(weekHtml.substring(weekHtml.indexOf("第") + 1, weekHtml.indexOf("周")).trim());
     await writeConfig(week.toString());
   } on TimeoutException catch (e) {
-    print(e);
     print("超时");
     readConfig();
   } on SocketException catch (e) {
-    print(e);
-    print("超时");
+    print("连接失败");
     readConfig();
   }
 }

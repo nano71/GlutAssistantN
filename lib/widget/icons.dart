@@ -2,9 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class RefreshIconWidgetDynamic extends StatefulWidget {
-  final Key key;
+  const RefreshIconWidgetDynamic({Key? key}) : super(key: key);
 
-  RefreshIconWidgetDynamic(this.key);
 
   @override
   State<StatefulWidget> createState() => RefreshIconWidgetDynamicState();
@@ -33,4 +32,9 @@ class RefreshIconWidgetDynamicState extends State<RefreshIconWidgetDynamic> {
 Icon chevronRight =const Icon(
   Icons.chevron_right,
   color: Colors.black45,
+);
+Icon goCurrent = const Icon(
+  Icons.gps_fixed_outlined,
+  color: Colors.black,
+  size: 24,
 );
