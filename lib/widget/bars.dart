@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:glutnnbox/config.dart';
 
 import '../data.dart';
+import 'icons.dart';
 
 SliverAppBar homeTopBar = SliverAppBar(
   pinned: true,
@@ -39,9 +40,9 @@ SliverAppBar mineTopBar = SliverAppBar(
   automaticallyImplyLeading: false,
   flexibleSpace: FlexibleSpaceBar(
       title: Row(
-        children:  [
+        children: [
           Text(
-            (writeData["name"]!=""?"Hi! "+writeData["name"]:"请先登录教务"),
+            (writeData["name"] != "" ? "Hi! " + writeData["name"] : "请先登录教务"),
             style: const TextStyle(
               color: Colors.black,
             ),
@@ -50,15 +51,51 @@ SliverAppBar mineTopBar = SliverAppBar(
       ),
       titlePadding: const EdgeInsets.fromLTRB(16, 0, 16, 12)),
 );
-AppBar scheduleTopBar = AppBar(
-  automaticallyImplyLeading: false,
-  elevation: 0.3,
-  backgroundColor: Colors.white,
-  title: Text(
-    "第 ${writeData['week']} 周",
-    style: const TextStyle(color: Colors.black),
-  ),
-);
+
+class ScheduleTopBar extends StatefulWidget {
+  const ScheduleTopBar({Key? key}) : super(key: key);
+
+  @override
+  State<StatefulWidget> createState() => ScheduleTopBarState();
+}
+
+class ScheduleTopBarState extends State<ScheduleTopBar> {
+  String _week = writeData["week"];
+
+  @override
+  Widget build(BuildContext context) {
+    return AppBar(
+      automaticallyImplyLeading: false,
+      elevation: 0.3,
+      backgroundColor: Colors.white,
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            "第 $_week 周",
+            style: const TextStyle(color: Colors.black),
+          ),
+          goCurrent,
+        ],
+      ),
+    );
+  }
+
+  void onPressed(int week) {
+    setState(() => _week = week.toString());
+  }
+}
+// AppBar scheduleTopBar(String week) {
+//   return AppBar(
+//     automaticallyImplyLeading: false,
+//     elevation: 0.3,
+//     backgroundColor: Colors.white,
+//     title: Text(
+//       "第 $week 周",
+//       style: const TextStyle(color: Colors.black),
+//     ),
+//   );
+// }
 
 class BottomNavBar extends StatefulWidget {
   const BottomNavBar({Key? key}) : super(key: key);
@@ -129,7 +166,7 @@ SnackBar jwSnackBar(bool result, String text, [int hideSnackBarSeconds = 2]) {
     elevation: 2,
     duration: Duration(seconds: hideSnackBarSeconds),
     content: Row(
-      mainAxisAlignment :MainAxisAlignment.spaceBetween,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[resultIcon, Text(text)],
     ),
     behavior: SnackBarBehavior.floating,

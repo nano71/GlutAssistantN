@@ -18,5 +18,6 @@ class Global {
   static Uri getScoreUrl = Uri.http(jwUrl, "/academic/manager/score/studentOwnScore.do");
   static List<String> getScheduleUrl = [jwUrl, "/academic/student/currcourse/currcourse.jsdo"];
   static List<String> codeCheckUrl = [jwUrl, "/academic/checkCaptcha.do"];
-
+  static double schedulePageTouchMovesMinValue = 70.0;
+  static double schedulePageGridHeight = 60.0;
 }

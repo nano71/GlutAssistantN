@@ -44,6 +44,9 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   int _goTopInitCount = 0;
   bool _bk = true;
   Timer? _time;
+  var lh ;
+  String? lh2;
+  late String lh3;
 
   @override
   void initState() {
@@ -78,19 +81,19 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   void _scrollControllerListener() {
     if (_timeOutBool) {
       int _offset = _scrollController.position.pixels.toInt();
-
       _offset < 0 ? iconKey.currentState!.onPressed((_offset / 25.0).abs() + offset_) : "";
       if (_offset < 0) {
         if ((_offset / 25.0).abs() >= 6.0) {
           final double __offset = (_offset / 25.0).abs();
           if (__offset == (_offset / 25.0).abs() || __offset + 0.25 < (_offset / 25.0).abs()) {
-            Future.delayed(const Duration(milliseconds: 200), () {
-              if (_timeOutBool) {
-                offset_ = (_offset / 25.0).abs();
-                _goTop();
-              }
-              _timeOutBool = false;
-            });
+            Future.delayed( const Duration(milliseconds: 200), () {
+                if (_timeOutBool) {
+                  offset_ = (_offset / 25.0).abs();
+                  _goTop();
+                }
+                _timeOutBool = false;
+              },
+            );
           }
         }
       }
@@ -311,7 +314,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                             Align(
                               child: Container(
                                 margin: HomeCardsState.iconMargin,
-                                child: RefreshIconWidgetDynamic(iconKey),
+                                child: RefreshIconWidgetDynamic(key:iconKey),
                               ),
                             ),
                             Align(

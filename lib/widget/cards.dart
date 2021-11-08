@@ -78,7 +78,7 @@ class HomeCardState extends State<HomeCard> with AutomaticKeepAliveClientMixin {
               height: 60.0,
               //限制进度条的宽度
               width: 60,
-              child: CircularProgressDynamic(indicatorKey),
+              child: CircularProgressDynamic(key:indicatorKey),
             ),
           ),
         ),
@@ -86,7 +86,7 @@ class HomeCardState extends State<HomeCard> with AutomaticKeepAliveClientMixin {
             alignment: Alignment.centerRight,
             child: Container(
               margin: const EdgeInsets.fromLTRB(0, 0, 32, 0),
-              child: TextProgressDynamic(textKey),
+              child: TextProgressDynamic(key:textKey),
             )),
         Align(
           alignment: Alignment.topRight,
@@ -179,9 +179,9 @@ class HomeCardsState {
 }
 
 class CircularProgressDynamic extends StatefulWidget {
-  final Key key;
+  const CircularProgressDynamic({Key? key}) : super(key: key);
 
-  CircularProgressDynamic(this.key);
+
 
   @override
   State<StatefulWidget> createState() => CircularProgressDynamicState();
@@ -209,9 +209,9 @@ class CircularProgressDynamicState extends State<CircularProgressDynamic> {
 }
 
 class TextProgressDynamic extends StatefulWidget {
-  final Key key;
+  const TextProgressDynamic({Key? key}) : super(key: key);
 
-  TextProgressDynamic(this.key);
+
 
   @override
   State<StatefulWidget> createState() => TextProgressDynamicState();
