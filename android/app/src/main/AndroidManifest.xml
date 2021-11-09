@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.glutnnbox">
+    package="com.nano71.glutassistantn">
    <application
         android:label="桂工助手N"
         android:icon="@mipmap/g">

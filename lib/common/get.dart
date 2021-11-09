@@ -1,11 +1,13 @@
+
+// ignore_for_file: import_of_legacy_library_into_null_safe
+
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:gbk2utf8/gbk2utf8.dart';
-import 'package:glutnnbox/common/cookie.dart';
-import 'package:glutnnbox/common/io.dart';
+import 'package:glutassistantn/common/cookie.dart';
+import 'package:glutassistantn/common/io.dart';
 import 'package:html/dom.dart' as dom;
 import 'package:html/parser.dart';
 import 'package:http/http.dart';

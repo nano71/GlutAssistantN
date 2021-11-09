@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class Global {
-  static String appTitle = "桂工助手";
+  static String appTitle = "桂工助手N";
   static bool logined = false;
   static int pageIndex = 0;
   static PageController pageControl = PageController(

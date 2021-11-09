@@ -1,4 +1,4 @@
-import 'package:glutnnbox/config.dart';
+import 'package:glutassistantn/config.dart';
 
 String mapCookieToString() {
   String result = '';

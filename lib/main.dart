@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:glutnnbox/pages/init.dart';
+import 'package:glutassistantn/pages/init.dart';
 import 'config.dart';
 
 main() {
@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
-        theme: ThemeData(fontFamily: 'SourceHanSansCN'),
+        theme: ThemeData(),
         title: Global.appTitle,
         home:const InitPage());
   }

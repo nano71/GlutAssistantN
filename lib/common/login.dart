@@ -1,4 +1,4 @@
-import 'package:glutnnbox/common/cookie.dart';
+import 'package:glutassistantn/common/cookie.dart';
 import 'package:http/http.dart';
 
 import '../config.dart';

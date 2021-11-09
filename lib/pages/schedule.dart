@@ -1,9 +1,11 @@
+import 'dart:async';
+
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:glutnnbox/data.dart';
-import 'package:glutnnbox/widget/bars.dart';
+import 'package:glutassistantn/data.dart';
+import 'package:glutassistantn/widget/bars.dart';
 
 import '../config.dart';
 
@@ -95,12 +97,6 @@ class SchedulePage extends StatefulWidget {
 GlobalKey<SchedulePageState> schedulePageKey = GlobalKey();
 EventBus reState = EventBus();
 
-class ReState {
-  int index;
-
-  ReState(this.index);
-}
-
 class SchedulePageState extends State<SchedulePage> with AutomaticKeepAliveClientMixin {
   late double _startPositionX;
   late double _startPositionY;
@@ -108,7 +104,7 @@ class SchedulePageState extends State<SchedulePage> with AutomaticKeepAliveClien
   GlobalKey<SchedulePageColumnState> weekKey = GlobalKey();
   GlobalKey<ScheduleTopBarState> barKey = GlobalKey();
   GlobalKey<RowHeaderState> rowHeaderKey = GlobalKey();
-  var eventBusFn;
+  late StreamSubscription<ReState> eventBusFn;
 
   @override
   void initState() {

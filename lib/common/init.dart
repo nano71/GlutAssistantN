@@ -35,6 +35,9 @@ initTodaySchedule() {
   } else {
     todayScheduleTitle = "今天没课";
   }
+  if (writeData["username"] == "") {
+    todayScheduleTitle = "";
+  }
   print("initTodaySchedule End");
 }
 
@@ -60,6 +63,9 @@ initTomorrowSchedule() {
   } else {
     tomorrowScheduleTitle = "明天没课嗷";
     if (todayScheduleTitle == "今天没课") tomorrowScheduleTitle = "明天也没课🤣";
+  }
+  if (writeData["username"] == "") {
+    tomorrowScheduleTitle = "";
   }
   print("initTomorrowSchedule End");
 }

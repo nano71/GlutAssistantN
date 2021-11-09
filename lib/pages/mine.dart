@@ -1,13 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:glutnnbox/pages/career.dart';
-import 'package:glutnnbox/pages/query.dart';
-import 'package:glutnnbox/pages/setting.dart';
-import 'package:glutnnbox/widget/bars.dart';
-import 'package:glutnnbox/widget/icons.dart';
+import 'package:glutassistantn/common/init.dart';
+import 'package:glutassistantn/common/io.dart';
+import 'package:glutassistantn/pages/career.dart';
+import 'package:glutassistantn/pages/query.dart';
+import 'package:glutassistantn/pages/setting.dart';
+import 'package:glutassistantn/widget/bars.dart';
+import 'package:glutassistantn/widget/icons.dart';
 
 import '../data.dart';
 import 'info.dart';
+import 'init.dart';
 import 'login.dart';
 
 class MinePage extends StatefulWidget {
@@ -37,11 +40,16 @@ class MinePageState extends State<MinePage> {
                   InkWell(
                     onTap: () {
                       Navigator.of(context).push(
-                          // 在FormPage()里传入参数
-                          MaterialPageRoute(builder: (context) => const LoginPage()));
+                        // 在FormPage()里传入参数
+                        MaterialPageRoute(
+                          builder: (context) => const LoginPage(),
+                        ),
+                      );
                     },
-                    child: mineItem(Icons.account_box_outlined,
-                        const EdgeInsets.fromLTRB(16, 14, 0, 14), (writeData["name"] != "" ? "更换账号" : "登录教务")),
+                    child: mineItem(
+                        Icons.account_box_outlined,
+                        const EdgeInsets.fromLTRB(16, 14, 0, 14),
+                        (writeData["name"] != "" ? "更换账号" : "登录教务")),
                   ),
                   InkWell(
                     onTap: () {
@@ -79,6 +87,27 @@ class MinePageState extends State<MinePage> {
                     },
                     child: mineItem(
                         Icons.settings_outlined, const EdgeInsets.fromLTRB(16, 14, 0, 14), "设置"),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      clearAll();
+                      writeData["username"] = "";
+                      writeData["name"] = "";
+                      writeData["password"] = "";
+                      initSchedule();
+                      todaySchedule = [];
+                      tomorrowSchedule = [];
+                      pageBus.fire(SetPageIndex(0));
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const InitPage(),
+                        ),
+                        (route) => false,
+                      );
+                    },
+                    child: mineItem(Icons.cleaning_services_outlined,
+                        const EdgeInsets.fromLTRB(16, 14, 0, 14), "清除"),
                   ),
                 ],
               ),

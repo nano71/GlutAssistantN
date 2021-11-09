@@ -3,11 +3,11 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:glutnnbox/common/cookie.dart';
-import 'package:glutnnbox/common/get.dart';
-import 'package:glutnnbox/common/io.dart';
-import 'package:glutnnbox/common/login.dart';
-import 'package:glutnnbox/widget/bars.dart';
+import 'package:glutassistantn/common/cookie.dart';
+import 'package:glutassistantn/common/get.dart';
+import 'package:glutassistantn/common/io.dart';
+import 'package:glutassistantn/common/login.dart';
+import 'package:glutassistantn/widget/bars.dart';
 import 'package:http/http.dart';
 
 import '../config.dart';
@@ -83,11 +83,15 @@ class LoginPageState extends State<LoginPage> {
   void _codeCheck() async {
     void _next(String value) {
       if (value == "success") {
+        setState(() {
+          buttonTitle = "马上就好,获取数据中...";
+        });
         _loginJW();
       } else {
         setState(() {
           messageColor = Colors.red;
           message = "验证码错误";
+          buttonTitle = "请检查后再试一次";
         });
       }
     }
@@ -104,27 +108,30 @@ class LoginPageState extends State<LoginPage> {
         setState(() {
           messageColor = Colors.blue;
           message = "登录成功";
-          buttonTitle = "马上就好,获取数据中...";
+          buttonTitle = "马上就好,处理数据中...";
         });
         writeData["username"] = _studentId;
         writeData["password"] = _password;
-        print(jsonEncode(writeData));
         await getName();
         await getSchedule();
         await writeConfig();
+        pageBus.fire(SetPageIndex(0));
         Navigator.pushAndRemoveUntil(
           context,
-          CustomRoute(
-            const Index(),
+          CustomRouteMs300(
+            const Index(
+              type: 1,
+            ),
           ),
           (route) => false,
         );
-        pageBus.fire(SetPageIndex(0));
       } else if (value == "fail") {
         setState(() {
-          messageColor = Colors.yellow;
-          message = "请重试";
+          messageColor = Colors.red;
+          message = "学号或密码有误";
+          buttonTitle = "请检查后再试一次";
         });
+
         _getCode();
       } else {
         if (Global.logined) {

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -82,10 +84,15 @@ GlobalKey<TomorrowCourseListState> tomorrowCourseListKey = GlobalKey();
 
 class TodayCourseListState extends State<TodayCourseList> {
   List _todaySchedule = todaySchedule;
+  late StreamSubscription<ReTodayListState> eventBusFn;
 
   @override
   void initState() {
     super.initState();
+
+    eventBusFn = pageBus.on<ReTodayListState>().listen((event) {
+      reSate();
+    });
   }
 
   reSate() {
@@ -217,14 +224,21 @@ class TodayCourseListState extends State<TodayCourseList> {
 
 class TomorrowCourseListState extends State<TomorrowCourseList> {
   List _tomorrowSchedule = tomorrowSchedule;
+  late StreamSubscription<ReTomorrowListState> eventBusFn;
 
   @override
   void initState() {
     super.initState();
+
+    eventBusFn = pageBus.on<ReTomorrowListState>().listen((event) {
+      print(1);
+      reSate();
+    });
   }
 
   reSate() {
     setState(() {
+      print(2);
       _tomorrowSchedule = tomorrowSchedule;
     });
   }
