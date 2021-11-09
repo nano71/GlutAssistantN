@@ -1,21 +1,16 @@
 import 'dart:async';
-import 'dart:convert';
-import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:glutnnbox/common/cookie.dart';
-import 'package:glutnnbox/common/init.dart';
 import 'package:glutnnbox/common/get.dart';
-import 'package:glutnnbox/common/login.dart';
+import 'package:glutnnbox/common/init.dart';
+import 'package:glutnnbox/pages/schedule.dart';
 import 'package:glutnnbox/widget/bars.dart';
 import 'package:glutnnbox/widget/cards.dart';
 import 'package:glutnnbox/widget/icons.dart';
 import 'package:glutnnbox/widget/lists.dart';
-import 'package:http/http.dart';
 
-import '../config.dart';
 import '../data.dart';
 
 class HomePage extends StatefulWidget {
@@ -48,7 +43,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    _getCode();
+    // _getCode();
     _animationControllerForHomeCards1 = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 150),
@@ -167,79 +162,6 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
     return const TextStyle(fontSize: 14, color: Colors.black, decoration: TextDecoration.none);
   }
 
-  void _getCode() async {
-    try {
-      setState(() {
-        _textFieldController.text = "";
-      });
-      print("getCode...");
-      var response = await get(Global.getCodeUrl).timeout(const Duration(milliseconds: 6000));
-      parseRawCookies(response.headers['set-cookie']);
-      setState(() {
-        _codeImgSrc = response.bodyBytes;
-      });
-    } catch (e) {
-      Scaffold.of(context).removeCurrentSnackBar();
-      Scaffold.of(context).showSnackBar(jwSnackBar(false, "网络错误"));
-    }
-  }
-
-  void _codeCheck() async {
-    void _next(String value) {
-      if (value == "success") {
-        _loginJW();
-      } else {
-        Scaffold.of(context).removeCurrentSnackBar();
-        Scaffold.of(context).showSnackBar(jwSnackBar(false, "验证码错误"));
-        setState(() {
-          _textFieldController.text = "";
-        });
-      }
-    }
-
-    await codeCheck(_textFieldController.text.toString()).then((String value) => _next(value));
-  }
-
-  void _loginJW() async {
-    void _next(String value) {
-      if (value == "success") {
-        Global.logined = true;
-        Scaffold.of(context).removeCurrentSnackBar();
-        Scaffold.of(context).showSnackBar(jwSnackBar(true, "登陆成功"));
-        _getWeek();
-      } else if (value == "fail") {
-        Scaffold.of(context).removeCurrentSnackBar();
-        Scaffold.of(context).showSnackBar(jwSnackBar(false, "请重试"));
-        _getCode();
-      } else {
-        if (Global.logined) {
-          Scaffold.of(context).removeCurrentSnackBar();
-          Scaffold.of(context).showSnackBar(jwSnackBar(false, "登录成功,但程序发生了错误"));
-          _getCode();
-        }
-      }
-    }
-
-    await login("5191963403", "sr20000923++", _textFieldController.text.toString())
-        .then((String value) => _next(value));
-  }
-
-  void _getWeek() async {
-    setState(() {
-      _textFieldController.text = "";
-      _week = int.parse(writeData["week"]);
-    });
-    // print("_getWeek...");
-    getSchedule();
-  }
-
-  final TextEditingController _textFieldController = TextEditingController();
-
-  Uint8List _codeImgSrc = const Base64Decoder().convert(
-      "iVBORw0KGgoAAAANSUhEUgAAAEgAAAAeCAYAAACPOlitAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAHYcAAB2HAY/l8WUAAABYSURBVGhD7dChAcAgEMDAb/ffGSpqIQvcmfg86zMcvX85MCgYFAwKBgWDgkHBoGBQMCgYFAwKBgWDgkHBoGBQMCgYFAwKBgWDgkHBoGBQMCgYFAwKBl3NbAiZBDiX3e/AAAAAAElFTkSuQmCC");
-  Map<String, String> headers = {"cookie": ""};
-  int _week = int.parse(writeData["week"]);
-
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -260,32 +182,10 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
               verticalDirection: VerticalDirection.down,
               textDirection: TextDirection.ltr,
               children: [
-                // InkWell(
-                //   child: _codeImgSrc.length > 1
-                //       ? Image.memory(_codeImgSrc, height: 25)
-                //       : Container(
-                //           height: 25,
-                //         ),
-                //   onTap: () {
-                //     _getCode();
-                //   },
-                // ),
-                // TextField(
-                //   controller: _textFieldController,
-                // ),
-                // InkWell(
-                //   child: const Text('提交'),
-                //   onTap: () {
-                //     if (Global.logined) {
-                //       _getWeek();
-                //     } else {
-                //       _codeCheck();
-                //     }
-                //   },
-                // ),
                 InkWell(
                   onTap: () {
                     pageBus.fire(SetPageIndex(1));
+                    pageBus.fire(ReState(1));
                   },
                   child: const HomeCard(),
                 ),

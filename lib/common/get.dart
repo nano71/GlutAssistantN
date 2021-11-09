@@ -21,7 +21,8 @@ Future<void> getWeek() async {
     String weekHtml = document.querySelector("#date p span")!.innerHtml.trim();
     int week =
         int.parse(weekHtml.substring(weekHtml.indexOf("第") + 1, weekHtml.indexOf("周")).trim());
-    await writeConfig(week.toString());
+    writeData["week"] = week.toString();
+    await readConfig();
   } on TimeoutException catch (e) {
     print("超时");
     readConfig();
@@ -124,7 +125,18 @@ Future<void> getSchedule() async {
     writeSchedule(jsonEncode(_schedule));
   } on SocketException catch (e) {
     print("超时");
+  } on TimeoutException catch (e) {
+    print("网络错误");
   }
+}
+
+Future<void> getName() async {
+  print("getName...");
+  var response = await get(Global.getNameUrl, headers: {"cookie": mapCookieToString()})
+      .timeout(const Duration(seconds: 3));
+  dom.Document document = parse(response.body);
+
+  writeData["name"] = document.querySelector('[name="realname"]')!.parentNode!.text;
 }
 
 int getLocalWeek(DateTime nowDate, DateTime pastDate) {

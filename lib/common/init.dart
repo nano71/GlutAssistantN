@@ -22,7 +22,6 @@ initSchedule() async {
 
 initTodaySchedule() {
   print("initTodaySchedule");
-  print(writeData["week"]);
   final String _week = writeData["week"].toString();
   Map _schedule = schedule;
   List toDay = [];
