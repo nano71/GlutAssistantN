@@ -1,23 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:glutnnbox/common/init.dart';
 import 'package:glutnnbox/common/get.dart';
+import 'package:glutnnbox/common/init.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../data.dart';
-
-// /// 获取文档目录文件
-// Future<File> _getLocalDocumentFile() async {
-//   final dir = await getApplicationDocumentsDirectory();
-//   return File('${dir.path}/str.txt');
-// }
-//
-// /// 获取临时目录文件
-// Future<File> _getLocalTemporaryFile() async {
-//   final dir = await getTemporaryDirectory();
-//   return File('${dir.path}/table.json');
-// }
 
 Future<File> scheduleLocalSupportFile() async {
   final dir = await getApplicationSupportDirectory();
@@ -65,10 +53,10 @@ Future<File> configLocalSupportFile() async {
   return File('${dir.path}/config.json');
 }
 
-Future<void> writeConfig(String week) async {
+Future<void> writeConfig() async {
   print("writeConfig");
+  print(jsonEncode(writeData));
   writeData["time"] = "${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}";
-  writeData["week"] = week;
   String str = jsonEncode(writeData);
   final file = await configLocalSupportFile();
   bool dirBool = await file.exists();
@@ -78,7 +66,6 @@ Future<void> writeConfig(String week) async {
   try {
     await file.writeAsString(str);
     print("writeConfig End");
-    await readConfig();
   } catch (e) {
     print(e);
   }
@@ -89,10 +76,12 @@ Future<void> readConfig() async {
   final file = await configLocalSupportFile();
   bool dirBool = await file.exists();
   if (!dirBool) {
+    print("文件不存在");
     await file.create(recursive: true);
   }
   try {
     final result = await file.readAsString();
+    print(result);
     writeData = jsonDecode(result);
     List _timeList = writeData["time"].toString().split("-");
     int y = DateTime.now().year;
@@ -103,6 +92,7 @@ Future<void> readConfig() async {
             DateTime(int.parse(_timeList[0]), int.parse(_timeList[1]), int.parse(_timeList[2])));
     writeData["week"] = _nowWeek.toString();
     print("readConfig End");
+    await writeConfig();
   } catch (e) {
     print(e);
   }

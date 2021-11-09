@@ -4,15 +4,12 @@ import 'package:flutter/material.dart';
 
 Map schedule = {};
 Map writeData = {
-  //时间
   "time": "",
-  //是多少周
   "week": "1",
-
   "weekDay": "",
-  "username": "5191963403",
+  "username": "",
   "password": "",
-  "name": "梁皓"
+  "name": ""
 };
 List todaySchedule = [];
 List tomorrowSchedule = [];

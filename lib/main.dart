@@ -8,7 +8,7 @@ main() {
   SystemUiOverlayStyle systemUiOverlayStyle =
       const SystemUiOverlayStyle(statusBarColor: Colors.white);
   SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
-  print("--start--");
+  print("startApp...");
   runApp(const MyApp());
 }
 

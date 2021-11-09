@@ -3,6 +3,7 @@ import 'package:event_bus/event_bus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:glutnnbox/config.dart';
+import 'package:glutnnbox/pages/schedule.dart';
 import 'package:glutnnbox/pages/setting.dart';
 
 import '../data.dart';
@@ -54,28 +55,32 @@ class HomeTopBar extends StatelessWidget {
   }
 }
 
-SliverAppBar mineTopBar = SliverAppBar(
-  pinned: true,
-  collapsedHeight: 56.00,
-  primary: true,
-  backgroundColor: Colors.white,
-  stretch: true,
-  expandedHeight: 125.0,
-  elevation: 0.3,
-  automaticallyImplyLeading: false,
-  flexibleSpace: FlexibleSpaceBar(
-      title: Row(
-        children: [
-          Text(
-            (writeData["name"] != "" ? "Hi! " + writeData["name"] : "请先登录教务"),
-            style: const TextStyle(
-              color: Colors.black,
+SliverAppBar publicTopBar(String title, [inkWell = const Text("")]) {
+  return SliverAppBar(
+    pinned: true,
+    collapsedHeight: 56.00,
+    primary: true,
+    backgroundColor: Colors.white,
+    stretch: true,
+    expandedHeight: 125.0,
+    elevation: 0.3,
+    automaticallyImplyLeading: false,
+    flexibleSpace: FlexibleSpaceBar(
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              (title),
+              style: const TextStyle(
+                color: Colors.black,
+              ),
             ),
-          ),
-        ],
-      ),
-      titlePadding: const EdgeInsets.fromLTRB(16, 0, 16, 12)),
-);
+            inkWell,
+          ],
+        ),
+        titlePadding: const EdgeInsets.fromLTRB(16, 0, 16, 12)),
+  );
+}
 
 class ScheduleTopBar extends StatefulWidget {
   const ScheduleTopBar({Key? key}) : super(key: key);
@@ -100,7 +105,12 @@ class ScheduleTopBarState extends State<ScheduleTopBar> {
             "第 $_week 周",
             style: const TextStyle(color: Colors.black),
           ),
-          goCurrent,
+          InkWell(
+            child: goCurrent,
+            onTap: () {
+              pageBus.fire(ReState(1));
+            },
+          )
         ],
       ),
     );

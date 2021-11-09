@@ -6,6 +6,7 @@ import 'package:glutnnbox/pages/setting.dart';
 import 'package:glutnnbox/widget/bars.dart';
 import 'package:glutnnbox/widget/icons.dart';
 
+import '../data.dart';
 import 'info.dart';
 import 'login.dart';
 
@@ -25,7 +26,7 @@ class MinePageState extends State<MinePage> {
       child: CustomScrollView(
           physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
           slivers: [
-            mineTopBar,
+            publicTopBar(writeData["name"] != "" ? "Hi! " + writeData["name"] : "请先登录教务"),
             SliverToBoxAdapter(
                 child: Container(
               width: double.infinity,
@@ -40,7 +41,7 @@ class MinePageState extends State<MinePage> {
                           MaterialPageRoute(builder: (context) => const LoginPage()));
                     },
                     child: mineItem(Icons.account_box_outlined,
-                        const EdgeInsets.fromLTRB(16, 14, 0, 14), "登录教务"),
+                        const EdgeInsets.fromLTRB(16, 14, 0, 14), (writeData["name"] != "" ? "更换账号" : "登录教务")),
                   ),
                   InkWell(
                     onTap: () {

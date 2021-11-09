@@ -1,3 +1,4 @@
+import 'package:event_bus/event_bus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -92,6 +93,13 @@ class SchedulePage extends StatefulWidget {
 }
 
 GlobalKey<SchedulePageState> schedulePageKey = GlobalKey();
+EventBus reState = EventBus();
+
+class ReState {
+  int index;
+
+  ReState(this.index);
+}
 
 class SchedulePageState extends State<SchedulePage> with AutomaticKeepAliveClientMixin {
   late double _startPositionX;
@@ -100,11 +108,15 @@ class SchedulePageState extends State<SchedulePage> with AutomaticKeepAliveClien
   GlobalKey<SchedulePageColumnState> weekKey = GlobalKey();
   GlobalKey<ScheduleTopBarState> barKey = GlobalKey();
   GlobalKey<RowHeaderState> rowHeaderKey = GlobalKey();
+  var eventBusFn;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    eventBusFn = pageBus.on<ReState>().listen((event) {
+      reState();
+    });
   }
 
   void _warning1() {
@@ -159,10 +171,7 @@ class SchedulePageState extends State<SchedulePage> with AutomaticKeepAliveClien
       margin: const EdgeInsets.fromLTRB(0, 0, 0, 16),
       child: Column(
         children: [
-          InkWell(
-            child: ScheduleTopBar(key: barKey),
-            onTap: reState,
-          ),
+          ScheduleTopBar(key: barKey),
           RowHeader(key: rowHeaderKey),
           Expanded(
             child: Listener(
