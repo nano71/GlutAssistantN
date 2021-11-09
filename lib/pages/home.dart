@@ -166,7 +166,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     if (widget.type == 1) {
-      Future.delayed(const Duration(seconds: 2), () {
+      Future.delayed(const Duration(seconds: 0), () {
         _goTop();
       });
     }
@@ -318,7 +318,9 @@ class LoginCheck extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
+    if (writeData["username"] != "") {
+      return const SliverToBoxAdapter(child: Center());
+    }
     return SliverToBoxAdapter(
       child: Center(
         child: TextButton(

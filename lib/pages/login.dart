@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:glutassistantn/common/cookie.dart';
 import 'package:glutassistantn/common/get.dart';
+import 'package:glutassistantn/common/init.dart';
 import 'package:glutassistantn/common/io.dart';
 import 'package:glutassistantn/common/login.dart';
 import 'package:glutassistantn/widget/bars.dart';
@@ -33,6 +34,7 @@ class LoginPageState extends State<LoginPage> {
   Uint8List _codeImgSrc = const Base64Decoder().convert(
       "iVBORw0KGgoAAAANSUhEUgAAAEgAAAAeCAYAAACPOlitAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAHYcAAB2HAY/l8WUAAABYSURBVGhD7dChAcAgEMDAb/ffGSpqIQvcmfg86zMcvX85MCgYFAwKBgWDgkHBoGBQMCgYFAwKBgWDgkHBoGBQMCgYFAwKBgWDgkHBoGBQMCgYFAwKBl3NbAiZBDiX3e/AAAAAAElFTkSuQmCC");
   String buttonTitle = "onPressed: () { login(); }";
+  bool logined = false;
 
   @override
   initState() {
@@ -43,24 +45,26 @@ class LoginPageState extends State<LoginPage> {
   }
 
   _check() {
-    FocusScope.of(context).requestFocus(FocusNode());
-    if (passwordController.text.isEmpty && studentIdController.text.isEmpty) {
-      setState(() {
-        messageColor = Colors.red;
-        message = "学号和密码不为空...";
-      });
-    } else if (studentIdController.text.length != 10) {
-      setState(() {
-        messageColor = Colors.red;
-        message = "学号长度不对...";
-      });
-    } else if (passwordController.text.isEmpty) {
-      setState(() {
-        messageColor = Colors.red;
-        message = "你忘输密码了...";
-      });
-    } else {
-      _codeCheck();
+    if (!logined) {
+      FocusScope.of(context).requestFocus(FocusNode());
+      if (passwordController.text.isEmpty && studentIdController.text.isEmpty) {
+        setState(() {
+          messageColor = Colors.red;
+          message = "学号和密码不为空...";
+        });
+      } else if (studentIdController.text.length != 10) {
+        setState(() {
+          messageColor = Colors.red;
+          message = "学号长度不对...";
+        });
+      } else if (passwordController.text.isEmpty) {
+        setState(() {
+          messageColor = Colors.red;
+          message = "你忘输密码了...";
+        });
+      } else {
+        _codeCheck();
+      }
     }
   }
 
@@ -105,6 +109,7 @@ class LoginPageState extends State<LoginPage> {
     Future<void> _next(String value) async {
       if (value == "success") {
         Global.logined = true;
+        logined = true;
         setState(() {
           messageColor = Colors.blue;
           message = "登录成功";
@@ -116,6 +121,9 @@ class LoginPageState extends State<LoginPage> {
         await getSchedule();
         await writeConfig();
         pageBus.fire(SetPageIndex(0));
+        await initTodaySchedule();
+        await initTomorrowSchedule();
+        print("initSchedule End");
         Navigator.pushAndRemoveUntil(
           context,
           CustomRouteMs300(
