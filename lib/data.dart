@@ -1,6 +1,30 @@
 import 'dart:math';
 
+import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
+
+EventBus pageBus = EventBus();
+
+class SetPageIndex {
+  int index;
+
+  SetPageIndex(this.index);
+}
+
+class ReState {
+  int index;
+
+  ReState(this.index);
+}
+
+class ReTomorrowListState {
+  int index;
+  ReTomorrowListState(this.index);
+}
+class ReTodayListState {
+  int index;
+  ReTodayListState(this.index);
+}
 
 Map schedule = {};
 Map writeData = {

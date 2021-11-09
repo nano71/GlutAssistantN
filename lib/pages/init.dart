@@ -1,23 +1,53 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:glutnnbox/common/get.dart';
-import 'package:glutnnbox/common/init.dart';
-import 'package:glutnnbox/common/io.dart';
-import 'package:glutnnbox/config.dart';
-import 'package:glutnnbox/pages/home.dart';
-import 'package:glutnnbox/pages/mine.dart';
-import 'package:glutnnbox/pages/schedule.dart';
-import 'package:glutnnbox/widget/bars.dart';
+import 'package:glutassistantn/common/get.dart';
+import 'package:glutassistantn/common/init.dart';
+import 'package:glutassistantn/common/io.dart';
+import 'package:glutassistantn/config.dart';
+import 'package:glutassistantn/pages/home.dart';
+import 'package:glutassistantn/pages/mine.dart';
+import 'package:glutassistantn/pages/schedule.dart';
+import 'package:glutassistantn/widget/bars.dart';
 
 class CustomRoute extends PageRouteBuilder {
   final Widget widget;
 
-  CustomRoute(this.widget)
+  CustomRoute(this.widget,[int s = 2])
       : super(
             //父类的方法
             //设置动画持续的时间，建议再1和2之间
-            transitionDuration: const Duration(seconds: 2),
+            transitionDuration:  Duration(seconds: s),
+            //页面的构造器
+            pageBuilder: (
+              BuildContext context,
+              Animation<double> animation,
+              //次级动画
+              Animation<double> secondaryAnimation,
+            ) {
+              return widget;
+            },
+            //过度效果
+            transitionsBuilder: (BuildContext context, Animation<double> animation,
+                Animation<double> secondaryAnimation, Widget child) {
+              // 过度的动画的值
+              return FadeTransition(
+                // 过度的透明的效果
+                opacity: Tween(begin: 0.0, end: 1.0)
+                    // 给他个透明度的动画   CurvedAnimation：设置动画曲线
+                    .animate(CurvedAnimation(parent: animation, curve: Curves.ease)),
+                child: child,
+              );
+            });
+}
+class CustomRouteMs300 extends PageRouteBuilder {
+  final Widget widget;
+
+  CustomRouteMs300(this.widget)
+      : super(
+            //父类的方法
+            //设置动画持续的时间，建议再1和2之间
+            transitionDuration:  const Duration(milliseconds: 300),
             //页面的构造器
             pageBuilder: (
               BuildContext context,
@@ -43,18 +73,15 @@ class CustomRoute extends PageRouteBuilder {
 
 class InitPage extends StatefulWidget {
   const InitPage({Key? key}) : super(key: key);
-
   @override
   InitPageState createState() => InitPageState();
 }
-
 class InitPageState extends State<InitPage> {
   @override
   void initState() {
     super.initState();
     _init();
   }
-
   _init() async {
     await getWeek();
     print("getWeek End");
@@ -75,39 +102,35 @@ class InitPageState extends State<InitPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        color: Colors.white,
-        child: const Center(
-          child: Text(
-            "",
-            style: TextStyle(
-                color: Colors.blue, fontWeight: FontWeight.w100, decoration: TextDecoration.none),
-          ),
-        ));
+    return Container(color: Colors.white);
   }
 }
 
 class Index extends StatelessWidget {
-  const Index({Key? key}) : super(key: key);
+  final int type;
+
+  const Index({Key? key, this.type = 0}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       backgroundColor: Colors.white,
-      body: Body(),
-      bottomNavigationBar: BottomNavBar(),
+      body: Body(type: type),
+      bottomNavigationBar: const BottomNavBar(),
     );
   }
 }
 
 class Body extends StatelessWidget {
-  const Body({Key? key}) : super(key: key);
+  final int type;
+
+  const Body({Key? key, this.type = 0}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return PageView(
         physics: const NeverScrollableScrollPhysics(),
         controller: Global.pageControl,
-        children: const [HomePage(), SchedulePage(), MinePage()]);
+        children: [HomePage(type: type), const SchedulePage(), const MinePage()]);
   }
 }

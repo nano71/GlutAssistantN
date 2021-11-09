@@ -3,18 +3,20 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:glutnnbox/common/get.dart';
-import 'package:glutnnbox/common/init.dart';
-import 'package:glutnnbox/pages/schedule.dart';
-import 'package:glutnnbox/widget/bars.dart';
-import 'package:glutnnbox/widget/cards.dart';
-import 'package:glutnnbox/widget/icons.dart';
-import 'package:glutnnbox/widget/lists.dart';
+import 'package:glutassistantn/common/get.dart';
+import 'package:glutassistantn/common/init.dart';
+import 'package:glutassistantn/widget/bars.dart';
+import 'package:glutassistantn/widget/cards.dart';
+import 'package:glutassistantn/widget/icons.dart';
+import 'package:glutassistantn/widget/lists.dart';
 
 import '../data.dart';
+import 'login.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  final int type;
+
+  const HomePage({Key? key, this.type = 0}) : super(key: key);
 
   @override
   HomePageState createState() => HomePageState();
@@ -43,7 +45,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    // _getCode();
+
     _animationControllerForHomeCards1 = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 150),
@@ -113,7 +115,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
       );
       _time?.cancel();
       print(_time);
-      _time = Timer(const Duration(seconds: 5), () {
+      _time = Timer(const Duration(seconds: 1), () {
         print("init");
         getWeek();
         initTodaySchedule();
@@ -140,7 +142,6 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
         Scaffold.of(context).removeCurrentSnackBar();
         Scaffold.of(context).showSnackBar(jwSnackBar(false, "你好快啊,求求你给我休息会吧..."));
         _time?.cancel();
-        print(_time);
         _time = Timer(const Duration(seconds: 5), () {
           Future.delayed(const Duration(seconds: 5), () {
             _timeOutBool = true;
@@ -164,6 +165,11 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.type == 1) {
+      Future.delayed(const Duration(seconds: 2), () {
+        _goTop();
+      });
+    }
     double width = MediaQuery.of(context).size.width;
     return Container(
       color: Colors.white,
@@ -300,7 +306,32 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
           TomorrowCourseList(
             key: tomorrowCourseListKey,
           ),
+          const LoginCheck(),
         ],
+      ),
+    );
+  }
+}
+
+class LoginCheck extends StatelessWidget {
+  const LoginCheck({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return SliverToBoxAdapter(
+      child: Center(
+        child: TextButton(
+          onPressed: () {
+            Navigator.of(context).push(
+              // 在FormPage()里传入参数
+              MaterialPageRoute(
+                builder: (context) => const LoginPage(),
+              ),
+            );
+          },
+          child: const Text("请先登录"),
+        ),
       ),
     );
   }

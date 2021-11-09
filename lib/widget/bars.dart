@@ -1,21 +1,13 @@
 // 引入 eventBus 包文件
-import 'package:event_bus/event_bus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:glutnnbox/config.dart';
-import 'package:glutnnbox/pages/schedule.dart';
-import 'package:glutnnbox/pages/setting.dart';
+import 'package:glutassistantn/config.dart';
+import 'package:glutassistantn/pages/setting.dart';
 
 import '../data.dart';
 import 'icons.dart';
 
-EventBus pageBus = EventBus();
 
-class SetPageIndex {
-  int index;
-
-  SetPageIndex(this.index);
-}
 
 class HomeTopBar extends StatelessWidget {
   const HomeTopBar({Key? key}) : super(key: key);
