@@ -65,6 +65,31 @@ String _timeText(int index) {
   }
 }
 
+List<String> _timeText2(int index) {
+  if (index == -1) return ["0", "0"];
+  List value = _getStartTime(int.parse(todaySchedule[index][3]));
+  if (value[0] >= 1) {
+    return ["0", "0"];
+  } else if (value[1] >= 4) {
+    return ["0", "0"];
+  } else if (value[1] >= 1) {
+    if (value[2] == 0) return [value[1].toString(), "0"];
+    return [value[1].toString(), value[2].toString()];
+  } else if (value[3] == "after") {
+    if (value[2] < 46 && value[2] > 0) {
+      if (value[1] == 0.0) {
+        return ["0", value[2].toString()];
+      } else {
+        return ["0", "0"];
+      }
+    } else {
+      return ["0", "0"];
+    }
+  } else {
+    return ["0", value[2].toString()];
+  }
+}
+
 class TodayCourseList extends StatefulWidget {
   const TodayCourseList({Key? key}) : super(key: key);
 
@@ -99,6 +124,61 @@ class TodayCourseListState extends State<TodayCourseList> {
     setState(() {
       _todaySchedule = todaySchedule;
     });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverList(
+      delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
+        return TodayCourseListItem(index: index);
+      }, childCount: _todaySchedule.length),
+    );
+  }
+}
+
+class TodayCourseListItem extends StatefulWidget {
+  final int index;
+
+  const TodayCourseListItem({Key? key, this.index = -1}) : super(key: key);
+
+  @override
+  TodayCourseListItemState createState() => TodayCourseListItemState();
+}
+
+class TodayCourseListItemState extends State<TodayCourseListItem> {
+  late Timer _timer;
+  bool timerS = false;
+
+  void timerRe(int index) {
+    if (!timerS) {
+      timerS = true;
+      Future.delayed(const Duration(seconds: 1), () {
+        List<String> list = _timeText2(index);
+        if (list[0] != "0" || list[1] != "0") {
+          print("$index : ${DateTime.now().second}");
+          setState(() {});
+        }
+      });
+    }
+    // if (!timerS) {
+    //   timerS = true;
+    //
+    //
+    //
+    //   List<String> list = _timeText2(index);
+    //   if (list[0] != "0" || list[1] != "0") {
+    //     _timer = Timer.periodic(const Duration(milliseconds: 1000), (timer) {
+    //       print("$index : ${DateTime.now().second}");
+    //       list = _timeText2(index);
+    //       if (list[0] == "0" && list[1] == "0") {
+    //         _timer.cancel();
+    //       }
+    //       setState(() {});
+    //     });
+    //   } else {
+    //     print("已结束");
+    //   }
+    // }
   }
 
   IconData _icon(int index) {
@@ -155,70 +235,69 @@ class TodayCourseListState extends State<TodayCourseList> {
 
   @override
   Widget build(BuildContext context) {
-    return SliverList(
-      delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
-        return Container(
-            margin: const EdgeInsets.fromLTRB(16, 16, 16, 16),
-            // height: 50,
-            child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-              Row(
+    timerRe(widget.index);
+    return Container(
+        margin: const EdgeInsets.fromLTRB(16, 16, 16, 16),
+        // height: 50,
+        child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          Row(
+            children: [
+              Container(
+                margin: const EdgeInsets.fromLTRB(0, 0, 8, 0),
+                child: Icon(
+                  _icon(widget.index),
+                  color: _timeColors(widget.index),
+                ),
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    margin: const EdgeInsets.fromLTRB(0, 0, 8, 0),
-                    child: Icon(
-                      _icon(index),
-                      color: _timeColors(index),
-                    ),
-                  ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  Row(
                     children: [
-                      Row(
-                        children: [
-                          Text(_todaySchedule[index][2] + " ",
-                              style: TextStyle(
-                                  decoration: TextDecoration.none, color: _textColorsTop(index))),
-                          Text(courseLongText2ShortName(_todaySchedule[index][0]),
-                              style: TextStyle(
-                                  decoration: TextDecoration.none, color: _textColorsTop(index))),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Text('第${_todaySchedule[index][3]}节 | ',
-                              style: TextStyle(
-                                  decoration: TextDecoration.none,
-                                  fontSize: 12,
-                                  color: _textColorsDown(index))),
-                          Text(_todaySchedule[index][1],
-                              style: TextStyle(
-                                  decoration: TextDecoration.none,
-                                  fontSize: 12,
-                                  color: _textColorsDown(index))),
-                        ],
-                      ),
+                      Text(todaySchedule[widget.index][2] + " ",
+                          style: TextStyle(
+                              decoration: TextDecoration.none,
+                              color: _textColorsTop(widget.index))),
+                      Text(courseLongText2ShortName(todaySchedule[widget.index][0]),
+                          style: TextStyle(
+                              decoration: TextDecoration.none,
+                              color: _textColorsTop(widget.index))),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Text('第${todaySchedule[widget.index][3]}节 | ',
+                          style: TextStyle(
+                              decoration: TextDecoration.none,
+                              fontSize: 12,
+                              color: _textColorsDown(widget.index))),
+                      Text(todaySchedule[widget.index][1],
+                          style: TextStyle(
+                              decoration: TextDecoration.none,
+                              fontSize: 12,
+                              color: _textColorsDown(widget.index))),
                     ],
                   ),
                 ],
               ),
-              Stack(
-                alignment: Alignment.centerRight,
-                children: [
-                  Align(
-                      alignment: Alignment.centerRight,
-                      child: Text(
-                        (_timeText(index - 1).contains("后") ? "" : _timeText(index)),
-                        style: TextStyle(
-                            decoration: TextDecoration.none,
-                            fontSize: 14,
-                            color: _timeColors(index)),
-                      ))
-                ],
-              ),
-            ]));
-      }, childCount: _todaySchedule.length),
-    );
+            ],
+          ),
+          Stack(
+            alignment: Alignment.centerRight,
+            children: [
+              Align(
+                  alignment: Alignment.centerRight,
+                  child: Text(
+                    (_timeText(widget.index - 1).contains("后") ? "" : _timeText(widget.index)),
+                    style: TextStyle(
+                        decoration: TextDecoration.none,
+                        fontSize: 14,
+                        color: _timeColors(widget.index)),
+                  ))
+            ],
+          ),
+        ]));
   }
 }
 
@@ -231,7 +310,6 @@ class TomorrowCourseListState extends State<TomorrowCourseList> {
     super.initState();
 
     eventBusFn = pageBus.on<ReTomorrowListState>().listen((event) {
-      print(1);
       reSate();
     });
   }

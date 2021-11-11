@@ -151,7 +151,8 @@ class SchedulePageState extends State<SchedulePage> with AutomaticKeepAliveClien
     rowHeaderKey.currentState!.onPressed(_currentScheduleWeek);
   }
 
-  void reState() {
+  reState() {
+    setState(() {});
     if (writeData["week"] != _currentScheduleWeek.toString()) {
       _currentScheduleWeek = int.parse(writeData["week"]);
       weekKey.currentState!.onPressed(int.parse(writeData["week"]));

@@ -3,6 +3,7 @@ import 'package:glutassistantn/common/cookie.dart';
 import 'package:glutassistantn/common/get.dart';
 import 'package:glutassistantn/common/login.dart';
 import 'package:glutassistantn/data.dart';
+import 'package:glutassistantn/pages/init.dart';
 import 'package:http/http.dart';
 
 import '../config.dart';
@@ -17,6 +18,12 @@ class CodeCheckDialog {
 codeCheckDialog(BuildContext context) async {
   TextEditingController textFieldController = TextEditingController();
   var response = await get(Global.getCodeUrl).timeout(const Duration(milliseconds: 6000));
+  bool clicked = false;
+  getCode(Function fn) async {
+    response = await get(Global.getCodeUrl).timeout(const Duration(milliseconds: 6000));
+    parseRawCookies(response.headers['set-cookie']);
+    fn(() {});
+  }
 
   parseRawCookies(response.headers['set-cookie']);
   void _codeCheck() async {
@@ -25,77 +32,97 @@ codeCheckDialog(BuildContext context) async {
         await getSchedule().then((value) => {
               if (value)
                 {
-                  Navigator.pop(context),
-                  Scaffold.of(context).removeCurrentSnackBar(),
-                  Scaffold.of(context).showSnackBar(jwSnackBar(true, "请再点一次刷新", 10))
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    CustomRouteMs300(
+                      const Index(
+                        type: 1,
+                      ),
+                    ),
+                    (route) => false,
+                  )
                 }
             });
       }
     }
 
     Future<void> _next(String value) async {
+      print(value);
       if (value == "success") {
         await login(writeData["username"], writeData["password"], textFieldController.text)
             .then((String value) => _next2(value));
       } else {
-        response = await get(Global.getCodeUrl).timeout(const Duration(milliseconds: 6000));
         Scaffold.of(context).removeCurrentSnackBar();
         Scaffold.of(context).showSnackBar(jwSnackBar(false, "验证码错误"));
       }
     }
 
-    await codeCheck(textFieldController.text).then((String value) => _next(value));
+    if (!clicked) {
+      clicked = !clicked;
+      print(textFieldController.text);
+      await codeCheck(textFieldController.text).then((String value) => _next(value));
+    }
   }
 
   showDialog(
       context: context,
       builder: (BuildContext context) {
-        return SimpleDialog(
-          children: <Widget>[
-            Container(
-              margin: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-              padding: const EdgeInsets.fromLTRB(0, 4, 0, 4),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: textFieldController,
-                      decoration: const InputDecoration(
-                        icon: Icon(Icons.code_outlined),
-                        border: InputBorder.none,
-                        hintText: "验证码", //类似placeholder效果
+        return StatefulBuilder(builder: (context, setState) {
+          return SimpleDialog(
+            children: <Widget>[
+              Container(
+                margin: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: textFieldController,
+                        decoration: const InputDecoration(
+                          icon: Icon(Icons.code_outlined),
+                          border: InputBorder.none,
+                          hintText: "验证码", //类似placeholder效果
+                        ),
                       ),
                     ),
-                  ),
-                  InkWell(
-                    child: Image.memory(response.bodyBytes, height: 25),
-                    onTap: () {},
-                  ),
-                ],
-              ),
-            ),
-            Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: const Text(
-                  "取消",
-                  style: TextStyle(color: Colors.blue),
+                    InkWell(
+                      child: Image.memory(response.bodyBytes, height: 25),
+                      onTap: () {
+                        getCode(setState);
+                      },
+                    ),
+                  ],
                 ),
               ),
-              TextButton(
-                onPressed: () {
-                  _codeCheck();
-                },
-                child: const Text(
-                  "继续",
-                  style: TextStyle(color: Colors.blue),
-                ),
+              Container(
+                margin: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: Text(
+                      !clicked ? "取消" : "",
+                      style: TextStyle(color: Colors.blue),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      _codeCheck();
+                      setState(() {
+                        clicked = true;
+                      });
+                    },
+                    child: Text(
+                      !clicked ? "继续" : "稍等...",
+                      style: TextStyle(color: Colors.blue),
+                    ),
+                  ),
+                ]),
               ),
-            ]),
-          ],
-        );
+            ],
+          );
+        });
       });
 }

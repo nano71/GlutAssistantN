@@ -7,12 +7,14 @@ import 'dart:io';
 import 'package:gbk2utf8/gbk2utf8.dart';
 import 'package:glutassistantn/common/cookie.dart';
 import 'package:glutassistantn/common/io.dart';
+import 'package:glutassistantn/widget/lists.dart';
 import 'package:html/dom.dart' as dom;
 import 'package:html/parser.dart';
 import 'package:http/http.dart';
 
 import '../config.dart';
 import '../data.dart';
+import 'init.dart';
 
 Future<void> getWeek() async {
   try {
@@ -30,7 +32,7 @@ Future<void> getWeek() async {
       writeData["semesterBk"] = q;
       writeData["yearBk"] = n;
     }
-    await readConfig();
+    // await readConfig();
   } on TimeoutException catch (e) {
     print("超时");
     readConfig();
@@ -62,8 +64,16 @@ Future<bool> getSchedule() async {
     if (response.body.contains("j_username")) {
       print("登录过期");
       return false;
-    }else{
-      dom.Document document = parse(gbk.decode(response.bodyBytes));
+    } else {
+
+      dom.Document document = parse(gbk
+          .decode(response.bodyBytes)
+          .toString()
+          .replaceAll("第", "")
+          .replaceAll("节", "")
+          .replaceAll("周", "")
+          .replaceAll("双", "")
+      );
       var list = document.querySelectorAll(".infolist_common");
       num listLength = document.querySelectorAll(".infolist_common").length - 23;
       for (var i = 0; i < listLength; i++) {
@@ -73,13 +83,13 @@ Future<bool> getSchedule() async {
               .querySelectorAll("table.none>tbody>tr")[j]
               .querySelectorAll("td")[2]
               .innerHtml
-              .trim().replaceAll("第", "").replaceAll("节", "");
+              .trim();
           //周次
           String zc = list[i]
               .querySelectorAll("table.none>tbody>tr")[j]
               .querySelectorAll("td")[0]
               .innerHtml
-              .trim().replaceAll("第", "").replaceAll("周", "");
+              .trim();
           List kjList = kj.trim().split('-');
           List zcList = zc.trim().split('-');
           String week = list[i]
@@ -132,7 +142,7 @@ Future<bool> getSchedule() async {
           }
         }
       }
-     await writeSchedule(jsonEncode(_schedule));
+      await writeSchedule(jsonEncode(_schedule));
     }
     print("getSchedule End");
     return true;
@@ -142,12 +152,11 @@ Future<bool> getSchedule() async {
   } on TimeoutException catch (e) {
     print("网络错误");
     return false;
-
   }
 }
-getScheduleErrorR(){
 
-}
+getScheduleErrorR() {}
+
 Future<void> getName() async {
   print("getName...");
   var response = await get(Global.getNameUrl, headers: {"cookie": mapCookieToString()})
