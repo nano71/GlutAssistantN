@@ -5,12 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:glutassistantn/common/get.dart';
 import 'package:glutassistantn/common/init.dart';
+import 'package:glutassistantn/pages/query.dart';
 import 'package:glutassistantn/widget/bars.dart';
 import 'package:glutassistantn/widget/cards.dart';
 import 'package:glutassistantn/widget/dialog.dart';
 import 'package:glutassistantn/widget/icons.dart';
 import 'package:glutassistantn/widget/lists.dart';
 
+import '../config.dart';
 import '../data.dart';
 import 'login.dart';
 
@@ -99,6 +101,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 
   void _goTop() {
+    // Global.cookie = {};
     print(_goTopInitCount);
     if (_goTopInitCount < 8) {
       print("刷新${DateTime.now()}");
@@ -133,15 +136,22 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   else
                     {
                       Scaffold.of(context).removeCurrentSnackBar(),
-                      Scaffold.of(context).showSnackBar(jwSnackBar(false, "需要验证")),
-                      codeCheckDialog(context),
+                      Scaffold.of(context).showSnackBar(jwSnackBarAction(
+                        false,
+                        "需要验证",
+                        context,
+                        10,
+                      )),
                     }
                 }
+              else
+                {
+                  initTodaySchedule(),
+                  initTomorrowSchedule(),
+                  todayCourseListKey.currentState!.reSate(),
+                  tomorrowCourseListKey.currentState!.reSate(),
+                }
             });
-        initTodaySchedule();
-        initTomorrowSchedule();
-        todayCourseListKey.currentState!.reSate();
-        tomorrowCourseListKey.currentState!.reSate();
         _timeOutBool = true;
         _goTopInitCount = 0;
       });
@@ -152,7 +162,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
         _count++;
         offset_ += 0.15;
         iconKey.currentState!.onPressed(offset_);
-        if (_count >= randomInt(100, 200)) {
+        if (_count >= randomInt(200, 300)) {
           timer.cancel();
         }
       });
@@ -267,6 +277,8 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       },
                       onTapUp: (d) {
                         Future.delayed(const Duration(milliseconds: 100), () {
+                          Navigator.of(context)
+                              .push(MaterialPageRoute(builder: (context) => const QueryPage()));
                           _animationControllerForHomeCards2.reverse();
                         });
                       },

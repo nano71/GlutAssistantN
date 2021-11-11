@@ -166,8 +166,8 @@ Widget homeCard3 = Stack(
 
 class HomeCardsState {
   static double iconSize = 36;
-  static List icons = [Icons.refresh, Icons.saved_search, Icons.library_books_sharp];
-  static List iconTexts = ["课表刷新", "教室查询", "我的考试"];
+  static List icons = [Icons.refresh, Icons.saved_search_outlined, Icons.library_books_sharp];
+  static List iconTexts = ["课表刷新", "成绩查询", "我的考试"];
   static EdgeInsetsGeometry textMargin = const EdgeInsets.fromLTRB(0, 44, 0, 0);
   static EdgeInsetsGeometry iconMargin = const EdgeInsets.fromLTRB(0, 0, 0, 32);
   static Decoration? cardDecoration = const BoxDecoration(

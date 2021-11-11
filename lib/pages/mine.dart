@@ -60,15 +60,15 @@ class MinePageState extends State<MinePage> {
                     child: mineItem(
                         Icons.workspaces_outline, const EdgeInsets.fromLTRB(16, 14, 0, 14), "课程生涯"),
                   ),
-                  InkWell(
-                    onTap: () {
-                      Navigator.of(context).push(
-                          // 在FormPage()里传入参数
-                          MaterialPageRoute(builder: (context) => const QueryPage()));
-                    },
-                    child: mineItem(
-                        Icons.list_alt_rounded, const EdgeInsets.fromLTRB(16, 14, 0, 14), "成绩查询"),
-                  ),
+                  // InkWell(
+                  //   onTap: () {
+                  //     Navigator.of(context).push(
+                  //         // 在FormPage()里传入参数
+                  //         MaterialPageRoute(builder: (context) => const QueryPage()));
+                  //   },
+                  //   child: mineItem(
+                  //       Icons.list_alt_rounded, const EdgeInsets.fromLTRB(16, 14, 0, 14), "成绩查询"),
+                  // ),
                   topLine,
                   InkWell(
                     onTap: () {

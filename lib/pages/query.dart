@@ -16,7 +16,7 @@ class _QueryPageState extends State<QueryPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    // getScore();
+    getScore();
   }
 
   @override
