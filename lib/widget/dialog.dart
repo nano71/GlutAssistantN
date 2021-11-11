@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:glutassistantn/common/cookie.dart';
+import 'package:glutassistantn/common/get.dart';
 import 'package:glutassistantn/common/login.dart';
 import 'package:glutassistantn/data.dart';
 import 'package:http/http.dart';
 
 import '../config.dart';
+import 'bars.dart';
 
 class CodeCheckDialog {
   static final checkCodeController = TextEditingController();
@@ -12,16 +14,34 @@ class CodeCheckDialog {
   static Color messageColor = Colors.grey;
 }
 
-void codeCheckDialog(BuildContext context) async {
+codeCheckDialog(BuildContext context) async {
   TextEditingController textFieldController = TextEditingController();
   var response = await get(Global.getCodeUrl).timeout(const Duration(milliseconds: 6000));
+
   parseRawCookies(response.headers['set-cookie']);
   void _codeCheck() async {
-    void _next(String value) async {
+    Future<void> _next2(String value) async {
+      if (value == "success") {
+        await getSchedule().then((value) => {
+              if (value)
+                {
+                  Navigator.pop(context),
+                  Scaffold.of(context).removeCurrentSnackBar(),
+                  Scaffold.of(context).showSnackBar(jwSnackBar(true, "请再点一次刷新", 10))
+                }
+            });
+      }
+    }
+
+    Future<void> _next(String value) async {
       if (value == "success") {
         await login(writeData["username"], writeData["password"], textFieldController.text)
-            .then((String value) => _next(value));
-      } else {}
+            .then((String value) => _next2(value));
+      } else {
+        response = await get(Global.getCodeUrl).timeout(const Duration(milliseconds: 6000));
+        Scaffold.of(context).removeCurrentSnackBar();
+        Scaffold.of(context).showSnackBar(jwSnackBar(false, "验证码错误"));
+      }
     }
 
     await codeCheck(textFieldController.text).then((String value) => _next(value));
@@ -55,7 +75,16 @@ void codeCheckDialog(BuildContext context) async {
                 ],
               ),
             ),
-            Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+            Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text(
+                  "取消",
+                  style: TextStyle(color: Colors.blue),
+                ),
+              ),
               TextButton(
                 onPressed: () {
                   _codeCheck();

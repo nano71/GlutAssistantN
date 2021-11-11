@@ -132,7 +132,7 @@ Future<bool> getSchedule() async {
           }
         }
       }
-      writeSchedule(jsonEncode(_schedule));
+     await writeSchedule(jsonEncode(_schedule));
     }
     print("getSchedule End");
     return true;

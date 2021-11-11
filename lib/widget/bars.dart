@@ -5,9 +5,8 @@ import 'package:glutassistantn/config.dart';
 import 'package:glutassistantn/pages/setting.dart';
 
 import '../data.dart';
+import 'dialog.dart';
 import 'icons.dart';
-
-
 
 class HomeTopBar extends StatelessWidget {
   const HomeTopBar({Key? key}) : super(key: key);
@@ -205,5 +204,37 @@ SnackBar jwSnackBar(bool result, String text, [int hideSnackBarSeconds = 2]) {
       children: <Widget>[resultIcon, Text(text)],
     ),
     behavior: SnackBarBehavior.floating,
+  );
+}
+
+SnackBar jwSnackBarAction(
+  bool result,
+  String text,
+  BuildContext fn, [
+  int hideSnackBarSeconds = 2,
+]) {
+  Widget resultIcon = result
+      ? const Icon(
+          Icons.mood,
+          color: Colors.green,
+        )
+      : const Icon(
+          Icons.mood_bad,
+          color: Colors.red,
+        );
+  return SnackBar(
+    elevation: 2,
+    duration: Duration(seconds: hideSnackBarSeconds),
+    content: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[resultIcon],
+    ),
+    behavior: SnackBarBehavior.floating,
+    action: SnackBarAction(
+      label: text,
+      onPressed: () {
+        codeCheckDialog(fn);
+      },
+    ),
   );
 }
