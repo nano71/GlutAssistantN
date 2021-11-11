@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:glutassistantn/common/init.dart';
 import 'package:glutassistantn/common/io.dart';
 import 'package:glutassistantn/widget/bars.dart';
+import 'package:glutassistantn/widget/lists.dart';
 
 import '../data.dart';
 import 'init.dart';
@@ -173,21 +174,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                             ),
                             TextButton(
                               onPressed: () {
-                                clearAll();
-                                writeData["username"] = "";
-                                writeData["name"] = "";
-                                writeData["password"] = "";
-                                initSchedule();
-                                todaySchedule = [];
-                                tomorrowSchedule = [];
-                                pageBus.fire(SetPageIndex(0));
-                                Navigator.pushAndRemoveUntil(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const InitPage(),
-                                  ),
-                                  (route) => false,
-                                );
+                                clear();
                               },
                               child: Text(
                                 "确定清除",
@@ -207,6 +194,26 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
           ],
         ),
       ),
+    );
+  }
+
+  void clear() async {
+    await clearAll();
+    writeData["username"] = "";
+    writeData["name"] = "";
+    writeData["password"] = "";
+    await initSchedule();
+    todaySchedule = [];
+    tomorrowSchedule = [];
+    await todayCourseListKey.currentState!.reSate();
+    await tomorrowCourseListKey.currentState!.reSate();
+    pageBus.fire(SetPageIndex(0));
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const InitPage(),
+      ),
+      (route) => false,
     );
   }
 }

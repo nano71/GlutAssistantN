@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,11 +9,9 @@ import 'package:glutassistantn/common/init.dart';
 import 'package:glutassistantn/pages/query.dart';
 import 'package:glutassistantn/widget/bars.dart';
 import 'package:glutassistantn/widget/cards.dart';
-import 'package:glutassistantn/widget/dialog.dart';
 import 'package:glutassistantn/widget/icons.dart';
 import 'package:glutassistantn/widget/lists.dart';
 
-import '../config.dart';
 import '../data.dart';
 import 'login.dart';
 
@@ -101,7 +100,6 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 
   void _goTop() {
-    // Global.cookie = {};
     print(_goTopInitCount);
     if (_goTopInitCount < 8) {
       print("刷新${DateTime.now()}");
@@ -118,6 +116,21 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
         duration: const Duration(milliseconds: 300),
         curve: Curves.linear,
       );
+      _next() async {
+        schedule = {};
+        todaySchedule = [];
+        tomorrowSchedule = [];
+        await initSchedule();
+        await getSchedule();
+        await initTodaySchedule();
+        await initTomorrowSchedule();
+        pageBus.fire(ReState(1));
+        pageBus.fire(ReTodayListState(1));
+        pageBus.fire(ReTomorrowListState(1));
+        setState(() {});
+
+      }
+
       _time?.cancel();
       print(_time);
       _time = Timer(const Duration(seconds: 1), () async {
@@ -145,12 +158,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     }
                 }
               else
-                {
-                  initTodaySchedule(),
-                  initTomorrowSchedule(),
-                  todayCourseListKey.currentState!.reSate(),
-                  tomorrowCourseListKey.currentState!.reSate(),
-                }
+                {_next()}
             });
         _timeOutBool = true;
         _goTopInitCount = 0;
@@ -162,7 +170,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
         _count++;
         offset_ += 0.15;
         iconKey.currentState!.onPressed(offset_);
-        if (_count >= randomInt(200, 300)) {
+        if (_count >= randomInt(200, 600)) {
           timer.cancel();
         }
       });
@@ -195,6 +203,15 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    Future.delayed(const Duration(seconds: 0), () {
+      if (DateTime.now().minute == 59 && DateTime.now().hour == 23) {
+        Scaffold.of(context).removeCurrentSnackBar();
+        Scaffold.of(context).showSnackBar(jwSnackBar(false, "请不要在 23:59 的时候打开此APP", 3));
+        Future.delayed(const Duration(seconds: 3), () {
+          exit(0);
+        });
+      }
+    });
     if (widget.type == 1 && _type) {
       Future.delayed(const Duration(seconds: 0), () {
         _goTop();

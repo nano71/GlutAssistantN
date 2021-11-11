@@ -210,7 +210,7 @@ SnackBar jwSnackBar(bool result, String text, [int hideSnackBarSeconds = 2]) {
 SnackBar jwSnackBarAction(
   bool result,
   String text,
-  BuildContext fn, [
+  BuildContext context, [
   int hideSnackBarSeconds = 2,
 ]) {
   Widget resultIcon = result
@@ -233,7 +233,7 @@ SnackBar jwSnackBarAction(
     action: SnackBarAction(
       label: text,
       onPressed: () {
-        codeCheckDialog(fn);
+        codeCheckDialog(context);
       },
     ),
   );

@@ -31,8 +31,14 @@ Future<void> writeSchedule(String str) async {
 Future<void> clearAll() async {
   final file1 = await scheduleLocalSupportFile();
   final file2 = await configLocalSupportFile();
-  await file1.delete();
-  await file2.delete();
+  bool dirBool1 = await file1.exists();
+  bool dirBool2 = await file2.exists();
+  if (dirBool1) {
+    await file1.delete();
+  }
+  if (dirBool2) {
+    await file2.delete();
+  }
   await initSchedule();
 }
 

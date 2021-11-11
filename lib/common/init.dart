@@ -20,15 +20,19 @@ initSchedule() async {
   await writeSchedule(jsonEncode(schedule));
 }
 
-initTodaySchedule() {
+initTodaySchedule() async {
   print("initTodaySchedule");
   final String _week = writeData["week"].toString();
   Map _schedule = schedule;
   List toDay = [];
-
-  _schedule[_week][DateTime.now().weekday.toString()].forEach((k, v) => {
-        if (v[1] != "null") {v.add(k), toDay.add(v)}
+  await _schedule[_week][DateTime.now().weekday.toString()].forEach((k, v) => {
+        if (v[1] != "null")
+          {
+            if (v.length < 5) {v.add(k)},
+            toDay.add(v)
+          }
       });
+
   if (toDay.isNotEmpty) {
     todayScheduleTitle = "今天的";
     todaySchedule = toDay;
@@ -41,7 +45,7 @@ initTodaySchedule() {
   print("initTodaySchedule End");
 }
 
-initTomorrowSchedule() {
+initTomorrowSchedule() async {
   print("initTomorrowSchedule");
   final String _week = writeData["week"].toString();
   Map _schedule = schedule;
@@ -54,7 +58,7 @@ initTomorrowSchedule() {
     }
   }
 
-  _schedule[_week][_getWeekDay()].forEach((k, v) => {
+  await _schedule[_week][_getWeekDay()].forEach((k, v) => {
         if (v[1] != "null") {v.add(k), tomorrow.add(v)}
       });
   if (tomorrow.isNotEmpty) {
