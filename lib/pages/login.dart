@@ -33,9 +33,8 @@ class LoginPageState extends State<LoginPage> {
   Color messageColor = Colors.grey;
   Uint8List _codeImgSrc = const Base64Decoder().convert(
       "iVBORw0KGgoAAAANSUhEUgAAAEgAAAAeCAYAAACPOlitAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAHYcAAB2HAY/l8WUAAABYSURBVGhD7dChAcAgEMDAb/ffGSpqIQvcmfg86zMcvX85MCgYFAwKBgWDgkHBoGBQMCgYFAwKBgWDgkHBoGBQMCgYFAwKBgWDgkHBoGBQMCgYFAwKBl3NbAiZBDiX3e/AAAAAAElFTkSuQmCC");
-  String buttonTitle = "onPressed: () { login(); }";
+  String buttonTitle = "登录";
   bool logined = false;
-
   @override
   initState() {
     super.initState();
@@ -120,10 +119,10 @@ class LoginPageState extends State<LoginPage> {
         await getName();
         await getSchedule();
         await writeConfig();
-        pageBus.fire(SetPageIndex(0));
         await initTodaySchedule();
         await initTomorrowSchedule();
         print("initSchedule End");
+        pageBus.fire(SetPageIndex(0));
         Navigator.pushAndRemoveUntil(
           context,
           CustomRouteMs300(
@@ -139,7 +138,6 @@ class LoginPageState extends State<LoginPage> {
           message = "学号或密码有误";
           buttonTitle = "请检查后再试一次";
         });
-
         _getCode();
       } else {
         if (Global.logined) {
@@ -219,7 +217,7 @@ class LoginPageState extends State<LoginPage> {
                         keyboardType: TextInputType.number,
                         inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                         controller: studentIdController,
-                        decoration: const InputDecoration(
+                          decoration: const InputDecoration(
                           icon: Icon(Icons.perm_identity),
                           border: InputBorder.none,
                           hintText: "请输入学号", //类似placeholder效果
