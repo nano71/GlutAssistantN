@@ -88,27 +88,6 @@ class MinePageState extends State<MinePage> {
                     child: mineItem(
                         Icons.settings_outlined, const EdgeInsets.fromLTRB(16, 14, 0, 14), "设置"),
                   ),
-                  InkWell(
-                    onTap: () {
-                      clearAll();
-                      writeData["username"] = "";
-                      writeData["name"] = "";
-                      writeData["password"] = "";
-                      initSchedule();
-                      todaySchedule = [];
-                      tomorrowSchedule = [];
-                      pageBus.fire(SetPageIndex(0));
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const InitPage(),
-                        ),
-                        (route) => false,
-                      );
-                    },
-                    child: mineItem(Icons.cleaning_services_outlined,
-                        const EdgeInsets.fromLTRB(16, 14, 0, 14), "清除"),
-                  ),
                 ],
               ),
             )),
@@ -147,6 +126,26 @@ Widget mineItem(IconData icon, EdgeInsets padding, String title) {
         ],
       ),
       chevronRight
+    ],
+  );
+}
+Widget mineItem2(IconData icon, EdgeInsets padding, String title) {
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+      Row(
+        children: [
+          Icon(icon),
+          Container(
+            padding: padding,
+            child: Text(
+              title,
+              style: const TextStyle(fontSize: 16),
+            ),
+          )
+        ],
+      ),
+      chevronDown
     ],
   );
 }

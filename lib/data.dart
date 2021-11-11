@@ -19,10 +19,13 @@ class ReState {
 
 class ReTomorrowListState {
   int index;
+
   ReTomorrowListState(this.index);
 }
+
 class ReTodayListState {
   int index;
+
   ReTodayListState(this.index);
 }
 
@@ -33,7 +36,11 @@ Map writeData = {
   "weekDay": "",
   "username": "",
   "password": "",
-  "name": ""
+  "name": "",
+  "semester": "",
+  "semesterBk": "",
+  "year": "",
+  "yearBk": ""
 };
 List todaySchedule = [];
 List tomorrowSchedule = [];

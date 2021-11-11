@@ -33,6 +33,14 @@ Icon chevronRight =const Icon(
   Icons.chevron_right,
   color: Colors.black45,
 );
+Icon chevronDown =const Icon(
+  Icons.keyboard_arrow_down_outlined,
+  color: Colors.black45,
+);
+Icon chevronUp =const Icon(
+  Icons.keyboard_arrow_up_outlined,
+  color: Colors.black45,
+);
 Icon goCurrent = const Icon(
   Icons.gps_fixed_outlined,
   color: Colors.black,

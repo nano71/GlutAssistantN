@@ -7,6 +7,7 @@ import 'package:glutassistantn/common/get.dart';
 import 'package:glutassistantn/common/init.dart';
 import 'package:glutassistantn/widget/bars.dart';
 import 'package:glutassistantn/widget/cards.dart';
+import 'package:glutassistantn/widget/dialog.dart';
 import 'package:glutassistantn/widget/icons.dart';
 import 'package:glutassistantn/widget/lists.dart';
 
@@ -41,6 +42,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   int _goTopInitCount = 0;
   bool _bk = true;
   Timer? _time;
+  bool _type = true;
 
   @override
   void initState() {
@@ -115,9 +117,27 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
       );
       _time?.cancel();
       print(_time);
-      _time = Timer(const Duration(seconds: 1), () {
+      _time = Timer(const Duration(seconds: 1), () async {
         print("init");
         getWeek();
+        await getSchedule().then((value) => {
+              if (!value)
+                {
+                  if (writeData["username"] == "")
+                    {
+                      // codeCheckDialog(context),
+
+                      Scaffold.of(context).removeCurrentSnackBar(),
+                      Scaffold.of(context).showSnackBar(jwSnackBar(false, "请先登录")),
+                    }
+                  else
+                    {
+                      Scaffold.of(context).removeCurrentSnackBar(),
+                      Scaffold.of(context).showSnackBar(jwSnackBar(false, "需要验证")),
+                      codeCheckDialog(context),
+                    }
+                }
+            });
         initTodaySchedule();
         initTomorrowSchedule();
         todayCourseListKey.currentState!.reSate();
@@ -165,9 +185,10 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.type == 1) {
+    if (widget.type == 1 && _type) {
       Future.delayed(const Duration(seconds: 0), () {
         _goTop();
+        _type = false;
       });
     }
     double width = MediaQuery.of(context).size.width;
