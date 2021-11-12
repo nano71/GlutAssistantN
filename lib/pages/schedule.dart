@@ -46,7 +46,7 @@ List<Widget> _loopRowHeader(bool nowWeek) {
         "周${_weekDayList[i - 1]}",
         style: TextStyle(
             color:
-                nowWeek ? (i == DateTime.now().weekday ? Colors.blue : Colors.grey) : Colors.grey),
+                nowWeek ? (i == DateTime.now().weekday ? readColor() : Colors.grey) : Colors.grey),
       ))));
     }
   }
@@ -74,7 +74,7 @@ Widget _leftGrid(String title) {
       title,
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
-      style: const TextStyle(fontSize: 12, color: Colors.blue),
+      style: TextStyle(fontSize: 12, color: readColor()),
     ),
   );
 }
@@ -159,6 +159,12 @@ class SchedulePageState extends State<SchedulePage> with AutomaticKeepAliveClien
       barKey.currentState!.onPressed(int.parse(writeData["week"]));
       rowHeaderKey.currentState!.onPressed(int.parse(writeData["week"]));
     }
+  }
+
+  @override
+  void dispose() {
+    eventBusFn.cancel();
+    super.dispose();
   }
 
   @override

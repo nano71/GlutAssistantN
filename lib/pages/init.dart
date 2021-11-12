@@ -13,11 +13,11 @@ import 'package:glutassistantn/widget/bars.dart';
 class CustomRoute extends PageRouteBuilder {
   final Widget widget;
 
-  CustomRoute(this.widget,[int s = 2])
+  CustomRoute(this.widget, [int s = 2])
       : super(
             //父类的方法
             //设置动画持续的时间，建议再1和2之间
-            transitionDuration:  Duration(seconds: s),
+            transitionDuration: Duration(seconds: s),
             //页面的构造器
             pageBuilder: (
               BuildContext context,
@@ -40,6 +40,7 @@ class CustomRoute extends PageRouteBuilder {
               );
             });
 }
+
 class CustomRouteMs300 extends PageRouteBuilder {
   final Widget widget;
 
@@ -47,7 +48,7 @@ class CustomRouteMs300 extends PageRouteBuilder {
       : super(
             //父类的方法
             //设置动画持续的时间，建议再1和2之间
-            transitionDuration:  const Duration(milliseconds: 300),
+            transitionDuration: const Duration(milliseconds: 300),
             //页面的构造器
             pageBuilder: (
               BuildContext context,
@@ -73,24 +74,24 @@ class CustomRouteMs300 extends PageRouteBuilder {
 
 class InitPage extends StatefulWidget {
   const InitPage({Key? key}) : super(key: key);
+
   @override
   InitPageState createState() => InitPageState();
 }
+
 class InitPageState extends State<InitPage> {
   @override
   void initState() {
     super.initState();
     _init();
   }
+
   _init() async {
+    await readConfig();
     await getWeek();
-    print("getWeek End");
     await readSchedule();
     await initTodaySchedule();
     await initTomorrowSchedule();
-    print("initSchedule End");
-    //跳转并关闭当前页面
-
     Navigator.pushAndRemoveUntil(
       context,
       CustomRoute(

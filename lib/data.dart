@@ -40,7 +40,8 @@ Map writeData = {
   "semester": "",
   "semesterBk": "",
   "year": "",
-  "yearBk": ""
+  "yearBk": "",
+  "color": "blue"
 };
 List todaySchedule = [];
 List tomorrowSchedule = [];
@@ -85,10 +86,24 @@ List colorList = [
   Colors.blueAccent,
   Colors.deepOrangeAccent,
   Colors.deepPurpleAccent,
+  Colors.teal,
+  Colors.cyan
+];
+
+List colorList2 = [
+  Colors.red,
+  Colors.amber,
+  Colors.blue,
+  Colors.green,
+  Colors.deepPurpleAccent,
 ];
 
 Color randomColors() {
   return colorList[randomInt(0, colorList.length - 1)];
+}
+
+Color randomColors2() {
+  return colorList2[randomInt(0, colorList2.length - 1)];
 }
 
 int randomInt(int min, int max) {

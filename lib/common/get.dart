@@ -32,7 +32,7 @@ Future<void> getWeek() async {
       writeData["semesterBk"] = q;
       writeData["yearBk"] = n;
     }
-    // await readConfig();
+    print("getWeek End");
   } on TimeoutException catch (e) {
     print("超时");
     readConfig();

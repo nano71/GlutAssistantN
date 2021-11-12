@@ -1,4 +1,6 @@
 // 引入 eventBus 包文件
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:glutassistantn/config.dart';
@@ -120,14 +122,13 @@ class BottomNavBar extends StatefulWidget {
 }
 
 class BottomNavBarState extends State<BottomNavBar> {
-  var eventBusFn;
+  late StreamSubscription<SetPageIndex> eventBusFn;
 
   @override
   void initState() {
     super.initState();
     eventBusFn = pageBus.on<SetPageIndex>().listen((event) {
       Global.pageControl.jumpToPage(event.index);
-
       Global.pageIndex = event.index;
       setState(() {});
     });
@@ -136,7 +137,6 @@ class BottomNavBarState extends State<BottomNavBar> {
   @override
   void dispose() {
     super.dispose();
-    //取消订阅
     eventBusFn.cancel();
   }
 
@@ -149,8 +149,8 @@ class BottomNavBarState extends State<BottomNavBar> {
         ),
       ),
       backgroundColor: Colors.white,
-      activeColor: Colors.blue,
-      inactiveColor: Colors.grey,
+      activeColor: readColor(),
+      inactiveColor: Colors.black87,
       currentIndex: Global.pageIndex,
       onTap: (int index) {
         setState(
