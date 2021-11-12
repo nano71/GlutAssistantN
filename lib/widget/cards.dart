@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../config.dart';
 import '../data.dart';
 
 class HomeCard extends StatefulWidget {
@@ -38,7 +39,6 @@ class HomeCardState extends State<HomeCard> with AutomaticKeepAliveClientMixin {
     });
   }
 
-
   double _weekProgressDouble() {
     return (_week * 5 / 100) + (DateTime.now().weekday / 7 * 5 / 100);
   }
@@ -64,9 +64,10 @@ class HomeCardState extends State<HomeCard> with AutomaticKeepAliveClientMixin {
     super.build(context);
     return Container(
       height: 100,
-      decoration: const BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(6.0)),
-        color: Colors.blue,
+      decoration: BoxDecoration(
+        borderRadius: const BorderRadius.all(Radius.circular(6.0)),
+        // color: Global.homeCardsColor,
+        gradient: readGradient(),
       ),
       child: Stack(children: [
         Align(
@@ -78,7 +79,7 @@ class HomeCardState extends State<HomeCard> with AutomaticKeepAliveClientMixin {
               height: 60.0,
               //限制进度条的宽度
               width: 60,
-              child: CircularProgressDynamic(key:indicatorKey),
+              child: CircularProgressDynamic(key: indicatorKey),
             ),
           ),
         ),
@@ -86,7 +87,7 @@ class HomeCardState extends State<HomeCard> with AutomaticKeepAliveClientMixin {
             alignment: Alignment.centerRight,
             child: Container(
               margin: const EdgeInsets.fromLTRB(0, 0, 32, 0),
-              child: TextProgressDynamic(key:textKey),
+              child: TextProgressDynamic(key: textKey),
             )),
         Align(
           alignment: Alignment.topRight,
@@ -129,7 +130,7 @@ Widget homeCard2 = Stack(
         margin: HomeCardsState.iconMargin,
         child: Icon(
           HomeCardsState.icons[1],
-          color: Colors.blue,
+          color: readColor(),
           size: HomeCardsState.iconSize,
         ),
       ),
@@ -150,7 +151,7 @@ Widget homeCard3 = Stack(
         margin: HomeCardsState.iconMargin,
         child: Icon(
           HomeCardsState.icons[2],
-          color: Colors.blue,
+          color: readColor(),
           size: HomeCardsState.iconSize,
         ),
       ),
@@ -181,8 +182,6 @@ class HomeCardsState {
 class CircularProgressDynamic extends StatefulWidget {
   const CircularProgressDynamic({Key? key}) : super(key: key);
 
-
-
   @override
   State<StatefulWidget> createState() => CircularProgressDynamicState();
 }
@@ -194,11 +193,8 @@ class CircularProgressDynamicState extends State<CircularProgressDynamic> {
   Widget build(BuildContext context) {
     return CircularProgressIndicator(
       strokeWidth: 8,
-      //0~1的浮点数，用来表示进度多少;如果 value 为 null 或空，则显示一个动画，否则显示一个定值
       value: _value,
-      //背景颜色
       backgroundColor: const Color.fromARGB(128, 255, 255, 255),
-      //进度颜色
       valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
     );
   }
@@ -210,8 +206,6 @@ class CircularProgressDynamicState extends State<CircularProgressDynamic> {
 
 class TextProgressDynamic extends StatefulWidget {
   const TextProgressDynamic({Key? key}) : super(key: key);
-
-
 
   @override
   State<StatefulWidget> createState() => TextProgressDynamicState();

@@ -1,16 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:glutassistantn/common/init.dart';
-import 'package:glutassistantn/common/io.dart';
 import 'package:glutassistantn/pages/career.dart';
-import 'package:glutassistantn/pages/query.dart';
 import 'package:glutassistantn/pages/setting.dart';
 import 'package:glutassistantn/widget/bars.dart';
 import 'package:glutassistantn/widget/icons.dart';
 
+import '../config.dart';
 import '../data.dart';
 import 'info.dart';
-import 'init.dart';
 import 'login.dart';
 
 class MinePage extends StatefulWidget {
@@ -47,9 +44,11 @@ class MinePageState extends State<MinePage> {
                       );
                     },
                     child: mineItem(
-                        Icons.account_box_outlined,
-                        const EdgeInsets.fromLTRB(16, 14, 0, 14),
-                        (writeData["name"] != "" ? "更换账号" : "登录教务")),
+                      Icons.account_box_outlined,
+                      const EdgeInsets.fromLTRB(16, 14, 0, 14),
+                      (writeData["name"] != "" ? "更换账号" : "登录教务"),
+                      readColor(),
+                    ),
                   ),
                   InkWell(
                     onTap: () {
@@ -57,8 +56,8 @@ class MinePageState extends State<MinePage> {
                           // 在FormPage()里传入参数
                           MaterialPageRoute(builder: (context) => const CareerPage()));
                     },
-                    child: mineItem(
-                        Icons.workspaces_outline, const EdgeInsets.fromLTRB(16, 14, 0, 14), "课程生涯"),
+                    child: mineItem(Icons.workspaces_outline,
+                        const EdgeInsets.fromLTRB(16, 14, 0, 14), "课程生涯", readColor()),
                   ),
                   // InkWell(
                   //   onTap: () {
@@ -76,8 +75,8 @@ class MinePageState extends State<MinePage> {
                           // 在FormPage()里传入参数
                           MaterialPageRoute(builder: (context) => const InfoPage()));
                     },
-                    child: mineItem(
-                        Icons.info_outline, const EdgeInsets.fromLTRB(16, 14, 0, 14), "说明"),
+                    child: mineItem(Icons.info_outline, const EdgeInsets.fromLTRB(16, 14, 0, 14),
+                        "说明", readColor()),
                   ),
                   InkWell(
                     onTap: () {
@@ -85,8 +84,8 @@ class MinePageState extends State<MinePage> {
                           // 在FormPage()里传入参数
                           MaterialPageRoute(builder: (context) => const SettingPage(title: "设置2")));
                     },
-                    child: mineItem(
-                        Icons.settings_outlined, const EdgeInsets.fromLTRB(16, 14, 0, 14), "设置"),
+                    child: mineItem(Icons.settings_outlined,
+                        const EdgeInsets.fromLTRB(16, 14, 0, 14), "设置", readColor()),
                   ),
                 ],
               ),
@@ -109,13 +108,13 @@ Container topLine = Container(
   ),
 );
 
-Widget mineItem(IconData icon, EdgeInsets padding, String title) {
+Widget mineItem(IconData icon, EdgeInsets padding, String title, Color color) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
       Row(
         children: [
-          Icon(icon),
+          Icon(icon, color: color),
           Container(
             padding: padding,
             child: Text(
@@ -129,13 +128,16 @@ Widget mineItem(IconData icon, EdgeInsets padding, String title) {
     ],
   );
 }
+
 Widget mineItem2(IconData icon, EdgeInsets padding, String title) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
       Row(
         children: [
-          Icon(icon),
+          Icon(
+            icon,
+          ),
           Container(
             padding: padding,
             child: Text(

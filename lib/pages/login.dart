@@ -35,6 +35,11 @@ class LoginPageState extends State<LoginPage> {
       "iVBORw0KGgoAAAANSUhEUgAAAEgAAAAeCAYAAACPOlitAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAHYcAAB2HAY/l8WUAAABYSURBVGhD7dChAcAgEMDAb/ffGSpqIQvcmfg86zMcvX85MCgYFAwKBgWDgkHBoGBQMCgYFAwKBgWDgkHBoGBQMCgYFAwKBgWDgkHBoGBQMCgYFAwKBl3NbAiZBDiX3e/AAAAAAElFTkSuQmCC");
   String buttonTitle = "登录";
   bool logined = false;
+
+  FocusNode? studentIdFocusNode = FocusNode();
+  FocusNode? passwordFocusNode = FocusNode();
+  FocusNode? checkCodeFocusNode = FocusNode();
+
   @override
   initState() {
     super.initState();
@@ -161,6 +166,7 @@ class LoginPageState extends State<LoginPage> {
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeOut,
     );
+    setState(() {});
   }
 
   @override
@@ -214,11 +220,16 @@ class LoginPageState extends State<LoginPage> {
                         onTap: () {
                           tap();
                         },
+                        cursorColor: readColor(),
                         keyboardType: TextInputType.number,
                         inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                        focusNode: studentIdFocusNode,
                         controller: studentIdController,
-                          decoration: const InputDecoration(
-                          icon: Icon(Icons.perm_identity),
+                        decoration: InputDecoration(
+                          icon: Icon(
+                            Icons.perm_identity,
+                            color: studentIdFocusNode!.hasFocus ? readColor() : null,
+                          ),
                           border: InputBorder.none,
                           hintText: "请输入学号", //类似placeholder效果
                         ),
@@ -239,9 +250,14 @@ class LoginPageState extends State<LoginPage> {
                         onTap: () {
                           tap();
                         },
+                        focusNode: passwordFocusNode,
+                        cursorColor: readColor(),
                         controller: passwordController,
-                        decoration: const InputDecoration(
-                          icon: Icon(Icons.vpn_key_outlined),
+                        decoration: InputDecoration(
+                          icon: Icon(
+                            Icons.vpn_key_outlined,
+                            color: passwordFocusNode!.hasFocus ? readColor() : null,
+                          ),
                           border: InputBorder.none,
                           hintText: "请输入密码", //类似placeholder效果
                         ),
@@ -258,9 +274,14 @@ class LoginPageState extends State<LoginPage> {
                               onTap: () {
                                 tap();
                               },
+                              cursorColor: readColor(),
+                              focusNode: checkCodeFocusNode,
                               controller: checkCodeController,
-                              decoration: const InputDecoration(
-                                icon: Icon(Icons.code_outlined),
+                              decoration: InputDecoration(
+                                icon: Icon(
+                                  Icons.code_outlined,
+                                  color: checkCodeFocusNode!.hasFocus ? readColor() : null,
+                                ),
                                 border: InputBorder.none,
                                 hintText: "请输入验证码", //类似placeholder效果
                               ),
@@ -290,7 +311,7 @@ class LoginPageState extends State<LoginPage> {
                               //设置水波纹颜色
                               overlayColor: MaterialStateProperty.all(Colors.yellow),
                               backgroundColor: MaterialStateProperty.resolveWith((states) {
-                                return Colors.blue;
+                                return readColor();
                               }),
                               shape: MaterialStateProperty.all(
                                   RoundedRectangleBorder(borderRadius: BorderRadius.circular(25))),

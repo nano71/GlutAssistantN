@@ -127,6 +127,12 @@ class TodayCourseListState extends State<TodayCourseList> {
   }
 
   @override
+  void dispose() {
+    eventBusFn.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SliverList(
       delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
@@ -146,7 +152,6 @@ class TodayCourseListItem extends StatefulWidget {
 }
 
 class TodayCourseListItemState extends State<TodayCourseListItem> {
-  late Timer _timer;
   bool timerS = false;
 
   void timerRe(int index) {
@@ -160,25 +165,6 @@ class TodayCourseListItemState extends State<TodayCourseListItem> {
         }
       });
     }
-    // if (!timerS) {
-    //   timerS = true;
-    //
-    //
-    //
-    //   List<String> list = _timeText2(index);
-    //   if (list[0] != "0" || list[1] != "0") {
-    //     _timer = Timer.periodic(const Duration(milliseconds: 1000), (timer) {
-    //       print("$index : ${DateTime.now().second}");
-    //       list = _timeText2(index);
-    //       if (list[0] == "0" && list[1] == "0") {
-    //         _timer.cancel();
-    //       }
-    //       setState(() {});
-    //     });
-    //   } else {
-    //     print("已结束");
-    //   }
-    // }
   }
 
   IconData _icon(int index) {
@@ -231,6 +217,11 @@ class TodayCourseListItemState extends State<TodayCourseListItem> {
         return Colors.black26;
       }
     }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
@@ -316,9 +307,14 @@ class TomorrowCourseListState extends State<TomorrowCourseList> {
 
   reSate() {
     setState(() {
-      print(2);
       _tomorrowSchedule = tomorrowSchedule;
     });
+  }
+
+  @override
+  void dispose() {
+    eventBusFn.cancel();
+    super.dispose();
   }
 
   @override

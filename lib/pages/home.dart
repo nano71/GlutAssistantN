@@ -12,6 +12,7 @@ import 'package:glutassistantn/widget/cards.dart';
 import 'package:glutassistantn/widget/icons.dart';
 import 'package:glutassistantn/widget/lists.dart';
 
+import '../config.dart';
 import '../data.dart';
 import 'login.dart';
 
@@ -37,12 +38,12 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   late Animation _animationForHomeCards1;
   late Animation _animationForHomeCards2;
   late Animation _animationForHomeCards3;
-  ColorTween homeCardsColorTween = ColorTween(
-      begin: const Color.fromARGB(42, 199, 229, 253),
-      end: const Color.fromARGB(110, 199, 229, 253));
+  ColorTween homeCardsColorTween =
+      ColorTween(begin: readColorBegin(), end: readColorEnd());
   int _goTopInitCount = 0;
   bool _bk = true;
   Timer? _time;
+  Timer? _time2;
   bool _type = true;
 
   @override
@@ -100,8 +101,10 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 
   void _goTop() {
-    print(_goTopInitCount);
+    _time?.cancel();
+    _time2?.cancel();
     if (_goTopInitCount < 8) {
+      int _endCount = 10000;
       print("刷新${DateTime.now()}");
       _goTopInitCount++;
       if (_goTopInitCount == 7) {
@@ -109,7 +112,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
         Scaffold.of(context).showSnackBar(jwSnackBar(false, "你这也太快了吧..."));
       } else if (_goTopInitCount == 1) {
         Scaffold.of(context).removeCurrentSnackBar();
-        Scaffold.of(context).showSnackBar(jwSnackBar(true, "开始刷新..."));
+        Scaffold.of(context).showSnackBar(jwSnackBar(true, "数据准备更新...", 10));
       }
       _scrollController.animateTo(
         _scrollController.position.minScrollExtent,
@@ -117,34 +120,44 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
         curve: Curves.linear,
       );
       _next() async {
+        Scaffold.of(context).removeCurrentSnackBar();
+        Scaffold.of(context).showSnackBar(jwSnackBar(true, "清除缓存...", 10));
         schedule = {};
         todaySchedule = [];
         tomorrowSchedule = [];
+        Scaffold.of(context).removeCurrentSnackBar();
+        Scaffold.of(context).showSnackBar(jwSnackBar(true, "数据初始化...", 10));
         await initSchedule();
+        Scaffold.of(context).removeCurrentSnackBar();
+        Scaffold.of(context).showSnackBar(jwSnackBar(true, "获取服务器课表...", 10));
         await getSchedule();
+        Scaffold.of(context).removeCurrentSnackBar();
+        Scaffold.of(context).showSnackBar(jwSnackBar(true, "处理返回数据...", 10));
         await initTodaySchedule();
         await initTomorrowSchedule();
         pageBus.fire(ReState(1));
         pageBus.fire(ReTodayListState(1));
         pageBus.fire(ReTomorrowListState(1));
         setState(() {});
-
+        _endCount = 0;
+        print("刷新结束${DateTime.now()}");
+        Scaffold.of(context).removeCurrentSnackBar();
+        Scaffold.of(context).showSnackBar(jwSnackBar(true, "数据已经更新", 1));
       }
 
-      _time?.cancel();
-      print(_time);
       _time = Timer(const Duration(seconds: 1), () async {
-        print("init");
         getWeek();
+        Scaffold.of(context).removeCurrentSnackBar();
+        Scaffold.of(context).showSnackBar(jwSnackBar(true, "开始用户验证...", 10));
         await getSchedule().then((value) => {
               if (!value)
                 {
                   if (writeData["username"] == "")
                     {
                       // codeCheckDialog(context),
-
                       Scaffold.of(context).removeCurrentSnackBar(),
                       Scaffold.of(context).showSnackBar(jwSnackBar(false, "请先登录")),
+                      _time2?.cancel()
                     }
                   else
                     {
@@ -155,6 +168,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         context,
                         10,
                       )),
+                      _time2?.cancel()
                     }
                 }
               else
@@ -163,14 +177,13 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
         _timeOutBool = true;
         _goTopInitCount = 0;
       });
-
       int _count = 0;
       const period = Duration(milliseconds: 10);
-      Timer.periodic(period, (timer) {
+      _time2 = Timer.periodic(period, (timer) {
         _count++;
         offset_ += 0.15;
         iconKey.currentState!.onPressed(offset_);
-        if (_count >= randomInt(200, 600)) {
+        if (_count >= _endCount) {
           timer.cancel();
         }
       });
@@ -193,6 +206,9 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   @override
   void dispose() {
+    _animationControllerForHomeCards3.dispose();
+    _animationControllerForHomeCards2.dispose();
+    _animationControllerForHomeCards1.dispose();
     _scrollController.dispose();
     super.dispose();
   }
@@ -382,7 +398,10 @@ class LoginCheck extends StatelessWidget {
               ),
             );
           },
-          child: const Text("请先登录"),
+          child: Text(
+            "请先登录",
+            style: TextStyle(color: readColor()),
+          ),
         ),
       ),
     );

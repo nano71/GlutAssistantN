@@ -4,6 +4,7 @@ import 'package:glutassistantn/common/io.dart';
 import 'package:glutassistantn/widget/bars.dart';
 import 'package:glutassistantn/widget/lists.dart';
 
+import '../config.dart';
 import '../data.dart';
 import 'init.dart';
 import 'mine.dart';
@@ -66,7 +67,10 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                       children: [
                         Row(
                           children: [
-                            Icon(!focusNodeType ? Icons.date_range_outlined : Icons.edit_outlined),
+                            Icon(
+                              !focusNodeType ? Icons.date_range_outlined : Icons.edit_outlined,
+                              color: readColor(),
+                            ),
                             Container(
                               padding: const EdgeInsets.fromLTRB(16, 14, 0, 14),
                               child: const Text(
@@ -77,8 +81,14 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                           ],
                         ),
                         DropdownButton(
+                          iconEnabledColor: readColor(),
                           elevation: 0,
-                          hint: Text(writeData["yearBk"]),
+                          hint: Text(
+                            writeData["yearBk"],
+                            style: TextStyle(
+                              color: readColor(),
+                            ),
+                          ),
                           items: yearList(),
                           underline: Container(height: 0),
                           onChanged: (value) {
@@ -94,7 +104,10 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                       children: [
                         Row(
                           children: [
-                            Icon(!focusNode2Type ? Icons.toys_outlined : Icons.edit_outlined),
+                            Icon(
+                              !focusNode2Type ? Icons.toys_outlined : Icons.edit_outlined,
+                              color: readColor(),
+                            ),
                             Container(
                               padding: const EdgeInsets.fromLTRB(16, 14, 0, 14),
                               child: const Text(
@@ -107,9 +120,13 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                           ],
                         ),
                         DropdownButton(
+                          iconEnabledColor: readColor(),
                           isDense: true,
                           elevation: 0,
-                          hint: Text(writeData["semesterBk"]),
+                          hint: Text(writeData["semesterBk"],
+                              style: TextStyle(
+                                color: readColor(),
+                              )),
                           underline: Container(height: 0),
                           items: const [
                             DropdownMenuItem(child: Text("春"), value: "春"),
@@ -124,22 +141,67 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                       ],
                     ),
                     topLine,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Icon(
+                              !focusNodeType ? Icons.date_range_outlined : Icons.edit_outlined,
+                              color: readColor(),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.fromLTRB(16, 14, 0, 14),
+                              child: const Text(
+                                "主题颜色",
+                                style: TextStyle(fontSize: 16, color: Colors.black),
+                              ),
+                            )
+                          ],
+                        ),
+                        Builder(builder: (BuildContext context) {
+                          return DropdownButton(
+                            iconEnabledColor: readColor(),
+                            elevation: 0,
+                            hint: Text(
+                              writeData["color"],
+                              style: TextStyle(color: readColor()),
+                            ),
+                            items: const [
+                              DropdownMenuItem(child: Text("red"), value: "red"),
+                              DropdownMenuItem(child: Text("blue"), value: "blue"),
+                              DropdownMenuItem(child: Text("cyan"), value: "cyan"),
+                              DropdownMenuItem(child: Text("yellow"), value: "yellow"),
+                            ],
+                            underline: Container(height: 0),
+                            onChanged: (value) {
+                              setState(() {
+                                writeData["color"] = value;
+                              });
+                              Scaffold.of(context).removeCurrentSnackBar();
+                              Scaffold.of(context).showSnackBar(jwSnackBar(true, "重新启动后APP生效", 10));
+                              writeConfig();
+                            },
+                          );
+                        })
+                      ],
+                    ),
                     InkWell(
                       onTap: () {},
                       child: mineItem(Icons.grid_view_outlined,
-                          const EdgeInsets.fromLTRB(16, 14, 0, 14), "课程管理"),
+                          const EdgeInsets.fromLTRB(16, 14, 0, 14), "课程管理", readColor()),
                     ),
                     InkWell(
                       child: mineItem(Icons.more_time_outlined,
-                          const EdgeInsets.fromLTRB(16, 14, 0, 14), "课节时间"),
+                          const EdgeInsets.fromLTRB(16, 14, 0, 14), "课节时间", readColor()),
                     ),
                     ExpansionTile(
                       onExpansionChanged: (e) {
-                        print("展开");
                         setState(() {
                           _isExpanded = !_isExpanded;
                         });
                       },
+                      collapsedIconColor: Colors.black45,
                       iconColor: Colors.redAccent,
                       tilePadding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                       title: Row(
@@ -148,7 +210,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                             _isExpanded
                                 ? Icons.warning_amber_rounded
                                 : Icons.cleaning_services_outlined,
-                            color: _isExpanded ? Colors.redAccent : Colors.black,
+                            color: _isExpanded ? Colors.redAccent : readColor(),
                           ),
                           Container(
                             padding: const EdgeInsets.fromLTRB(16, 14, 0, 14),

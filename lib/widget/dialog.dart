@@ -26,7 +26,7 @@ codeCheckDialog(BuildContext context) async {
   }
 
   parseRawCookies(response.headers['set-cookie']);
-  void _codeCheck() async {
+  void _codeCheck(Function fn) async {
     Future<void> _next2(String value) async {
       if (value == "success") {
         await getSchedule().then((value) => {
@@ -54,11 +54,16 @@ codeCheckDialog(BuildContext context) async {
       } else {
         Scaffold.of(context).removeCurrentSnackBar();
         Scaffold.of(context).showSnackBar(jwSnackBar(false, "验证码错误"));
+        fn(() {
+          clicked = !clicked;
+        });
       }
     }
 
     if (!clicked) {
-      clicked = !clicked;
+      fn(() {
+        clicked = !clicked;
+      });
       print(textFieldController.text);
       await codeCheck(textFieldController.text).then((String value) => _next(value));
     }
@@ -109,10 +114,7 @@ codeCheckDialog(BuildContext context) async {
                   ),
                   TextButton(
                     onPressed: () {
-                      _codeCheck();
-                      setState(() {
-                        clicked = true;
-                      });
+                      _codeCheck(setState);
                     },
                     child: Text(
                       !clicked ? "继续" : "稍等...",
