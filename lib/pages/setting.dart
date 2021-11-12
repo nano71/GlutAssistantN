@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:glutassistantn/common/init.dart';
 import 'package:glutassistantn/common/io.dart';
+import 'package:glutassistantn/pages/schedulemanage.dart';
+import 'package:glutassistantn/pages/timemanage.dart';
 import 'package:glutassistantn/widget/bars.dart';
 import 'package:glutassistantn/widget/lists.dart';
 
@@ -187,11 +189,20 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                       ],
                     ),
                     InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.of(context).push(
+                            // 在FormPage()里传入参数
+                            MaterialPageRoute(builder: (context) => const ScheduleManagePage()));
+                      },
                       child: mineItem(Icons.grid_view_outlined,
                           const EdgeInsets.fromLTRB(16, 14, 0, 14), "课程管理", readColor()),
                     ),
                     InkWell(
+                      onTap: () {
+                        Navigator.of(context).push(
+                            // 在FormPage()里传入参数
+                            MaterialPageRoute(builder: (context) => const TimeManagePage()));
+                      },
                       child: mineItem(Icons.more_time_outlined,
                           const EdgeInsets.fromLTRB(16, 14, 0, 14), "课节时间", readColor()),
                     ),

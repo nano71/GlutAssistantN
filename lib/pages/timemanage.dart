@@ -3,16 +3,16 @@ import 'package:glutassistantn/widget/bars.dart';
 
 import '../config.dart';
 
-class CareerPage extends StatefulWidget {
+class TimeManagePage extends StatefulWidget {
   final String title;
 
-  const CareerPage({Key? key, this.title = "生涯"}) : super(key: key);
+  const TimeManagePage({Key? key, this.title = "生涯"}) : super(key: key);
 
   @override
-  State<CareerPage> createState() => _CareerPageState();
+  State<TimeManagePage> createState() => _TimeManagePageState();
 }
 
-class _CareerPageState extends State<CareerPage> {
+class _TimeManagePageState extends State<TimeManagePage> {
   @override
   void initState() {
     // TODO: implement initState
@@ -31,7 +31,7 @@ class _CareerPageState extends State<CareerPage> {
           physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
           slivers: [
             publicTopBar(
-              "课程生涯",
+              "时间定义",
               InkWell(
                 child: const Icon(Icons.close_outlined, size: 24),
                 onTap: () {
@@ -44,7 +44,7 @@ class _CareerPageState extends State<CareerPage> {
                     height: MediaQuery.of(context).size.height - 125,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
+                      children:  [
                         Text(
                           "页面开发中...",
                           style: TextStyle(fontSize: 18, color: readColor()),
