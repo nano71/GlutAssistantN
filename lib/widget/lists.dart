@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:glutassistantn/config.dart';
 
 import '../data.dart';
 
@@ -322,12 +323,14 @@ class TomorrowCourseListState extends State<TomorrowCourseList> {
     return SliverList(
       delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
         return Container(
-            margin: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-            height: 50,
-            decoration: const BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(6.0)),
-            ),
-            child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          margin: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+          height: 50,
+          decoration: const BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(6.0)),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
               Row(
                 children: [
                   Container(
@@ -383,15 +386,92 @@ class TomorrowCourseListState extends State<TomorrowCourseList> {
                   ),
                 ],
               ),
-              Stack(alignment: Alignment.centerRight, children: [
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: Text((_tomorrowSchedule[index][3] == "1" && index == 0 ? "别睡懒觉😅" : ""),
-                      style: TextStyle(fontSize: 14, color: Colors.orange[900])),
-                )
-              ]),
-            ]));
+              Stack(
+                alignment: Alignment.centerRight,
+                children: [
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Text((_tomorrowSchedule[index][3] == "1" && index == 0 ? "别睡懒觉😅" : ""),
+                        style: TextStyle(fontSize: 14, color: Colors.orange[900])),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
       }, childCount: _tomorrowSchedule.length),
+    );
+  }
+}
+
+class QueryScore extends StatefulWidget {
+  QueryScoreState createState() => QueryScoreState();
+}
+
+class QueryScoreState extends State<QueryScore> {
+  @override
+  Widget build(BuildContext context) {
+    return SliverList(
+      delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
+        return Column(
+          children: [
+            Container(
+              margin: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            child: Text(
+                              courseLongText2ShortName(queryScore[index][2]),
+                              style: TextStyle(fontSize: 18),
+                            ),
+                          ),
+                          Container(
+                            child: Text(
+                              queryScore[index][3] == "" ? "慕课成绩不会被统计" : queryScore[index][3],
+                              style: TextStyle(color: Colors.black45),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  Container(
+                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                    margin: const EdgeInsets.fromLTRB(0, 0, 4, 0),
+                    decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.all(Radius.circular(6.0)),
+                      // color: Global.homeCardsColor,
+                      color: randomColors(),
+                    ),
+                    child: Column(children: [
+                      Text(queryScore[index][4],
+                          style: TextStyle(fontSize: 18, color: Colors.white)),
+                      Text(queryScore[index][5], style: TextStyle(color: Colors.white)),
+                    ]),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              margin: const EdgeInsets.fromLTRB(28, 14, 28, 14),
+              decoration: const BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(
+                    width: 0, //宽度
+                    color: Color(0xfff1f1f1), //边框颜色
+                  ),
+                ),
+              ),
+            )
+          ],
+        );
+      }, childCount: queryScore.length),
     );
   }
 }

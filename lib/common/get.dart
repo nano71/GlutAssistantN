@@ -32,6 +32,11 @@ Future<void> getWeek() async {
       writeData["semesterBk"] = q;
       writeData["yearBk"] = n;
     }
+    if (writeData["querySemester"] == "" && writeData["queryYear"] == "") {
+      writeData["querySemester"] = q;
+      writeData["queryYear"] = n;
+    }
+
     print("getWeek End");
   } on TimeoutException catch (e) {
     print("超时");
@@ -65,15 +70,13 @@ Future<bool> getSchedule() async {
       print("登录过期");
       return false;
     } else {
-
       dom.Document document = parse(gbk
           .decode(response.bodyBytes)
           .toString()
           .replaceAll("第", "")
           .replaceAll("节", "")
           .replaceAll("周", "")
-          .replaceAll("双", "")
-      );
+          .replaceAll("双", ""));
       var list = document.querySelectorAll(".infolist_common");
       num listLength = document.querySelectorAll(".infolist_common").length - 23;
       for (var i = 0; i < listLength; i++) {
@@ -180,10 +183,11 @@ List getSemester() {
   ];
 }
 
-Future<void> getScore() async {
+Future<List> getScore() async {
+  print("getScore");
   Map postData = {
-    "year": "",
-    "term": "",
+    "year": (int.parse(writeData["queryYear"]) - 1980).toString(),
+    "term": (writeData["querySemester"] == "秋" ? 3 : 1).toString(),
     "prop": "",
     "groupName": "",
     "para": "0",
@@ -193,19 +197,22 @@ Future<void> getScore() async {
   var response =
       await post(Global.getScoreUrl, body: postData, headers: {"cookie": mapCookieToString()})
           .timeout(const Duration(milliseconds: 6000));
+  if(response.headers["location"] == "/academic/common/security/login.jsp"){
+    return ["登录过期"];
+  }
   dom.Document document = parse(response.body);
   var dataList = document.querySelectorAll(".datalist > tbody >tr");
   List list = [];
   for (int i = 1; i < dataList.length; i++) {
     List _list = [];
-    _list.add(dataList[i].querySelectorAll("td")[0].text);
-    _list.add(dataList[i].querySelectorAll("td")[1].text);
-    _list.add(dataList[i].querySelectorAll("td")[3].text);
-    _list.add(dataList[i].querySelectorAll("td")[4].text);
-    _list.add(dataList[i].querySelectorAll("td")[5].text);
-    _list.add(dataList[i].querySelectorAll("td")[6].text);
+    _list.add(dataList[i].querySelectorAll("td")[0].text.trim());
+    _list.add(dataList[i].querySelectorAll("td")[1].text.trim());
+    _list.add(dataList[i].querySelectorAll("td")[3].text.trim());
+    _list.add(dataList[i].querySelectorAll("td")[4].text.trim());
+    _list.add(dataList[i].querySelectorAll("td")[5].text.trim());
+    _list.add(dataList[i].querySelectorAll("td")[6].text.trim());
     list.add(_list);
   }
-
-  print(list);
+  print("getScore End");
+  return list;
 }
