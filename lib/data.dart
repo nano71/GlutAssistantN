@@ -28,7 +28,9 @@ class ReTodayListState {
 
   ReTodayListState(this.index);
 }
-
+double gpa = 0.0;
+double avg = 0.0;
+double weight = 0.0;
 Map schedule = {};
 Map writeData = {
   "time": "",
@@ -41,11 +43,13 @@ Map writeData = {
   "semesterBk": "",
   "year": "",
   "yearBk": "",
-  "color": "blue"
+  "color": "blue",
+  "querySemester": "",
+  "queryYear": "",
 };
 List todaySchedule = [];
 List tomorrowSchedule = [];
-
+List queryScore = [];
 String todayScheduleTitle = "";
 String tomorrowScheduleTitle = "";
 final List startTimeList = [
@@ -112,4 +116,9 @@ int randomInt(int min, int max) {
 
 String courseLongText2ShortName(String value) {
   return value.replaceAll("（", "(").replaceAll("）", ")").replaceAll("毛泽东思想和中国特色社会主义理论体系概论", "毛概");
+}
+
+String levelToNumber(String value) {
+  return value.replaceAll("优", "95").replaceAll("良", "85").replaceAll("中", "65").replaceAll(
+      "及格", "65").replaceAll("合格", "65").replaceAll("不及格", "40").replaceAll("不合格", "40");
 }
