@@ -2,8 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:glutassistantn/pages/career.dart';
 import 'package:glutassistantn/pages/setting.dart';
+import 'package:glutassistantn/pages/update.dart';
 import 'package:glutassistantn/widget/bars.dart';
 import 'package:glutassistantn/widget/icons.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../config.dart';
 import '../data.dart';
@@ -53,27 +55,26 @@ class MinePageState extends State<MinePage> {
                   InkWell(
                     onTap: () {
                       Navigator.of(context).push(
-                          // 在FormPage()里传入参数
                           MaterialPageRoute(builder: (context) => const CareerPage()));
                     },
                     child: mineItem(Icons.workspaces_outline,
                         const EdgeInsets.fromLTRB(16, 14, 0, 14), "课程生涯", readColor()),
                   ),
-                  // InkWell(
-                  //   onTap: () {
-                  //     Navigator.of(context).push(
-                  //         // 在FormPage()里传入参数
-                  //         MaterialPageRoute(builder: (context) => const QueryPage()));
-                  //   },
-                  //   child: mineItem(
-                  //       Icons.list_alt_rounded, const EdgeInsets.fromLTRB(16, 14, 0, 14), "成绩查询"),
-                  // ),
                   topLine,
                   InkWell(
                     onTap: () {
+                      // launch("https://github.com/ChinaGamer/GlutAssistantN/releases/latest");
+
                       Navigator.of(context).push(
-                          // 在FormPage()里传入参数
-                          MaterialPageRoute(builder: (context) => const InfoPage()));
+                          MaterialPageRoute(builder: (context) => const UpdatePage()));
+                    },
+                    child: mineItem(Icons.system_update_alt,
+                        const EdgeInsets.fromLTRB(16, 14, 0, 14), "版本更新", readColor()),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (context) => const InfoPage()));
                     },
                     child: mineItem(Icons.info_outline, const EdgeInsets.fromLTRB(16, 14, 0, 14),
                         "说明", readColor()),
@@ -81,7 +82,6 @@ class MinePageState extends State<MinePage> {
                   InkWell(
                     onTap: () {
                       Navigator.of(context).push(
-                          // 在FormPage()里传入参数
                           MaterialPageRoute(builder: (context) => const SettingPage(title: "设置2")));
                     },
                     child: mineItem(Icons.settings_outlined,
@@ -125,6 +125,30 @@ Widget mineItem(IconData icon, EdgeInsets padding, String title, Color color) {
         ],
       ),
       chevronRight
+    ],
+  );
+}
+
+Widget mineItem3(IconData icon, EdgeInsets padding, String title, Color color) {
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+      Row(
+        children: [
+          Icon(icon, color: color),
+          Container(
+            padding: padding,
+            child: Text(
+              title,
+              style: const TextStyle(fontSize: 16),
+            ),
+          )
+        ],
+      ),
+      Icon(
+        Icons.link,
+        color: Colors.black45,
+      ),
     ],
   );
 }

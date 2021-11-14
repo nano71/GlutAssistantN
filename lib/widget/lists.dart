@@ -404,13 +404,18 @@ class TomorrowCourseListState extends State<TomorrowCourseList> {
   }
 }
 
-class QueryScore extends StatefulWidget {
-  QueryScoreState createState() => QueryScoreState();
+class ScoreList extends StatefulWidget {
+  ScoreListState createState() => ScoreListState();
 }
 
-class QueryScoreState extends State<QueryScore> {
+class ScoreListState extends State<ScoreList> {
   @override
   Widget build(BuildContext context) {
+    if (queryScore.length == 1) {
+      return SliverList(
+        delegate: SliverChildBuilderDelegate((BuildContext context, int index) {}),
+      );
+    }
     return SliverList(
       delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
         return Column(
@@ -434,7 +439,7 @@ class QueryScoreState extends State<QueryScore> {
                           Container(
                             child: Text(
                               queryScore[index][3] == "" ? "慕课成绩不会被统计" : queryScore[index][3],
-                              style: TextStyle(color: Colors.black45,fontSize: 12),
+                              style: TextStyle(color: Colors.black45, fontSize: 12),
                             ),
                           ),
                         ],
@@ -452,7 +457,8 @@ class QueryScoreState extends State<QueryScore> {
                     child: Column(children: [
                       Text(queryScore[index][4],
                           style: TextStyle(fontSize: 16, color: Colors.white)),
-                      Text(queryScore[index][5], style: TextStyle(color: Colors.white,fontSize: 12)),
+                      Text(queryScore[index][5],
+                          style: TextStyle(color: Colors.white, fontSize: 12)),
                     ]),
                   ),
                 ],
@@ -472,6 +478,83 @@ class QueryScoreState extends State<QueryScore> {
           ],
         );
       }, childCount: queryScore.length),
+    );
+  }
+}
+
+class ExamList extends StatefulWidget {
+  ExamListState createState() => ExamListState();
+}
+
+class ExamListState extends State<ExamList> {
+  _getColor(int index) {
+    if (examListC[index]) {
+      return Colors.grey;
+    }
+    return readColor();
+  }
+
+  _getColor2(int index) {
+    if (examListC[index]) {
+      return Colors.grey;
+    }
+    return Colors.black;
+  }
+
+  _getIcon(int index) {
+    if (examListC[index]) {
+      return Icons.check;
+    }
+    return Icons.panorama_fish_eye;
+  }
+
+  process() {}
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverList(
+      delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
+        return Container(
+          margin: EdgeInsets.fromLTRB(16, 16, 16, 16),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  Column(
+                    children: [Icon(_getIcon(index), color: _getColor(index))],
+                  ),
+                  SizedBox(
+                    width: 8,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        examList[index][0],
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold, color: _getColor2(index)),
+                      ),
+                      SizedBox(
+                        height: 8,
+                      ),
+                      Text(
+                        examList[index][1],
+                        style: TextStyle(fontSize: 12, color: Colors.black45),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              Text(
+                examList[index][2],
+                style: TextStyle(color: Colors.black45),
+              ),
+              // Text(examList[index][3]),
+            ],
+          ),
+        );
+      }, childCount: examList.length),
     );
   }
 }

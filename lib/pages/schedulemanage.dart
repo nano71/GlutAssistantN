@@ -46,7 +46,7 @@ class _ScheduleManagePageState extends State<ScheduleManagePage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          "页面开发中...",
+                          "敬请期待...",
                           style: TextStyle(fontSize: 18, color: readColor()),
                         ),
                       ],

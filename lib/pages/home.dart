@@ -7,6 +7,7 @@ import 'package:flutter/widgets.dart';
 import 'package:glutassistantn/common/get.dart';
 import 'package:glutassistantn/common/init.dart';
 import 'package:glutassistantn/pages/query.dart';
+import 'package:glutassistantn/pages/queryexam.dart';
 import 'package:glutassistantn/widget/bars.dart';
 import 'package:glutassistantn/widget/cards.dart';
 import 'package:glutassistantn/widget/icons.dart';
@@ -38,8 +39,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   late Animation _animationForHomeCards1;
   late Animation _animationForHomeCards2;
   late Animation _animationForHomeCards3;
-  ColorTween homeCardsColorTween =
-      ColorTween(begin: readColorBegin(), end: readColorEnd());
+  ColorTween homeCardsColorTween = ColorTween(begin: readColorBegin(), end: readColorEnd());
   int _goTopInitCount = 0;
   bool _bk = true;
   Timer? _time;
@@ -269,7 +269,12 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       },
                       onTapUp: (d) {
                         Future.delayed(const Duration(milliseconds: 100), () {
-                          _goTop();
+                          if (writeData["username"] == "") {
+                            Navigator.of(context)
+                                .push(MaterialPageRoute(builder: (context) => const LoginPage()));
+                          } else {
+                            _goTop();
+                          }
                           _animationControllerForHomeCards1.reverse();
                         });
                       },
@@ -310,8 +315,13 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       },
                       onTapUp: (d) {
                         Future.delayed(const Duration(milliseconds: 100), () {
-                          Navigator.of(context)
-                              .push(MaterialPageRoute(builder: (context) => const QueryPage()));
+                          if (writeData["username"] == "") {
+                            Navigator.of(context)
+                                .push(MaterialPageRoute(builder: (context) => const LoginPage()));
+                          } else {
+                            Navigator.of(context)
+                                .push(MaterialPageRoute(builder: (context) => const QueryPage()));
+                          }
                           _animationControllerForHomeCards2.reverse();
                         });
                       },
@@ -334,6 +344,13 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       },
                       onTapUp: (d) {
                         Future.delayed(const Duration(milliseconds: 100), () {
+                          if (writeData["username"] == "") {
+                            Navigator.of(context)
+                                .push(MaterialPageRoute(builder: (context) => const LoginPage()));
+                          } else {
+                            Navigator.of(context).push(
+                                MaterialPageRoute(builder: (context) => const QueryExamPage()));
+                          }
                           _animationControllerForHomeCards3.reverse();
                         });
                       },

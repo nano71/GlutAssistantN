@@ -28,6 +28,7 @@ class ReTodayListState {
 
   ReTodayListState(this.index);
 }
+
 double gpa = 0.0;
 double avg = 0.0;
 double weight = 0.0;
@@ -50,6 +51,10 @@ Map writeData = {
 List todaySchedule = [];
 List tomorrowSchedule = [];
 List queryScore = [];
+List<List<String>> examList = [];
+List<bool> examListC = [];
+int examListA = 0;
+int examListB = 0;
 String todayScheduleTitle = "";
 String tomorrowScheduleTitle = "";
 final List startTimeList = [
@@ -119,6 +124,12 @@ String courseLongText2ShortName(String value) {
 }
 
 String levelToNumber(String value) {
-  return value.replaceAll("优", "95").replaceAll("良", "85").replaceAll("中", "65").replaceAll(
-      "及格", "65").replaceAll("合格", "65").replaceAll("不及格", "40").replaceAll("不合格", "40");
+  return value
+      .replaceAll("优", "95")
+      .replaceAll("良", "85")
+      .replaceAll("中", "65")
+      .replaceAll("及格", "65")
+      .replaceAll("合格", "65")
+      .replaceAll("不及格", "40")
+      .replaceAll("不合格", "40");
 }

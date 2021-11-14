@@ -54,9 +54,13 @@ class _QueryPageState extends State<QueryPage> {
         if (list[i][2].toString().contains("慕") && list[i][3] == "") {
           no++;
         } else {
-          _q += (int.parse(levelToNumber(list[i][4])) * double.parse(list[i][5]));
-          _xf += double.parse(levelToNumber(list[i][5]));
-          sum += int.parse(levelToNumber(list[i][4]));
+          if (list[i].length > 5) {
+            _q += (int.parse(levelToNumber(list[i]![4])) * double.parse(list[i]![5]));
+            _xf += double.parse(levelToNumber(list[i][5]));
+          }
+          if (list[i].length > 4) {
+            sum += int.parse(levelToNumber(list[i][4]));
+          }
         }
       }
       _avg = double.parse((sum / (list.length - no)).toStringAsFixed(1));
@@ -114,14 +118,20 @@ class _QueryPageState extends State<QueryPage> {
           physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
           slivers: [
             publicTopBar(
-              "成绩查询",
-              InkWell(
-                child: const Icon(Icons.close_outlined, size: 24),
-                onTap: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ),
+                "成绩查询",
+                InkWell(
+                  child: const Icon(
+                    Icons.close_outlined,
+                    size: 24,
+                    color: Colors.white,
+                  ),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                readColor(),
+                Colors.white,
+                0),
             SliverToBoxAdapter(
               child: Container(
                 padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
@@ -226,7 +236,7 @@ class _QueryPageState extends State<QueryPage> {
                 ),
               ),
             ),
-            QueryScore()
+            ScoreList()
           ],
         ),
       ),

@@ -8,8 +8,7 @@ import 'package:glutassistantn/pages/init.dart';
 import 'config.dart';
 
 main() {
-  SystemUiOverlayStyle systemUiOverlayStyle =
-      const SystemUiOverlayStyle(statusBarColor: Colors.white);
+  SystemUiOverlayStyle systemUiOverlayStyle = SystemUiOverlayStyle(statusBarColor: Colors.transparent);
   SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
   print("startApp...");
   runApp(const MyApp());
