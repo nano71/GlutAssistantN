@@ -4,6 +4,7 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:glutassistantn/config.dart';
+import 'package:glutassistantn/pages/login.dart';
 import 'package:glutassistantn/pages/setting.dart';
 
 import '../data.dart';
@@ -239,21 +240,57 @@ SnackBar jwSnackBarAction(
   );
 }
 
-SnackBar jwSnackBarActionQ(
-    bool result,
-    String text,
-    BuildContext context, [
-      int hideSnackBarSeconds = 2,
-    ]) {
+SnackBar jwSnackBarActionL(
+  bool result,
+  String text,
+  BuildContext context, [
+  int hideSnackBarSeconds = 2,
+]) {
   Widget resultIcon = result
       ? const Icon(
-    Icons.mood,
-    color: Colors.green,
-  )
+          Icons.mood,
+          color: Colors.green,
+        )
       : const Icon(
-    Icons.mood_bad,
-    color: Colors.red,
+          Icons.mood_bad,
+          color: Colors.red,
+        );
+  return SnackBar(
+    elevation: 2,
+    duration: Duration(seconds: hideSnackBarSeconds),
+    content: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[resultIcon],
+    ),
+    behavior: SnackBarBehavior.floating,
+    action: SnackBarAction(
+      label: text,
+      onPressed: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const LoginPage(),
+            ));
+      },
+    ),
   );
+}
+
+SnackBar jwSnackBarActionQ(
+  bool result,
+  String text,
+  BuildContext context, [
+  int hideSnackBarSeconds = 2,
+]) {
+  Widget resultIcon = result
+      ? const Icon(
+          Icons.mood,
+          color: Colors.green,
+        )
+      : const Icon(
+          Icons.mood_bad,
+          color: Colors.red,
+        );
   return SnackBar(
     elevation: 2,
     duration: Duration(seconds: hideSnackBarSeconds),

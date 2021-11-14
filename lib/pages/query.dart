@@ -10,8 +10,9 @@ import '../data.dart';
 
 class QueryPage extends StatefulWidget {
   final String title;
+  final int type;
 
-  const QueryPage({Key? key, this.title = "查询"}) : super(key: key);
+  const QueryPage({Key? key, this.title = "查询", this.type = 0}) : super(key: key);
 
   @override
   State<QueryPage> createState() => _QueryPageState();
@@ -29,8 +30,6 @@ class _QueryPageState extends State<QueryPage> {
   }
 
   _query(BuildContext context) async {
-    Scaffold.of(context).removeCurrentSnackBar();
-    Scaffold.of(context).showSnackBar(jwSnackBar(true, "查询中...", 10));
     _next(List list) {
       if (list.length == 1 && list[0] == "登录过期") {
         Scaffold.of(context).removeCurrentSnackBar();
@@ -88,7 +87,20 @@ class _QueryPageState extends State<QueryPage> {
       setState(() {});
     }
 
-    await getScore().then((value) => _next(value));
+    print(writeData["username"]);
+    if (writeData["username"] == "") {
+      Scaffold.of(context).removeCurrentSnackBar();
+      Scaffold.of(context).showSnackBar(jwSnackBarActionL(
+        false,
+        "请先登录",
+        context,
+        10,
+      ));
+    } else {
+      Scaffold.of(context).removeCurrentSnackBar();
+      Scaffold.of(context).showSnackBar(jwSnackBar(true, "查询中...", 10));
+      await getScore().then((value) => _next(value));
+    }
   }
 
   @override
@@ -112,13 +124,9 @@ class _QueryPageState extends State<QueryPage> {
             ),
             SliverToBoxAdapter(
               child: Container(
-                padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-                decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.all(Radius.circular(6.0)),
-                  // color: Global.homeCardsColor,
-                  color: readColor(),
-                ),
-                margin: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+                color: readColor(),
+                margin: const EdgeInsets.fromLTRB(0, 0, 0, 16),
                 child: Column(
                   children: [
                     Row(
@@ -142,6 +150,9 @@ class _QueryPageState extends State<QueryPage> {
                                   writeData["queryYear"] = value;
                                 });
                               },
+                            ),
+                            SizedBox(
+                              width: 25,
                             ),
                             DropdownButton(
                               iconEnabledColor: Colors.white,
@@ -170,7 +181,11 @@ class _QueryPageState extends State<QueryPage> {
                                 _query(context);
                               },
                               child: Container(
-                                padding: const EdgeInsets.fromLTRB(16, 16, 0, 16),
+                                decoration: const BoxDecoration(
+                                  borderRadius: BorderRadius.all(Radius.circular(6.0)),
+                                  color: Color(0x1ff1f1f1),
+                                ),
+                                padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
                                 child: Text(
                                   "查询",
                                   style: TextStyle(color: Colors.white),
@@ -179,35 +194,33 @@ class _QueryPageState extends State<QueryPage> {
                         })
                       ],
                     ),
-                  ],
-                ),
-              ),
-            ),
-            SliverToBoxAdapter(
-              child: Container(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "GPA绩点: $_gpa",
-                      style: TextStyle(),
+                    SizedBox(
+                      height: 8,
                     ),
-                    Text(
-                      "|",
-                      style: TextStyle(color: readColor()),
-                    ),
-                    Text(
-                      "算术平均分: $_avg",
-                      style: TextStyle(),
-                    ),
-                    Text(
-                      "|",
-                      style: TextStyle(color: readColor()),
-                    ),
-                    Text(
-                      "加权平均分: $_weight",
-                      style: TextStyle(),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "GPA绩点: $_gpa",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        Text(
+                          "|",
+                          style: TextStyle(color: readColor()),
+                        ),
+                        Text(
+                          "算术平均分: $_avg",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        Text(
+                          "|",
+                          style: TextStyle(color: readColor()),
+                        ),
+                        Text(
+                          "加权平均分: $_weight",
+                          style: TextStyle(color: Colors.white),
+                        )
+                      ],
                     )
                   ],
                 ),

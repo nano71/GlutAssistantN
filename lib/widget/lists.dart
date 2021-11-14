@@ -428,13 +428,13 @@ class QueryScoreState extends State<QueryScore> {
                           Container(
                             child: Text(
                               courseLongText2ShortName(queryScore[index][2]),
-                              style: TextStyle(fontSize: 18),
+                              style: TextStyle(fontSize: 16),
                             ),
                           ),
                           Container(
                             child: Text(
                               queryScore[index][3] == "" ? "慕课成绩不会被统计" : queryScore[index][3],
-                              style: TextStyle(color: Colors.black45),
+                              style: TextStyle(color: Colors.black45,fontSize: 12),
                             ),
                           ),
                         ],
@@ -451,8 +451,8 @@ class QueryScoreState extends State<QueryScore> {
                     ),
                     child: Column(children: [
                       Text(queryScore[index][4],
-                          style: TextStyle(fontSize: 18, color: Colors.white)),
-                      Text(queryScore[index][5], style: TextStyle(color: Colors.white)),
+                          style: TextStyle(fontSize: 16, color: Colors.white)),
+                      Text(queryScore[index][5], style: TextStyle(color: Colors.white,fontSize: 12)),
                     ]),
                   ),
                 ],
