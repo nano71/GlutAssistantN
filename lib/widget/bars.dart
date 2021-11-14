@@ -49,15 +49,16 @@ class HomeTopBar extends StatelessWidget {
   }
 }
 
-SliverAppBar publicTopBar(String title, [inkWell = const Text("")]) {
+SliverAppBar publicTopBar(String title,
+    [inkWell = const Text(""), color = Colors.white, color2 = Colors.black, double e = 0.3]) {
   return SliverAppBar(
     pinned: true,
     collapsedHeight: 56.00,
     primary: true,
-    backgroundColor: Colors.white,
+    backgroundColor: color,
     stretch: true,
     expandedHeight: 125.0,
-    elevation: 0.3,
+    elevation: e,
     automaticallyImplyLeading: false,
     flexibleSpace: FlexibleSpaceBar(
         title: Row(
@@ -65,8 +66,8 @@ SliverAppBar publicTopBar(String title, [inkWell = const Text("")]) {
           children: [
             Text(
               (title),
-              style: const TextStyle(
-                color: Colors.black,
+              style: TextStyle(
+                color: color2,
               ),
             ),
             inkWell,

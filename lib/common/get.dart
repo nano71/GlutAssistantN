@@ -197,7 +197,7 @@ Future<List> getScore() async {
   var response =
       await post(Global.getScoreUrl, body: postData, headers: {"cookie": mapCookieToString()})
           .timeout(const Duration(milliseconds: 6000));
-  if(response.headers["location"] == "/academic/common/security/login.jsp"){
+  if (response.headers["location"] == "/academic/common/security/login.jsp") {
     return ["登录过期"];
   }
   dom.Document document = parse(response.body);
@@ -215,4 +215,88 @@ Future<List> getScore() async {
   }
   print("getScore End");
   return list;
+}
+
+Future<String> getExam() async {
+  print("getExam");
+  try {
+    var response = await post(Global.getExamUrl, headers: {"cookie": mapCookieToString()})
+        .timeout(const Duration(milliseconds: 6000));
+    dom.Document document = parse(gbk.decode(response.bodyBytes));
+    if (document.querySelector("title")!.text.contains("提示信息")) {
+      return "fail";
+    } else {
+      document = parse(response.body);
+      examList = [];
+      var _row = document.querySelectorAll(".datalist> tbody > tr");
+      for (int i = 1; i < _row.length; i++) {
+        List<String> _list = [];
+        String time = _row[i].querySelectorAll("td")[2].text;
+        List timeList = time.split("-");
+        _list.add(_row[i].querySelectorAll("td")[1].text);
+        _list.add(time);
+        _list.add(_row[i]
+            .querySelectorAll("td")[3]
+            .text
+            .replaceAll("空港校区", "")
+            .replaceAll("教", "")
+            .trim()
+            .substring(1)
+            .trim());
+        _list.add(_row[i].querySelectorAll("td")[4].text);
+
+        DateTime startDate = DateTime.now();
+        DateTime endDate = DateTime(int.parse(timeList[0]), int.parse(timeList[1]),
+            int.parse(timeList[2].toString().substring(0, 2)));
+        int days = endDate.difference(startDate).inDays;
+        if (days < 0) {
+          examListC.add(true);
+          examListA++;
+        } else {
+          examListB++;
+          examListC.add(false);
+        }
+
+        examList.add(_list);
+      }
+      print("getExam End");
+      return "success";
+    }
+  } on TimeoutException catch (e) {
+    print("getExam Error");
+    return "超时" + e.toString();
+  } on SocketException catch (e) {
+    print("getExam Error");
+    return "网络连接失败" + e.toString();
+  }
+}
+
+Future getCareer() async {
+  print("getCareer");
+  _next(url) async {
+    var response = await get(Uri.http(Global.jwUrl, url), headers: {"cookie": mapCookieToString()})
+        .timeout(const Duration(milliseconds: 6000));
+    dom.Document document = parse(gbk.decode(response.bodyBytes));
+    print(document.querySelectorAll("tr").length);
+  }
+
+  var response = await get(Global.getCareerUrl, headers: {"cookie": mapCookieToString()})
+      .timeout(const Duration(milliseconds: 6000));
+  dom.Document document = parse(gbk.decode(response.bodyBytes));
+  if (gbk.decode(response.bodyBytes).contains("用户名不能为空！")) {
+
+  } else {
+    String url = document
+        .querySelectorAll("a")[3]
+        .parent!
+        .innerHtml
+        .trim()
+        .replaceAll(
+            '" target="_blank"><img src="/academic/styles/images/calendar_timeline.png" title="修读顺序：按照课组及学年学期的顺序，用二维表方式显示教学计划课',
+            "")
+        .replaceAll('<a href="', "");
+    print(url);
+    await _next(url);
+    print("getCareer End");
+  }
 }
