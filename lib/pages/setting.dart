@@ -70,7 +70,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                         Row(
                           children: [
                             Icon(
-                              !focusNodeType ? Icons.date_range_outlined : Icons.edit_outlined,
+                              Icons.date_range_outlined,
                               color: readColor(),
                             ),
                             Container(
@@ -107,7 +107,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                         Row(
                           children: [
                             Icon(
-                              !focusNode2Type ? Icons.toys_outlined : Icons.edit_outlined,
+                              Icons.toys_outlined,
                               color: readColor(),
                             ),
                             Container(
@@ -206,8 +206,6 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                               setState(() {
                                 writeData["color"] = value;
                               });
-                              // Scaffold.of(context).removeCurrentSnackBar();
-                              // Scaffold.of(context).showSnackBar(jwSnackBar(true, "重新启动后APP生效", 10));
                               writeConfig();
                               pageBus.fire(SetPageIndex(0));
                               Navigator.pushAndRemoveUntil(
@@ -217,8 +215,79 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                                     type: 0,
                                   ),
                                 ),
-                                    (route) => false,
+                                (route) => false,
                               );
+                            },
+                          );
+                        })
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.flip_to_back,
+                              color: readColor(),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.fromLTRB(16, 14, 0, 14),
+                              child: const Text(
+                                "APP生命",
+                                style: TextStyle(fontSize: 16, color: Colors.black),
+                              ),
+                            )
+                          ],
+                        ),
+                        Builder(builder: (BuildContext context) {
+                          return DropdownButton(
+                            iconEnabledColor: readColor(),
+                            elevation: 0,
+                            hint: Text(
+                              writeData["threshold"] != null
+                                  ? writeData["threshold"] + "分钟"
+                                  : "5分钟",
+                              style: TextStyle(color: readColor()),
+                            ),
+                            items: [
+                              DropdownMenuItem(
+                                  child: Text(
+                                    "5分钟",
+                                  ),
+                                  value: "5"),
+                              DropdownMenuItem(
+                                  child: Text(
+                                    "10分钟",
+                                  ),
+                                  value: "10"),
+                              DropdownMenuItem(
+                                  child: Text(
+                                    "20分钟",
+                                  ),
+                                  value: "20"),
+                              DropdownMenuItem(
+                                  child: Text(
+                                    "30分钟",
+                                  ),
+                                  value: "30"),
+                              DropdownMenuItem(
+                                  child: Text(
+                                    "40分钟",
+                                  ),
+                                  value: "40"),
+                              DropdownMenuItem(
+                                  child: Text(
+                                    "不限",
+                                  ),
+                                  value: "9999999999"),
+                            ],
+                            underline: Container(height: 0),
+                            onChanged: (value) {
+                              setState(() {
+                                writeData["threshold"] = value;
+                              });
+                              writeConfig();
                             },
                           );
                         })
