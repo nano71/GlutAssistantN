@@ -16,6 +16,7 @@ class QueryExamRe {
 
   QueryExamRe(this.index);
 }
+
 class QueryScoreRe {
   int index;
 
@@ -58,6 +59,7 @@ Map writeData = {
   "color": "blue",
   "querySemester": "",
   "queryYear": "",
+  "threshold": "5"
 };
 List todaySchedule = [];
 List tomorrowSchedule = [];

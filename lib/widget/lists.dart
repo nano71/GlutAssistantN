@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -6,26 +7,19 @@ import 'package:glutassistantn/config.dart';
 
 import '../data.dart';
 
+GlobalKey<TodayCourseListState> todayCourseListKey = GlobalKey();
+GlobalKey<TomorrowCourseListState> tomorrowCourseListKey = GlobalKey();
+
 List _getStartTime(index) {
   var startH = startTimeList[index - 1][0];
   var endH = endTimeList[index - 1][0];
   var startM = startTimeList[index - 1][1];
   var endM = endTimeList[index - 1][1];
-  var y = DateTime
-      .now()
-      .year;
-  var m = DateTime
-      .now()
-      .month;
-  var d = DateTime
-      .now()
-      .day;
-  var h = DateTime
-      .now()
-      .hour;
-  var mm = DateTime
-      .now()
-      .minute;
+  var y = DateTime.now().year;
+  var m = DateTime.now().month;
+  var d = DateTime.now().day;
+  var h = DateTime.now().hour;
+  var mm = DateTime.now().minute;
   var difference = DateTime(y, m, d, startH, startM).difference(DateTime(y, m, d, h, mm));
   var difference2 = DateTime(y, m, d, endH, endM).difference(DateTime(y, m, d, h, mm));
   bool studying = false;
@@ -76,30 +70,30 @@ String _timeText(int index) {
   }
 }
 
-List<String> _timeText2(int index) {
-  if (index == -1) return ["0", "0"];
-  List value = _getStartTime(int.parse(todaySchedule[index][3]));
-  if (value[0] >= 1) {
-    return ["0", "0"];
-  } else if (value[1] >= 4) {
-    return ["0", "0"];
-  } else if (value[1] >= 1) {
-    if (value[2] == 0) return [value[1].toString(), "0"];
-    return [value[1].toString(), value[2].toString()];
-  } else if (value[3] == "after") {
-    if (value[2] < 46 && value[2] > 0) {
-      if (value[1] == 0.0) {
-        return ["0", value[2].toString()];
-      } else {
-        return ["0", "0"];
-      }
-    } else {
-      return ["0", "0"];
-    }
-  } else {
-    return ["0", value[2].toString()];
-  }
-}
+// List<String> _timeText2(int index) {
+//   if (index == -1) return ["0", "0"];
+//   List value = _getStartTime(int.parse(todaySchedule[index][3]));
+//   if (value[0] >= 1) {
+//     return ["0", "0"];
+//   } else if (value[1] >= 4) {
+//     return ["0", "0"];
+//   } else if (value[1] >= 1) {
+//     if (value[2] == 0) return [value[1].toString(), "0"];
+//     return [value[1].toString(), value[2].toString()];
+//   } else if (value[3] == "after") {
+//     if (value[2] < 46 && value[2] > 0) {
+//       if (value[1] == 0.0) {
+//         return ["0", value[2].toString()];
+//       } else {
+//         return ["0", "0"];
+//       }
+//     } else {
+//       return ["0", "0"];
+//     }
+//   } else {
+//     return ["0", value[2].toString()];
+//   }
+// }
 
 class TodayCourseList extends StatefulWidget {
   const TodayCourseList({Key? key}) : super(key: key);
@@ -114,9 +108,6 @@ class TomorrowCourseList extends StatefulWidget {
   @override
   TomorrowCourseListState createState() => TomorrowCourseListState();
 }
-
-GlobalKey<TodayCourseListState> todayCourseListKey = GlobalKey();
-GlobalKey<TomorrowCourseListState> tomorrowCourseListKey = GlobalKey();
 
 class TodayCourseListState extends State<TodayCourseList> {
   List _todaySchedule = todaySchedule;
@@ -143,10 +134,38 @@ class TodayCourseListState extends State<TodayCourseList> {
     super.dispose();
   }
 
+  bool timerS = false;
+  int sum = 0;
+
+  timerRe(int index) {
+    print("timerRe");
+    if (!timerS && index == 0) {
+      timerS = !timerS;
+      Future.delayed(
+        const Duration(seconds: 1),
+        () {
+          if (DateTime.now().second < 2) {
+            sum++;
+            if (sum > (int.parse(writeData["threshold"]) * 2)) exit(0);
+            print("$index : ${DateTime.now().second}");
+            setState(() {
+              timerS = !timerS;
+            });
+          } else {
+            print("timerRe End ${DateTime.now().second}");
+            timerS = !timerS;
+            timerRe(0);
+          }
+        },
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SliverList(
       delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
+        timerRe(index);
         return TodayCourseListItem(index: index);
       }, childCount: _todaySchedule.length),
     );
@@ -163,23 +182,6 @@ class TodayCourseListItem extends StatefulWidget {
 }
 
 class TodayCourseListItemState extends State<TodayCourseListItem> {
-  bool timerS = false;
-
-  void timerRe(int index) {
-    if (!timerS) {
-      timerS = true;
-      Future.delayed(const Duration(seconds: 1), () {
-        List<String> list = _timeText2(index);
-        if (list[0] != "0" || list[1] != "0") {
-          print("$index : ${DateTime
-              .now()
-              .second}");
-          setState(() {});
-        }
-      });
-    }
-  }
-
   IconData _icon(int index) {
     String result = _getStartTime(int.parse(todaySchedule[index][3]))[3];
     if (result == "before") {
@@ -239,10 +241,8 @@ class TodayCourseListItemState extends State<TodayCourseListItem> {
 
   @override
   Widget build(BuildContext context) {
-    timerRe(widget.index);
     return Container(
         margin: const EdgeInsets.fromLTRB(16, 16, 16, 16),
-        // height: 50,
         child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           Row(
             children: [
@@ -335,11 +335,14 @@ class TomorrowCourseListState extends State<TomorrowCourseList> {
     return SliverList(
       delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
         return Container(
-          margin: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+          padding: _tomorrowSchedule[index][3] == "1" && index == 0
+              ? const EdgeInsets.fromLTRB(16, 0, 16, 4)
+              : const EdgeInsets.fromLTRB(16, 0, 16, 0),
+          margin: const EdgeInsets.fromLTRB(0, 0, 0, 16),
           height: 50,
-          decoration: const BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(6.0)),
-          ),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(6.0)),
+              color: (_tomorrowSchedule[index][3] == "1" && index == 0 ? readColorBegin() : null)),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -351,7 +354,7 @@ class TomorrowCourseListState extends State<TomorrowCourseList> {
                       Icons.attachment,
                       color: (_tomorrowSchedule[index][3] == "1" && index == 0
                           ? Colors.orange[900]
-                          : Colors.blue),
+                          : readColor()),
                     ),
                   ),
                   Column(
