@@ -40,17 +40,19 @@ class _ScheduleManagePageState extends State<ScheduleManagePage> {
               ),
             ),
             SliverToBoxAdapter(
-                child: SizedBox(
-                    height: MediaQuery.of(context).size.height - 125,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "敬请期待...",
-                          style: TextStyle(fontSize: 18, color: readColor()),
-                        ),
-                      ],
-                    ))),
+              child: SizedBox(
+                height: MediaQuery.of(context).size.height - 125,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "敬请期待...",
+                      style: TextStyle(fontSize: 18, color: readColor()),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
       ),

@@ -7,14 +7,12 @@ import 'dart:io';
 import 'package:gbk2utf8/gbk2utf8.dart';
 import 'package:glutassistantn/common/cookie.dart';
 import 'package:glutassistantn/common/io.dart';
-import 'package:glutassistantn/widget/lists.dart';
 import 'package:html/dom.dart' as dom;
 import 'package:html/parser.dart';
 import 'package:http/http.dart';
 
 import '../config.dart';
 import '../data.dart';
-import 'init.dart';
 
 Future<void> getWeek() async {
   try {
@@ -47,7 +45,7 @@ Future<void> getWeek() async {
   }
 }
 
-Future<bool> getSchedule() async {
+Future<String> getSchedule() async {
   print("getSchedule...");
   Map _schedule = schedule;
   Map<String, String> _weekList = {
@@ -68,7 +66,7 @@ Future<bool> getSchedule() async {
         .timeout(const Duration(seconds: 3));
     if (response.body.contains("j_username")) {
       print("登录过期");
-      return false;
+      return "fail";
     } else {
       dom.Document document = parse(gbk
           .decode(response.bodyBytes)
@@ -148,17 +146,15 @@ Future<bool> getSchedule() async {
       await writeSchedule(jsonEncode(_schedule));
     }
     print("getSchedule End");
-    return true;
-  } on SocketException catch (e) {
-    print("超时");
-    return false;
+    return "success";
   } on TimeoutException catch (e) {
-    print("网络错误");
-    return false;
+    print("getExam Error");
+    return Global.timeOutError;
+  } on SocketException catch (e) {
+    print("getExam Error");
+    return Global.socketError;
   }
 }
-
-getScheduleErrorR() {}
 
 Future<void> getName() async {
   print("getName...");
@@ -177,7 +173,6 @@ int getLocalWeek(DateTime nowDate, DateTime pastDate) {
 
 List getSemester() {
   int y = DateTime.now().year;
-  int m = DateTime.now().month;
   return [
     (y - 1980).toString(),
   ];
@@ -194,38 +189,50 @@ Future<List> getScore() async {
     "sortColumn": "",
     "Submit": "查询"
   };
-  var response =
-      await post(Global.getScoreUrl, body: postData, headers: {"cookie": mapCookieToString()})
-          .timeout(const Duration(milliseconds: 6000));
-  if (response.headers["location"] == "/academic/common/security/login.jsp") {
-    return ["登录过期"];
+  try {
+    var response =
+        await post(Global.getScoreUrl, body: postData, headers: {"cookie": mapCookieToString()})
+            .timeout(const Duration(seconds: 3));
+    if (response.headers["location"] == "/academic/common/security/login.jsp") {
+      return ["登录过期"];
+    }
+    dom.Document document = parse(response.body);
+    var dataList = document.querySelectorAll(".datalist > tbody >tr");
+    List list = [];
+    for (int i = 1; i < dataList.length; i++) {
+      List _list = [];
+      _list.add(dataList[i].querySelectorAll("td")[0].text.trim());
+      _list.add(dataList[i].querySelectorAll("td")[1].text.trim());
+      _list.add(dataList[i].querySelectorAll("td")[3].text.trim());
+      _list.add(dataList[i].querySelectorAll("td")[4].text.trim());
+      _list.add(dataList[i].querySelectorAll("td")[5].text.trim());
+      _list.add(dataList[i].querySelectorAll("td")[6].text.trim());
+      list.add(_list);
+    }
+    print("getScore End");
+    return list;
+  } on TimeoutException catch (e) {
+    print("getScore Error");
+    return [Global.timeOutError];
+  } on SocketException catch (e) {
+    print("getScore Error");
+    return [Global.socketError];
   }
-  dom.Document document = parse(response.body);
-  var dataList = document.querySelectorAll(".datalist > tbody >tr");
-  List list = [];
-  for (int i = 1; i < dataList.length; i++) {
-    List _list = [];
-    _list.add(dataList[i].querySelectorAll("td")[0].text.trim());
-    _list.add(dataList[i].querySelectorAll("td")[1].text.trim());
-    _list.add(dataList[i].querySelectorAll("td")[3].text.trim());
-    _list.add(dataList[i].querySelectorAll("td")[4].text.trim());
-    _list.add(dataList[i].querySelectorAll("td")[5].text.trim());
-    _list.add(dataList[i].querySelectorAll("td")[6].text.trim());
-    list.add(_list);
-  }
-  print("getScore End");
-  return list;
 }
 
 Future<String> getExam() async {
   print("getExam");
   try {
     var response = await post(Global.getExamUrl, headers: {"cookie": mapCookieToString()})
-        .timeout(const Duration(milliseconds: 6000));
+        .timeout(const Duration(seconds: 3));
     dom.Document document = parse(gbk.decode(response.bodyBytes));
     if (document.querySelector("title")!.text.contains("提示信息")) {
       return "fail";
     } else {
+      examList = [];
+      examListC = [];
+      examListA = 0;
+      examListB = 0;
       document = parse(response.body);
       examList = [];
       var _row = document.querySelectorAll(".datalist> tbody > tr");
@@ -264,10 +271,10 @@ Future<String> getExam() async {
     }
   } on TimeoutException catch (e) {
     print("getExam Error");
-    return "超时" + e.toString();
+    return Global.timeOutError;
   } on SocketException catch (e) {
     print("getExam Error");
-    return "网络连接失败" + e.toString();
+    return Global.socketError;
   }
 }
 
@@ -275,16 +282,15 @@ Future getCareer() async {
   print("getCareer");
   _next(url) async {
     var response = await get(Uri.http(Global.jwUrl, url), headers: {"cookie": mapCookieToString()})
-        .timeout(const Duration(milliseconds: 6000));
+        .timeout(const Duration(seconds: 3));
     dom.Document document = parse(gbk.decode(response.bodyBytes));
     print(document.querySelectorAll("tr").length);
   }
 
   var response = await get(Global.getCareerUrl, headers: {"cookie": mapCookieToString()})
-      .timeout(const Duration(milliseconds: 6000));
+      .timeout(const Duration(seconds: 3));
   dom.Document document = parse(gbk.decode(response.bodyBytes));
   if (gbk.decode(response.bodyBytes).contains("用户名不能为空！")) {
-
   } else {
     String url = document
         .querySelectorAll("a")[3]

@@ -17,10 +17,10 @@ class CodeCheckDialog {
 
 codeCheckDialog(BuildContext context) async {
   TextEditingController textFieldController = TextEditingController();
-  var response = await get(Global.getCodeUrl).timeout(const Duration(milliseconds: 6000));
+  var response = await get(Global.getCodeUrl).timeout(const Duration(seconds: 3));
   bool clicked = false;
   getCode(Function fn) async {
-    response = await get(Global.getCodeUrl).timeout(const Duration(milliseconds: 6000));
+    response = await get(Global.getCodeUrl).timeout(const Duration(seconds: 3));
     parseRawCookies(response.headers['set-cookie']);
     fn(() {});
   }
@@ -30,7 +30,7 @@ codeCheckDialog(BuildContext context) async {
     Future<void> _next2(String value) async {
       if (value == "success") {
         await getSchedule().then((value) => {
-              if (value)
+              if (value == "success")
                 {
                   Navigator.pushAndRemoveUntil(
                     context,
@@ -84,8 +84,11 @@ codeCheckDialog(BuildContext context) async {
                     Expanded(
                       child: TextField(
                         controller: textFieldController,
-                        decoration: const InputDecoration(
-                          icon: Icon(Icons.code_outlined),
+                        decoration: InputDecoration(
+                          icon: Icon(
+                            Icons.code_outlined,
+                            color: readColor(),
+                          ),
                           border: InputBorder.none,
                           hintText: "验证码", //类似placeholder效果
                         ),
@@ -109,7 +112,7 @@ codeCheckDialog(BuildContext context) async {
                     },
                     child: Text(
                       !clicked ? "取消" : "",
-                      style: TextStyle(color: Colors.blue),
+                      style: TextStyle(color: readColor()),
                     ),
                   ),
                   TextButton(
@@ -118,7 +121,7 @@ codeCheckDialog(BuildContext context) async {
                     },
                     child: Text(
                       !clicked ? "继续" : "稍等...",
-                      style: TextStyle(color: Colors.blue),
+                      style: TextStyle(color: readColor()),
                     ),
                   ),
                 ]),
@@ -130,11 +133,12 @@ codeCheckDialog(BuildContext context) async {
 }
 
 codeCheckDialogQ(BuildContext context) async {
+  print("codeCheckDialogQ");
   TextEditingController textFieldController = TextEditingController();
-  var response = await get(Global.getCodeUrl).timeout(const Duration(milliseconds: 6000));
+  var response = await get(Global.getCodeUrl).timeout(const Duration(seconds: 3));
   bool clicked = false;
   getCode(Function fn) async {
-    response = await get(Global.getCodeUrl).timeout(const Duration(milliseconds: 6000));
+    response = await get(Global.getCodeUrl).timeout(const Duration(seconds: 3));
     parseRawCookies(response.headers['set-cookie']);
     fn(() {});
   }
@@ -143,14 +147,14 @@ codeCheckDialogQ(BuildContext context) async {
   void _codeCheck(Function fn) async {
     Future<void> _next2(String value) async {
       if (value == "success") {
-        await getSchedule().then((value) => {
-              if (value)
-                {
-                  Scaffold.of(context).removeCurrentSnackBar(),
-                  Scaffold.of(context).showSnackBar(jwSnackBar(true, "验证完成,请再次点击查询")),
-                  Navigator.pop(context)
-                }
-            });
+        Scaffold.of(context).removeCurrentSnackBar();
+        // Scaffold.of(context).showSnackBar(jwSnackBar(true, "验证完成,请再次点击查询")),
+        pageBus.fire(QueryScoreRe(1));
+        Navigator.pop(context);
+      } else {
+        Scaffold.of(context).removeCurrentSnackBar();
+        Scaffold.of(context).showSnackBar(jwSnackBar(false, value, 4));
+        Navigator.pop(context);
       }
     }
 
@@ -159,12 +163,16 @@ codeCheckDialogQ(BuildContext context) async {
       if (value == "success") {
         await login(writeData["username"], writeData["password"], textFieldController.text)
             .then((String value) => _next2(value));
-      } else {
+      } else if (value == "fail")  {
         Scaffold.of(context).removeCurrentSnackBar();
         Scaffold.of(context).showSnackBar(jwSnackBar(false, "验证码错误"));
         fn(() {
           clicked = !clicked;
         });
+      }else{
+        Scaffold.of(context).removeCurrentSnackBar();
+        Scaffold.of(context).showSnackBar(jwSnackBar(false, value, 4));
+        Navigator.pop(context);
       }
     }
 
@@ -192,8 +200,11 @@ codeCheckDialogQ(BuildContext context) async {
                     Expanded(
                       child: TextField(
                         controller: textFieldController,
-                        decoration: const InputDecoration(
-                          icon: Icon(Icons.code_outlined),
+                        decoration: InputDecoration(
+                          icon: Icon(
+                            Icons.code_outlined,
+                            color: readColor(),
+                          ),
                           border: InputBorder.none,
                           hintText: "验证码", //类似placeholder效果
                         ),
@@ -217,7 +228,7 @@ codeCheckDialogQ(BuildContext context) async {
                     },
                     child: Text(
                       !clicked ? "取消" : "",
-                      style: TextStyle(color: Colors.blue),
+                      style: TextStyle(color: readColor()),
                     ),
                   ),
                   TextButton(
@@ -226,7 +237,118 @@ codeCheckDialogQ(BuildContext context) async {
                     },
                     child: Text(
                       !clicked ? "继续" : "稍等...",
-                      style: TextStyle(color: Colors.blue),
+                      style: TextStyle(color: readColor()),
+                    ),
+                  ),
+                ]),
+              ),
+            ],
+          );
+        });
+      });
+}
+
+codeCheckDialogQ2(BuildContext context) async {
+  TextEditingController textFieldController = TextEditingController();
+  var response = await get(Global.getCodeUrl).timeout(const Duration(seconds: 3));
+  bool clicked = false;
+  getCode(Function fn) async {
+    response = await get(Global.getCodeUrl).timeout(const Duration(seconds: 3));
+    parseRawCookies(response.headers['set-cookie']);
+    fn(() {});
+  }
+
+  parseRawCookies(response.headers['set-cookie']);
+  void _codeCheck(Function fn) async {
+    Future<void> _next2(String value) async {
+      if (value == "success") {
+        Scaffold.of(context).removeCurrentSnackBar();
+        // Scaffold.of(context).showSnackBar(jwSnackBar(true, "验证完成,请再次点击查询")),
+        pageBus.fire(QueryExamRe(1));
+        Navigator.pop(context);
+      }
+    }
+
+    Future<void> _next(String value) async {
+      print(value);
+      if (value == "success") {
+        await login(writeData["username"], writeData["password"], textFieldController.text)
+            .then((String value) => _next2(value));
+      } else if (value == "fail") {
+        Scaffold.of(context).removeCurrentSnackBar();
+        Scaffold.of(context).showSnackBar(jwSnackBar(false, "验证码错误"));
+        fn(() {
+          clicked = !clicked;
+        });
+      } else {
+        Scaffold.of(context).removeCurrentSnackBar();
+        Scaffold.of(context).showSnackBar(jwSnackBar(false, value, 4));
+        Navigator.pop(context);
+      }
+    }
+
+    if (!clicked) {
+      fn(() {
+        clicked = !clicked;
+      });
+      print(textFieldController.text);
+      await codeCheck(textFieldController.text).then((String value) => _next(value));
+    }
+  }
+
+  showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(builder: (context, setState) {
+          return SimpleDialog(
+            children: <Widget>[
+              Container(
+                margin: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: textFieldController,
+                        decoration: InputDecoration(
+                          icon: Icon(
+                            Icons.code_outlined,
+                            color: readColor(),
+                          ),
+                          border: InputBorder.none,
+                          hintText: "验证码", //类似placeholder效果
+                        ),
+                      ),
+                    ),
+                    InkWell(
+                      child: Image.memory(response.bodyBytes, height: 25),
+                      onTap: () {
+                        getCode(setState);
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: Text(
+                      !clicked ? "取消" : "",
+                      style: TextStyle(color: readColor()),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      _codeCheck(setState);
+                    },
+                    child: Text(
+                      !clicked ? "继续" : "稍等...",
+                      style: TextStyle(color: readColor()),
                     ),
                   ),
                 ]),

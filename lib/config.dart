@@ -11,6 +11,8 @@ class Global {
     initialPage: 0,
     keepPage: true,
   );
+  static String timeOutError = "连接教务超时,教务可能维护中";
+  static String socketError = "网络连接失败";
   static Map<String, String> cookie = {};
   static String jwUrl = "jw.glutnn.cn";
   static Uri getCodeUrl = Uri.http(jwUrl, "/academic/getCaptcha.do");
@@ -21,7 +23,8 @@ class Global {
   static Uri getNameUrl = Uri.http(jwUrl, "/academic/student/studentinfo/studentInfoModifyIndex.do",
       {"frombase": "0", "wantTag": "0"});
   static Uri getScoreUrl = Uri.http(jwUrl, "/academic/manager/score/studentOwnScore.do");
-  static Uri getCareerUrl = Uri.http(jwUrl, "/academic/manager/studyschedule/studentSelfSchedule.jsdo");
+  static Uri getCareerUrl =
+      Uri.http(jwUrl, "/academic/manager/studyschedule/studentSelfSchedule.jsdo");
   static List<String> getScheduleUrl = [jwUrl, "/academic/student/currcourse/currcourse.jsdo"];
   static List<String> codeCheckUrl = [jwUrl, "/academic/checkCaptcha.do"];
   static double schedulePageTouchMovesMinValue = 70.0;
@@ -35,7 +38,13 @@ readGradient() {
       begin: Alignment.centerLeft,
       end: Alignment.topRight,
     );
-  } else if (writeData["color"] == "blue") {
+  } else if (writeData["color"] == "pink") {
+    return const LinearGradient(
+      colors: [Color(0xfffb7766), Color(0xfffc6caa)],
+      begin: Alignment.centerLeft,
+      end: Alignment.topRight,
+    );
+  }else if (writeData["color"] == "blue") {
     return const LinearGradient(
       colors: [Color(0xff66cefb), Color(0xff4175f7)],
       begin: Alignment.centerLeft,
@@ -65,6 +74,8 @@ readGradient() {
 readColor() {
   if (writeData["color"] == "blue") {
     return Colors.blue;
+  } else if (writeData["color"] == "pink") {
+    return Colors.pinkAccent[100];
   } else if (writeData["color"] == "red") {
     return Colors.redAccent;
   } else if (writeData["color"] == "yellow") {
@@ -77,7 +88,7 @@ readColor() {
 }
 
 readColorBegin() {
-  if (writeData["color"] == "red") {
+  if (writeData["color"] == "red"||writeData["color"] == "pink") {
     return const Color.fromARGB(42, 255, 229, 253);
   } else if (writeData["color"] == "blue") {
     return const Color.fromARGB(42, 199, 229, 253);
@@ -93,7 +104,9 @@ readColorBegin() {
 readColorEnd() {
   if (writeData["color"] == "red") {
     return const Color.fromARGB(110, 253, 199, 199);
-  } else if (writeData["color"] == "blue") {
+  } else if (writeData["color"] == "pink") {
+    return const Color.fromARGB(110, 253, 199, 228);
+  }else if (writeData["color"] == "blue") {
     return const Color.fromARGB(110, 199, 229, 253);
   } else if (writeData["color"] == "yellow") {
     return const Color.fromARGB(110, 253, 246, 199);

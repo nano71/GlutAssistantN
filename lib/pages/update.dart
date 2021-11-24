@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:glutassistantn/widget/bars.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import '../config.dart';
+import 'package:package_info/package_info.dart';
+import 'mine.dart';
 
 class UpdatePage extends StatefulWidget {
   final String title;
@@ -14,11 +14,25 @@ class UpdatePage extends StatefulWidget {
 }
 
 class _UpdatePageState extends State<UpdatePage> {
+  String appName = "";
+
+  String packageName = "";
+
+  String version = "";
+
+  String buildNumber = "";
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    // getScore();
+    PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
+      print(packageInfo.appName);
+      appName = packageInfo.appName;
+      packageName = packageInfo.packageName;
+      version = packageInfo.version;
+      buildNumber = packageInfo.buildNumber;
+      setState(() {});
+    });
   }
 
   @override
@@ -40,32 +54,58 @@ class _UpdatePageState extends State<UpdatePage> {
                 },
               ),
             ),
+
             SliverToBoxAdapter(
-              child: Container(
-                margin: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                child: const Text(
-                  "会调用浏览器访问",
-                  style: TextStyle(color: Colors.grey),
-                ),
+              child: SizedBox(
+                height: 64,
               ),
             ),
             SliverToBoxAdapter(
-                child: SizedBox(
-                    height: MediaQuery.of(context).size.height - 125,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        TextButton(
-                          onPressed: () {
-                            launch("https://github.com/ChinaGamer/GlutAssistantN/releases/latest");
-                          },
-                          child: Text(
-                            "点我获取更新",
-                            style: TextStyle(fontSize: 18, color: readColor()),
-                          ),
-                        )
-                      ],
-                    ))),
+              child: Container(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                child: Column(
+                  children: [
+                    Image.asset(
+                      'images/g.png',
+                      width: 72,
+                    ),
+                    SizedBox(
+                      height: 16,
+                    ),
+                    Text(
+                      appName,
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    Text(
+                      version,
+                      style: TextStyle(fontSize: 14, color: Colors.grey),
+                    ),
+                    Container(
+                      width: double.infinity,
+                      margin: const EdgeInsets.fromLTRB(0, 64, 0, 16),
+                      child: Text(
+                        "选择以下渠道获取更新",
+                        style: TextStyle(color: Colors.grey),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        launch("https://www.coolapk.com/apk/289253");
+                      },
+                      child: mineItem(Icons.local_mall, const EdgeInsets.fromLTRB(16, 14, 0, 14),
+                          "酷安", Colors.green),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        launch("https://github.com/ChinaGamer/GlutAssistantN/releases/latest");
+                      },
+                      child: mineItem(Icons.face, const EdgeInsets.fromLTRB(16, 14, 0, 14),
+                          "Github", Colors.blueGrey),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
       ),

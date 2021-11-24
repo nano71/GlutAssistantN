@@ -5,7 +5,6 @@ import 'package:glutassistantn/pages/setting.dart';
 import 'package:glutassistantn/pages/update.dart';
 import 'package:glutassistantn/widget/bars.dart';
 import 'package:glutassistantn/widget/icons.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../config.dart';
 import '../data.dart';

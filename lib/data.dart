@@ -11,6 +11,17 @@ class SetPageIndex {
   SetPageIndex(this.index);
 }
 
+class QueryExamRe {
+  int index;
+
+  QueryExamRe(this.index);
+}
+class QueryScoreRe {
+  int index;
+
+  QueryScoreRe(this.index);
+}
+
 class ReState {
   int index;
 
