@@ -79,8 +79,8 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   void _scrollControllerListener() {
     if (_timeOutBool) {
       int _offset = _scrollController.position.pixels.toInt();
-      _offset < 0 ? iconKey.currentState!.onPressed((_offset / 25.0).abs() + offset_) : "";
       if (_offset < 0) {
+        iconKey.currentState!.onPressed((_offset / 25.0).abs() + offset_);
         if ((_offset / 25.0).abs() >= 6.0) {
           final double __offset = (_offset / 25.0).abs();
           if (__offset == (_offset / 25.0).abs() || __offset + 0.25 < (_offset / 25.0).abs()) {
@@ -148,9 +148,9 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
       _time = Timer(const Duration(seconds: 1), () async {
         getWeek();
         Scaffold.of(context).removeCurrentSnackBar();
-        Scaffold.of(context).showSnackBar(jwSnackBar(true, "开始用户验证...", 10));
+        Scaffold.of(context).showSnackBar(jwSnackBar(true, "获取教务数据...", 10));
         await getSchedule().then((value) => {
-              if (!value)
+              if (value == "fail")
                 {
                   if (writeData["username"] == "")
                     {
@@ -171,8 +171,14 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       _time2?.cancel()
                     }
                 }
-              else
+              else if (value == "success")
                 {_next()}
+              else
+                {
+                  Scaffold.of(context).removeCurrentSnackBar(),
+                  Scaffold.of(context).showSnackBar(jwSnackBar(false, value, 4)),
+                  _time2?.cancel()
+                }
             });
         _timeOutBool = true;
         _goTopInitCount = 0;
@@ -335,7 +341,26 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         decoration: BoxDecoration(
                             borderRadius: const BorderRadius.all(Radius.circular(6.0)),
                             color: _animationForHomeCards2.value),
-                        child: homeCard2,
+                        child: Stack(
+                          children: [
+                            Align(
+                              child: Container(
+                                margin: HomeCardsState.iconMargin,
+                                child: Icon(
+                                  HomeCardsState.icons[1],
+                                  color: readColor(),
+                                  size: HomeCardsState.iconSize,
+                                ),
+                              ),
+                            ),
+                            Align(
+                              child: Container(
+                                margin: HomeCardsState.textMargin,
+                                child: Text(HomeCardsState.iconTexts[1], style: HomeCardsState.textStyle),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                     GestureDetector(
@@ -364,7 +389,26 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         decoration: BoxDecoration(
                             borderRadius: const BorderRadius.all(Radius.circular(6.0)),
                             color: _animationForHomeCards3.value),
-                        child: homeCard3,
+                        child: Stack(
+                          children: [
+                            Align(
+                              child: Container(
+                                margin: HomeCardsState.iconMargin,
+                                child: Icon(
+                                  HomeCardsState.icons[2],
+                                  color: readColor(),
+                                  size: HomeCardsState.iconSize,
+                                ),
+                              ),
+                            ),
+                            Align(
+                              child: Container(
+                                margin: HomeCardsState.textMargin,
+                                child: Text(HomeCardsState.iconTexts[2], style: HomeCardsState.textStyle),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ],

@@ -88,7 +88,7 @@ class InitPageState extends State<InitPage> {
 
   _init() async {
     await readConfig();
-    await getWeek();
+    getWeek();
     await readSchedule();
     await initTodaySchedule();
     await initTomorrowSchedule();

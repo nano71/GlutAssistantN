@@ -33,6 +33,7 @@ dependencies:
   path_provider: ^2.0.6
   event_bus: ^2.0.0
   url_launcher: ^6.0.12
+  package_info: ^2.0.2
   flutter:
     sdk: flutter
 
@@ -62,11 +63,10 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
-
+  assets:
+    - images/g.png
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

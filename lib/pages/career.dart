@@ -40,6 +40,15 @@ class _CareerPageState extends State<CareerPage> {
               ),
             ),
             SliverToBoxAdapter(
+              child: Container(
+                margin: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                child: const Text(
+                  "你大学期间的全部课程都在这里",
+                  style: TextStyle(color: Colors.grey),
+                ),
+              ),
+            ),
+            SliverToBoxAdapter(
                 child: SizedBox(
                     height: MediaQuery.of(context).size.height - 125,
                     child: Column(

@@ -169,20 +169,56 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                               writeData["color"],
                               style: TextStyle(color: readColor()),
                             ),
-                            items: const [
-                              DropdownMenuItem(child: Text("red"), value: "red"),
-                              DropdownMenuItem(child: Text("blue"), value: "blue"),
-                              DropdownMenuItem(child: Text("cyan"), value: "cyan"),
-                              DropdownMenuItem(child: Text("yellow"), value: "yellow"),
+                            items: [
+                              DropdownMenuItem(
+                                  child: Text(
+                                    "red",
+                                    style: TextStyle(color: Colors.redAccent),
+                                  ),
+                                  value: "red"),
+                              DropdownMenuItem(
+                                  child: Text(
+                                    "blue",
+                                    style: TextStyle(color: Colors.blue),
+                                  ),
+                                  value: "blue"),
+                              DropdownMenuItem(
+                                  child: Text(
+                                    "cyan",
+                                    style: TextStyle(color: Colors.cyan[400]),
+                                  ),
+                                  value: "cyan"),
+                              DropdownMenuItem(
+                                  child: Text(
+                                    "pink",
+                                    style: TextStyle(color: Colors.pinkAccent[100]),
+                                  ),
+                                  value: "pink"),
+                              DropdownMenuItem(
+                                  child: Text(
+                                    "yellow",
+                                    style: TextStyle(color: Colors.yellow[600]),
+                                  ),
+                                  value: "yellow"),
                             ],
                             underline: Container(height: 0),
                             onChanged: (value) {
                               setState(() {
                                 writeData["color"] = value;
                               });
-                              Scaffold.of(context).removeCurrentSnackBar();
-                              Scaffold.of(context).showSnackBar(jwSnackBar(true, "重新启动后APP生效", 10));
+                              // Scaffold.of(context).removeCurrentSnackBar();
+                              // Scaffold.of(context).showSnackBar(jwSnackBar(true, "重新启动后APP生效", 10));
                               writeConfig();
+                              pageBus.fire(SetPageIndex(0));
+                              Navigator.pushAndRemoveUntil(
+                                context,
+                                CustomRouteMs300(
+                                  const Index(
+                                    type: 0,
+                                  ),
+                                ),
+                                    (route) => false,
+                              );
                             },
                           );
                         })
@@ -191,15 +227,15 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                     InkWell(
                       onTap: () {
                         Navigator.of(context).push(
-                              MaterialPageRoute(builder: (context) => const ScheduleManagePage()));
+                            MaterialPageRoute(builder: (context) => const ScheduleManagePage()));
                       },
                       child: mineItem(Icons.grid_view_outlined,
                           const EdgeInsets.fromLTRB(16, 14, 0, 14), "课程管理", readColor()),
                     ),
                     InkWell(
                       onTap: () {
-                        Navigator.of(context).push(
-                              MaterialPageRoute(builder: (context) => const TimeManagePage()));
+                        Navigator.of(context)
+                            .push(MaterialPageRoute(builder: (context) => const TimeManagePage()));
                       },
                       child: mineItem(Icons.more_time_outlined,
                           const EdgeInsets.fromLTRB(16, 14, 0, 14), "课节时间", readColor()),

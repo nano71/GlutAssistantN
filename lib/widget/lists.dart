@@ -11,11 +11,21 @@ List _getStartTime(index) {
   var endH = endTimeList[index - 1][0];
   var startM = startTimeList[index - 1][1];
   var endM = endTimeList[index - 1][1];
-  var y = DateTime.now().year;
-  var m = DateTime.now().month;
-  var d = DateTime.now().day;
-  var h = DateTime.now().hour;
-  var mm = DateTime.now().minute;
+  var y = DateTime
+      .now()
+      .year;
+  var m = DateTime
+      .now()
+      .month;
+  var d = DateTime
+      .now()
+      .day;
+  var h = DateTime
+      .now()
+      .hour;
+  var mm = DateTime
+      .now()
+      .minute;
   var difference = DateTime(y, m, d, startH, startM).difference(DateTime(y, m, d, h, mm));
   var difference2 = DateTime(y, m, d, endH, endM).difference(DateTime(y, m, d, h, mm));
   bool studying = false;
@@ -161,7 +171,9 @@ class TodayCourseListItemState extends State<TodayCourseListItem> {
       Future.delayed(const Duration(seconds: 1), () {
         List<String> list = _timeText2(index);
         if (list[0] != "0" || list[1] != "0") {
-          print("$index : ${DateTime.now().second}");
+          print("$index : ${DateTime
+              .now()
+              .second}");
           setState(() {});
         }
       });
@@ -184,7 +196,7 @@ class TodayCourseListItemState extends State<TodayCourseListItem> {
   Color _timeColors(int index) {
     String result = _getStartTime(int.parse(todaySchedule[index][3]))[3];
     if (result == "before") {
-      return Colors.blue;
+      return readColor();
     } else {
       if (_timeText(index).contains("下课")) {
         return Colors.teal;
@@ -508,8 +520,6 @@ class ExamListState extends State<ExamList> {
     return Icons.panorama_fish_eye;
   }
 
-  process() {}
-
   @override
   Widget build(BuildContext context) {
     return SliverList(
@@ -531,7 +541,7 @@ class ExamListState extends State<ExamList> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        examList[index][0],
+                        courseLongText2ShortName(examList[index][0]),
                         style: TextStyle(
                             fontSize: 16, fontWeight: FontWeight.bold, color: _getColor2(index)),
                       ),

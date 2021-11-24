@@ -123,7 +123,7 @@ class _InfoPageState extends State<InfoPage> {
                               Row(
                                 children: [
                                   const Text(
-                                    "企鹅:",
+                                    "QQ:",
                                     style: TextStyle(color: Colors.grey),
                                   ),
                                   Builder(
@@ -148,7 +148,7 @@ class _InfoPageState extends State<InfoPage> {
                               Row(
                                 children: [
                                   const Text(
-                                    "微信:",
+                                    "WX:",
                                     style: TextStyle(color: Colors.grey),
                                   ),
                                   Builder(builder: (BuildContext context) {
@@ -161,7 +161,7 @@ class _InfoPageState extends State<InfoPage> {
                                       },
                                       child: const Text(
                                         "13520944872",
-                                        style: TextStyle(color: Colors.blue),
+                                        style: TextStyle(color: Colors.green),
                                       ),
                                     );
                                   }),
