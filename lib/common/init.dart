@@ -58,9 +58,15 @@ initTomorrowSchedule() async {
     }
   }
 
-  await _schedule[_week][_getWeekDay()].forEach((k, v) => {
-        if (v[1] != "null") {v.add(k), tomorrow.add(v)}
-      });
+  if (DateTime.now().weekday <= 6) {
+    await _schedule[_week][_getWeekDay()].forEach((k, v) => {
+          if (v[1] != "null") {v.add(k), tomorrow.add(v)}
+        });
+  } else {
+    await _schedule[(int.parse(_week) + 1).toString()][_getWeekDay()].forEach((k, v) => {
+          if (v[1] != "null") {v.add(k), tomorrow.add(v)}
+        });
+  }
   if (tomorrow.isNotEmpty) {
     tomorrowScheduleTitle = "明天的";
     tomorrowSchedule = tomorrow;
