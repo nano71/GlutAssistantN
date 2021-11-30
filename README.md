@@ -8,5 +8,5 @@
 
 图标:
 
-<img src="https://github.com/ChinaGamer/Images/blob/master/gan/G1.png" width="72" />
+<img src="https://github.com/ChinaGamer/Images/blob/master/gan/G1.png" width="72" /><img src="https://github.com/ChinaGamer/Images/blob/master/gan/G2.png" width="72" /><img src="https://github.com/ChinaGamer/Images/blob/master/gan/G3.png" width="72" />
 
