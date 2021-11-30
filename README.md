@@ -10,6 +10,6 @@
 
 <img src="https://github.com/ChinaGamer/Images/blob/master/gan/G1.png" width="72" /><img src="https://github.com/ChinaGamer/Images/blob/master/gan/G2.png" width="72" /><img src="https://github.com/ChinaGamer/Images/blob/master/gan/G3.png" width="72" />
 
-截图:
+截图: (格格的号)
 
 <img src="https://github.com/ChinaGamer/Images/blob/master/gan/a.jpg" style="border:1px solid" width="192" /><img src="https://github.com/ChinaGamer/Images/blob/master/gan/b.jpg" width="192" /><img src="https://github.com/ChinaGamer/Images/blob/master/gan/e.jpg" width="192" /><img src="https://github.com/ChinaGamer/Images/blob/master/gan/d.jpg" width="192" /><img src="https://github.com/ChinaGamer/Images/blob/master/gan/c.jpg" width="192" /><img src="https://github.com/ChinaGamer/Images/blob/master/gan/f.jpg" width="192" /><img src="https://github.com/ChinaGamer/Images/blob/master/gan/g.jpg" width="192" /><img src="https://github.com/ChinaGamer/Images/blob/master/gan/h.jpg" width="192" /><img src="https://github.com/ChinaGamer/Images/blob/master/gan/i.jpg" width="192" />
