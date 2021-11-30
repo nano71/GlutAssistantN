@@ -342,7 +342,7 @@ class TomorrowCourseListState extends State<TomorrowCourseList> {
           height: 50,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(6.0)),
-              color: (_tomorrowSchedule[index][3] == "1" && index == 0 ? readColorBegin() : null)),
+          ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -427,10 +427,15 @@ class ScoreListState extends State<ScoreList> {
   @override
   Widget build(BuildContext context) {
     if (queryScore.length == 1) {
-      return SliverList(
-        delegate: SliverChildBuilderDelegate((BuildContext context, int index) {}),
-      );
+      if (queryScore[0] == Global.socketError ||
+          queryScore[0] == Global.timeOutError ||
+          queryScore[0] == "登录过期") {
+        return SliverList(
+          delegate: SliverChildBuilderDelegate((BuildContext context, int index) {}),
+        );
+      }
     }
+
     return SliverList(
       delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
         return Column(

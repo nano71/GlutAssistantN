@@ -114,8 +114,8 @@ class _QueryBodyState extends State<QueryBody> {
           context,
           10,
         ));
-      } else if (list.length == 1 && list[0] == Global.socketError ||
-          list[0] == Global.timeOutError) {
+      } else if (list.length == 1 && (list[0] == Global.socketError ||
+          list[0] == Global.timeOutError)) {
         Scaffold.of(context).removeCurrentSnackBar();
         Scaffold.of(context).showSnackBar(jwSnackBar(false, list[0], 4));
       } else if (list.length == 0) {
