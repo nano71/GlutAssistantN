@@ -8,4 +8,5 @@
 
 图标:
 
-![image](https://github.com/ChinaGamer/Images/blob/master/gan/G1.png =72x72)
+<img src="https://github.com/ChinaGamer/Images/blob/master/gan/G1.png" width="72" />
+
