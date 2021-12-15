@@ -70,6 +70,7 @@ Future<File> configLocalSupportFile() async {
 Future<void> writeConfig() async {
   print("writeConfig");
   writeData["time"] = "${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}";
+  writeData["weekDay"] = DateTime.now().weekday;
   print(jsonEncode(writeData));
   String str = jsonEncode(writeData);
   final file = await configLocalSupportFile();

@@ -34,7 +34,7 @@ Future<void> getWeek() async {
       writeData["querySemester"] = q;
       writeData["queryYear"] = n;
     }
-
+    await writeConfig();
     print("getWeek End");
   } on TimeoutException catch (e) {
     print("超时");
@@ -161,13 +161,12 @@ Future<void> getName() async {
   var response = await get(Global.getNameUrl, headers: {"cookie": mapCookieToString()})
       .timeout(const Duration(seconds: 3));
   dom.Document document = parse(response.body);
-
   writeData["name"] = document.querySelector('[name="realname"]')!.parentNode!.text;
 }
 
 int getLocalWeek(DateTime nowDate, DateTime pastDate) {
   int day = nowDate.difference(pastDate).inDays;
-  int week = day ~/ 7;
+  int week = day.abs()~/7;
   return week;
 }
 
