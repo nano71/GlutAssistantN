@@ -40,7 +40,10 @@ class HomeCardState extends State<HomeCard> with AutomaticKeepAliveClientMixin {
   }
 
   double _weekProgressDouble() {
-    return (_week * 5 / 100) + (DateTime.now().weekday / 7 * 5 / 100);
+    if (_week > 20) {
+      return 1.00;
+    }
+    return (_week * 5 / 100) - 0.05 + (DateTime.now().weekday / 7 * 5 / 100);
   }
 
   String _weekText() {
@@ -55,7 +58,7 @@ class HomeCardState extends State<HomeCard> with AutomaticKeepAliveClientMixin {
     } else if (_week >= 1) {
       return "开学不久,好好玩吧";
     } else {
-      return "";
+      return "学期已经结束?";
     }
   }
 
