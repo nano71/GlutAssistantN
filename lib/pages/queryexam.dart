@@ -43,10 +43,8 @@ class _QueryExamBodyState extends State<QueryExamBody> {
     super.initState();
     eventBusFn = pageBus.on<QueryExamRe>().listen((event) {
       getExam().then((value) => process(value));
-      // getCareer();
     });
     getExam().then((value) => process(value));
-    // getCareer();
   }
 
   process(String value) {

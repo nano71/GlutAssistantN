@@ -104,8 +104,10 @@ class _QueryBodyState extends State<QueryBody> {
   }
 
   _query() async {
+    // Global.cookie = {};
 
     _next(List list) {
+      print(list);
       if (list.length == 1 && list[0] == "登录过期") {
         Scaffold.of(context).removeCurrentSnackBar();
         Scaffold.of(context).showSnackBar(jwSnackBarActionQ(
@@ -114,8 +116,8 @@ class _QueryBodyState extends State<QueryBody> {
           context,
           10,
         ));
-      } else if (list.length == 1 && (list[0] == Global.socketError ||
-          list[0] == Global.timeOutError)) {
+      } else if (list.length == 1 &&
+          (list[0] == Global.socketError || list[0] == Global.timeOutError)) {
         Scaffold.of(context).removeCurrentSnackBar();
         Scaffold.of(context).showSnackBar(jwSnackBar(false, list[0], 4));
       } else if (list.length == 0) {
@@ -144,7 +146,12 @@ class _QueryBodyState extends State<QueryBody> {
         }
         _avg = double.parse((sum / (list.length - no)).toStringAsFixed(1));
         _weight = double.parse((_q / _xf).toStringAsFixed(1));
-
+        if (_avg.isNaN) {
+          _avg = 0.0;
+        }
+        if (_weight.isNaN) {
+          _weight = 0.0;
+        }
         if (_weight >= 90) {
           _gpa = 4.0;
         } else if (_weight >= 85) {
@@ -167,6 +174,7 @@ class _QueryBodyState extends State<QueryBody> {
         weight = _weight;
         gpa = _gpa;
         avg = _avg;
+
         setState(() {});
       }
     }

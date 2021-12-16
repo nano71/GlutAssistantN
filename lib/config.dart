@@ -13,6 +13,7 @@ class Global {
   );
   static String timeOutError = "连接教务超时,教务可能维护中";
   static String socketError = "网络连接失败";
+  static int timeOutSec = 12;
   static Map<String, String> cookie = {};
   static String jwUrl = "jw.glutnn.cn";
   static Uri getCodeUrl = Uri.http(jwUrl, "/academic/getCaptcha.do");

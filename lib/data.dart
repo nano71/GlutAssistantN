@@ -16,6 +16,10 @@ class QueryExamRe {
 
   QueryExamRe(this.index);
 }
+class CareerRe {
+  int index;
+  CareerRe(this.index);
+}
 
 class QueryScoreRe {
   int index;

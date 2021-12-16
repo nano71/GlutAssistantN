@@ -17,7 +17,7 @@ import '../data.dart';
 Future<void> getWeek() async {
   try {
     print("getWeek");
-    var response = await get(Global.getWeekUrl).timeout(const Duration(seconds: 3));
+    var response = await get(Global.getWeekUrl).timeout(Duration(seconds: Global.timeOutSec));
     dom.Document document = parse(gbk.decode(response.bodyBytes));
     String weekHtml = document.querySelector("#date p span")!.text.trim();
     String week = weekHtml.substring(weekHtml.indexOf("第") + 1, weekHtml.indexOf("周")).trim();
@@ -63,7 +63,7 @@ Future<String> getSchedule() async {
       "term": writeData["semesterBk"] == "秋" ? "3" : "1"
     });
     var response = await get(_url, headers: {"cookie": mapCookieToString()})
-        .timeout(const Duration(seconds: 3));
+        .timeout(Duration(seconds: Global.timeOutSec));
     if (response.body.contains("j_username")) {
       print("登录过期");
       return "fail";
@@ -159,14 +159,14 @@ Future<String> getSchedule() async {
 Future<void> getName() async {
   print("getName...");
   var response = await get(Global.getNameUrl, headers: {"cookie": mapCookieToString()})
-      .timeout(const Duration(seconds: 3));
+      .timeout(Duration(seconds: Global.timeOutSec));
   dom.Document document = parse(response.body);
   writeData["name"] = document.querySelector('[name="realname"]')!.parentNode!.text;
 }
 
 int getLocalWeek(DateTime nowDate, DateTime pastDate) {
   int day = nowDate.difference(pastDate).inDays;
-  int week = day.abs()~/7;
+  int week = day.abs() ~/ 7;
   return week;
 }
 
@@ -191,8 +191,9 @@ Future<List> getScore() async {
   try {
     var response =
         await post(Global.getScoreUrl, body: postData, headers: {"cookie": mapCookieToString()})
-            .timeout(const Duration(seconds: 3));
-    if (response.headers["location"] == "/academic/common/security/login.jsp") {
+            .timeout(Duration(seconds: Global.timeOutSec));
+    if (response.headers["location"] == "/academic/common/security/login.jsp" ||
+        response.headers["location"] == null) {
       return ["登录过期"];
     }
     dom.Document document = parse(response.body);
@@ -223,7 +224,7 @@ Future<String> getExam() async {
   print("getExam");
   try {
     var response = await post(Global.getExamUrl, headers: {"cookie": mapCookieToString()})
-        .timeout(const Duration(seconds: 3));
+        .timeout(Duration(seconds: Global.timeOutSec));
     dom.Document document = parse(gbk.decode(response.bodyBytes));
     if (document.querySelector("title")!.text.contains("提示信息")) {
       return "fail";
@@ -279,29 +280,67 @@ Future<String> getExam() async {
 
 Future getCareer() async {
   print("getCareer");
-  _next(url) async {
-    var response = await get(Uri.http(Global.jwUrl, url), headers: {"cookie": mapCookieToString()})
-        .timeout(const Duration(seconds: 3));
-    dom.Document document = parse(gbk.decode(response.bodyBytes));
-    print(document.querySelectorAll("tr").length);
-  }
 
-  var response = await get(Global.getCareerUrl, headers: {"cookie": mapCookieToString()})
-      .timeout(const Duration(seconds: 3));
-  dom.Document document = parse(gbk.decode(response.bodyBytes));
-  if (gbk.decode(response.bodyBytes).contains("用户名不能为空！")) {
-  } else {
-    String url = document
-        .querySelectorAll("a")[3]
-        .parent!
-        .innerHtml
-        .trim()
-        .replaceAll(
-            '" target="_blank"><img src="/academic/styles/images/calendar_timeline.png" title="修读顺序：按照课组及学年学期的顺序，用二维表方式显示教学计划课',
-            "")
-        .replaceAll('<a href="', "");
-    print(url);
-    await _next(url);
-    print("getCareer End");
+  try {
+    _next(List url) async {
+      var response = await get(
+          Uri.http(Global.jwUrl, "/academic/manager/studyschedule/studentScheduleShowByTerm.do",
+              {"z": "z", "studentId": url[0], "classId": url[1]}),
+          headers: {"cookie": mapCookieToString()}).timeout(Duration(seconds: Global.timeOutSec));
+      dom.Document document = parse(response.bodyBytes);
+      int length = document.querySelectorAll("table.datalist tbody tr").length;
+      List list = [];
+      for (int i = 0; i < length; i++) {
+        var td = document.querySelectorAll("table.datalist tbody tr")[i].querySelectorAll("td");
+        if (td.length > 1) {
+          List _list = [];
+          for (int j = 0; j < td.length; j++) {
+            _list.add(td[j].text.trim());
+          }
+          list.add(_list);
+        } else if (td.length == 1) {
+          List _list = [];
+          List title = td[0].text.trim().split("学年");
+          if (title.length > 1) {
+            _list.add(title[0].trim() + " 学年");
+            _list.add(title[1].trim());
+            list.add(_list);
+          }
+        }
+      }
+      print(list);
+    }
+
+    var response = await get(Global.getCareerUrl, headers: {"cookie": mapCookieToString()})
+        .timeout(Duration(seconds: Global.timeOutSec));
+    dom.Document document = parse(gbk.decode(response.bodyBytes));
+    if (gbk.decode(response.bodyBytes).contains("用户名不能为空！")) {
+      return "fail";
+    } else {
+      String url = document.querySelectorAll("a")[3].parent!.innerHtml.trim();
+      String urlA = url.substring(url.indexOf('修读顺序：按照课组及学年学期的顺序，用二维表方式显示教学计划课组及课程"></a>') +
+          '修读顺序：按照课组及学年学期的顺序，用二维表方式显示教学计划课组及课程"></a>'.length);
+      String urlB = urlA
+          .replaceAll('<a href="', "")
+          .replaceAll(
+              '" target="_blank"><img src="/academic/styles/images/Sort_Ascending.png" title="学期模式：按照学年学期的顺序，显示教学计划课程"></a>',
+              "")
+          .replaceAll("amp;", "")
+          .replaceAll(
+              '/academic/manager/studyschedule/scheduleJump.jsp?link=studentScheduleShowByTerm.do&studentId=',
+              "")
+          .trim();
+      List urlC = urlB.split('&classId=');
+      print(urlC);
+      await _next(urlC);
+      print("getCareer End");
+      return "success";
+    }
+  } on TimeoutException catch (e) {
+    print("getExam Error");
+    return Global.timeOutError;
+  } on SocketException catch (e) {
+    print("getExam Error");
+    return Global.socketError;
   }
 }
