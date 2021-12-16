@@ -340,3 +340,35 @@ SnackBar jwSnackBarActionQ2(
     ),
   );
 }
+
+SnackBar jwSnackBarActionQ3(
+    bool result,
+    String text,
+    BuildContext context, [
+      int hideSnackBarSeconds = 2,
+    ]) {
+  Widget resultIcon = result
+      ? const Icon(
+    Icons.mood,
+    color: Colors.green,
+  )
+      : const Icon(
+    Icons.mood_bad,
+    color: Colors.red,
+  );
+  return SnackBar(
+    elevation: 2,
+    duration: Duration(seconds: hideSnackBarSeconds),
+    content: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[resultIcon],
+    ),
+    behavior: SnackBarBehavior.floating,
+    action: SnackBarAction(
+      label: text,
+      onPressed: () {
+        codeCheckDialogQ3(context);
+      },
+    ),
+  );
+}
