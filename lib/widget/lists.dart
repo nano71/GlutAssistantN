@@ -138,7 +138,7 @@ class TodayCourseListState extends State<TodayCourseList> {
   int sum = 0;
 
   timerRe(int index) {
-    print("timerRe");
+    // print("timerRe");
     if (!timerS && index == 0) {
       timerS = !timerS;
       Future.delayed(
@@ -152,7 +152,7 @@ class TodayCourseListState extends State<TodayCourseList> {
               timerS = !timerS;
             });
           } else {
-            print("timerRe End ${DateTime.now().second}");
+            // print("timerRe End ${DateTime.now().second}");
             timerS = !timerS;
             timerRe(0);
           }

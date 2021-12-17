@@ -68,11 +68,15 @@ Map writeData = {
   "threshold": "5",
   "newVersion": "",
   "newBody": "",
-  "newTime": ""
+  "newTime": "",
+  "githubDownload": ""
 };
 List todaySchedule = [];
 List tomorrowSchedule = [];
 List queryScore = [];
+List careerList = [];
+int careerNumber= 0;
+int examAllNumber = 0;
 List<List<String>> examList = [];
 List<bool> examListC = [];
 int examListA = 0;

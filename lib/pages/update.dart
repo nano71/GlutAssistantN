@@ -80,6 +80,7 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
       newVersion = true;
       writeData["newVersion"] = value[1];
       writeData["newBody"] = value[3];
+      writeData["githubDownload"] = value[4];
       writeData["newTime"] = "${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}";
       writeConfig();
       setState(() {});
@@ -119,9 +120,14 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
               padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
               child: Column(
                 children: [
-                  Image.asset(
-                    'images/g.png',
-                    width: 72,
+                  InkWell(
+                    onTap: () {
+                      getUpdate().then((value) => _next(value));
+                    },
+                    child: Image.asset(
+                      'images/g.png',
+                      width: 72,
+                    ),
                   ),
                   SizedBox(
                     height: 16,
@@ -173,7 +179,7 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
                             ),
                             InkWell(
                               onTap: () {
-                                launch("https://github.com/nano71/GlutAssistantN/releases/latest");
+                                launch(writeData["githubDownload"]);
                               },
                               child: mineItem(Icons.face, const EdgeInsets.fromLTRB(16, 14, 0, 14),
                                   "Github", Colors.blueGrey),

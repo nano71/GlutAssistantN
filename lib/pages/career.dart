@@ -39,9 +39,70 @@ class _CareerPageBodyState extends State<CareerPageBody> {
     // TODO: implement initState
     super.initState();
     eventBusFn = pageBus.on<CareerRe>().listen((event) {
-      getExam().then((value) => process(value));
+      getCareer().then((value) => process(value));
     });
     getCareer().then((value) => process(value));
+  }
+
+  Widget careerListProcess(index) {
+    print(index);
+    if (careerList.length == 0 || index == 0) return Container();
+    if (careerList.length == 0 || index == 0) return Container();
+    if (careerList[index].length > 3) {
+      return Container(
+        margin: const EdgeInsets.fromLTRB(16, 4, 16, 4),
+        padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.all(Radius.circular(6.0)),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Container(
+            //   margin: const EdgeInsets.fromLTRB(16, 16, 16, 16),
+            //   color:Colors.white,
+            //   child: Align(
+            //     child: Text(courseLongText2ShortName(careerList[index][1])[0]),
+            //   ),
+            // ),
+            Text(
+              courseLongText2ShortName(careerList[index][1]),
+              style: TextStyle(fontSize: 16),
+            ),
+            SizedBox(
+              height: 8,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text("性质: " + careerList[index][2], style: TextStyle()),
+                SizedBox(
+                  width: 25,
+                ),
+                Text("类型: " + careerList[index][5], style: TextStyle()),
+
+                SizedBox(
+                  width: 25,
+                ),
+                Text("学分: " + careerList[index][3], style: TextStyle()),
+
+                // Text("性质: " + careerList[index][7], style: TextStyle(color: Colors.white)),
+              ],
+            ),
+          ],
+        ),
+      );
+    } else {
+      return Container(
+        margin: const EdgeInsets.fromLTRB(16, 4, 16, 4),
+        child: Row(
+          children: [
+            Text(careerList[index][0]),
+            Text(careerList[index][1]),
+          ],
+        ),
+      );
+    }
   }
 
   process(String value) {
@@ -52,6 +113,18 @@ class _CareerPageBodyState extends State<CareerPageBody> {
       setState(() {});
       Scaffold.of(context).removeCurrentSnackBar();
       Scaffold.of(context).showSnackBar(jwSnackBar(true, "数据已经更新", 1));
+      examAllNumber = 0;
+      careerNumber = 0;
+      careerList.forEach((element) {
+        if (element.contains("考试")) {
+          print(element);
+          examAllNumber++;
+        }
+        if (element.length > 3) {
+          careerNumber++;
+        }
+      });
+      print(examAllNumber);
     } else if (value == "fail") {
       Scaffold.of(context).removeCurrentSnackBar();
       Scaffold.of(context).showSnackBar(jwSnackBarActionQ3(
@@ -72,7 +145,8 @@ class _CareerPageBodyState extends State<CareerPageBody> {
     Future.delayed(const Duration(seconds: 0), () {
       if (login) {
         Scaffold.of(context).removeCurrentSnackBar();
-        Scaffold.of(context).showSnackBar(jwSnackBar(true, "获取教务数据...", 6));
+        Scaffold.of(context)
+            .showSnackBar(jwSnackBar(true, "获取教务数据(可能需要半分钟)...", Global.timeOutSec * 2));
       }
     });
     return Container(
@@ -93,24 +167,45 @@ class _CareerPageBodyState extends State<CareerPageBody> {
           SliverToBoxAdapter(
             child: Container(
               margin: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-              child: const Text(
-                "你大学期间的全部课程都在这里",
-                style: TextStyle(color: Colors.grey),
+              padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
+              decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.all(Radius.circular(6.0)),
+                  color: randomColors()),
+              child: Row(
+                children: [
+                  Container(
+                    margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                    padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
+                    child: Icon(
+                      Icons.mood,
+                      size: 64,
+                      color: Colors.white,
+                    ),
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        writeData["name"],
+                        style: TextStyle(fontSize: 18, color: Colors.white),
+                      ),
+                      // Text("作为${careerList[0][1]}的一员"),
+                      // Text("你会在3年内学习不低于$careerNumber门的课程"),
+                      // Text("你勤奋学习,目前还任何一门课程绊倒过你"),
+                      // Text("作为计算机的专业的一员,你将在3年内学习不低于80门课程"),
+                      Text(careerList[0][1] + "  " + careerList[0][2],
+                          style: TextStyle(color: Colors.white)),
+                      Text(careerList[0][4], style: TextStyle(color: Colors.white)),
+                    ],
+                  )
+                ],
               ),
             ),
           ),
-          SliverToBoxAdapter(
-              child: SizedBox(
-                  height: MediaQuery.of(context).size.height - 125,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "敬请期待...",
-                        style: TextStyle(fontSize: 18, color: readColor()),
-                      ),
-                    ],
-                  ))),
+          SliverList(
+              delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
+            return careerListProcess(index);
+          }, childCount: careerList.length)),
         ],
       ),
     );
