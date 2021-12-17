@@ -309,6 +309,8 @@ Future getCareer() async {
         }
       }
       careerList = list;
+      careerInfo = list[0];
+      careerList.removeAt(0);
     }
 
     var response = await get(Global.getCareerUrl, headers: {"cookie": mapCookieToString()})
