@@ -1,3 +1,4 @@
+import 'package:badges/badges.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:glutassistantn/pages/career.dart';
@@ -5,6 +6,7 @@ import 'package:glutassistantn/pages/setting.dart';
 import 'package:glutassistantn/pages/update.dart';
 import 'package:glutassistantn/widget/bars.dart';
 import 'package:glutassistantn/widget/icons.dart';
+import 'package:package_info/package_info.dart';
 
 import '../config.dart';
 import '../data.dart';
@@ -19,6 +21,24 @@ class MinePage extends StatefulWidget {
 }
 
 class MinePageState extends State<MinePage> {
+  bool newVersion = false;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
+      print(packageInfo.appName);
+      if (writeData["newVersion"] != "" && packageInfo.version != writeData["newVersion"]) {
+        setState(() {
+          newVersion = true;
+        });
+      }
+      print(newVersion);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -53,8 +73,8 @@ class MinePageState extends State<MinePage> {
                   ),
                   InkWell(
                     onTap: () {
-                      Navigator.of(context).push(
-                          MaterialPageRoute(builder: (context) => const CareerPage()));
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (context) => const CareerPage()));
                     },
                     child: mineItem(Icons.workspaces_outline,
                         const EdgeInsets.fromLTRB(16, 14, 0, 14), "课程生涯", readColor()),
@@ -64,11 +84,14 @@ class MinePageState extends State<MinePage> {
                     onTap: () {
                       // launch("https://github.com/ChinaGamer/GlutAssistantN/releases/latest");
 
-                      Navigator.of(context).push(
-                          MaterialPageRoute(builder: (context) => const UpdatePage()));
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (context) => const UpdatePage()));
                     },
-                    child: mineItem(Icons.system_update_alt,
-                        const EdgeInsets.fromLTRB(16, 14, 0, 14), "版本更新", readColor()),
+                    child: newVersion
+                        ? mineItem5(Icons.system_update_alt,
+                            const EdgeInsets.fromLTRB(16, 14, 0, 14), "版本更新", readColor())
+                        : mineItem(Icons.system_update_alt,
+                            const EdgeInsets.fromLTRB(16, 14, 0, 14), "版本更新", readColor()),
                   ),
                   InkWell(
                     onTap: () {
@@ -124,6 +147,49 @@ Widget mineItem(IconData icon, EdgeInsets padding, String title, Color color) {
         ],
       ),
       chevronRight
+    ],
+  );
+}
+
+Widget mineItem5(IconData icon, EdgeInsets padding, String title, Color color) {
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+      Row(
+        children: [
+          Icon(icon, color: color),
+          Container(
+              padding: padding,
+              child: Badge(
+                badgeContent: Text(''),
+                child: Text(
+                  title,
+                  style: const TextStyle(fontSize: 16),
+                ),
+              ))
+        ],
+      ),
+      chevronRight
+    ],
+  );
+}
+
+Widget mineItem4(IconData icon, EdgeInsets padding, String title, Color color) {
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+      Row(
+        children: [
+          Icon(icon, color: color),
+          Container(
+            padding: padding,
+            child: Text(
+              title,
+              style: const TextStyle(fontSize: 16),
+            ),
+          )
+        ],
+      )
     ],
   );
 }

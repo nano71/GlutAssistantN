@@ -344,3 +344,44 @@ Future getCareer() async {
     return Global.socketError;
   }
 }
+
+Future getUpdate() async {
+  print("getUpdate");
+  try {
+    var response = await get(Global.getUpdateUrl);
+    if (response.body.toString().contains('"message":"API rate limit exceeded for')) {
+      print("getUpdate End");
+      return ["频繁的请求!"];
+    }
+    List list = jsonDecode(response.body)["name"].split("_");
+    list.add(jsonDecode(response.body)["body"]);
+    print(list);
+    print("getUpdate End");
+    return list;
+  } on TimeoutException catch (e) {
+    print("getUpdate Error: "+e.toString());
+    return ["请求超时"];
+  } on SocketException catch (e) {
+    print("getUpdate Error: "+e.toString());
+    return [Global.socketError];
+  }
+}
+
+Future getUpdateForEveryday() async {
+  print("getUpdateForEveryday");
+  if ("${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}" !=
+      writeData["newTime"]) {
+    var response = await get(Global.getUpdateUrl);
+    if (response.body.toString().contains('"message":"API rate limit exceeded for')) {
+    } else {
+      List list = jsonDecode(response.body)["name"].split("_");
+      list.add(jsonDecode(response.body)["body"]);
+      writeData["newVersion"] = list[1];
+      writeData["newBody"] = list[3];
+      writeData["newTime"] = "${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}";
+      writeConfig();
+      print("getUpdateForEveryday End");
+    }
+  }
+  print("getUpdateForEveryday Skip");
+}

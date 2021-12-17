@@ -92,6 +92,7 @@ class InitPageState extends State<InitPage> {
     await readSchedule();
     await initTodaySchedule();
     await initTomorrowSchedule();
+    getUpdateForEveryday();
     Navigator.pushAndRemoveUntil(
       context,
       CustomRoute(
