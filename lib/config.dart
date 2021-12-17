@@ -16,6 +16,7 @@ class Global {
   static int timeOutSec = 12;
   static Map<String, String> cookie = {};
   static String jwUrl = "jw.glutnn.cn";
+  static String updateApiUrl = "api.github.com";
   static Uri getCodeUrl = Uri.http(jwUrl, "/academic/getCaptcha.do");
   static Uri loginUrl = Uri.http(jwUrl, "/academic/j_acegi_security_check");
   static Uri loginUrl2 = Uri.http(jwUrl, "/academic/index_new.jsp");
@@ -26,6 +27,8 @@ class Global {
   static Uri getScoreUrl = Uri.http(jwUrl, "/academic/manager/score/studentOwnScore.do");
   static Uri getCareerUrl =
       Uri.http(jwUrl, "/academic/manager/studyschedule/studentSelfSchedule.jsdo");
+  static Uri getUpdateUrl =
+      Uri.http(updateApiUrl, "/repos/nano71/GlutAssistantN/releases/latest");
   static List<String> getScheduleUrl = [jwUrl, "/academic/student/currcourse/currcourse.jsdo"];
   static List<String> codeCheckUrl = [jwUrl, "/academic/checkCaptcha.do"];
   static double schedulePageTouchMovesMinValue = 70.0;

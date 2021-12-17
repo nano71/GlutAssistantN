@@ -1,11 +1,13 @@
 // 引入 eventBus 包文件
 import 'dart:async';
 
+import 'package:badges/badges.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:glutassistantn/config.dart';
 import 'package:glutassistantn/pages/login.dart';
 import 'package:glutassistantn/pages/setting.dart';
+import 'package:package_info/package_info.dart';
 
 import '../data.dart';
 import 'dialog.dart';
@@ -125,6 +127,7 @@ class BottomNavBar extends StatefulWidget {
 
 class BottomNavBarState extends State<BottomNavBar> {
   late StreamSubscription<SetPageIndex> eventBusFn;
+  bool newVersion = false;
 
   @override
   void initState() {
@@ -132,7 +135,15 @@ class BottomNavBarState extends State<BottomNavBar> {
     eventBusFn = pageBus.on<SetPageIndex>().listen((event) {
       Global.pageControl.jumpToPage(event.index);
       Global.pageIndex = event.index;
+      print(event.index);
       setState(() {});
+    });
+    PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
+      if (writeData["newVersion"] != "" && packageInfo.version != writeData["newVersion"]) {
+        setState(() {
+          newVersion = true;
+        });
+      }
     });
   }
 
@@ -164,7 +175,7 @@ class BottomNavBarState extends State<BottomNavBar> {
           },
         );
       },
-      items: const [
+      items: [
         BottomNavigationBarItem(
             tooltip: '',
             icon: Icon(
@@ -179,9 +190,17 @@ class BottomNavBarState extends State<BottomNavBar> {
             label: ''),
         BottomNavigationBarItem(
             tooltip: '',
-            icon: Icon(
-              Icons.mood,
-            ),
+            icon: newVersion
+                ? Badge(
+                    animationDuration: const Duration(milliseconds: 0),
+                    badgeContent: Text('1',style: TextStyle(color: Colors.white),),
+                    child: Icon(
+                      Icons.mood,
+                    ),
+                  )
+                : Icon(
+                    Icons.mood,
+                  ),
             label: ''),
       ],
     );
@@ -342,20 +361,20 @@ SnackBar jwSnackBarActionQ2(
 }
 
 SnackBar jwSnackBarActionQ3(
-    bool result,
-    String text,
-    BuildContext context, [
-      int hideSnackBarSeconds = 2,
-    ]) {
+  bool result,
+  String text,
+  BuildContext context, [
+  int hideSnackBarSeconds = 2,
+]) {
   Widget resultIcon = result
       ? const Icon(
-    Icons.mood,
-    color: Colors.green,
-  )
+          Icons.mood,
+          color: Colors.green,
+        )
       : const Icon(
-    Icons.mood_bad,
-    color: Colors.red,
-  );
+          Icons.mood_bad,
+          color: Colors.red,
+        );
   return SnackBar(
     elevation: 2,
     duration: Duration(seconds: hideSnackBarSeconds),

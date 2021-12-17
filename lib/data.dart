@@ -16,8 +16,10 @@ class QueryExamRe {
 
   QueryExamRe(this.index);
 }
+
 class CareerRe {
   int index;
+
   CareerRe(this.index);
 }
 
@@ -63,7 +65,10 @@ Map writeData = {
   "color": "blue",
   "querySemester": "",
   "queryYear": "",
-  "threshold": "5"
+  "threshold": "5",
+  "newVersion": "",
+  "newBody": "",
+  "newTime": ""
 };
 List todaySchedule = [];
 List tomorrowSchedule = [];
