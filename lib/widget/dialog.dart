@@ -247,7 +247,6 @@ codeCheckDialogQ(BuildContext context) async {
         });
       });
 }
-
 codeCheckDialogQ2(BuildContext context) async {
   TextEditingController textFieldController = TextEditingController();
   var response = await get(Global.getCodeUrl).timeout(const Duration(seconds: 3));
@@ -379,7 +378,6 @@ codeCheckDialogQ3(BuildContext context) async {
     }
 
     Future<void> _next(String value) async {
-      print(value);
       if (value == "success") {
         await login(writeData["username"], writeData["password"], textFieldController.text)
             .then((String value) => _next2(value));
