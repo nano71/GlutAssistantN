@@ -308,7 +308,7 @@ Future getCareer() async {
           }
         }
       }
-      print(list);
+      careerList = list;
     }
 
     var response = await get(Global.getCareerUrl, headers: {"cookie": mapCookieToString()})
@@ -355,14 +355,15 @@ Future getUpdate() async {
     }
     List list = jsonDecode(response.body)["name"].split("_");
     list.add(jsonDecode(response.body)["body"]);
+    list.add(jsonDecode(response.body)["assets"][0]["browser_download_url"].toString().trim());
     print(list);
     print("getUpdate End");
     return list;
   } on TimeoutException catch (e) {
-    print("getUpdate Error: "+e.toString());
+    print("getUpdate Error: " + e.toString());
     return ["请求超时"];
   } on SocketException catch (e) {
-    print("getUpdate Error: "+e.toString());
+    print("getUpdate Error: " + e.toString());
     return [Global.socketError];
   }
 }

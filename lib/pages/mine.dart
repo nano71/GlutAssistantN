@@ -73,8 +73,13 @@ class MinePageState extends State<MinePage> {
                   ),
                   InkWell(
                     onTap: () {
-                      Navigator.of(context)
-                          .push(MaterialPageRoute(builder: (context) => const CareerPage()));
+                      if (writeData["username"] == "") {
+                        Navigator.of(context)
+                            .push(MaterialPageRoute(builder: (context) => const LoginPage()));
+                      } else {
+                        Navigator.of(context)
+                            .push(MaterialPageRoute(builder: (context) => const CareerPage()));
+                      }
                     },
                     child: mineItem(Icons.workspaces_outline,
                         const EdgeInsets.fromLTRB(16, 14, 0, 14), "课程生涯", readColor()),

@@ -131,7 +131,9 @@ class _QueryExamBodyState extends State<QueryExamBody> {
                             Container(
                               width: 50,
                               child: Text(
-                                "NaN",
+                                (examAllNumber.toString() == "0"
+                                    ? "待更新"
+                                    : examAllNumber.toString()),
                                 textAlign: TextAlign.center,
                                 style: TextStyle(color: Colors.white, fontSize: 24),
                               ),
