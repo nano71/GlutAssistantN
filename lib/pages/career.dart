@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:glutassistantn/common/get.dart';
 import 'package:glutassistantn/common/style.dart';
 import 'package:glutassistantn/widget/bars.dart';
+import 'package:noripple_overscroll/noripple_overscroll.dart';
 
 import '../config.dart';
 import '../data.dart';
@@ -474,7 +475,9 @@ class CareerListProcessState extends State<CareerListProcess> {
               ),
               TextButton(
                 style: buttonStyle(),
-                onPressed: () {},
+                onPressed: () {
+                  careerDialog(context, index, 1, startYear + index);
+                },
                 child: Text(
                   "view",
                   style: TextStyle(
@@ -504,24 +507,7 @@ class CareerListProcessState extends State<CareerListProcess> {
               TextButton(
                 style: buttonStyle(),
                 onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return SimpleDialog(
-                          title: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [Text("2021 秋学期 -"), Text("课程一览")],
-                          ),
-                          titlePadding: EdgeInsets.fromLTRB(16, 16, 16, 16),
-                          titleTextStyle: TextStyle(
-                            color: readColor(),
-                            fontSize: 25,
-                          ),
-                          contentPadding: EdgeInsets.only(left: 15, right: 15, bottom: 15),
-                          backgroundColor: Colors.white,
-                          children: careerDialogLoop(index, 2));
-                    },
-                  );
+                  careerDialog(context, index, 2, startYear + index + 1);
                 },
                 child: Text(
                   "view",
@@ -538,39 +524,100 @@ class CareerListProcessState extends State<CareerListProcess> {
   }
 }
 
+careerDialog(context, index, type, year) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return NoRippleOverScroll(
+        child: SimpleDialog(
+          title: Row(
+            mainAxisAlignment:MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("$year - ${type == 2 ? "春" : "秋"}学期"),
+                  Text(
+                    "课程计数: ${careerList2[(index * 2 + type / 2 >= 1 ? index * 2 + type / 2 : 0).toInt()].length} 门",
+                    style: TextStyle(color: Colors.grey, fontSize: 14),
+                  )
+                ],
+              ),
+              InkWell(
+                child: const Icon(Icons.close_outlined, size: 32),
+                onTap: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          ),
+          titlePadding: EdgeInsets.fromLTRB(16, 16, 16, 16),
+          titleTextStyle: TextStyle(
+            color: readColor(),
+            fontSize: 25,
+          ),
+          contentPadding: EdgeInsets.only(left: 0, right: 0, bottom: 0),
+          backgroundColor: Colors.white,
+          children: careerDialogLoop(index, type),
+        ),
+      );
+    },
+  );
+}
+
 careerDialogLoop(int index, int semester) {
   List<Widget> list = [];
   double newIndex = 0;
   newIndex = index * 2 + semester / 2 >= 1 ? index * 2 + semester / 2 : 0;
   careerList2[newIndex.toInt()].forEach((element) {
-    print(element[0]);
-    list.add(careerDialogItem(element[1], element[2], element[5], element[3]));
+    list.add(careerDialogItem(element));
   });
   return list;
 }
 
-careerDialogItem(name, type, type2, credit) {
+careerDialogItem(element) {
   return Container(
-    padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
-    decoration: BoxDecoration(
-      borderRadius: const BorderRadius.all(Radius.circular(6.0)),
-    ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          courseLongText2ShortName(name),
-          style: TextStyle(fontSize: 16),
-        ),
-        SizedBox(
-          height: 8,
-        ),
-        Text("性质: " + type, style: TextStyle()),
-        Text("类型: " + type2, style: TextStyle()),
-        Text("学分: " + credit, style: TextStyle()),
-      ],
-    ),
-  );
+      padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
+      margin: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+      decoration: BoxDecoration(color: randomColors()),
+      height: 150,
+      child: Stack(
+        children: [
+          Align(
+            alignment: Alignment.bottomRight,
+            child: Container(
+              child: Text(
+                element[1][0],
+                style: TextStyle(fontSize: 128, color: Color(0x66f1f1f1)),
+              ),
+            ),
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                courseLongText2ShortName(element[1]),
+                style: TextStyle(fontSize: 18, color: Colors.white),
+              ),
+              SizedBox(
+                height: 8,
+              ),
+              Text(element[0], style: TextStyle(color: Colors.white)),
+              Text(element[5], style: TextStyle(color: Colors.white)),
+              Text("性质: " + element[2], style: TextStyle(color: Colors.white)),
+              Text("学分: " + element[3], style: TextStyle(color: Colors.white)),
+              Text(
+                  "学时: " +
+                      element[4]
+                          .toString()
+                          .replaceAll(" ", "")
+                          .replaceAll(RegExp(r"\s+\b|\b\s\n"), "")
+                          .trim(),
+                  style: TextStyle(color: Colors.white)),
+            ],
+          ),
+        ],
+      ));
 }
 
 class CircularProgressDynamicForCareer extends StatefulWidget {
