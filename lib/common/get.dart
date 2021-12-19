@@ -192,11 +192,12 @@ Future<List> getScore() async {
     var response =
         await post(Global.getScoreUrl, body: postData, headers: {"cookie": mapCookieToString()})
             .timeout(Duration(seconds: Global.timeOutSec));
-    if (response.headers["location"] == "/academic/common/security/login.jsp" ||
-        response.headers["location"] == null) {
+
+    dom.Document document = parse(response.body);
+    print(response.contentLength);
+    if (response.contentLength == 0 || document.querySelector("title")!.text.contains("提示信息")) {
       return ["登录过期"];
     }
-    dom.Document document = parse(response.body);
     var dataList = document.querySelectorAll(".datalist > tbody >tr");
     List list = [];
     for (int i = 1; i < dataList.length; i++) {
@@ -288,29 +289,61 @@ Future getCareer() async {
               {"z": "z", "studentId": url[0], "classId": url[1]}),
           headers: {"cookie": mapCookieToString()}).timeout(Duration(seconds: Global.timeOutSec));
       dom.Document document = parse(response.bodyBytes);
-      int length = document.querySelectorAll("table.datalist tbody tr").length;
-      List list = [];
-      for (int i = 0; i < length; i++) {
-        var td = document.querySelectorAll("table.datalist tbody tr")[i].querySelectorAll("td");
+      print(document.querySelectorAll("img.no_output").length);
+      careerCount = [0, 0, 0, 0];
+      document.querySelectorAll("img.no_output").forEach((element) {
+        if (element.parent!.innerHtml.contains("/academic/styles/images/course_failed.png") ||
+            element.parent!.innerHtml
+                .contains("/academic/styles/images/course_failed_reelect.png")) {
+          //重修&&不及格
+          careerCount[0]++;
+        }
+        if (element.parent!.innerHtml.contains("/academic/styles/images/course_pass.png") ||
+            element.parent!.innerHtml.contains("/academic/styles/images/course_pass_reelect.png")) {
+          //合格
+          careerCount[1]++;
+        }
+        if (element.parent!.innerHtml.contains("/academic/styles/images/course_unknown_pass.png")) {
+          //成绩未知
+          careerCount[2]++;
+        }
+      });
+      List<List<String>> list = [];
+      document.querySelectorAll("table.datalist tbody tr").forEach((element) {
+        var td = element.querySelectorAll("td");
         if (td.length > 1) {
-          List _list = [];
-          for (int j = 0; j < td.length; j++) {
-            _list.add(td[j].text.trim());
-          }
+          List<String> _list = [];
+          td.forEach((element) {
+            _list.add(element.text.trim());
+          });
           list.add(_list);
         } else if (td.length == 1) {
-          List _list = [];
-          List title = td[0].text.trim().split("学年");
+          List<String> _list = [];
+          List<String> title = td[0].text.trim().split("学年");
           if (title.length > 1) {
             _list.add(title[0].trim() + " 学年");
             _list.add(title[1].trim());
             list.add(_list);
           }
         }
-      }
-      careerList = list;
+      });
+
       careerInfo = list[0];
-      careerList.removeAt(0);
+      list.removeAt(0);
+      careerList = list;
+      int start = 1;
+      List newList = [];
+      for (int i = 0; i < list.length; i++) {
+        if (i != 0 && list[i].length == 2) {
+          newList.add(list.sublist(start, i));
+          start = i + 1;
+        }
+        if (i == list.length - 1) {
+          print("结尾了");
+          newList.add(list.sublist(start, i + 1));
+        }
+      }
+      careerList2 = newList;
     }
 
     var response = await get(Global.getCareerUrl, headers: {"cookie": mapCookieToString()})

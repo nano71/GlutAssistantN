@@ -41,6 +41,7 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
   String buildNumber = "";
   bool newVersion = false;
   bool networkError = false;
+  bool updating = false;
 
   @override
   void initState() {
@@ -56,16 +57,23 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
         newVersion = true;
       }
       setState(() {});
+      print(writeData["newTime"]);
     });
-    if ("${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}" !=
-        writeData["newTime"]) {
-      getUpdate().then((value) => _next(value));
-    }
+
+    getUpdate().then((value) => _next(value));
   }
 
   _next(List value) {
+    updating = true;
     if (value.length > 1 && value[1].toString().trim() == version) {
-      print("与当前版本一致");
+      newVersion = false;
+      writeData["newVersion"] = value[1];
+      writeData["newBody"] = value[3];
+      writeData["githubDownload"] = value[4];
+
+      // writeData["newTime"] = "${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}";
+      writeConfig();
+      setState(() {});
       Scaffold.of(context).removeCurrentSnackBar();
       Scaffold.of(context).showSnackBar(jwSnackBar(true, "暂无新版本更新", 5));
     } else if (value.length == 1) {
@@ -73,15 +81,13 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
       Scaffold.of(context).showSnackBar(jwSnackBar(false, value[0], 5));
       networkError = true;
     } else {
-      if (!newVersion) {
-        Scaffold.of(context).removeCurrentSnackBar();
-        Scaffold.of(context).showSnackBar(jwSnackBar(true, "有新版本更新!", 5));
-      }
+      Scaffold.of(context).removeCurrentSnackBar();
+      Scaffold.of(context).showSnackBar(jwSnackBar(true, "有新版本更新!", 5));
       newVersion = true;
       writeData["newVersion"] = value[1];
       writeData["newBody"] = value[3];
       writeData["githubDownload"] = value[4];
-      writeData["newTime"] = "${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}";
+      // writeData["newTime"] = "${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}";
       writeConfig();
       setState(() {});
     }
@@ -90,9 +96,9 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
   @override
   Widget build(BuildContext context) {
     Future.delayed(const Duration(seconds: 0), () {
-      if (!newVersion) {
+      if (!newVersion && !updating) {
         Scaffold.of(context).removeCurrentSnackBar();
-        Scaffold.of(context).showSnackBar(jwSnackBar(true, "获取版本更新数据...", 6));
+        Scaffold.of(context).showSnackBar(jwSnackBar(true, "获取版本更新数据...", 24));
       }
     });
     return Container(
@@ -122,6 +128,8 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
                 children: [
                   InkWell(
                     onTap: () {
+                      Scaffold.of(context).removeCurrentSnackBar();
+                      Scaffold.of(context).showSnackBar(jwSnackBar(true, "获取版本更新数据...", 24));
                       getUpdate().then((value) => _next(value));
                     },
                     child: Image.asset(
@@ -186,6 +194,49 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
                             ),
                           ],
                         )
+                      : Container(),
+                  (!networkError && !newVersion)
+                      ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      mineItem4(Icons.lightbulb_outline, const EdgeInsets.fromLTRB(16, 14, 0, 14),
+                          "当前版本变更", Colors.blue),
+                      Container(
+                        width: double.infinity,
+                        margin: const EdgeInsets.fromLTRB(0, 0, 0, 7),
+                        child: Text(
+                          "版本号:" + version ,
+                          style: TextStyle(color: Colors.black54),
+                        ),
+                      ),
+                      Text(
+                        writeData["newBody"],
+                        style: TextStyle(color: Colors.grey),
+                      ),
+                      Container(
+                        width: double.infinity,
+                        margin: const EdgeInsets.fromLTRB(0, 32, 0, 8),
+                        child: Text(
+                          "以下方式,关注项目",
+                          style: TextStyle(color: Colors.black),
+                        ),
+                      ),
+                      InkWell(
+                        onTap: () {
+                          launch("https://www.coolapk.com/apk/289253");
+                        },
+                        child: mineItem(Icons.local_mall,
+                            const EdgeInsets.fromLTRB(16, 14, 0, 14), "酷安", Colors.green),
+                      ),
+                      InkWell(
+                        onTap: () {
+                          launch(writeData["githubDownload"]);
+                        },
+                        child: mineItem(Icons.face, const EdgeInsets.fromLTRB(16, 14, 0, 14),
+                            "Github", Colors.blueGrey),
+                      ),
+                    ],
+                  )
                       : Container(),
                   (networkError && !newVersion)
                       ? Column(

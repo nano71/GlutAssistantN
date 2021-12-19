@@ -44,7 +44,7 @@ readGradient() {
     );
   } else if (writeData["color"] == "pink") {
     return const LinearGradient(
-      colors: [Color(0xfffb7766), Color(0xfffc6caa)],
+      colors: [Color(0xffeca299), Color(0xfffc6caa)],
       begin: Alignment.centerLeft,
       end: Alignment.topRight,
     );

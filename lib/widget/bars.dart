@@ -127,23 +127,20 @@ class BottomNavBar extends StatefulWidget {
 
 class BottomNavBarState extends State<BottomNavBar> {
   late StreamSubscription<SetPageIndex> eventBusFn;
+  String version = writeData["newVersion"];
   bool newVersion = false;
 
   @override
   void initState() {
+    print("初始化");
     super.initState();
+    PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
+      version = packageInfo.version;
+    });
     eventBusFn = pageBus.on<SetPageIndex>().listen((event) {
       Global.pageControl.jumpToPage(event.index);
       Global.pageIndex = event.index;
-      print(event.index);
       setState(() {});
-    });
-    PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
-      if (writeData["newVersion"] != "" && packageInfo.version != writeData["newVersion"]) {
-        setState(() {
-          newVersion = true;
-        });
-      }
     });
   }
 
@@ -166,14 +163,16 @@ class BottomNavBarState extends State<BottomNavBar> {
       inactiveColor: Colors.black87,
       currentIndex: Global.pageIndex,
       onTap: (int index) {
-        setState(
-          () {
-            if (Global.pageIndex != index) {
-              Global.pageControl.jumpToPage(index);
-              Global.pageIndex = index;
-            }
-          },
-        );
+        if (version != writeData["newVersion"]) if (index != 2) {
+          newVersion = true;
+        } else {
+          newVersion = false;
+        }
+        if (Global.pageIndex != index) {
+          Global.pageControl.jumpToPage(index);
+          Global.pageIndex = index;
+        }
+        setState(() {});
       },
       items: [
         BottomNavigationBarItem(
@@ -190,17 +189,17 @@ class BottomNavBarState extends State<BottomNavBar> {
             label: ''),
         BottomNavigationBarItem(
             tooltip: '',
-            icon: newVersion
-                ? Badge(
-                    animationDuration: const Duration(milliseconds: 0),
-                    badgeContent: Text('1',style: TextStyle(color: Colors.white),),
-                    child: Icon(
-                      Icons.mood,
-                    ),
-                  )
-                : Icon(
-                    Icons.mood,
-                  ),
+            icon: Badge(
+              animationType: BadgeAnimationType.scale,
+              showBadge: newVersion,
+              badgeContent: Text(
+                "1",
+                style: TextStyle(color: Colors.white),
+              ),
+              child: Icon(
+                Icons.mood,
+              ),
+            ),
             label: ''),
       ],
     );
