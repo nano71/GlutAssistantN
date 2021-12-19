@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:glutassistantn/common/init.dart';
 import 'package:glutassistantn/common/io.dart';
+import 'package:glutassistantn/common/style.dart';
 import 'package:glutassistantn/pages/schedulemanage.dart';
 import 'package:glutassistantn/pages/timemanage.dart';
 import 'package:glutassistantn/widget/bars.dart';
@@ -349,6 +350,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                               ),
                             ),
                             TextButton(
+                              style: buttonStyle(),
                               onPressed: () {
                                 clear();
                               },

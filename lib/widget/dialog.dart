@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:glutassistantn/common/cookie.dart';
 import 'package:glutassistantn/common/get.dart';
 import 'package:glutassistantn/common/login.dart';
+import 'package:glutassistantn/common/style.dart';
 import 'package:glutassistantn/data.dart';
 import 'package:glutassistantn/pages/init.dart';
 import 'package:http/http.dart';
@@ -70,19 +71,29 @@ codeCheckDialog(BuildContext context) async {
   }
 
   showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return StatefulBuilder(builder: (context, setState) {
+    context: context,
+    builder: (BuildContext context) {
+      return StatefulBuilder(
+        builder: (context, setState) {
           return SimpleDialog(
+            title: Text('提示'),
             children: <Widget>[
               Container(
-                margin: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                margin: const EdgeInsets.fromLTRB(24, 0, 24, 4),
+                child: Text(
+                  "输入验证码后继续",
+                  style: TextStyle(color: Colors.grey),
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.fromLTRB(24, 4, 24, 0),
+                alignment: Alignment.center,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(
                       child: TextField(
+                        autofocus: true,
                         controller: textFieldController,
                         decoration: InputDecoration(
                           icon: Icon(
@@ -103,10 +114,16 @@ codeCheckDialog(BuildContext context) async {
                   ],
                 ),
               ),
-              Container(
-                margin: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-                  TextButton(
+              Divider(
+                height: 1,
+                indent: 24,
+                endIndent: 24,
+              ),
+              Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                Container(
+                  margin: const EdgeInsets.fromLTRB(0, 8, 0, 0),
+                  child: TextButton(
+                    style: buttonStyle(),
                     onPressed: () {
                       Navigator.pop(context);
                     },
@@ -115,7 +132,11 @@ codeCheckDialog(BuildContext context) async {
                       style: TextStyle(color: readColor()),
                     ),
                   ),
-                  TextButton(
+                ),
+                Container(
+                  margin: const EdgeInsets.fromLTRB(0, 8, 24, 0),
+                  child: TextButton(
+                    style: buttonStyle(),
                     onPressed: () {
                       _codeCheck(setState);
                     },
@@ -124,12 +145,14 @@ codeCheckDialog(BuildContext context) async {
                       style: TextStyle(color: readColor()),
                     ),
                   ),
-                ]),
-              ),
+                ),
+              ]),
             ],
           );
-        });
-      });
+        },
+      );
+    },
+  );
 }
 
 codeCheckDialogQ(BuildContext context) async {
@@ -163,13 +186,13 @@ codeCheckDialogQ(BuildContext context) async {
       if (value == "success") {
         await login(writeData["username"], writeData["password"], textFieldController.text)
             .then((String value) => _next2(value));
-      } else if (value == "fail")  {
+      } else if (value == "fail") {
         Scaffold.of(context).removeCurrentSnackBar();
         Scaffold.of(context).showSnackBar(jwSnackBar(false, "验证码错误"));
         fn(() {
           clicked = !clicked;
         });
-      }else{
+      } else {
         Scaffold.of(context).removeCurrentSnackBar();
         Scaffold.of(context).showSnackBar(jwSnackBar(false, value, 4));
         Navigator.pop(context);
@@ -186,19 +209,29 @@ codeCheckDialogQ(BuildContext context) async {
   }
 
   showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return StatefulBuilder(builder: (context, setState) {
+    context: context,
+    builder: (BuildContext context) {
+      return StatefulBuilder(
+        builder: (context, setState) {
           return SimpleDialog(
+            title: Text('提示'),
             children: <Widget>[
               Container(
-                margin: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                margin: const EdgeInsets.fromLTRB(24, 0, 24, 4),
+                child: Text(
+                  "输入验证码后继续",
+                  style: TextStyle(color: Colors.grey),
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.fromLTRB(24, 4, 24, 0),
+                alignment: Alignment.center,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(
                       child: TextField(
+                        autofocus: true,
                         controller: textFieldController,
                         decoration: InputDecoration(
                           icon: Icon(
@@ -219,10 +252,16 @@ codeCheckDialogQ(BuildContext context) async {
                   ],
                 ),
               ),
-              Container(
-                margin: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-                  TextButton(
+              Divider(
+                height: 1,
+                indent: 24,
+                endIndent: 24,
+              ),
+              Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                Container(
+                  margin: const EdgeInsets.fromLTRB(0, 8, 0, 0),
+                  child: TextButton(
+                    style: buttonStyle(),
                     onPressed: () {
                       Navigator.pop(context);
                     },
@@ -231,7 +270,11 @@ codeCheckDialogQ(BuildContext context) async {
                       style: TextStyle(color: readColor()),
                     ),
                   ),
-                  TextButton(
+                ),
+                Container(
+                  margin: const EdgeInsets.fromLTRB(0, 8, 24, 0),
+                  child: TextButton(
+                    style: buttonStyle(),
                     onPressed: () {
                       _codeCheck(setState);
                     },
@@ -240,13 +283,16 @@ codeCheckDialogQ(BuildContext context) async {
                       style: TextStyle(color: readColor()),
                     ),
                   ),
-                ]),
-              ),
+                ),
+              ]),
             ],
           );
-        });
-      });
+        },
+      );
+    },
+  );
 }
+
 codeCheckDialogQ2(BuildContext context) async {
   TextEditingController textFieldController = TextEditingController();
   var response = await get(Global.getCodeUrl).timeout(const Duration(seconds: 3));
@@ -296,19 +342,29 @@ codeCheckDialogQ2(BuildContext context) async {
   }
 
   showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return StatefulBuilder(builder: (context, setState) {
+    context: context,
+    builder: (BuildContext context) {
+      return StatefulBuilder(
+        builder: (context, setState) {
           return SimpleDialog(
+            title: Text('提示'),
             children: <Widget>[
               Container(
-                margin: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                margin: const EdgeInsets.fromLTRB(24, 0, 24, 4),
+                child: Text(
+                  "输入验证码后继续",
+                  style: TextStyle(color: Colors.grey),
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.fromLTRB(24, 4, 24, 0),
+                alignment: Alignment.center,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(
                       child: TextField(
+                        autofocus: true,
                         controller: textFieldController,
                         decoration: InputDecoration(
                           icon: Icon(
@@ -329,10 +385,16 @@ codeCheckDialogQ2(BuildContext context) async {
                   ],
                 ),
               ),
-              Container(
-                margin: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-                  TextButton(
+              Divider(
+                height: 1,
+                indent: 24,
+                endIndent: 24,
+              ),
+              Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                Container(
+                  margin: const EdgeInsets.fromLTRB(0, 8, 0, 0),
+                  child: TextButton(
+                    style: buttonStyle(),
                     onPressed: () {
                       Navigator.pop(context);
                     },
@@ -341,7 +403,11 @@ codeCheckDialogQ2(BuildContext context) async {
                       style: TextStyle(color: readColor()),
                     ),
                   ),
-                  TextButton(
+                ),
+                Container(
+                  margin: const EdgeInsets.fromLTRB(0, 8, 24, 0),
+                  child: TextButton(
+                    style: buttonStyle(),
                     onPressed: () {
                       _codeCheck(setState);
                     },
@@ -350,13 +416,16 @@ codeCheckDialogQ2(BuildContext context) async {
                       style: TextStyle(color: readColor()),
                     ),
                   ),
-                ]),
-              ),
+                ),
+              ]),
             ],
           );
-        });
-      });
+        },
+      );
+    },
+  );
 }
+
 codeCheckDialogQ3(BuildContext context) async {
   TextEditingController textFieldController = TextEditingController();
   var response = await get(Global.getCodeUrl).timeout(const Duration(seconds: 3));
@@ -404,19 +473,29 @@ codeCheckDialogQ3(BuildContext context) async {
   }
 
   showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return StatefulBuilder(builder: (context, setState) {
+    context: context,
+    builder: (BuildContext context) {
+      return StatefulBuilder(
+        builder: (context, setState) {
           return SimpleDialog(
+            title: Text('提示'),
             children: <Widget>[
               Container(
-                margin: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                margin: const EdgeInsets.fromLTRB(24, 0, 24, 4),
+                child: Text(
+                  "输入验证码后继续",
+                  style: TextStyle(color: Colors.grey),
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.fromLTRB(24, 4, 24, 0),
+                alignment: Alignment.center,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(
                       child: TextField(
+                        autofocus: true,
                         controller: textFieldController,
                         decoration: InputDecoration(
                           icon: Icon(
@@ -437,10 +516,16 @@ codeCheckDialogQ3(BuildContext context) async {
                   ],
                 ),
               ),
-              Container(
-                margin: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-                  TextButton(
+              Divider(
+                height: 1,
+                indent: 24,
+                endIndent: 24,
+              ),
+              Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                Container(
+                  margin: const EdgeInsets.fromLTRB(0, 8, 0, 0),
+                  child: TextButton(
+                    style: buttonStyle(),
                     onPressed: () {
                       Navigator.pop(context);
                     },
@@ -449,7 +534,11 @@ codeCheckDialogQ3(BuildContext context) async {
                       style: TextStyle(color: readColor()),
                     ),
                   ),
-                  TextButton(
+                ),
+                Container(
+                  margin: const EdgeInsets.fromLTRB(0, 8, 24, 0),
+                  child: TextButton(
+                    style: buttonStyle(),
                     onPressed: () {
                       _codeCheck(setState);
                     },
@@ -458,10 +547,12 @@ codeCheckDialogQ3(BuildContext context) async {
                       style: TextStyle(color: readColor()),
                     ),
                   ),
-                ]),
-              ),
+                ),
+              ]),
             ],
           );
-        });
-      });
+        },
+      );
+    },
+  );
 }

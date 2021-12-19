@@ -7,6 +7,7 @@ import 'package:glutassistantn/widget/bars.dart';
 import 'package:glutassistantn/widget/lists.dart';
 
 import '../data.dart';
+import 'career.dart';
 
 class QueryExamPage extends StatefulWidget {
   final String title;
@@ -130,12 +131,18 @@ class _QueryExamBodyState extends State<QueryExamBody> {
                             ),
                             Container(
                               width: 50,
-                              child: Text(
-                                (examAllNumber.toString() == "0"
-                                    ? "待更新"
-                                    : examAllNumber.toString()),
-                                textAlign: TextAlign.center,
-                                style: TextStyle(color: Colors.white, fontSize: 24),
+                              child: InkWell(
+                                onTap: () {
+                                  Navigator.of(context).push(
+                                      MaterialPageRoute(builder: (context) => const CareerPage()));
+                                },
+                                child: Text(
+                                  (examAllNumber.toString() == "0"
+                                      ? "获取"
+                                      : examAllNumber.toString()),
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(color: Colors.white, fontSize: 24),
+                                ),
                               ),
                             ),
                           ],
