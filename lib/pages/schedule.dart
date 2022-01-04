@@ -261,20 +261,16 @@ List<Widget> _loopWeekDayColGrid(String week, String weekDay) {
 
     if (courseName != "null") {
       if (i == 1) {
-        // print(courseName + " start${i}");
         s = i;
       } else if (courseName == courseLongText2ShortName(_schedule[(i - 1).toString()][0])) {
         if (i == 11) {
-          // print(courseName + " end${i}");
           list.add(_grid(
               courseName, studyArea, randomColors(), Global.schedulePageGridHeight * (i - s + 1)));
         } else if (courseName != courseLongText2ShortName(_schedule[(i + 1).toString()][0])) {
-          // print(courseName + " end${i}");
           list.add(_grid(
               courseName, studyArea, randomColors(), Global.schedulePageGridHeight * (i - s + 1)));
         }
       } else {
-        // print(courseName + " start${i}");
         s = i;
       }
     } else {
@@ -288,12 +284,32 @@ Widget _grid(String title, String studyArea, Color color, [double height = 60.0]
   TextStyle style = const TextStyle(fontSize: 12, color: Colors.white);
   return Container(
       height: height,
-      color: color,
-      padding: const EdgeInsets.only(left: 6, right: 6),
+      decoration: BoxDecoration(
+        color: color,
+        border: Border(
+            top: BorderSide(
+              width: 1, //宽度
+              color: Colors.white, //边框颜色
+            ),
+            right: BorderSide(
+              width: 1, //宽度
+              color: Colors.white, //边框颜色
+            ),
+            bottom: BorderSide(
+              width: 1, //宽度
+              color: Colors.white, //边框颜色
+            ),
+            left: BorderSide(
+              width: 1, //宽度
+              color: Colors.white, //边框颜色
+            )),
+        borderRadius: const BorderRadius.all(Radius.circular(4.0)),
+      ),
+      padding: const EdgeInsets.only(left: 5, right: 5, top: 5, bottom: 5),
       alignment: Alignment.center,
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisSize: MainAxisSize.max,
         children: [
           Text(
             title,

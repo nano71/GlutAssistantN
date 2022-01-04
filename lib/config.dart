@@ -30,6 +30,7 @@ class Global {
   static Uri getUpdateUrl =
       Uri.http(updateApiUrl, "/repos/nano71/GlutAssistantN/releases/latest");
   static List<String> getScheduleUrl = [jwUrl, "/academic/student/currcourse/currcourse.jsdo"];
+  static List<String> getScheduleNextUrl = [jwUrl, "/academic/manager/coursearrange/showTimetable.do"];
   static List<String> codeCheckUrl = [jwUrl, "/academic/checkCaptcha.do"];
   static double schedulePageTouchMovesMinValue = 70.0;
   static double schedulePageGridHeight = 60.0;
