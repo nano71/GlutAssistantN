@@ -25,11 +25,11 @@ initTodaySchedule() async {
   final String _week = writeData["week"].toString();
   Map _schedule = schedule;
   List toDay = [];
-  await _schedule[_week][DateTime.now().weekday.toString()].forEach((k, v) => {
-        if (v[1] != "null")
+  await _schedule[_week][DateTime.now().weekday.toString()].forEach((key, value) => {
+        if (value[1] != "null")
           {
-            if (v.length < 5) {v.add(k)},
-            toDay.add(v)
+            if (value.length < 5) {value.add(key)},
+            toDay.add(value)
           }
       });
 
@@ -59,12 +59,12 @@ initTomorrowSchedule() async {
   }
 
   if (DateTime.now().weekday <= 6) {
-    await _schedule[_week][_getWeekDay()].forEach((k, v) => {
-          if (v[1] != "null") {v.add(k), tomorrow.add(v)}
+    await _schedule[_week][_getWeekDay()].forEach((key, value) => {
+          if (value[1] != "null") {value.add(key), tomorrow.add(value)}
         });
   } else {
-    await _schedule[(int.parse(_week) + 1).toString()][_getWeekDay()].forEach((k, v) => {
-          if (v[1] != "null") {v.add(k), tomorrow.add(v)}
+    await _schedule[(int.parse(_week) + 1).toString()][_getWeekDay()].forEach((key, value) => {
+          if (value[1] != "null") {value.add(key), tomorrow.add(value)}
         });
   }
   if (tomorrow.isNotEmpty) {

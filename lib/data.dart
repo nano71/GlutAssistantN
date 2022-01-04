@@ -76,9 +76,9 @@ List tomorrowSchedule = [];
 List queryScore = [];
 List careerList = [];
 List careerList2 = [];
-List<String> careerInfo = ["","","","","","","","","",""];
-List<int> careerCount = [0,0,0,0];
-int careerNumber= 0;
+List<String> careerInfo = ["", "", "", "", "", "", "", "", "", ""];
+List<int> careerCount = [0, 0, 0, 0];
+int careerNumber = 0;
 int careerJobNumber = 0;
 int examAllNumber = 0;
 List<List<String>> examList = [];
@@ -163,3 +163,15 @@ String levelToNumber(String value) {
       .replaceAll("不及格", "40")
       .replaceAll("不合格", "40");
 }
+
+String weekDay2Number(String value) {
+  return value
+      .replaceAll("周一", "1")
+      .replaceAll("周二", "2")
+      .replaceAll("周三", "3")
+      .replaceAll("周四", "4")
+      .replaceAll("周五", "5")
+      .replaceAll("周六", "6")
+      .replaceAll("周日", "7");
+}
+
