@@ -144,6 +144,7 @@ Future<String> getSchedule() async {
         }
       }
       _next() async {
+        print("获取课表变更(调课/停课/补课)");
         String _id = document
             .querySelector(".button[value='个人课表']")!
             .attributes["onclick"]!
@@ -160,101 +161,105 @@ Future<String> getSchedule() async {
         var response2 = await get(_url, headers: {"cookie": mapCookieToString()})
             .timeout(Duration(seconds: Global.timeOutSec));
         document = parse(gbk.decode(response2.bodyBytes));
-        dom.Element table = document.querySelectorAll(".infolist_hr")[2];
-        List<dom.Element> trs = table.querySelectorAll(".infolist_hr_common");
-        int _index = 0;
-        String _name = "";
-        String _teacher = "";
-        trs.forEach((element) {
-          List<dom.Element> tds = element.querySelectorAll("td");
-          int _length = tds.length;
-          print(_length);
-          if (_length == 17) {
-            //周
-            String _delWeek = tds[8].innerHtml.trim();
-            String _addWeek = tds[13].innerHtml.trim();
-            //课节
-            List<String> _delTime = tds[10]
-                .innerHtml
-                .trim()
-                .replaceAll("第", "")
-                .replaceAll("节", "")
-                .replaceAll("周", "")
-                .replaceAll("双", "")
-                .split('-');
-            List<String> _addTime = tds[15]
-                .innerHtml
-                .trim()
-                .replaceAll("第", "")
-                .replaceAll("节", "")
-                .replaceAll("周", "")
-                .replaceAll("双", "")
-                .split('-');
-            //星期
-            String _delWeekDay = weekDay2Number(tds[9].innerHtml.trim());
-            String _addWeekDay = weekDay2Number(tds[14].innerHtml.trim());
-            //教室
-            String _addRoom = tds[16].innerHtml.trim();
-            //老师
-            String _addTeacher = tds[4].innerHtml.trim();
-            _teacher = _addTeacher;
-            //课
-            String _addName = tds[2].innerHtml.trim();
-            _name = _addName;
-            if (_delWeek != "&nbsp;") {
-              for (int i = int.parse(_delTime[0]); i <= int.parse(_delTime[1]); i++) {
-                _schedule[_delWeek][_delWeekDay][i.toString()] = ["null", "null", "null"];
+        List<dom.Element> tables = document.querySelectorAll(".infolist_hr");
+        if (tables.length >= 3) {
+          dom.Element table = tables[2];
+          List<dom.Element> trs = table.querySelectorAll(".infolist_hr_common");
+          int _index = 0;
+          String _name = "";
+          String _teacher = "";
+          trs.forEach((element) {
+            List<dom.Element> tds = element.querySelectorAll("td");
+            int _length = tds.length;
+            print(_length);
+            if (_length == 17) {
+              //周
+              String _delWeek = tds[8].innerHtml.trim();
+              String _addWeek = tds[13].innerHtml.trim();
+              //课节
+              List<String> _delTime = tds[10]
+                  .innerHtml
+                  .trim()
+                  .replaceAll("第", "")
+                  .replaceAll("节", "")
+                  .replaceAll("周", "")
+                  .replaceAll("双", "")
+                  .split('-');
+              List<String> _addTime = tds[15]
+                  .innerHtml
+                  .trim()
+                  .replaceAll("第", "")
+                  .replaceAll("节", "")
+                  .replaceAll("周", "")
+                  .replaceAll("双", "")
+                  .split('-');
+              //星期
+              String _delWeekDay = weekDay2Number(tds[9].innerHtml.trim());
+              String _addWeekDay = weekDay2Number(tds[14].innerHtml.trim());
+              //教室
+              String _addRoom = tds[16].innerHtml.trim();
+              //老师
+              String _addTeacher = tds[4].innerHtml.trim();
+              _teacher = _addTeacher;
+              //课
+              String _addName = tds[2].innerHtml.trim();
+              _name = _addName;
+              if (_delWeek != "&nbsp;") {
+                for (int i = int.parse(_delTime[0]); i <= int.parse(_delTime[1]); i++) {
+                  _schedule[_delWeek][_delWeekDay][i.toString()] = ["null", "null", "null"];
+                }
               }
-            }
-            if (_addWeek != "&nbsp;") {
-              for (int i = int.parse(_addTime[0]); i <= int.parse(_addTime[1]); i++) {
-                _schedule[_addWeek][_addWeekDay][i.toString()] = [_addName, _addTeacher, _addRoom];
+              if (_addWeek != "&nbsp;") {
+                for (int i = int.parse(_addTime[0]); i <= int.parse(_addTime[1]); i++) {
+                  _schedule[_addWeek][_addWeekDay]
+                      [i.toString()] = [_addName, _addTeacher, _addRoom];
+                }
               }
-            }
-          } else if (_length == 10) {
-            //周
-            String _delWeek = tds[1].innerHtml.trim();
-            String _addWeek = tds[6].innerHtml.trim();
-            //课节
-            List<String> _delTime = tds[3]
-                .innerHtml
-                .trim()
-                .replaceAll("第", "")
-                .replaceAll("节", "")
-                .replaceAll("周", "")
-                .replaceAll("双", "")
-                .split('-');
-            List<String> _addTime = tds[8]
-                .innerHtml
-                .trim()
-                .replaceAll("第", "")
-                .replaceAll("节", "")
-                .replaceAll("周", "")
-                .replaceAll("双", "")
-                .split('-');
-            //星期
-            String _delWeekDay = weekDay2Number(tds[2].innerHtml.trim());
-            String _addWeekDay = weekDay2Number(tds[7].innerHtml.trim());
-            //教室
-            String _addRoom = tds[9].innerHtml.trim();
+            } else if (_length == 10) {
+              //周
+              String _delWeek = tds[1].innerHtml.trim();
+              String _addWeek = tds[6].innerHtml.trim();
+              //课节
+              List<String> _delTime = tds[3]
+                  .innerHtml
+                  .trim()
+                  .replaceAll("第", "")
+                  .replaceAll("节", "")
+                  .replaceAll("周", "")
+                  .replaceAll("双", "")
+                  .split('-');
+              List<String> _addTime = tds[8]
+                  .innerHtml
+                  .trim()
+                  .replaceAll("第", "")
+                  .replaceAll("节", "")
+                  .replaceAll("周", "")
+                  .replaceAll("双", "")
+                  .split('-');
+              //星期
+              String _delWeekDay = weekDay2Number(tds[2].innerHtml.trim());
+              String _addWeekDay = weekDay2Number(tds[7].innerHtml.trim());
+              //教室
+              String _addRoom = tds[9].innerHtml.trim();
 
-            if (_delWeek != "&nbsp;") {
-              for (int i = int.parse(_delTime[0]); i <= int.parse(_delTime[1]); i++) {
-                _schedule[_delWeek][_delWeekDay][i.toString()] = ["null", "null", "null"];
+              if (_delWeek != "&nbsp;") {
+                for (int i = int.parse(_delTime[0]); i <= int.parse(_delTime[1]); i++) {
+                  _schedule[_delWeek][_delWeekDay][i.toString()] = ["null", "null", "null"];
+                }
+              }
+              if (_addWeek != "&nbsp;") {
+                for (int i = int.parse(_addTime[0]); i <= int.parse(_addTime[1]); i++) {
+                  _schedule[_addWeek][_addWeekDay][i.toString()] = [_name, _teacher, _addRoom];
+                  print(_schedule[_addWeek][_addWeekDay][i.toString()]);
+                }
               }
             }
-            if (_addWeek != "&nbsp;") {
-              for (int i = int.parse(_addTime[0]); i <= int.parse(_addTime[1]); i++) {
-                _schedule[_addWeek][_addWeekDay][i.toString()] = [_name, _teacher, _addRoom];
-                print(_schedule[_addWeek][_addWeekDay][i.toString()]);
-              }
-            }
-          }
-          _index++;
-        });
+            _index++;
+          });
+        }
       }
 
-      print(_schedule["19"]["2"]);
+      print(writeData);
       await _next();
       await writeSchedule(jsonEncode(_schedule));
     }
@@ -452,7 +457,6 @@ Future getCareer() async {
           start = i + 1;
         }
         if (i == list.length - 1) {
-          print("结尾了");
           newList.add(list.sublist(start, i + 1));
         }
       }
