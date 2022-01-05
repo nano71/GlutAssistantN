@@ -40,7 +40,7 @@ class _CareerPageBodyState extends State<CareerPageBody> {
   GlobalKey<TextProgressDynamicStateForCareer> textKey = GlobalKey();
   final int _week = int.parse(writeData["week"]);
   int year = 0;
-  int year2 = 0;
+  int allYear = 0;
 
   @override
   void initState() {
@@ -112,24 +112,42 @@ class _CareerPageBodyState extends State<CareerPageBody> {
 
   double _weekProgressDouble() {
     if (careerInfo[2] != "" && careerInfo[3] != "") {
+      //年级
       year = int.parse(careerInfo[2].replaceAll("级", "").trim());
-      year2 = int.parse(
+      // 全部学年
+      allYear = int.parse(
           careerInfo[3].substring(careerInfo[3].toString().indexOf("年") - 1).replaceAll("年", ""));
       setState(() {});
     }
-    double semesterPercentage = year2 == 3 ? 1 / 6 : 1 / 8;
+    //完整的一个学期占比
+    double semesterPercentage = allYear == 3 ? 1 / 6 : 1 / 8;
+
+    //本学期
     double weekPercentage = (_week * 5 / 100) - 0.05 + (DateTime.now().weekday / 7 * 5 / 100);
-    int year3 = year + year2 - DateTime.now().year;
-    next() {
-      if (writeData["semester"] == "秋")
-        return 1 - year3 / year2 + weekPercentage * semesterPercentage;
-      else
-        return 1 - year3 / year2 + semesterPercentage + weekPercentage * semesterPercentage;
+
+    //剩余学年 :: 2019 + 3年 - 2022
+
+    int year3 = year + allYear - DateTime.now().year;
+    print(DateTime.now().month);
+    if (DateTime.now().month < 3) {
+      year3++;
     }
 
-    if (_week > 20 && DateTime.now().year == year + year2) return 1.00;
+    //本学期在全部学期占比
+    double proportionOfSemesterInAllSemesters = weekPercentage * semesterPercentage;
+
+    //year2 = 3 , year3 = 0
+    _next() {
+      if (writeData["semester"] == "秋")
+        return (allYear * 2 - year3 * 2) * semesterPercentage + proportionOfSemesterInAllSemesters;
+      else
+        return (allYear * 2 - year3 * 2 + 1) * semesterPercentage +
+            proportionOfSemesterInAllSemesters;
+    }
+
+    if (_week > 20 && DateTime.now().year == year + allYear) return 1.00;
     if (careerInfo[2] == "" && careerInfo[3] == "") return 0.0;
-    return next();
+    return _next();
   }
 
   @override
@@ -389,7 +407,7 @@ class _CareerPageBodyState extends State<CareerPageBody> {
           SliverList(
             delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
               return CareerListProcess(index);
-            }, childCount: year2),
+            }, childCount: allYear),
           ),
         ],
       ),
@@ -531,7 +549,7 @@ careerDialog(context, index, type, year) {
       return NoRippleOverScroll(
         child: SimpleDialog(
           title: Row(
-            mainAxisAlignment:MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
