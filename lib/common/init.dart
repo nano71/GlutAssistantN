@@ -59,13 +59,15 @@ initTomorrowSchedule() async {
   }
 
   if (DateTime.now().weekday <= 6) {
+    if (int.parse(_week) < 21)
     await _schedule[_week][_getWeekDay()].forEach((key, value) => {
           if (value[1] != "null") {value.add(key), tomorrow.add(value)}
         });
   } else {
-    await _schedule[(int.parse(_week) + 1).toString()][_getWeekDay()].forEach((key, value) => {
-          if (value[1] != "null") {value.add(key), tomorrow.add(value)}
-        });
+    if (int.parse(_week) < 20)
+      await _schedule[(int.parse(_week) + 1).toString()][_getWeekDay()].forEach((key, value) => {
+            if (value[1] != "null") {value.add(key), tomorrow.add(value)}
+          });
   }
   if (tomorrow.isNotEmpty) {
     tomorrowScheduleTitle = "明天的";
