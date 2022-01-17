@@ -47,7 +47,9 @@ class HomeCardState extends State<HomeCard> with AutomaticKeepAliveClientMixin {
   }
 
   String _weekText() {
-    if (_week == 20) {
+    if (_week > 20) {
+      return "学期已经结束咯";
+    } else if (_week == 20) {
       return "学期即将结束";
     } else if (_week >= 15) {
       return "期末来临,复习为重";

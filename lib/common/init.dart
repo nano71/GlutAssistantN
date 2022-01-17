@@ -25,6 +25,7 @@ initTodaySchedule() async {
   final String _week = writeData["week"].toString();
   Map _schedule = schedule;
   List toDay = [];
+  if (int.parse(_week) < 21)
   await _schedule[_week][DateTime.now().weekday.toString()].forEach((key, value) => {
         if (value[1] != "null")
           {
