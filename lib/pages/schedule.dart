@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:core';
 
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter/cupertino.dart';
@@ -126,13 +127,11 @@ class SchedulePageState extends State<SchedulePage> with AutomaticKeepAliveClien
     double sY = _startPositionY;
     if (eY - sY < minValue || eY + sY < minValue) {
       if (sX - eX > minValue) {
-        if (_currentScheduleWeek == 20) {
-          _warning1();
-        } else {
+
           print("下一页");
           _currentScheduleWeek++;
           _findNewSchedule();
-        }
+
       } else if (eX - sX > minValue) {
         if (_currentScheduleWeek == 1) {
           _warning1();
@@ -222,6 +221,9 @@ class SchedulePageColumnState extends State<SchedulePageColumn> {
 
   @override
   Widget build(BuildContext context) {
+    if (int.parse(_findWeek) > 20) {
+      _findWeek = "20";
+    }
     return Expanded(
       child: Row(
         mainAxisSize: MainAxisSize.min,
