@@ -428,6 +428,7 @@ Widget settingItem(IconData icon, EdgeInsets padding, String title, int type) {
 
 List<DropdownMenuItem<Object>>? yearList() {
   List<DropdownMenuItem<Object>>? list = [];
+  list.add(DropdownMenuItem(child: Text("全部"), value: "全部"),);
   for (int i = int.parse(writeData["year"]); i > (int.parse(writeData["year"]) - 5); i--) {
     list.add(DropdownMenuItem(child: Text(i.toString()), value: i.toString()));
   }
