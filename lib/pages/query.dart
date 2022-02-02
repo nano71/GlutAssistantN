@@ -261,6 +261,7 @@ class _QueryBodyState extends State<QueryBody> {
                                 )),
                             underline: Container(height: 0),
                             items: const [
+                              DropdownMenuItem(child: Text("全部"), value: "全部"),
                               DropdownMenuItem(child: Text("春"), value: "春"),
                               DropdownMenuItem(child: Text("秋"), value: "秋"),
                             ],

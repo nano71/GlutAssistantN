@@ -297,9 +297,17 @@ List getSemester() {
 
 Future<List> getScore() async {
   print("getScore");
+  String _year = "";
+  String _term = "";
+  if (writeData["queryYear"] != "全部") {
+    _year = (int.parse(writeData["queryYear"]) - 1980).toString();
+  }
+  if (writeData["querySemester"] != "全部") {
+    _term = (writeData["querySemester"] == "秋" ? 3 : 1).toString();
+  }
   Map postData = {
-    "year": (int.parse(writeData["queryYear"]) - 1980).toString(),
-    "term": (writeData["querySemester"] == "秋" ? 3 : 1).toString(),
+    "year": _year,
+    "term": _term,
     "prop": "",
     "groupName": "",
     "para": "0",
