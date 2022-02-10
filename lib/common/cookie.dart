@@ -7,7 +7,7 @@ String mapCookieToString() {
   });
   return result;
 }
-
+//
 void parseRawCookies(dynamic rawCookie) {
   for (var item in rawCookie.split(',')) {
     List<String> cookie = item.split(';')[0].split('=');

@@ -38,17 +38,18 @@ class QueryExamBody extends StatefulWidget {
 class _QueryExamBodyState extends State<QueryExamBody> {
   bool login = true;
   late StreamSubscription<QueryExamRe> eventBusFn;
+  int _examAllNumber = examAllNumber;
 
   @override
   void initState() {
     super.initState();
     eventBusFn = pageBus.on<QueryExamRe>().listen((event) {
-      getExam().then((value) => process(value));
+      getExam().then((value) => _process(value));
     });
-    getExam().then((value) => process(value));
+    getExam().then((value) => _process(value));
   }
 
-  process(String value) {
+  void _process(String value) {
     if (value == "success") {
       login = false;
       Scaffold.of(context).removeCurrentSnackBar();
@@ -133,13 +134,22 @@ class _QueryExamBodyState extends State<QueryExamBody> {
                               width: 50,
                               child: InkWell(
                                 onTap: () {
-                                  Navigator.of(context).push(
-                                      MaterialPageRoute(builder: (context) => const CareerPage()));
+                                  Navigator.of(context)
+                                      .push(MaterialPageRoute(
+                                          builder: (context) => const CareerPage(
+                                                type: 1,
+                                              )))
+                                      .then((result) {
+                                    print(examAllNumber);
+                                    setState(() {
+                                      _examAllNumber = examAllNumber;
+                                    });
+                                  });
                                 },
                                 child: Text(
-                                  (examAllNumber.toString() == "0"
+                                  (_examAllNumber.toString() == "0"
                                       ? "获取"
-                                      : examAllNumber.toString()),
+                                      : _examAllNumber.toString()),
                                   textAlign: TextAlign.center,
                                   style: TextStyle(color: Colors.white, fontSize: 24),
                                 ),

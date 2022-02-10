@@ -34,7 +34,7 @@ class LoginPageState extends State<LoginPage> {
   Uint8List _codeImgSrc = const Base64Decoder().convert(
       "iVBORw0KGgoAAAANSUhEUgAAAEgAAAAeCAYAAACPOlitAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAHYcAAB2HAY/l8WUAAABYSURBVGhD7dChAcAgEMDAb/ffGSpqIQvcmfg86zMcvX85MCgYFAwKBgWDgkHBoGBQMCgYFAwKBgWDgkHBoGBQMCgYFAwKBgWDgkHBoGBQMCgYFAwKBl3NbAiZBDiX3e/AAAAAAElFTkSuQmCC");
   String buttonTitle = "登录";
-  bool logined = false;
+  bool logged = false;
 
   FocusNode? studentIdFocusNode = FocusNode();
   FocusNode? passwordFocusNode = FocusNode();
@@ -48,8 +48,8 @@ class LoginPageState extends State<LoginPage> {
     _getCode();
   }
 
-  _check() {
-    if (!logined) {
+  void _check() {
+    if (!logged) {
       FocusScope.of(context).requestFocus(FocusNode());
       if (passwordController.text.isEmpty && studentIdController.text.isEmpty) {
         setState(() {
@@ -113,7 +113,7 @@ class LoginPageState extends State<LoginPage> {
     Future<void> _next(String value) async {
       if (value == "success") {
         Global.logined = true;
-        logined = true;
+        logged = true;
         setState(() {
           messageColor = Colors.blue;
           message = "登录成功";
@@ -160,7 +160,7 @@ class LoginPageState extends State<LoginPage> {
         .then((String value) => _next(value));
   }
 
-  tap() {
+  void tap() {
     _scrollController.animateTo(
       56.0, //滚动到底部
       duration: const Duration(milliseconds: 300),

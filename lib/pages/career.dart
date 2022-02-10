@@ -11,34 +11,37 @@ import '../config.dart';
 import '../data.dart';
 
 class CareerPage extends StatefulWidget {
-  final String title;
-
-  const CareerPage({Key? key, this.title = "生涯"}) : super(key: key);
-
+  final int type;
+  const CareerPage({Key? key, this.type = 0}) : super(key: key);
   @override
-  State<CareerPage> createState() => _CareerPageState();
+  State<CareerPage> createState() => _CareerPageState(type: this.type);
 }
 
 class _CareerPageState extends State<CareerPage> {
+  final int type;
+  _CareerPageState({this.type = 0});
   @override
   Widget build(BuildContext context) {
-    return Scaffold(backgroundColor: Colors.white, body: CareerPageBody());
+    return Scaffold(backgroundColor: Colors.white, body: CareerPageBody(type: type,));
   }
 }
 
 class CareerPageBody extends StatefulWidget {
-  const CareerPageBody({Key? key}) : super(key: key);
-
+  final int type;
+  const CareerPageBody({Key? key, required this.type}) : super(key: key);
   @override
-  State<StatefulWidget> createState() => _CareerPageBodyState();
+  State<StatefulWidget> createState() => _CareerPageBodyState(type: this.type);
 }
 
 class _CareerPageBodyState extends State<CareerPageBody> {
+  final int type;
+
+  _CareerPageBodyState({required this.type });
+
   bool login = true;
   late StreamSubscription<CareerRe> eventBusFn;
   GlobalKey<CircularProgressDynamicStateForCareer> indicatorKey = GlobalKey();
   GlobalKey<TextProgressDynamicStateForCareer> textKey = GlobalKey();
-  final int _week = int.parse(writeData["week"]);
   int year = 0;
   int allYear = 0;
 
@@ -46,7 +49,8 @@ class _CareerPageBodyState extends State<CareerPageBody> {
   void initState() {
     // TODO: implement initState
     super.initState();
-
+    print("type:");
+    print(type);
     eventBusFn = pageBus.on<CareerRe>().listen((event) {
       Scaffold.of(context).removeCurrentSnackBar();
       Scaffold.of(context)
@@ -115,37 +119,23 @@ class _CareerPageBodyState extends State<CareerPageBody> {
       //年级
       year = int.parse(careerInfo[2].replaceAll("级", "").trim());
       // 全部学年
+
       allYear = int.parse(
           careerInfo[3].substring(careerInfo[3].toString().indexOf("年") - 1).replaceAll("年", ""));
       setState(() {});
     }
-    //完整的一个学期占比
-    double semesterPercentage = allYear == 3 ? 1 / 6 : 1 / 8;
-
-    //本学期
-    double weekPercentage = (_week * 5 / 100) - 0.05 + (DateTime.now().weekday / 7 * 5 / 100);
-
-    //剩余学年 :: 2019 + 3年 - 2022
-
-    int year3 = year + allYear - DateTime.now().year;
-    print(DateTime.now().month);
-    if (DateTime.now().month < 3) {
-      year3++;
-    }
-
-    //本学期在全部学期占比
-    double proportionOfSemesterInAllSemesters = weekPercentage * semesterPercentage;
-
-    //year2 = 3 , year3 = 0
+    print(year.toString() + "年9月开学," + (year + allYear).toString() + "年6月毕业");
     _next() {
-      if (writeData["semester"] == "秋")
-        return (allYear * 2 - year3 * 2) * semesterPercentage + proportionOfSemesterInAllSemesters;
-      else
-        return (allYear * 2 - year3 * 2 + 1) * semesterPercentage +
-            proportionOfSemesterInAllSemesters;
+      var d6 = new DateTime(year, 9);
+      var d7 = new DateTime(year + allYear, 6);
+      var d8 = new DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+      var difference = d7.difference(d6);
+      var difference2 = d8.difference(d6);
+      var difference3 = d8.difference(d7);
+      if (difference3.inDays > 1) return 1.00;
+      return difference2.inDays / difference.inDays;
     }
 
-    if (_week > 20 && DateTime.now().year == year + allYear) return 1.00;
     if (careerInfo[2] == "" && careerInfo[3] == "") return 0.0;
     return _next();
   }
@@ -170,7 +160,11 @@ class _CareerPageBodyState extends State<CareerPageBody> {
             InkWell(
               child: const Icon(Icons.close_outlined, size: 24),
               onTap: () {
-                Navigator.of(context).pop();
+                if (type == 0) {
+                  Navigator.of(context).pop();
+                } else if (type == 1) {
+                  Navigator.of(context).pop(1);
+                }
               },
             ),
           ),
@@ -180,48 +174,50 @@ class _CareerPageBodyState extends State<CareerPageBody> {
               // padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
               // decoration: BoxDecoration(
               //     borderRadius: const BorderRadius.all(Radius.circular(6.0)), color: readColor()),
-              child: Row(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                        borderRadius: const BorderRadius.all(Radius.circular(6.0)),
-                        color: readColor()),
-                    margin: const EdgeInsets.fromLTRB(16, 0, 0, 0),
-                    padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
-                    child: Icon(
-                      Icons.sentiment_neutral,
-                      size: 64,
-                      color: Colors.white,
-                    ),
-                  ),
-                  Expanded(
-                      child: Container(
-                    margin: const EdgeInsets.fromLTRB(8, 0, 16, 0),
-                    padding: const EdgeInsets.fromLTRB(14, 8, 8, 8),
-                    height: 80,
-                    decoration: BoxDecoration(
-                        borderRadius: const BorderRadius.all(Radius.circular(6.0)),
-                        color: randomColors()),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          writeData["name"],
-                          style: TextStyle(fontSize: 18, color: Colors.white),
-                        ),
-                        Text(careerInfo[1], style: TextStyle(color: Colors.white)),
-                        Text(careerInfo[2] + "  " + careerInfo[4],
-                            style: TextStyle(color: Colors.white)),
-                      ],
-                    ),
-                  )),
-                ],
-              ),
+              // child: Row(
+              //   children: [
+              //     Container(
+              //       decoration: BoxDecoration(
+              //           borderRadius: const BorderRadius.all(Radius.circular(6.0)),
+              //           color: readColor()),
+              //       margin: const EdgeInsets.fromLTRB(16, 0, 0, 0),
+              //       padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
+              //       child: Icon(
+              //         Icons.mood,
+              //         size: 64,
+              //         color: Colors.white,
+              //       ),
+              //     ),
+              //     Expanded(
+              //         child: Container(
+              //       margin: const EdgeInsets.fromLTRB(0, 0, 16, 0),
+              //       padding: const EdgeInsets.fromLTRB(8, 12, 8, 0),
+              //       height: 80,
+              //       decoration: BoxDecoration(
+              //         borderRadius: const BorderRadius.all(Radius.circular(6.0)),
+              //       ),
+              //       child: Column(
+              //         crossAxisAlignment: CrossAxisAlignment.start,
+              //         children: [
+              //           Text(
+              //             writeData["name"],
+              //           ),
+              //           Text(
+              //             careerInfo[1],
+              //           ),
+              //           Text(
+              //             careerInfo[2] + "  " + careerInfo[4],
+              //           ),
+              //         ],
+              //       ),
+              //     )),
+              //   ],
+              // ),
             ),
           ),
           SliverToBoxAdapter(
             child: Container(
-              margin: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+              margin: const EdgeInsets.fromLTRB(16, 16, 16, 16),
               padding: const EdgeInsets.fromLTRB(32, 16, 32, 16),
               decoration: BoxDecoration(
                   borderRadius: const BorderRadius.all(Radius.circular(6.0)), color: readColor()),
