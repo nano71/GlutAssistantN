@@ -12,7 +12,4 @@
 
 截图: (格格的号)
 
-<img src="https://github.com/ChinaGamer/Images/blob/master/gan/a.jpg" style="border:1px solid" width="192" />
-<img src="https://github.com/ChinaGamer/Images/blob/master/gan/b.jpg" width="192" />
-<img src="https://github.com/ChinaGamer/Images/blob/master/gan/e.jpg" width="192" />
-<img src="https://github.com/nano71/Images/blob/master/gan/Screenshot_2022-01-04-14-40-42-59_581d685b5f7bb8d.jpg" width="192" /><img src="https://github.com/ChinaGamer/Images/blob/master/gan/c.jpg" width="192" /><img src="https://github.com/ChinaGamer/Images/blob/master/gan/f.jpg" width="192" /><img src="https://github.com/ChinaGamer/Images/blob/master/gan/g.jpg" width="192" /><img src="https://github.com/ChinaGamer/Images/blob/master/gan/h.jpg" width="192" /><img src="https://github.com/ChinaGamer/Images/blob/master/gan/i.jpg" width="192" />
+<img src="https://github.com/ChinaGamer/Images/blob/master/gan/a.jpg" style="border:1px solid" width="192" /><img src="https://github.com/ChinaGamer/Images/blob/master/gan/b.jpg" width="192" /><img src="https://github.com/ChinaGamer/Images/blob/master/gan/e.jpg" width="192" /><img src="https://github.com/nano71/Images/blob/master/gan/Screenshot_2022-01-04-14-40-42-59_581d685b5f7bb8d.jpg" width="192" /><img src="https://github.com/ChinaGamer/Images/blob/master/gan/c.jpg" width="192" /><img src="https://github.com/ChinaGamer/Images/blob/master/gan/f.jpg" width="192" /><img src="https://github.com/ChinaGamer/Images/blob/master/gan/g.jpg" width="192" /><img src="https://github.com/ChinaGamer/Images/blob/master/gan/h.jpg" width="192" /><img src="https://github.com/ChinaGamer/Images/blob/master/gan/i.jpg" width="192" />
