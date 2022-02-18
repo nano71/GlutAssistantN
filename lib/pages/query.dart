@@ -240,7 +240,7 @@ class _QueryBodyState extends State<QueryBody> {
                                 color: Colors.white,
                               ),
                             ),
-                            items: yearList(),
+                            items: yearList(0),
                             underline: Container(height: 0),
                             onChanged: (value) {
                               setState(() {

@@ -92,7 +92,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                               color: readColor(),
                             ),
                           ),
-                          items: yearList(),
+                          items: yearList(1),
                           underline: Container(height: 0),
                           onChanged: (value) {
                             setState(() {
@@ -126,7 +126,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                           iconEnabledColor: readColor(),
                           isDense: true,
                           elevation: 0,
-                          hint: Text(writeData["semesterBk"],
+                          hint: Text(writeData["semester"],
                               style: TextStyle(
                                 color: readColor(),
                               )),
@@ -137,9 +137,52 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                           ],
                           onChanged: (value) {
                             setState(() {
+                              writeData["semester"] = value;
                               writeData["semesterBk"] = value;
                             });
                           },
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.view_week,
+                              color: readColor(),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.fromLTRB(16, 14, 0, 14),
+                              child: const Text(
+                                "当前周数",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                        DropdownButton(
+                          iconEnabledColor: readColor(),
+                          isDense: true,
+                          elevation: 0,
+                          hint: Text(writeData["week"],
+                              style: TextStyle(
+                                color: readColor(),
+                              )),
+                          underline: Container(height: 0),
+                          items: [
+                            DropdownMenuItem(child: Text("暂"), value: ""),
+                            DropdownMenuItem(child: Text("时"), value: ""),
+                            DropdownMenuItem(child: Text("不"), value: ""),
+                            DropdownMenuItem(child: Text("允"), value: ""),
+                            DropdownMenuItem(child: Text("许"), value: ""),
+                            DropdownMenuItem(child: Text("更"), value: ""),
+                            DropdownMenuItem(child: Text("改"), value: ""),
+                          ],
+                          onChanged: (value) {},
                         ),
                       ],
                     ),
@@ -150,7 +193,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                         Row(
                           children: [
                             Icon(
-                              !focusNodeType ? Icons.date_range_outlined : Icons.edit_outlined,
+                              !focusNodeType ? Icons.color_lens_outlined : Icons.edit_outlined,
                               color: readColor(),
                             ),
                             Container(
@@ -426,9 +469,18 @@ Widget settingItem(IconData icon, EdgeInsets padding, String title, int type) {
   );
 }
 
-List<DropdownMenuItem<Object>>? yearList() {
+List<DropdownMenuItem<Object>>? yearList(int type) {
   List<DropdownMenuItem<Object>>? list = [];
-  list.add(DropdownMenuItem(child: Text("全部"), value: "全部"),);
+  if (type == 0) {
+    list.add(
+      DropdownMenuItem(child: Text("全部"), value: "全部"),
+    );
+  } else {
+    list.add(DropdownMenuItem(
+        child: Text((int.parse(writeData["year"]) + 1).toString()),
+        value: (int.parse(writeData["year"]) + 1).toString()));
+  }
+
   for (int i = int.parse(writeData["year"]); i > (int.parse(writeData["year"]) - 5); i--) {
     list.add(DropdownMenuItem(child: Text(i.toString()), value: i.toString()));
   }
