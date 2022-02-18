@@ -74,6 +74,7 @@ Future<String> getSchedule() async {
           .replaceAll("第", "")
           .replaceAll("节", "")
           .replaceAll("周", "")
+          .replaceAll("单", "")
           .replaceAll("双", ""));
       var list = document.querySelectorAll(".infolist_common");
       num listLength = document.querySelectorAll(".infolist_common").length - 23;

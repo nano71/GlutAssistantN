@@ -230,7 +230,7 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
                       ),
                       InkWell(
                         onTap: () {
-                          launch(writeData["githubDownload"]);
+                          launch("https://github.com/nano71/GlutAssistantN");
                         },
                         child: mineItem(Icons.face, const EdgeInsets.fromLTRB(16, 14, 0, 14),
                             "Github", Colors.blueGrey),
