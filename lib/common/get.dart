@@ -58,6 +58,8 @@ Future<String> getSchedule() async {
     "星期日": "7"
   };
   try {
+    print(writeData["semesterBk"]);
+    print(writeData["yearBk"]);
     Uri _url = Uri.http(Global.getScheduleUrl[0], Global.getScheduleUrl[1], {
       "year": ((int.parse(writeData["yearBk"])) - 1980).toString(),
       "term": writeData["semesterBk"] == "秋" ? "3" : "1"
@@ -70,12 +72,7 @@ Future<String> getSchedule() async {
     } else {
       dom.Document document = parse(gbk
           .decode(response.bodyBytes)
-          .toString()
-          .replaceAll("第", "")
-          .replaceAll("节", "")
-          .replaceAll("周", "")
-          .replaceAll("单", "")
-          .replaceAll("双", ""));
+          .toString());
       var list = document.querySelectorAll(".infolist_common");
       num listLength = document.querySelectorAll(".infolist_common").length - 23;
       for (var i = 0; i < listLength; i++) {
@@ -85,13 +82,22 @@ Future<String> getSchedule() async {
               .querySelectorAll("table.none>tbody>tr")[j]
               .querySelectorAll("td")[2]
               .innerHtml
-              .trim();
+              .trim()
+              .replaceAll("第", "")
+              .replaceAll("节", "")
+          ;
           //周次
           String zc = list[i]
               .querySelectorAll("table.none>tbody>tr")[j]
               .querySelectorAll("td")[0]
               .innerHtml
-              .trim();
+              .trim()
+              .replaceAll("第", "")
+              .replaceAll("单", "")
+              .replaceAll("双", "")
+              .replaceAll("周", "")
+          ;
+          //课节
           List kjList = kj.trim().split('-');
           List zcList = zc.trim().split('-');
           String week = list[i]
@@ -184,6 +190,7 @@ Future<String> getSchedule() async {
                   .replaceAll("第", "")
                   .replaceAll("节", "")
                   .replaceAll("周", "")
+                  .replaceAll("单", "")
                   .replaceAll("双", "")
                   .split('-');
               List<String> _addTime = tds[15]
@@ -192,6 +199,7 @@ Future<String> getSchedule() async {
                   .replaceAll("第", "")
                   .replaceAll("节", "")
                   .replaceAll("周", "")
+                  .replaceAll("单", "")
                   .replaceAll("双", "")
                   .split('-');
               //星期
@@ -227,6 +235,7 @@ Future<String> getSchedule() async {
                   .replaceAll("第", "")
                   .replaceAll("节", "")
                   .replaceAll("周", "")
+                  .replaceAll("单", "")
                   .replaceAll("双", "")
                   .split('-');
               List<String> _addTime = tds[8]
@@ -235,6 +244,7 @@ Future<String> getSchedule() async {
                   .replaceAll("第", "")
                   .replaceAll("节", "")
                   .replaceAll("周", "")
+                  .replaceAll("单", "")
                   .replaceAll("双", "")
                   .split('-');
               //星期

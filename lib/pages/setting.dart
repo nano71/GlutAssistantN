@@ -15,7 +15,7 @@ import 'mine.dart';
 class SettingPage extends StatefulWidget {
   final String title;
 
-  const SettingPage({Key? key, this.title = "返回"}) : super(key: key);
+  const SettingPage({Key? key, this.title = "设置"}) : super(key: key);
 
   @override
   State<SettingPage> createState() => _SettingPageState();
@@ -83,23 +83,29 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                             )
                           ],
                         ),
-                        DropdownButton(
-                          iconEnabledColor: readColor(),
-                          elevation: 0,
-                          hint: Text(
-                            writeData["yearBk"],
-                            style: TextStyle(
-                              color: readColor(),
-                            ),
+                        Text(
+                          writeData["yearBk"],
+                          style: TextStyle(
+                            color: readColor(),
                           ),
-                          items: yearList(1),
-                          underline: Container(height: 0),
-                          onChanged: (value) {
-                            setState(() {
-                              writeData["yearBk"] = value;
-                            });
-                          },
-                        )
+                        ),
+                        // DropdownButton(
+                        //   iconEnabledColor: readColor(),
+                        //   elevation: 0,
+                        //   hint: Text(
+                        //     writeData["yearBk"],
+                        //     style: TextStyle(
+                        //       color: readColor(),
+                        //     ),
+                        //   ),
+                        //   items: yearList(1),
+                        //   underline: Container(height: 0),
+                        //   onChanged: (value) {
+                        //     setState(() {
+                        //       writeData["yearBk"] = value;
+                        //     });
+                        //   },
+                        // )
                       ],
                     ),
                     Row(
@@ -122,26 +128,31 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                             )
                           ],
                         ),
-                        DropdownButton(
-                          iconEnabledColor: readColor(),
-                          isDense: true,
-                          elevation: 0,
-                          hint: Text(writeData["semester"],
-                              style: TextStyle(
-                                color: readColor(),
-                              )),
-                          underline: Container(height: 0),
-                          items: const [
-                            DropdownMenuItem(child: Text("春"), value: "春"),
-                            DropdownMenuItem(child: Text("秋"), value: "秋"),
-                          ],
-                          onChanged: (value) {
-                            setState(() {
-                              writeData["semester"] = value;
-                              writeData["semesterBk"] = value;
-                            });
-                          },
-                        ),
+                        Text(writeData["semester"],
+                            style: TextStyle(
+                              color: readColor(),
+                            )),
+                        // DropdownButton(
+                        //   iconEnabledColor: readColor(),
+                        //   isDense: true,
+                        //   elevation: 0,
+                        //   hint: Text(writeData["semester"],
+                        //       style: TextStyle(
+                        //         color: readColor(),
+                        //       )),
+                        //   underline: Container(height: 0),
+                        //   items: const [
+                        //     DropdownMenuItem(child: Text("春"), value: "春"),
+                        //     DropdownMenuItem(child: Text("秋"), value: "秋"),
+                        //   ],
+                        //   onChanged: (value) {
+                        //     setState(() {
+                        //       writeData["semester"] = value;
+                        //       writeData["semesterBk"] = value;
+                        //     });
+                        //   },
+                        // ),
+
                       ],
                     ),
                     Row(
@@ -164,26 +175,30 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                             )
                           ],
                         ),
-                        DropdownButton(
-                          iconEnabledColor: readColor(),
-                          isDense: true,
-                          elevation: 0,
-                          hint: Text(writeData["week"],
-                              style: TextStyle(
-                                color: readColor(),
-                              )),
-                          underline: Container(height: 0),
-                          items: [
-                            DropdownMenuItem(child: Text("暂"), value: ""),
-                            DropdownMenuItem(child: Text("时"), value: ""),
-                            DropdownMenuItem(child: Text("不"), value: ""),
-                            DropdownMenuItem(child: Text("允"), value: ""),
-                            DropdownMenuItem(child: Text("许"), value: ""),
-                            DropdownMenuItem(child: Text("更"), value: ""),
-                            DropdownMenuItem(child: Text("改"), value: ""),
-                          ],
-                          onChanged: (value) {},
-                        ),
+                        Text(writeData["week"],
+                            style: TextStyle(
+                              color: readColor(),
+                            )),
+                        // DropdownButton(
+                        //   iconEnabledColor: readColor(),
+                        //   isDense: true,
+                        //   elevation: 0,
+                        //   hint: Text(writeData["week"],
+                        //       style: TextStyle(
+                        //         color: readColor(),
+                        //       )),
+                        //   underline: Container(height: 0),
+                        //   items: [
+                        //     DropdownMenuItem(child: Text("暂"), value: ""),
+                        //     DropdownMenuItem(child: Text("时"), value: ""),
+                        //     DropdownMenuItem(child: Text("不"), value: ""),
+                        //     DropdownMenuItem(child: Text("允"), value: ""),
+                        //     DropdownMenuItem(child: Text("许"), value: ""),
+                        //     DropdownMenuItem(child: Text("更"), value: ""),
+                        //     DropdownMenuItem(child: Text("改"), value: ""),
+                        //   ],
+                        //   onChanged: (value) {},
+                        // ),
                       ],
                     ),
                     topLine,
