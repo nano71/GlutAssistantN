@@ -127,11 +127,9 @@ class SchedulePageState extends State<SchedulePage> with AutomaticKeepAliveClien
     double sY = _startPositionY;
     if (eY - sY < minValue || eY + sY < minValue) {
       if (sX - eX > minValue) {
-
-          print("下一页");
-          _currentScheduleWeek++;
-          _findNewSchedule();
-
+        print("下一页");
+        _currentScheduleWeek++;
+        _findNewSchedule();
       } else if (eX - sX > minValue) {
         if (_currentScheduleWeek == 1) {
           _warning1();
@@ -260,74 +258,94 @@ List<Widget> _loopWeekDayColGrid(String week, String weekDay) {
   for (int i = 1; i < 12; i++) {
     String courseName = courseLongText2ShortName(_schedule[i.toString()][0]);
     String studyArea = _schedule[i.toString()][2];
+    String teacher = _schedule[i.toString()][1];
 
     if (courseName != "null") {
       if (i == 1) {
         s = i;
       } else if (courseName == courseLongText2ShortName(_schedule[(i - 1).toString()][0])) {
         if (i == 11) {
-          list.add(_grid(
-              courseName, studyArea, randomColors(), Global.schedulePageGridHeight * (i - s + 1)));
+          list.add(_grid(i, s, courseName, studyArea, teacher, randomColors(),
+              Global.schedulePageGridHeight * (i - s + 1)));
         } else if (courseName != courseLongText2ShortName(_schedule[(i + 1).toString()][0])) {
-          list.add(_grid(
-              courseName, studyArea, randomColors(), Global.schedulePageGridHeight * (i - s + 1)));
+          list.add(_grid(i, s, courseName, studyArea, teacher, randomColors(),
+              Global.schedulePageGridHeight * (i - s + 1)));
         }
       } else {
         s = i;
       }
     } else {
-      list.add(_grid("", "", Colors.white));
+      list.add(_grid(0, 0, "", "", "", Colors.white));
     }
   }
   return list;
 }
 
-Widget _grid(String title, String studyArea, Color color, [double height = 60.0]) {
+Widget _grid(int index, int index2, String title, String studyArea, String teacher, Color color,
+    [double height = 60.0]) {
   TextStyle style = const TextStyle(fontSize: 12, color: Colors.white);
-  return Container(
-      height: height,
-      decoration: BoxDecoration(
-        color: color,
-        border: Border(
-            top: BorderSide(
-              width: 1, //宽度
-              color: Colors.white, //边框颜色
+  return InkWell(
+    onTap: () {
+      if (index != 0) {
+        print(index2);
+        print(index);
+      }
+    },
+    child: Container(
+        height: height,
+        decoration: BoxDecoration(
+          color: color,
+          border: Border(
+              top: BorderSide(
+                width: 1, //宽度
+                color: Colors.white, //边框颜色
+              ),
+              right: BorderSide(
+                width: 1, //宽度
+                color: Colors.white, //边框颜色
+              ),
+              bottom: BorderSide(
+                width: 1, //宽度
+                color: Colors.white, //边框颜色
+              ),
+              left: BorderSide(
+                width: 1, //宽度
+                color: Colors.white, //边框颜色
+              )),
+          borderRadius: const BorderRadius.all(Radius.circular(4.0)),
+        ),
+        padding: const EdgeInsets.only(left: 5, right: 5, top: 5, bottom: 5),
+        alignment: Alignment.center,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Text(
+              title,
+              textAlign: TextAlign.center,
+              softWrap: true,
+              style: style,
             ),
-            right: BorderSide(
-              width: 1, //宽度
-              color: Colors.white, //边框颜色
+            const SizedBox(
+              height: 10,
             ),
-            bottom: BorderSide(
-              width: 1, //宽度
-              color: Colors.white, //边框颜色
+            Column(
+              children: [
+                // Text(
+                //   teacher,
+                //   textAlign: TextAlign.center,
+                //   softWrap: true,
+                //   style: style,
+                // ),
+                Text(
+                  studyArea,
+                  textAlign: TextAlign.center,
+                  softWrap: true,
+                  style: style,
+                ),
+              ],
             ),
-            left: BorderSide(
-              width: 1, //宽度
-              color: Colors.white, //边框颜色
-            )),
-        borderRadius: const BorderRadius.all(Radius.circular(4.0)),
-      ),
-      padding: const EdgeInsets.only(left: 5, right: 5, top: 5, bottom: 5),
-      alignment: Alignment.center,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          Text(
-            title,
-            textAlign: TextAlign.center,
-            softWrap: true,
-            style: style,
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          Text(
-            studyArea,
-            textAlign: TextAlign.center,
-            softWrap: true,
-            style: style,
-          ),
-        ],
-      ));
+          ],
+        )),
+  );
 }
