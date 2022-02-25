@@ -96,14 +96,17 @@ Future<String> getSchedule() async {
               .replaceAll("单", "")
               .replaceAll("双", "")
               .replaceAll("周", "")
-          ;
-          //课节
+          ; //课节
           List kjList = kj.trim().split('-');
           List zcList = zc.trim().split('-');
           String week = list[i]
               .querySelectorAll("table.none>tbody>tr")[j]
               .querySelectorAll("td")[1]
               .innerHtml
+              .replaceAll("第", "")
+              .replaceAll("单", "")
+              .replaceAll("双", "")
+              .replaceAll("周", "")
               .trim();
           String area = list[i]
               .querySelectorAll("table.none>tbody>tr")[j]
@@ -137,7 +140,7 @@ Future<String> getSchedule() async {
                     .innerHtml
                     .trim()]]?[k.toString()] = [
                   //课程名
-                  list[i].querySelectorAll("a.infolist")[0].innerHtml.trim(),
+                 list[i].querySelectorAll("a.infolist")[0].innerHtml.trim(),
                   //老师名字
                   list[i].querySelectorAll("a.infolist").length > 1
                       ? list[i].querySelectorAll("a.infolist")[1].innerHtml.trim()
@@ -157,6 +160,7 @@ Future<String> getSchedule() async {
             .attributes["onclick"]!
             .substring(61)
             .split("&year")[0];
+
         print(_id);
         Uri _url = Uri.http(Global.getScheduleNextUrl[0], Global.getScheduleNextUrl[1], {
           "id": _id,

@@ -108,11 +108,11 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
       print("刷新${DateTime.now()}");
       _goTopInitCount++;
       if (_goTopInitCount == 7) {
-        Scaffold.of(context).removeCurrentSnackBar();
-        Scaffold.of(context).showSnackBar(jwSnackBar(false, "你这也太快了吧..."));
+        ScaffoldMessenger.of(context).removeCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(false, "太快了吧..."));
       } else if (_goTopInitCount == 1) {
-        Scaffold.of(context).removeCurrentSnackBar();
-        Scaffold.of(context).showSnackBar(jwSnackBar(true, "数据准备更新...", 10));
+        ScaffoldMessenger.of(context).removeCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(true, "准备更新...", 10));
       }
       _scrollController.animateTo(
         _scrollController.position.minScrollExtent,
@@ -120,19 +120,19 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
         curve: Curves.linear,
       );
       _next() async {
-        Scaffold.of(context).removeCurrentSnackBar();
-        Scaffold.of(context).showSnackBar(jwSnackBar(true, "清除缓存...", 10));
+        ScaffoldMessenger.of(context).removeCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(true, "清除缓存...", 10));
         schedule = {};
         todaySchedule = [];
         tomorrowSchedule = [];
-        Scaffold.of(context).removeCurrentSnackBar();
-        Scaffold.of(context).showSnackBar(jwSnackBar(true, "数据初始化...", 10));
+        ScaffoldMessenger.of(context).removeCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(true, "初始化...", 10));
         await initSchedule();
-        Scaffold.of(context).removeCurrentSnackBar();
-        Scaffold.of(context).showSnackBar(jwSnackBar(true, "获取服务器课表...", 10));
+        ScaffoldMessenger.of(context).removeCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(true, "获取课表...", 10));
         await getSchedule();
-        Scaffold.of(context).removeCurrentSnackBar();
-        Scaffold.of(context).showSnackBar(jwSnackBar(true, "处理返回数据...", 10));
+        ScaffoldMessenger.of(context).removeCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(true, "处理数据...", 10));
         await initTodaySchedule();
         await initTomorrowSchedule();
         pageBus.fire(ReState(1));
@@ -141,14 +141,14 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
         setState(() {});
         _endCount = 0;
         print("刷新结束${DateTime.now()}");
-        Scaffold.of(context).removeCurrentSnackBar();
-        Scaffold.of(context).showSnackBar(jwSnackBar(true, "数据已经更新", 1));
+        ScaffoldMessenger.of(context).removeCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(true, "数据已更新!", 1));
       }
 
       _time = Timer(const Duration(seconds: 1), () async {
         getWeek();
-        Scaffold.of(context).removeCurrentSnackBar();
-        Scaffold.of(context).showSnackBar(jwSnackBar(true, "获取教务数据...", 10));
+        ScaffoldMessenger.of(context).removeCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(true, "获取数据...", 10));
         await getSchedule().then((value) => {
               if (value == "fail")
                 {
@@ -156,13 +156,13 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     {
                       // codeCheckDialog(context),
                       Scaffold.of(context).removeCurrentSnackBar(),
-                      Scaffold.of(context).showSnackBar(jwSnackBar(false, "请先登录")),
+                      ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(false, "请先登录!")),
                       _time2?.cancel()
                     }
                   else
                     {
                       Scaffold.of(context).removeCurrentSnackBar(),
-                      Scaffold.of(context).showSnackBar(jwSnackBarAction(
+                      ScaffoldMessenger.of(context).showSnackBar(jwSnackBarAction(
                         false,
                         "需要验证",
                         context,
@@ -176,7 +176,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
               else
                 {
                   Scaffold.of(context).removeCurrentSnackBar(),
-                  Scaffold.of(context).showSnackBar(jwSnackBar(false, value, 4)),
+                  ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(false, value, 4)),
                   _time2?.cancel()
                 }
             });
@@ -196,8 +196,8 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
     } else {
       if (_bk) {
         _bk = false;
-        Scaffold.of(context).removeCurrentSnackBar();
-        Scaffold.of(context).showSnackBar(jwSnackBar(false, "你好快啊,求求你给我休息会吧..."));
+        ScaffoldMessenger.of(context).removeCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(false, "你慢一点!"));
         _time?.cancel();
         _time = Timer(const Duration(seconds: 5), () {
           Future.delayed(const Duration(seconds: 5), () {
@@ -227,8 +227,8 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     Future.delayed(const Duration(seconds: 0), () {
       if (DateTime.now().minute == 59 && DateTime.now().hour == 23) {
-        Scaffold.of(context).removeCurrentSnackBar();
-        Scaffold.of(context).showSnackBar(jwSnackBar(false, "请不要在 23:59 的时候打开此APP", 3));
+        ScaffoldMessenger.of(context).removeCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(false, "明天再来!", 3));
         Future.delayed(const Duration(seconds: 3), () {
           exit(0);
         });
@@ -292,7 +292,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         height: 100,
                         width: width / 3 - 48 / 3,
                         decoration: BoxDecoration(
-                            borderRadius: const BorderRadius.all(Radius.circular(6.0)),
+                            borderRadius: const BorderRadius.all(Radius.circular(12.0)),
                             color: _animationForHomeCards1.value),
                         child: Stack(
                           children: [
@@ -339,7 +339,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         height: 100,
                         width: width / 3 - 48 / 3,
                         decoration: BoxDecoration(
-                            borderRadius: const BorderRadius.all(Radius.circular(6.0)),
+                            borderRadius: const BorderRadius.all(Radius.circular(12.0)),
                             color: _animationForHomeCards2.value),
                         child: Stack(
                           children: [
@@ -356,7 +356,8 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                             Align(
                               child: Container(
                                 margin: HomeCardsState.textMargin,
-                                child: Text(HomeCardsState.iconTexts[1], style: HomeCardsState.textStyle),
+                                child: Text(HomeCardsState.iconTexts[1],
+                                    style: HomeCardsState.textStyle),
                               ),
                             ),
                           ],
@@ -387,7 +388,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         height: 100,
                         width: width / 3 - 48 / 3,
                         decoration: BoxDecoration(
-                            borderRadius: const BorderRadius.all(Radius.circular(6.0)),
+                            borderRadius: const BorderRadius.all(Radius.circular(12.0)),
                             color: _animationForHomeCards3.value),
                         child: Stack(
                           children: [
@@ -404,7 +405,8 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                             Align(
                               child: Container(
                                 margin: HomeCardsState.textMargin,
-                                child: Text(HomeCardsState.iconTexts[2], style: HomeCardsState.textStyle),
+                                child: Text(HomeCardsState.iconTexts[2],
+                                    style: HomeCardsState.textStyle),
                               ),
                             ),
                           ],

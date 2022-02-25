@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_remix/flutter_remix.dart';
 
 import '../config.dart';
+import 'cards.dart';
 
 class RefreshIconWidgetDynamic extends StatefulWidget {
   const RefreshIconWidgetDynamic({Key? key}) : super(key: key);
@@ -18,7 +20,7 @@ class RefreshIconWidgetDynamicState extends State<RefreshIconWidgetDynamic> {
     return Transform.rotate(
       angle: _angle,
       child: Icon(
-        Icons.refresh,
+        HomeCardsState.icons[0],
         color: readColor(),
         size: 32,
       ),
@@ -31,15 +33,15 @@ class RefreshIconWidgetDynamicState extends State<RefreshIconWidgetDynamic> {
 }
 
 Icon chevronRight = const Icon(
-  Icons.chevron_right,
+  FlutterRemix.arrow_right_s_line,
   color: Colors.black45,
 );
 Icon chevronDown = const Icon(
-  Icons.keyboard_arrow_down_outlined,
+  FlutterRemix.arrow_down_s_line,
   color: Colors.black45,
 );
 Icon chevronUp = const Icon(
-  Icons.keyboard_arrow_up_outlined,
+  FlutterRemix.arrow_up_s_line,
   color: Colors.black45,
 );
 Icon goCurrent = const Icon(

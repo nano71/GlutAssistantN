@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_remix/flutter_remix.dart';
 import 'package:glutassistantn/common/get.dart';
 import 'package:glutassistantn/common/io.dart';
 import 'package:glutassistantn/data.dart';
@@ -74,15 +75,15 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
       // writeData["newTime"] = "${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}";
       writeConfig();
       setState(() {});
-      Scaffold.of(context).removeCurrentSnackBar();
-      Scaffold.of(context).showSnackBar(jwSnackBar(true, "暂无新版本更新", 5));
+       ScaffoldMessenger.of(context).removeCurrentSnackBar();
+       ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(true, "暂无更新!", 5));
     } else if (value.length == 1) {
-      Scaffold.of(context).removeCurrentSnackBar();
-      Scaffold.of(context).showSnackBar(jwSnackBar(false, value[0], 5));
+       ScaffoldMessenger.of(context).removeCurrentSnackBar();
+       ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(false, value[0], 5));
       networkError = true;
     } else {
-      Scaffold.of(context).removeCurrentSnackBar();
-      Scaffold.of(context).showSnackBar(jwSnackBar(true, "有新版本更新!", 5));
+       ScaffoldMessenger.of(context).removeCurrentSnackBar();
+       ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(true, "发现新版本!", 5));
       newVersion = true;
       writeData["newVersion"] = value[1];
       writeData["newBody"] = value[3];
@@ -97,8 +98,8 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
   Widget build(BuildContext context) {
     Future.delayed(const Duration(seconds: 0), () {
       if (!newVersion && !updating) {
-        Scaffold.of(context).removeCurrentSnackBar();
-        Scaffold.of(context).showSnackBar(jwSnackBar(true, "获取版本更新数据...", 24));
+         ScaffoldMessenger.of(context).removeCurrentSnackBar();
+         ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(true, "获取更新...", 24));
       }
     });
     return Container(
@@ -110,7 +111,7 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
           publicTopBar(
             "获取新版本",
             InkWell(
-              child: const Icon(Icons.close_outlined, size: 24),
+              child: const Icon(FlutterRemix.close_line, size: 24),
               onTap: () {
                 Navigator.of(context).pop();
               },
@@ -128,8 +129,8 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
                 children: [
                   InkWell(
                     onTap: () {
-                      Scaffold.of(context).removeCurrentSnackBar();
-                      Scaffold.of(context).showSnackBar(jwSnackBar(true, "获取版本更新数据...", 24));
+                       ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                       ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(true, "获取更新...", 24));
                       getUpdate().then((value) => _next(value));
                     },
                     child: Image.asset(
@@ -156,7 +157,7 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
                       ? Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            mineItem4(Icons.file_upload, const EdgeInsets.fromLTRB(16, 14, 0, 14),
+                            mineItem4(FlutterRemix.arrow_up_line, const EdgeInsets.fromLTRB(16, 14, 0, 14),
                                 "有新版本可以更新!", Colors.red),
                             Container(
                               width: double.infinity,
@@ -182,14 +183,14 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
                               onTap: () {
                                 launch("https://www.coolapk.com/apk/289253");
                               },
-                              child: mineItem(Icons.local_mall,
+                              child: mineItem(FlutterRemix.store_2_line,
                                   const EdgeInsets.fromLTRB(16, 14, 0, 14), "酷安", Colors.green),
                             ),
                             InkWell(
                               onTap: () {
                                 launch(writeData["githubDownload"]);
                               },
-                              child: mineItem(Icons.face, const EdgeInsets.fromLTRB(16, 14, 0, 14),
+                              child: mineItem(FlutterRemix.github_line, const EdgeInsets.fromLTRB(16, 14, 0, 14),
                                   "Github", Colors.blueGrey),
                             ),
                           ],

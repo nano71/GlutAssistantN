@@ -11,8 +11,8 @@ class Global {
     initialPage: 0,
     keepPage: true,
   );
-  static String timeOutError = "连接教务超时,教务可能维护中";
-  static String socketError = "网络连接失败";
+  static String timeOutError = "教务无响应!";
+  static String socketError = "网络错误!";
   static int timeOutSec = 12;
   static Map<String, String> cookie = {};
   static String jwUrl = "jw.glutnn.cn";

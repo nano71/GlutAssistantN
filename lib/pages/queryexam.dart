@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_remix/flutter_remix.dart';
 import 'package:glutassistantn/common/get.dart';
 import 'package:glutassistantn/config.dart';
 import 'package:glutassistantn/widget/bars.dart';
@@ -52,14 +53,14 @@ class _QueryExamBodyState extends State<QueryExamBody> {
   void _process(String value) {
     if (value == "success") {
       login = false;
-      Scaffold.of(context).removeCurrentSnackBar();
-      Scaffold.of(context).showSnackBar(jwSnackBar(true, "处理返回数据...", 10));
+       ScaffoldMessenger.of(context).removeCurrentSnackBar();
+       ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(true, "处理数据...", 10));
       setState(() {});
-      Scaffold.of(context).removeCurrentSnackBar();
-      Scaffold.of(context).showSnackBar(jwSnackBar(true, "数据已经更新", 1));
+       ScaffoldMessenger.of(context).removeCurrentSnackBar();
+       ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(true, "数据已更新!", 1));
     } else if (value == "fail") {
-      Scaffold.of(context).removeCurrentSnackBar();
-      Scaffold.of(context).showSnackBar(jwSnackBarActionQ2(
+       ScaffoldMessenger.of(context).removeCurrentSnackBar();
+       ScaffoldMessenger.of(context).showSnackBar(jwSnackBarActionQ2(
         false,
         "需要验证",
         context,
@@ -67,8 +68,8 @@ class _QueryExamBodyState extends State<QueryExamBody> {
       ));
     } else {
       print(value);
-      Scaffold.of(context).removeCurrentSnackBar();
-      Scaffold.of(context).showSnackBar(jwSnackBar(false, value, 4));
+       ScaffoldMessenger.of(context).removeCurrentSnackBar();
+       ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(false, value, 4));
     }
   }
 
@@ -76,12 +77,19 @@ class _QueryExamBodyState extends State<QueryExamBody> {
   Widget build(BuildContext context) {
     Future.delayed(const Duration(seconds: 0), () {
       if (login) {
-        Scaffold.of(context).removeCurrentSnackBar();
-        Scaffold.of(context).showSnackBar(jwSnackBar(true, "获取教务数据...", 6));
+         ScaffoldMessenger.of(context).removeCurrentSnackBar();
+         ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(true, "获取数据...", 6));
       }
     });
     return Container(
-      color: Colors.white,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [readColor(),readColor(),Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent],
+            stops: [0,.5,.50001,.6,.61,1]
+        ),
+      ),
       margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
       child: CustomScrollView(
         physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
@@ -90,7 +98,7 @@ class _QueryExamBodyState extends State<QueryExamBody> {
               "我的考试",
               InkWell(
                 child: const Icon(
-                  Icons.close_outlined,
+                  FlutterRemix.close_line,
                   size: 24,
                   color: Colors.white,
                 ),
@@ -105,7 +113,7 @@ class _QueryExamBodyState extends State<QueryExamBody> {
             child: Container(
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
               color: readColor(),
-              margin: const EdgeInsets.fromLTRB(0, 0, 0, 16),
+              margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
               child: Row(
                 children: [
                   Expanded(

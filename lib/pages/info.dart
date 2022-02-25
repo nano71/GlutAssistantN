@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_remix/flutter_remix.dart';
 import 'package:glutassistantn/widget/bars.dart';
 
 class InfoPage extends StatefulWidget {
@@ -25,7 +26,7 @@ class _InfoPageState extends State<InfoPage> {
             publicTopBar(
               "说明",
               InkWell(
-                child: const Icon(Icons.close_outlined, size: 24),
+                child: const Icon(FlutterRemix.close_line, size: 24),
                 onTap: () {
                   Navigator.of(context).pop();
                 },
@@ -132,9 +133,9 @@ class _InfoPageState extends State<InfoPage> {
                                         onPressed: () {
                                           Clipboard.setData(
                                               const ClipboardData(text: "1742968988"));
-                                          Scaffold.of(context).removeCurrentSnackBar();
-                                          Scaffold.of(context)
-                                              .showSnackBar(jwSnackBar(true, "已复制到剪切板"));
+                                          ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(jwSnackBar(true, "复制成功!"));
                                         },
                                         child: const Text(
                                           "1742968988",
@@ -155,9 +156,9 @@ class _InfoPageState extends State<InfoPage> {
                                     return TextButton(
                                       onPressed: () {
                                         Clipboard.setData(const ClipboardData(text: "13520944872"));
-                                        Scaffold.of(context).removeCurrentSnackBar();
+                                        ScaffoldMessenger.of(context).removeCurrentSnackBar();
                                         Scaffold.of(context)
-                                            .showSnackBar(jwSnackBar(true, "已复制到剪切板"));
+                                            .showSnackBar(jwSnackBar(true, "复制成功!"));
                                       },
                                       child: const Text(
                                         "13520944872",

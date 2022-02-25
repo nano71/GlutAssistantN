@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_remix/flutter_remix.dart';
 import 'package:glutassistantn/common/cookie.dart';
 import 'package:glutassistantn/common/get.dart';
 import 'package:glutassistantn/common/init.dart';
@@ -33,7 +34,7 @@ class LoginPageState extends State<LoginPage> {
   Color messageColor = Colors.grey;
   Uint8List _codeImgSrc = const Base64Decoder().convert(
       "iVBORw0KGgoAAAANSUhEUgAAAEgAAAAeCAYAAACPOlitAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAHYcAAB2HAY/l8WUAAABYSURBVGhD7dChAcAgEMDAb/ffGSpqIQvcmfg86zMcvX85MCgYFAwKBgWDgkHBoGBQMCgYFAwKBgWDgkHBoGBQMCgYFAwKBgWDgkHBoGBQMCgYFAwKBl3NbAiZBDiX3e/AAAAAAElFTkSuQmCC");
-  String buttonTitle = "登录";
+  String buttonTitle = "即刻登录";
   bool logged = false;
 
   FocusNode? studentIdFocusNode = FocusNode();
@@ -98,7 +99,7 @@ class LoginPageState extends State<LoginPage> {
       } else {
         setState(() {
           messageColor = Colors.red;
-          message = "验证码错误";
+          message = "验证码错误!";
           buttonTitle = "请检查后再试一次";
         });
       }
@@ -183,7 +184,7 @@ class LoginPageState extends State<LoginPage> {
             publicTopBar(
                 "桂工助手N",
                 InkWell(
-                  child: const Icon(Icons.close_outlined, size: 24),
+                  child: const Icon(FlutterRemix.close_line, size: 24),
                   onTap: () {
                     Navigator.of(context).pop();
                   },
@@ -227,7 +228,7 @@ class LoginPageState extends State<LoginPage> {
                         controller: studentIdController,
                         decoration: InputDecoration(
                           icon: Icon(
-                            Icons.perm_identity,
+                            FlutterRemix.user_3_line,
                             color: studentIdFocusNode!.hasFocus ? readColor() : null,
                           ),
                           border: InputBorder.none,
@@ -255,7 +256,7 @@ class LoginPageState extends State<LoginPage> {
                         controller: passwordController,
                         decoration: InputDecoration(
                           icon: Icon(
-                            Icons.vpn_key_outlined,
+                            FlutterRemix.key_line,
                             color: passwordFocusNode!.hasFocus ? readColor() : null,
                           ),
                           border: InputBorder.none,
@@ -279,7 +280,7 @@ class LoginPageState extends State<LoginPage> {
                               controller: checkCodeController,
                               decoration: InputDecoration(
                                 icon: Icon(
-                                  Icons.code_outlined,
+                                  FlutterRemix.magic_line,
                                   color: checkCodeFocusNode!.hasFocus ? readColor() : null,
                                 ),
                                 border: InputBorder.none,
@@ -314,7 +315,7 @@ class LoginPageState extends State<LoginPage> {
                                 return readColor();
                               }),
                               shape: MaterialStateProperty.all(
-                                  RoundedRectangleBorder(borderRadius: BorderRadius.circular(25))),
+                                  RoundedRectangleBorder(borderRadius: BorderRadius.circular(28))),
                             ),
                             child: Text(
                               buttonTitle,

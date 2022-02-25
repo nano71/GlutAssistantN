@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_remix/flutter_remix.dart';
 import 'package:glutassistantn/widget/bars.dart';
 
 import '../config.dart';
@@ -33,7 +34,7 @@ class _ScheduleManagePageState extends State<ScheduleManagePage> {
             publicTopBar(
               "课程管理",
               InkWell(
-                child: const Icon(Icons.close_outlined, size: 24),
+                child: const Icon(FlutterRemix.close_line, size: 24),
                 onTap: () {
                   Navigator.of(context).pop();
                 },

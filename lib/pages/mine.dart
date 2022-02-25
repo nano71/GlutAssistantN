@@ -1,6 +1,7 @@
 import 'package:badges/badges.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_remix/flutter_remix.dart';
 import 'package:glutassistantn/pages/career.dart';
 import 'package:glutassistantn/pages/setting.dart';
 import 'package:glutassistantn/pages/update.dart';
@@ -65,7 +66,7 @@ class MinePageState extends State<MinePage> {
                       );
                     },
                     child: mineItem(
-                      Icons.account_box_outlined,
+                      FlutterRemix.user_5_line,
                       const EdgeInsets.fromLTRB(16, 14, 0, 14),
                       (writeData["name"] != "" ? "更换账号" : "登录教务"),
                       readColor(),
@@ -81,7 +82,7 @@ class MinePageState extends State<MinePage> {
                             .push(MaterialPageRoute(builder: (context) => const CareerPage()));
                       }
                     },
-                    child: mineItem(Icons.workspaces_outline,
+                    child: mineItem(FlutterRemix.timer_flash_line,
                         const EdgeInsets.fromLTRB(16, 14, 0, 14), "课程生涯", readColor()),
                   ),
                   topLine,
@@ -93,9 +94,9 @@ class MinePageState extends State<MinePage> {
                           .push(MaterialPageRoute(builder: (context) => const UpdatePage()));
                     },
                     child: newVersion
-                        ? mineItem5(Icons.system_update_alt,
+                        ? mineItem5(FlutterRemix.download_cloud_2_line,
                             const EdgeInsets.fromLTRB(16, 14, 0, 14), "版本更新", readColor())
-                        : mineItem(Icons.system_update_alt,
+                        : mineItem(FlutterRemix.download_cloud_2_line,
                             const EdgeInsets.fromLTRB(16, 14, 0, 14), "版本更新", readColor()),
                   ),
                   InkWell(
@@ -103,7 +104,7 @@ class MinePageState extends State<MinePage> {
                       Navigator.of(context)
                           .push(MaterialPageRoute(builder: (context) => const InfoPage()));
                     },
-                    child: mineItem(Icons.info_outline, const EdgeInsets.fromLTRB(16, 14, 0, 14),
+                    child: mineItem(FlutterRemix.information_line, const EdgeInsets.fromLTRB(16, 14, 0, 14),
                         "说明", readColor()),
                   ),
                   InkWell(
@@ -111,7 +112,7 @@ class MinePageState extends State<MinePage> {
                       Navigator.of(context).push(
                           MaterialPageRoute(builder: (context) => const SettingPage(title: "设置2")));
                     },
-                    child: mineItem(Icons.settings_outlined,
+                    child: mineItem(FlutterRemix.settings_line,
                         const EdgeInsets.fromLTRB(16, 14, 0, 14), "设置", readColor()),
                   ),
                 ],

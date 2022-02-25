@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_remix/flutter_remix.dart';
 import 'package:glutassistantn/common/get.dart';
 import 'package:glutassistantn/common/style.dart';
 import 'package:glutassistantn/widget/bars.dart';
@@ -12,23 +14,34 @@ import '../data.dart';
 
 class CareerPage extends StatefulWidget {
   final int type;
+
   const CareerPage({Key? key, this.type = 0}) : super(key: key);
+
   @override
   State<CareerPage> createState() => _CareerPageState(type: this.type);
 }
 
 class _CareerPageState extends State<CareerPage> {
   final int type;
+
   _CareerPageState({this.type = 0});
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(backgroundColor: Colors.white, body: CareerPageBody(type: type,));
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: CareerPageBody(
+        type: type,
+      ),
+    );
   }
 }
 
 class CareerPageBody extends StatefulWidget {
   final int type;
+
   const CareerPageBody({Key? key, required this.type}) : super(key: key);
+
   @override
   State<StatefulWidget> createState() => _CareerPageBodyState(type: this.type);
 }
@@ -36,7 +49,7 @@ class CareerPageBody extends StatefulWidget {
 class _CareerPageBodyState extends State<CareerPageBody> {
   final int type;
 
-  _CareerPageBodyState({required this.type });
+  _CareerPageBodyState({required this.type});
 
   bool login = true;
   late StreamSubscription<CareerRe> eventBusFn;
@@ -52,9 +65,9 @@ class _CareerPageBodyState extends State<CareerPageBody> {
     print("type:");
     print(type);
     eventBusFn = pageBus.on<CareerRe>().listen((event) {
-      Scaffold.of(context).removeCurrentSnackBar();
-      Scaffold.of(context)
-          .showSnackBar(jwSnackBar(true, "获取教务数据(可能需要半分钟)...", Global.timeOutSec * 2));
+      ScaffoldMessenger.of(context).removeCurrentSnackBar();
+      ScaffoldMessenger.of(context)
+          .showSnackBar(jwSnackBar(true, "获取数据...", Global.timeOutSec * 2));
       getCareer().then((value) => process(value));
     });
     getCareer().then((value) => process(value));
@@ -63,11 +76,11 @@ class _CareerPageBodyState extends State<CareerPageBody> {
   process(String value) {
     if (value == "success") {
       login = false;
-      Scaffold.of(context).removeCurrentSnackBar();
-      Scaffold.of(context).showSnackBar(jwSnackBar(true, "处理返回数据...", Global.timeOutSec));
+      ScaffoldMessenger.of(context).removeCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(true, "处理数据...", Global.timeOutSec));
       setState(() {});
-      Scaffold.of(context).removeCurrentSnackBar();
-      Scaffold.of(context).showSnackBar(jwSnackBar(true, "数据已经更新", 1));
+      ScaffoldMessenger.of(context).removeCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(true, "数据已更新!", 1));
       examAllNumber = 0;
       careerNumber = 0;
       careerJobNumber = 0;
@@ -86,8 +99,8 @@ class _CareerPageBodyState extends State<CareerPageBody> {
 
       _weekProgressAnimation();
     } else if (value == "fail") {
-      Scaffold.of(context).removeCurrentSnackBar();
-      Scaffold.of(context).showSnackBar(jwSnackBarActionQ3(
+      ScaffoldMessenger.of(context).removeCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(jwSnackBarActionQ3(
         false,
         "需要验证",
         context,
@@ -95,8 +108,8 @@ class _CareerPageBodyState extends State<CareerPageBody> {
       ));
     } else {
       print(value);
-      Scaffold.of(context).removeCurrentSnackBar();
-      Scaffold.of(context).showSnackBar(jwSnackBar(false, value, 4));
+      ScaffoldMessenger.of(context).removeCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(false, value, 4));
     }
   }
 
@@ -144,9 +157,9 @@ class _CareerPageBodyState extends State<CareerPageBody> {
   Widget build(BuildContext context) {
     Future.delayed(const Duration(seconds: 0), () {
       if (login) {
-        Scaffold.of(context).removeCurrentSnackBar();
-        Scaffold.of(context)
-            .showSnackBar(jwSnackBar(true, "获取教务数据(可能需要半分钟)...", Global.timeOutSec * 2));
+        ScaffoldMessenger.of(context).removeCurrentSnackBar();
+        ScaffoldMessenger.of(context)
+            .showSnackBar(jwSnackBar(true, "获取数据...", Global.timeOutSec * 2));
       }
     });
     return Container(
@@ -158,7 +171,7 @@ class _CareerPageBodyState extends State<CareerPageBody> {
           publicTopBar(
             "我的大学生涯",
             InkWell(
-              child: const Icon(Icons.close_outlined, size: 24),
+              child: const Icon(FlutterRemix.close_line, size: 24),
               onTap: () {
                 if (type == 0) {
                   Navigator.of(context).pop();
@@ -170,57 +183,57 @@ class _CareerPageBodyState extends State<CareerPageBody> {
           ),
           SliverToBoxAdapter(
             child: Container(
-              // margin: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-              // padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
-              // decoration: BoxDecoration(
-              //     borderRadius: const BorderRadius.all(Radius.circular(6.0)), color: readColor()),
-              // child: Row(
-              //   children: [
-              //     Container(
-              //       decoration: BoxDecoration(
-              //           borderRadius: const BorderRadius.all(Radius.circular(6.0)),
-              //           color: readColor()),
-              //       margin: const EdgeInsets.fromLTRB(16, 0, 0, 0),
-              //       padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
-              //       child: Icon(
-              //         Icons.mood,
-              //         size: 64,
-              //         color: Colors.white,
-              //       ),
-              //     ),
-              //     Expanded(
-              //         child: Container(
-              //       margin: const EdgeInsets.fromLTRB(0, 0, 16, 0),
-              //       padding: const EdgeInsets.fromLTRB(8, 12, 8, 0),
-              //       height: 80,
-              //       decoration: BoxDecoration(
-              //         borderRadius: const BorderRadius.all(Radius.circular(6.0)),
-              //       ),
-              //       child: Column(
-              //         crossAxisAlignment: CrossAxisAlignment.start,
-              //         children: [
-              //           Text(
-              //             writeData["name"],
-              //           ),
-              //           Text(
-              //             careerInfo[1],
-              //           ),
-              //           Text(
-              //             careerInfo[2] + "  " + careerInfo[4],
-              //           ),
-              //         ],
-              //       ),
-              //     )),
-              //   ],
-              // ),
-            ),
+                // margin: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                // padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
+                // decoration: BoxDecoration(
+                //     borderRadius: const BorderRadius.all(Radius.circular(12.0)), color: readColor()),
+                // child: Row(
+                //   children: [
+                //     Container(
+                //       decoration: BoxDecoration(
+                //           borderRadius: const BorderRadius.all(Radius.circular(12.0)),
+                //           color: readColor()),
+                //       margin: const EdgeInsets.fromLTRB(16, 0, 0, 0),
+                //       padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
+                //       child: Icon(
+                //         FlutterRemix.checkbox_circle_line,
+                //         size: 64,
+                //         color: Colors.white,
+                //       ),
+                //     ),
+                //     Expanded(
+                //         child: Container(
+                //       margin: const EdgeInsets.fromLTRB(0, 0, 16, 0),
+                //       padding: const EdgeInsets.fromLTRB(8, 12, 8, 0),
+                //       height: 80,
+                //       decoration: BoxDecoration(
+                //         borderRadius: const BorderRadius.all(Radius.circular(12.0)),
+                //       ),
+                //       child: Column(
+                //         crossAxisAlignment: CrossAxisAlignment.start,
+                //         children: [
+                //           Text(
+                //             writeData["name"],
+                //           ),
+                //           Text(
+                //             careerInfo[1],
+                //           ),
+                //           Text(
+                //             careerInfo[2] + "  " + careerInfo[4],
+                //           ),
+                //         ],
+                //       ),
+                //     )),
+                //   ],
+                // ),
+                ),
           ),
           SliverToBoxAdapter(
             child: Container(
               margin: const EdgeInsets.fromLTRB(16, 16, 16, 16),
-              padding: const EdgeInsets.fromLTRB(32, 16, 32, 16),
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
               decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.all(Radius.circular(6.0)), color: readColor()),
+                  borderRadius: const BorderRadius.all(Radius.circular(12.0)), color: readColor()),
               child: Column(
                 children: [
                   Row(
@@ -235,56 +248,84 @@ class _CareerPageBodyState extends State<CareerPageBody> {
                             decoration: BoxDecoration(
                               border: Border(
                                 left: BorderSide(
-                                  width: 4, //宽度
+                                  width: 3.5, //宽度
                                   color: Colors.white, //边框颜色
                                 ),
                               ),
                             ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                Text("课程总计", style: TextStyle(color: Colors.white)),
-                                Row(
+                                Container(
+                                  margin: EdgeInsets.only(right: 8),
+                                  // decoration: BoxDecoration(
+                                  //   border: Border(
+                                  //     bottom: BorderSide(
+                                  //       width: 0, //宽度
+                                  //       color: Colors.white, //边框颜色
+                                  //     ),
+                                  //   ),
+                                  // ),
+                                  child: Text(
+                                    careerNumber.toString() + "",
+                                    style: TextStyle(
+                                        fontSize: 38,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w100),
+                                  ),
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
+                                    Text("全部课程总计", style: TextStyle(color: Colors.white)),
                                     Text("预估", style: TextStyle(color: Colors.white)),
-                                    Text(
-                                      careerNumber.toString(),
-                                      style: TextStyle(fontSize: 24, color: Colors.white),
-                                    ),
-                                    Text("门", style: TextStyle(color: Colors.white))
                                   ],
-                                )
+                                ),
                               ],
                             ),
                           ),
                           SizedBox(
                             //限制进度条的高度
-                            height: 20,
+                            height: 10,
                           ),
                           Container(
                             padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
                             decoration: BoxDecoration(
                               border: Border(
                                 left: BorderSide(
-                                  width: 4, //宽度
+                                  width: 3.5, //宽度
                                   color: Colors.white, //边框颜色
                                 ),
                               ),
                             ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                Text("专业课程", style: TextStyle(color: Colors.white)),
-                                Row(
+                                Container(
+                                  margin: EdgeInsets.only(right: 8),
+                                  // decoration: BoxDecoration(
+                                  //   border: Border(
+                                  //     bottom: BorderSide(
+                                  //       width: 3.5, //宽度
+                                  //       color: Colors.white, //边框颜色
+                                  //     ),
+                                  //   ),
+                                  // ),
+                                  child: Text(
+                                    careerJobNumber.toString() + "",
+                                    style: TextStyle(
+                                        fontSize: 38,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w100),
+                                  ),
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
+                                    Text("全部专业课程", style: TextStyle(color: Colors.white)),
                                     Text("预估", style: TextStyle(color: Colors.white)),
-                                    Text(
-                                      careerJobNumber.toString(),
-                                      style: TextStyle(fontSize: 24, color: Colors.white),
-                                    ),
-                                    Text("门", style: TextStyle(color: Colors.white))
                                   ],
-                                )
+                                ),
                               ],
                             ),
                           ),
@@ -321,12 +362,13 @@ class _CareerPageBodyState extends State<CareerPageBody> {
                     ],
                   ),
                   Container(
-                    margin: const EdgeInsets.fromLTRB(0, 16, 0, 16),
+                    height: 0.5,
+                    margin: const EdgeInsets.fromLTRB(0, 18, 0, 12),
                     decoration: BoxDecoration(
                       border: Border(
                         bottom: BorderSide(
                           width: 0.5, //宽度
-                          color: Colors.white, //边框颜色
+                          color: Colors.white60, //边框颜色
                         ),
                       ),
                     ),
@@ -340,7 +382,7 @@ class _CareerPageBodyState extends State<CareerPageBody> {
                           Container(
                             margin: const EdgeInsets.fromLTRB(0, 4, 0, 4),
                             child: SizedBox(
-                              height: 8,
+                              height: 3.5,
                               width: 50,
                               child: LinearProgressIndicator(
                                 color: Colors.white,
@@ -360,7 +402,7 @@ class _CareerPageBodyState extends State<CareerPageBody> {
                           Container(
                             margin: const EdgeInsets.fromLTRB(0, 4, 0, 4),
                             child: SizedBox(
-                              height: 8,
+                              height: 3.5,
                               width: 50,
                               child: LinearProgressIndicator(
                                 color: Colors.white,
@@ -380,7 +422,7 @@ class _CareerPageBodyState extends State<CareerPageBody> {
                           Container(
                             margin: const EdgeInsets.fromLTRB(0, 4, 0, 4),
                             child: SizedBox(
-                              height: 8,
+                              height: 3.5,
                               width: 50,
                               child: LinearProgressIndicator(
                                 color: Colors.white,
@@ -544,6 +586,9 @@ careerDialog(context, index, type, year) {
     builder: (BuildContext context) {
       return NoRippleOverScroll(
         child: SimpleDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12.0),
+          ),
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -558,7 +603,7 @@ careerDialog(context, index, type, year) {
                 ],
               ),
               InkWell(
-                child: const Icon(Icons.close_outlined, size: 32),
+                child: const Icon(FlutterRemix.close_line, size: 32),
                 onTap: () {
                   Navigator.of(context).pop();
                 },
@@ -647,9 +692,9 @@ class CircularProgressDynamicStateForCareer extends State<CircularProgressDynami
   @override
   Widget build(BuildContext context) {
     return CircularProgressIndicator(
-      strokeWidth: 16,
+      strokeWidth: 3.5,
       value: _value,
-      backgroundColor: const Color.fromARGB(128, 255, 255, 255),
+      backgroundColor: const Color.fromARGB(48, 255, 255, 255),
       valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
     );
   }
