@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_remix/flutter_remix.dart';
 
 import '../config.dart';
 import '../data.dart';
@@ -70,7 +71,7 @@ class HomeCardState extends State<HomeCard> with AutomaticKeepAliveClientMixin {
     return Container(
       height: 100,
       decoration: BoxDecoration(
-        borderRadius: const BorderRadius.all(Radius.circular(6.0)),
+        borderRadius: const BorderRadius.all(Radius.circular(12.0)),
         // color: Global.homeCardsColor,
         gradient: readGradient(),
       ),
@@ -172,12 +173,12 @@ Widget homeCard3 = Stack(
 
 class HomeCardsState {
   static double iconSize = 36;
-  static List icons = [Icons.refresh, Icons.saved_search_outlined, Icons.library_books_sharp];
+  static List icons = [FlutterRemix.restart_line, FlutterRemix.search_eye_line, FlutterRemix.file_list_3_line];
   static List iconTexts = ["课表刷新", "成绩查询", "我的考试"];
   static EdgeInsetsGeometry textMargin = const EdgeInsets.fromLTRB(0, 44, 0, 0);
   static EdgeInsetsGeometry iconMargin = const EdgeInsets.fromLTRB(0, 0, 0, 32);
   static Decoration? cardDecoration = const BoxDecoration(
-    borderRadius: BorderRadius.all(Radius.circular(6.0)),
+    borderRadius: BorderRadius.all(Radius.circular(12.0)),
     color: Color.fromARGB(42, 199, 229, 253),
   );
   static double width = double.infinity;
@@ -197,9 +198,9 @@ class CircularProgressDynamicState extends State<CircularProgressDynamic> {
   @override
   Widget build(BuildContext context) {
     return CircularProgressIndicator(
-      strokeWidth: 8,
+      strokeWidth: 3.5,
       value: _value,
-      backgroundColor: const Color.fromARGB(128, 255, 255, 255),
+      backgroundColor: const Color.fromARGB(48, 255, 255, 255),
       valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
     );
   }
@@ -221,7 +222,8 @@ class TextProgressDynamicState extends State<TextProgressDynamic> {
 
   @override
   Widget build(BuildContext context) {
-    return Text((_value.toString() + "%"), style: const TextStyle(color: Colors.white));
+    return Text((_value < 10 ? "0" + _value.toString() + "%" : _value.toString() + "%"),
+        style: const TextStyle(color: Colors.white));
   }
 
   void onPressed(int value) {

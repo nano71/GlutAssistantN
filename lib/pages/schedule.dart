@@ -41,14 +41,22 @@ List<Widget> _loopRowHeader(bool nowWeek) {
     if (i == 0) {
       list.add(const SizedBox(width: 20));
     } else {
-      list.add(Expanded(
-          child: Center(
+      list.add(
+        Expanded(
+          child: Container(
+            height: 30,
+            child: Center(
               child: Text(
-        "周${_weekDayList[i - 1]}",
-        style: TextStyle(
-            color:
-                nowWeek ? (i == DateTime.now().weekday ? readColor() : Colors.grey) : Colors.grey),
-      ))));
+                "周${_weekDayList[i - 1]}",
+                style: TextStyle(
+                    color: nowWeek
+                        ? (i == DateTime.now().weekday ? readColor() : Colors.grey)
+                        : Colors.grey),
+              ),
+            ),
+          ),
+        ),
+      );
     }
   }
   return list;
@@ -59,15 +67,15 @@ Widget _leftGrid(String title) {
     width: 20,
     height: Global.schedulePageGridHeight,
     alignment: Alignment.center,
-    decoration: const BoxDecoration(
+    decoration: BoxDecoration(
       color: Colors.white,
       border: Border(
           top: BorderSide(
-            width: 0.75, //宽度
-            color: Color(0xfff9f9f9), //边框颜色
+            width: 0.5, //宽度
+            color: title != "1" ? Color(0xfff9f9f9) : Colors.white, //边框颜色
           ),
           right: BorderSide(
-            width: 0.75, //宽度
+            width: 0.5, //宽度
             color: Color(0xfff9f9f9), //边框颜色
           )),
     ),
@@ -117,8 +125,8 @@ class SchedulePageState extends State<SchedulePage> with AutomaticKeepAliveClien
   }
 
   void _warning1() {
-    Scaffold.of(context).removeCurrentSnackBar();
-    Scaffold.of(context).showSnackBar(jwSnackBar(false, "别翻了,已经没了...", 1));
+    ScaffoldMessenger.of(context).removeCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(false, "已经没了!", 1));
   }
 
   void _touchListen(double eX, double eY) {
@@ -164,7 +172,6 @@ class SchedulePageState extends State<SchedulePage> with AutomaticKeepAliveClien
     super.dispose();
   }
 
-  @override
   Widget build(BuildContext context) {
     return Container(
       color: Colors.white,
@@ -289,6 +296,7 @@ Widget _grid(int index, int index2, String title, String studyArea, String teach
       if (index != 0) {
         print(index2);
         print(index);
+
       }
     },
     child: Container(
@@ -296,23 +304,24 @@ Widget _grid(int index, int index2, String title, String studyArea, String teach
         decoration: BoxDecoration(
           color: color,
           border: Border(
-              top: BorderSide(
-                width: 1, //宽度
-                color: Colors.white, //边框颜色
-              ),
-              right: BorderSide(
-                width: 1, //宽度
-                color: Colors.white, //边框颜色
-              ),
-              bottom: BorderSide(
-                width: 1, //宽度
-                color: Colors.white, //边框颜色
-              ),
-              left: BorderSide(
-                width: 1, //宽度
-                color: Colors.white, //边框颜色
-              )),
-          borderRadius: const BorderRadius.all(Radius.circular(4.0)),
+            top: BorderSide(
+              width: 1, //宽度
+              color: Colors.white, //边框颜色
+            ),
+            right: BorderSide(
+              width: 1, //宽度
+              color: Colors.white, //边框颜色
+            ),
+            bottom: BorderSide(
+              width: 1, //宽度
+              color: Colors.white, //边框颜色
+            ),
+            left: BorderSide(
+              width: 1, //宽度
+              color: Colors.white, //边框颜色
+            ),
+          ),
+          borderRadius: const BorderRadius.all(Radius.circular(6.0)),
         ),
         padding: const EdgeInsets.only(left: 5, right: 5, top: 5, bottom: 5),
         alignment: Alignment.center,

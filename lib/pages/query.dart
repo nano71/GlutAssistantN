@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_remix/flutter_remix.dart';
 import 'package:glutassistantn/common/get.dart';
 import 'package:glutassistantn/pages/setting.dart';
 import 'package:glutassistantn/widget/bars.dart';
@@ -46,11 +47,11 @@ class _QueryBodyState extends State<QueryBody> {
     eventBusFn = pageBus.on<QueryScoreRe>().listen((event) async {
       _next(List list) {
         if (list.length == 0) {
-          Scaffold.of(context).removeCurrentSnackBar();
-          Scaffold.of(context).showSnackBar(jwSnackBar(true, "无结果...", 5));
+          ScaffoldMessenger.of(context).removeCurrentSnackBar();
+          ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(true, "没有结果!", 5));
         } else {
-          Scaffold.of(context).removeCurrentSnackBar();
-          Scaffold.of(context).showSnackBar(jwSnackBar(true, "数据已经更新...", 1));
+          ScaffoldMessenger.of(context).removeCurrentSnackBar();
+          ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(true, "数据已更新!", 1));
 
           queryScore = list;
           double sum = 0.0;
@@ -109,8 +110,8 @@ class _QueryBodyState extends State<QueryBody> {
     _next(List list) {
       print(list);
       if (list.length == 1 && list[0] == "登录过期") {
-        Scaffold.of(context).removeCurrentSnackBar();
-        Scaffold.of(context).showSnackBar(jwSnackBarActionQ(
+        ScaffoldMessenger.of(context).removeCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(jwSnackBarActionQ(
           false,
           "需要验证",
           context,
@@ -118,14 +119,14 @@ class _QueryBodyState extends State<QueryBody> {
         ));
       } else if (list.length == 1 &&
           (list[0] == Global.socketError || list[0] == Global.timeOutError)) {
-        Scaffold.of(context).removeCurrentSnackBar();
-        Scaffold.of(context).showSnackBar(jwSnackBar(false, list[0], 4));
+        ScaffoldMessenger.of(context).removeCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(false, list[0], 4));
       } else if (list.length == 0) {
-        Scaffold.of(context).removeCurrentSnackBar();
-        Scaffold.of(context).showSnackBar(jwSnackBar(true, "无结果...", 5));
+        ScaffoldMessenger.of(context).removeCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(true, "没有结果!", 5));
       } else {
-        Scaffold.of(context).removeCurrentSnackBar();
-        Scaffold.of(context).showSnackBar(jwSnackBar(true, "数据已经更新...", 1));
+        ScaffoldMessenger.of(context).removeCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(true, "数据已更新!", 1));
         queryScore = list;
         double sum = 0.0;
         double _q = 0.0;
@@ -181,16 +182,16 @@ class _QueryBodyState extends State<QueryBody> {
 
     print(writeData["username"]);
     if (writeData["username"] == "") {
-      Scaffold.of(context).removeCurrentSnackBar();
-      Scaffold.of(context).showSnackBar(jwSnackBarActionL(
+      ScaffoldMessenger.of(context).removeCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(jwSnackBarActionL(
         false,
-        "请先登录",
+        "请先登录!",
         context,
         10,
       ));
     } else {
-      Scaffold.of(context).removeCurrentSnackBar();
-      Scaffold.of(context).showSnackBar(jwSnackBar(true, "查询中...", 10));
+      ScaffoldMessenger.of(context).removeCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(true, "查询中...", 10));
       await getScore().then((value) => _next(value));
     }
   }
@@ -199,8 +200,16 @@ class _QueryBodyState extends State<QueryBody> {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Container(
-      color: Colors.white,
+      // color: readColor(),
       margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [readColor(),readColor(),Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent],
+            stops: [0,.5,.50001,.6,.61,1]
+        ),
+      ),
       child: CustomScrollView(
         physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
         slivers: [
@@ -208,7 +217,7 @@ class _QueryBodyState extends State<QueryBody> {
               "成绩查询",
               InkWell(
                 child: const Icon(
-                  Icons.close_outlined,
+                  FlutterRemix.close_line,
                   size: 24,
                   color: Colors.white,
                 ),
@@ -223,7 +232,7 @@ class _QueryBodyState extends State<QueryBody> {
             child: Container(
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
               color: readColor(),
-              margin: const EdgeInsets.fromLTRB(0, 0, 0, 16),
+              margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
               child: Column(
                 children: [
                   Row(
@@ -323,7 +332,7 @@ class _QueryBodyState extends State<QueryBody> {
               ),
             ),
           ),
-          ScoreList()
+          ScoreList(),
         ],
       ),
     );

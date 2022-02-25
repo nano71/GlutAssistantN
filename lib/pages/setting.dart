@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_remix/flutter_remix.dart';
 import 'package:glutassistantn/common/init.dart';
 import 'package:glutassistantn/common/io.dart';
 import 'package:glutassistantn/common/style.dart';
@@ -52,7 +53,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
             publicTopBar(
               "设置",
               InkWell(
-                child: const Icon(Icons.close_outlined, size: 24),
+                child: const Icon(FlutterRemix.close_line, size: 24),
                 onTap: () {
                   Navigator.of(context).pop();
                 },
@@ -71,7 +72,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                         Row(
                           children: [
                             Icon(
-                              Icons.date_range_outlined,
+                              FlutterRemix.calendar_line,
                               color: readColor(),
                             ),
                             Container(
@@ -114,7 +115,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                         Row(
                           children: [
                             Icon(
-                              Icons.toys_outlined,
+                              FlutterRemix.mickey_line,
                               color: readColor(),
                             ),
                             Container(
@@ -161,7 +162,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                         Row(
                           children: [
                             Icon(
-                              Icons.view_week,
+                              FlutterRemix.game_line,
                               color: readColor(),
                             ),
                             Container(
@@ -208,7 +209,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                         Row(
                           children: [
                             Icon(
-                              !focusNodeType ? Icons.color_lens_outlined : Icons.edit_outlined,
+                              !focusNodeType ? FlutterRemix.palette_line : Icons.edit_outlined,
                               color: readColor(),
                             ),
                             Container(
@@ -339,7 +340,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                                   child: Text(
                                     "不限",
                                   ),
-                                  value: "9999999999"),
+                                  value: "-1"),
                             ],
                             underline: Container(height: 0),
                             onChanged: (value) {
@@ -357,7 +358,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                         Navigator.of(context).push(
                             MaterialPageRoute(builder: (context) => const ScheduleManagePage()));
                       },
-                      child: mineItem(Icons.grid_view_outlined,
+                      child: mineItem(FlutterRemix.edit_box_line,
                           const EdgeInsets.fromLTRB(16, 14, 0, 14), "课程管理", readColor()),
                     ),
                     InkWell(

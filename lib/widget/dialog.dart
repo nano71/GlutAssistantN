@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_remix/flutter_remix.dart';
 import 'package:glutassistantn/common/cookie.dart';
 import 'package:glutassistantn/common/get.dart';
 import 'package:glutassistantn/common/login.dart';
@@ -53,8 +54,8 @@ codeCheckDialog(BuildContext context) async {
         await login(writeData["username"], writeData["password"], textFieldController.text)
             .then((String value) => _next2(value));
       } else {
-        Scaffold.of(context).removeCurrentSnackBar();
-        Scaffold.of(context).showSnackBar(jwSnackBar(false, "验证码错误"));
+         ScaffoldMessenger.of(context).removeCurrentSnackBar();
+         ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(false, "验证码错误!"));
         fn(() {
           clicked = !clicked;
         });
@@ -76,6 +77,9 @@ codeCheckDialog(BuildContext context) async {
       return StatefulBuilder(
         builder: (context, setState) {
           return SimpleDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12.0),
+            ),
             title: Text('提示'),
             children: <Widget>[
               Container(
@@ -97,7 +101,7 @@ codeCheckDialog(BuildContext context) async {
                         controller: textFieldController,
                         decoration: InputDecoration(
                           icon: Icon(
-                            Icons.code_outlined,
+                            FlutterRemix.magic_line,
                             color: readColor(),
                           ),
                           border: InputBorder.none,
@@ -170,13 +174,13 @@ codeCheckDialogQ(BuildContext context) async {
   void _codeCheck(Function fn) async {
     Future<void> _next2(String value) async {
       if (value == "success") {
-        Scaffold.of(context).removeCurrentSnackBar();
-        // Scaffold.of(context).showSnackBar(jwSnackBar(true, "验证完成,请再次点击查询")),
+         ScaffoldMessenger.of(context).removeCurrentSnackBar();
+        //  ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(true, "验证完成,请再次点击查询")),
         pageBus.fire(QueryScoreRe(1));
         Navigator.pop(context);
       } else {
-        Scaffold.of(context).removeCurrentSnackBar();
-        Scaffold.of(context).showSnackBar(jwSnackBar(false, value, 4));
+         ScaffoldMessenger.of(context).removeCurrentSnackBar();
+         ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(false, value, 4));
         Navigator.pop(context);
       }
     }
@@ -187,14 +191,14 @@ codeCheckDialogQ(BuildContext context) async {
         await login(writeData["username"], writeData["password"], textFieldController.text)
             .then((String value) => _next2(value));
       } else if (value == "fail") {
-        Scaffold.of(context).removeCurrentSnackBar();
-        Scaffold.of(context).showSnackBar(jwSnackBar(false, "验证码错误"));
+         ScaffoldMessenger.of(context).removeCurrentSnackBar();
+         ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(false, "验证码错误!"));
         fn(() {
           clicked = !clicked;
         });
       } else {
-        Scaffold.of(context).removeCurrentSnackBar();
-        Scaffold.of(context).showSnackBar(jwSnackBar(false, value, 4));
+         ScaffoldMessenger.of(context).removeCurrentSnackBar();
+         ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(false, value, 4));
         Navigator.pop(context);
       }
     }
@@ -214,6 +218,9 @@ codeCheckDialogQ(BuildContext context) async {
       return StatefulBuilder(
         builder: (context, setState) {
           return SimpleDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12.0),
+            ),
             title: Text('提示'),
             children: <Widget>[
               Container(
@@ -235,7 +242,7 @@ codeCheckDialogQ(BuildContext context) async {
                         controller: textFieldController,
                         decoration: InputDecoration(
                           icon: Icon(
-                            Icons.code_outlined,
+                            FlutterRemix.magic_line,
                             color: readColor(),
                           ),
                           border: InputBorder.none,
@@ -307,8 +314,8 @@ codeCheckDialogQ2(BuildContext context) async {
   void _codeCheck(Function fn) async {
     Future<void> _next2(String value) async {
       if (value == "success") {
-        Scaffold.of(context).removeCurrentSnackBar();
-        // Scaffold.of(context).showSnackBar(jwSnackBar(true, "验证完成,请再次点击查询")),
+         ScaffoldMessenger.of(context).removeCurrentSnackBar();
+        //  ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(true, "验证完成,请再次点击查询")),
         pageBus.fire(QueryExamRe(1));
         Navigator.pop(context);
       }
@@ -320,14 +327,14 @@ codeCheckDialogQ2(BuildContext context) async {
         await login(writeData["username"], writeData["password"], textFieldController.text)
             .then((String value) => _next2(value));
       } else if (value == "fail") {
-        Scaffold.of(context).removeCurrentSnackBar();
-        Scaffold.of(context).showSnackBar(jwSnackBar(false, "验证码错误"));
+         ScaffoldMessenger.of(context).removeCurrentSnackBar();
+         ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(false, "验证码错误!"));
         fn(() {
           clicked = !clicked;
         });
       } else {
-        Scaffold.of(context).removeCurrentSnackBar();
-        Scaffold.of(context).showSnackBar(jwSnackBar(false, value, 4));
+         ScaffoldMessenger.of(context).removeCurrentSnackBar();
+         ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(false, value, 4));
         Navigator.pop(context);
       }
     }
@@ -347,6 +354,9 @@ codeCheckDialogQ2(BuildContext context) async {
       return StatefulBuilder(
         builder: (context, setState) {
           return SimpleDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12.0),
+            ),
             title: Text('提示'),
             children: <Widget>[
               Container(
@@ -368,7 +378,7 @@ codeCheckDialogQ2(BuildContext context) async {
                         controller: textFieldController,
                         decoration: InputDecoration(
                           icon: Icon(
-                            Icons.code_outlined,
+                            FlutterRemix.magic_line,
                             color: readColor(),
                           ),
                           border: InputBorder.none,
@@ -440,7 +450,7 @@ codeCheckDialogQ3(BuildContext context) async {
   void _codeCheck(Function fn) async {
     Future<void> _next2(String value) async {
       if (value == "success") {
-        Scaffold.of(context).removeCurrentSnackBar();
+         ScaffoldMessenger.of(context).removeCurrentSnackBar();
         pageBus.fire(CareerRe(1));
         Navigator.pop(context);
       }
@@ -451,14 +461,14 @@ codeCheckDialogQ3(BuildContext context) async {
         await login(writeData["username"], writeData["password"], textFieldController.text)
             .then((String value) => _next2(value));
       } else if (value == "fail") {
-        Scaffold.of(context).removeCurrentSnackBar();
-        Scaffold.of(context).showSnackBar(jwSnackBar(false, "验证码错误"));
+         ScaffoldMessenger.of(context).removeCurrentSnackBar();
+         ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(false, "验证码错误!"));
         fn(() {
           clicked = !clicked;
         });
       } else {
-        Scaffold.of(context).removeCurrentSnackBar();
-        Scaffold.of(context).showSnackBar(jwSnackBar(false, value, 4));
+         ScaffoldMessenger.of(context).removeCurrentSnackBar();
+         ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(false, value, 4));
         Navigator.pop(context);
       }
     }
@@ -478,6 +488,9 @@ codeCheckDialogQ3(BuildContext context) async {
       return StatefulBuilder(
         builder: (context, setState) {
           return SimpleDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12.0),
+            ),
             title: Text('提示'),
             children: <Widget>[
               Container(
@@ -499,7 +512,7 @@ codeCheckDialogQ3(BuildContext context) async {
                         controller: textFieldController,
                         decoration: InputDecoration(
                           icon: Icon(
-                            Icons.code_outlined,
+                            FlutterRemix.magic_line,
                             color: readColor(),
                           ),
                           border: InputBorder.none,

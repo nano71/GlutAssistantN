@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_remix/flutter_remix.dart';
 import 'package:glutassistantn/config.dart';
 
 import '../data.dart';
@@ -146,7 +147,8 @@ class TodayCourseListState extends State<TodayCourseList> {
         () {
           if (DateTime.now().second < 2) {
             sum++;
-            if (sum > (int.parse(writeData["threshold"]) * 2)) exit(0);
+            if (writeData["threshold"] != "-1") if (sum > (int.parse(writeData["threshold"]) * 2))
+              exit(0);
             print("$index : ${DateTime.now().second}");
             setState(() {
               timerS = !timerS;
@@ -185,12 +187,12 @@ class TodayCourseListItemState extends State<TodayCourseListItem> {
   IconData _icon(int index) {
     String result = _getStartTime(int.parse(todaySchedule[index][3]))[3];
     if (result == "before") {
-      return Icons.access_time;
+      return FlutterRemix.timer_2_line;
     } else {
       if (_timeText(index).contains("下课")) {
-        return Icons.menu_book;
+        return FlutterRemix.quill_pen_line;
       } else {
-        return Icons.check;
+        return FlutterRemix.medal_line;
       }
     }
   }
@@ -341,7 +343,7 @@ class TomorrowCourseListState extends State<TomorrowCourseList> {
           margin: const EdgeInsets.fromLTRB(0, 0, 0, 16),
           height: 50,
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(6.0)),
+            borderRadius: BorderRadius.all(Radius.circular(6.0)),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -351,7 +353,7 @@ class TomorrowCourseListState extends State<TomorrowCourseList> {
                   Container(
                     margin: const EdgeInsets.fromLTRB(0, 0, 8, 0),
                     child: Icon(
-                      Icons.attachment,
+                      FlutterRemix.loader_2_line,
                       color: (_tomorrowSchedule[index][3] == "1" && index == 0
                           ? Colors.orange[900]
                           : readColor()),
@@ -431,20 +433,33 @@ class ScoreListState extends State<ScoreList> {
           queryScore[0] == Global.timeOutError ||
           queryScore[0] == "登录过期") {
         return SliverList(
-          delegate: SliverChildBuilderDelegate((BuildContext context, int index) {}),
+          delegate: SliverChildBuilderDelegate(
+            (BuildContext context, int index) {},
+          ),
         );
       }
     }
-
+    if (queryScore.length == 0) {
+      return SliverList(
+        delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
+          return Container(
+            color: Colors.white,
+            height: 500,
+          );
+        }, childCount: 1),
+      );
+    }
     return SliverList(
       delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
         return Column(
           children: [
             Container(
-              margin: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+              color: Colors.white,
+              padding: EdgeInsets.fromLTRB(16, index == 0 ? 16 : 0, 16, 0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  //科目
                   Row(
                     children: [
                       Column(
@@ -466,6 +481,7 @@ class ScoreListState extends State<ScoreList> {
                       ),
                     ],
                   ),
+                  //成绩
                   Container(
                     padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
                     margin: const EdgeInsets.fromLTRB(0, 0, 4, 0),
@@ -485,14 +501,11 @@ class ScoreListState extends State<ScoreList> {
               ),
             ),
             Container(
-              margin: const EdgeInsets.fromLTRB(28, 14, 28, 14),
-              decoration: const BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(
-                    width: 0, //宽度
-                    color: Color(0xfff1f1f1), //边框颜色
-                  ),
-                ),
+              color: Colors.white,
+              padding: const EdgeInsets.fromLTRB(36, 16, 36, 16),
+              child: Container(
+                color: Color(0xfffafafa),
+                height: 1,
               ),
             )
           ],
@@ -523,55 +536,79 @@ class ExamListState extends State<ExamList> {
 
   _getIcon(int index) {
     if (examListC[index]) {
-      return Icons.check;
+      return FlutterRemix.medal_2_line;
     }
-    return Icons.panorama_fish_eye;
+    return FlutterRemix.timer_line;
   }
 
   @override
   Widget build(BuildContext context) {
+    if (examList.length == 0) {
+      return SliverList(
+        delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
+          return Container(
+            color: Colors.white,
+            height: 500,
+          );
+        }, childCount: 1),
+      );
+    }
     return SliverList(
       delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
         return Container(
-          margin: EdgeInsets.fromLTRB(16, 16, 16, 16),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  Column(
-                    children: [Icon(_getIcon(index), color: _getColor(index))],
+            color: Colors.white,
+            padding: EdgeInsets.fromLTRB(16, index == 0 ? 16 : 0, 16, 0),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Column(
+                          children: [Icon(_getIcon(index), color: _getColor(index))],
+                        ),
+                        SizedBox(
+                          width: 8,
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              courseLongText2ShortName(examList[index][0]),
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: _getColor2(index)),
+                            ),
+                            SizedBox(
+                              height: 8,
+                            ),
+                            Text(
+                              examList[index][1],
+                              style: TextStyle(fontSize: 12, color: Colors.black45),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    Text(
+                      examList[index][2],
+                      style: TextStyle(color: Colors.black45),
+                    ),
+                    // Text(examList[index][3]),
+                  ],
+                ),
+                Container(
+                  color: Colors.white,
+                  padding: const EdgeInsets.fromLTRB(36, 16, 36, 16),
+                  child: Container(
+                    color: Color(0xfffafafa),
+                    height: 1,
                   ),
-                  SizedBox(
-                    width: 8,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        courseLongText2ShortName(examList[index][0]),
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold, color: _getColor2(index)),
-                      ),
-                      SizedBox(
-                        height: 8,
-                      ),
-                      Text(
-                        examList[index][1],
-                        style: TextStyle(fontSize: 12, color: Colors.black45),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              Text(
-                examList[index][2],
-                style: TextStyle(color: Colors.black45),
-              ),
-              // Text(examList[index][3]),
-            ],
-          ),
-        );
+                )
+              ],
+            ));
       }, childCount: examList.length),
     );
   }

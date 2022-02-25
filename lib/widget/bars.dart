@@ -4,6 +4,7 @@ import 'dart:async';
 import 'package:badges/badges.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_remix/flutter_remix.dart';
 import 'package:glutassistantn/config.dart';
 import 'package:glutassistantn/pages/login.dart';
 import 'package:glutassistantn/pages/setting.dart';
@@ -32,13 +33,13 @@ class HomeTopBar extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text(
-                '今日一览',
+                "今日一览",
                 style: TextStyle(
                   color: Colors.black,
                 ),
               ),
               InkWell(
-                child: const Icon(Icons.settings, size: 24),
+                child: const Icon(FlutterRemix.settings_line, size: 24),
                 onTap: () {
                   Navigator.of(context).push(
                       MaterialPageRoute(builder: (context) => const SettingPage(title: "设置")));
@@ -55,6 +56,7 @@ SliverAppBar publicTopBar(String title,
     [inkWell = const Text(""), color = Colors.white, color2 = Colors.black, double e = 0.3]) {
   return SliverAppBar(
     pinned: true,
+    shadowColor: color,
     collapsedHeight: 56.00,
     primary: true,
     backgroundColor: color,
@@ -99,12 +101,14 @@ class ScheduleTopBarState extends State<ScheduleTopBar> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            "第 $_week 周",
+            "Week $_week",
             style: const TextStyle(color: Colors.black),
           ),
           InkWell(
             child: goCurrent,
             onTap: () {
+              ScaffoldMessenger.of(context).removeCurrentSnackBar();
+              ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(true, "回到当前周!", 1));
               pageBus.fire(ReState(1));
             },
           )
@@ -178,13 +182,13 @@ class BottomNavBarState extends State<BottomNavBar> {
         BottomNavigationBarItem(
             tooltip: '',
             icon: Icon(
-              Icons.home,
+              FlutterRemix.home_3_line,
             ),
             label: ''),
         BottomNavigationBarItem(
             tooltip: '',
             icon: Icon(
-              Icons.insert_invitation_sharp,
+              FlutterRemix.calendar_todo_line,
             ),
             label: ''),
         BottomNavigationBarItem(
@@ -197,7 +201,7 @@ class BottomNavBarState extends State<BottomNavBar> {
                 style: TextStyle(color: Colors.white),
               ),
               child: Icon(
-                Icons.mood,
+                FlutterRemix.emotion_happy_line,
               ),
             ),
             label: ''),
@@ -209,19 +213,33 @@ class BottomNavBarState extends State<BottomNavBar> {
 SnackBar jwSnackBar(bool result, String text, [int hideSnackBarSeconds = 2]) {
   Widget resultIcon = result
       ? const Icon(
-          Icons.mood,
+          FlutterRemix.checkbox_circle_line,
           color: Colors.green,
         )
       : const Icon(
-          Icons.mood_bad,
+          FlutterRemix.error_warning_line,
           color: Colors.red,
         );
   return SnackBar(
+    margin: EdgeInsets.fromLTRB(100, 0, 100, 50),
+    padding: EdgeInsets.all(12),
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(50.0),
+    ),
     elevation: 2,
     duration: Duration(seconds: hideSnackBarSeconds),
     content: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[resultIcon, Text(text)],
+      children: <Widget>[
+        resultIcon,
+        Padding(
+          padding: EdgeInsets.only(bottom: 2, right: 4),
+          child: Text(
+            text,
+            textAlign: TextAlign.center,
+          ),
+        ),
+      ],
     ),
     behavior: SnackBarBehavior.floating,
   );
@@ -235,15 +253,19 @@ SnackBar jwSnackBarAction(
 ]) {
   Widget resultIcon = result
       ? const Icon(
-          Icons.mood,
+          FlutterRemix.checkbox_circle_line,
           color: Colors.green,
         )
       : const Icon(
-          Icons.mood_bad,
+          FlutterRemix.error_warning_line,
           color: Colors.red,
         );
   return SnackBar(
     elevation: 2,
+    margin: EdgeInsets.fromLTRB(100, 0, 100, 50),
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(50.0),
+    ),
     duration: Duration(seconds: hideSnackBarSeconds),
     content: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -267,15 +289,19 @@ SnackBar jwSnackBarActionL(
 ]) {
   Widget resultIcon = result
       ? const Icon(
-          Icons.mood,
+          FlutterRemix.checkbox_circle_line,
           color: Colors.green,
         )
       : const Icon(
-          Icons.mood_bad,
+          FlutterRemix.error_warning_line,
           color: Colors.red,
         );
   return SnackBar(
     elevation: 2,
+    margin: EdgeInsets.fromLTRB(100, 0, 100, 50),
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(50.0),
+    ),
     duration: Duration(seconds: hideSnackBarSeconds),
     content: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -303,15 +329,19 @@ SnackBar jwSnackBarActionQ(
 ]) {
   Widget resultIcon = result
       ? const Icon(
-          Icons.mood,
+          FlutterRemix.checkbox_circle_line,
           color: Colors.green,
         )
       : const Icon(
-          Icons.mood_bad,
+          FlutterRemix.error_warning_line,
           color: Colors.red,
         );
   return SnackBar(
     elevation: 2,
+    margin: EdgeInsets.fromLTRB(100, 0, 100, 50),
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(50.0),
+    ),
     duration: Duration(seconds: hideSnackBarSeconds),
     content: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -335,15 +365,19 @@ SnackBar jwSnackBarActionQ2(
 ]) {
   Widget resultIcon = result
       ? const Icon(
-          Icons.mood,
+          FlutterRemix.checkbox_circle_line,
           color: Colors.green,
         )
       : const Icon(
-          Icons.mood_bad,
+          FlutterRemix.error_warning_line,
           color: Colors.red,
         );
   return SnackBar(
     elevation: 2,
+    margin: EdgeInsets.fromLTRB(100, 0, 100, 50),
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(50.0),
+    ),
     duration: Duration(seconds: hideSnackBarSeconds),
     content: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -367,15 +401,19 @@ SnackBar jwSnackBarActionQ3(
 ]) {
   Widget resultIcon = result
       ? const Icon(
-          Icons.mood,
+          FlutterRemix.checkbox_circle_line,
           color: Colors.green,
         )
       : const Icon(
-          Icons.mood_bad,
+          FlutterRemix.error_warning_line,
           color: Colors.red,
         );
   return SnackBar(
     elevation: 2,
+    margin: EdgeInsets.fromLTRB(100, 0, 100, 50),
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(50.0),
+    ),
     duration: Duration(seconds: hideSnackBarSeconds),
     content: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
