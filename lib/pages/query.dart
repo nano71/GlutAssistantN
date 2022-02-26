@@ -23,7 +23,7 @@ class QueryPage extends StatefulWidget {
 class _QueryPageState extends State<QueryPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(backgroundColor: Colors.white, body: QueryBody());
+    return Scaffold(backgroundColor: Colors.white, body: QueryBody(),);
   }
 }
 

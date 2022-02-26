@@ -582,7 +582,7 @@ scheduleDialogItem(title, time, teacher, position) {
         Radius.circular(8.0),
       ),
     ),
-    height: 150,
+    height: 160,
     child: Stack(
       children: [
         Align(

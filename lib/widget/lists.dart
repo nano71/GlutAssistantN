@@ -454,8 +454,11 @@ class ScoreListState extends State<ScoreList> {
         return Column(
           children: [
             Container(
-              color: Colors.white,
               padding: EdgeInsets.fromLTRB(16, index == 0 ? 16 : 0, 16, 0),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border.all(width: 0, color: Colors.white),
+              ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -484,14 +487,16 @@ class ScoreListState extends State<ScoreList> {
                   //成绩
                   Container(
                     padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-                    margin: const EdgeInsets.fromLTRB(0, 0, 4, 0),
+                    margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                     decoration: BoxDecoration(
                       borderRadius: const BorderRadius.all(Radius.circular(6.0)),
                       // color: Global.homeCardsColor,
-                      color: randomColors(),
+                      color: queryScore[index][4] == "不及格" ? Colors.red : randomColors(),
                     ),
                     child: Column(children: [
-                      Text(queryScore[index][4],
+                      Text(
+                          // "不及格",
+                          queryScore[index][4],
                           style: TextStyle(fontSize: 16, color: Colors.white)),
                       Text(queryScore[index][5],
                           style: TextStyle(color: Colors.white, fontSize: 12)),
@@ -536,7 +541,7 @@ class ExamListState extends State<ExamList> {
 
   _getIcon(int index) {
     if (examListC[index]) {
-      return FlutterRemix.medal_2_line;
+      return FlutterRemix.checkbox_multiple_line;
     }
     return FlutterRemix.timer_line;
   }
@@ -556,59 +561,63 @@ class ExamListState extends State<ExamList> {
     return SliverList(
       delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
         return Container(
+          decoration: BoxDecoration(
             color: Colors.white,
-            padding: EdgeInsets.fromLTRB(16, index == 0 ? 16 : 0, 16, 0),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Column(
-                          children: [Icon(_getIcon(index), color: _getColor(index))],
-                        ),
-                        SizedBox(
-                          width: 8,
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              courseLongText2ShortName(examList[index][0]),
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: _getColor2(index)),
-                            ),
-                            SizedBox(
-                              height: 8,
-                            ),
-                            Text(
-                              examList[index][1],
-                              style: TextStyle(fontSize: 12, color: Colors.black45),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    Text(
-                      examList[index][2],
-                      style: TextStyle(color: Colors.black45),
-                    ),
-                    // Text(examList[index][3]),
-                  ],
-                ),
-                Container(
-                  color: Colors.white,
-                  padding: const EdgeInsets.fromLTRB(36, 16, 36, 16),
-                  child: Container(
-                    color: Color(0xfffafafa),
-                    height: 1,
+            border: Border.all(width: 0, color: Colors.white),
+          ),
+          padding: EdgeInsets.fromLTRB(16, index == 0 ? 16 : 0, 16, 0),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      Column(
+                        children: [Icon(_getIcon(index), color: _getColor(index))],
+                      ),
+                      SizedBox(
+                        width: 8,
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            courseLongText2ShortName(examList[index][0]),
+                            style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: _getColor2(index)),
+                          ),
+                          SizedBox(
+                            height: 8,
+                          ),
+                          Text(
+                            examList[index][1],
+                            style: TextStyle(fontSize: 12, color: Colors.black45),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
-                )
-              ],
-            ));
+                  Text(
+                    examList[index][2],
+                    style: TextStyle(color: Colors.black45),
+                  ),
+                  // Text(examList[index][3]),
+                ],
+              ),
+              Container(
+                color: Colors.white,
+                padding: const EdgeInsets.fromLTRB(36, 16, 36, 16),
+                child: Container(
+                  color: Color(0xfffafafa),
+                  height: 1,
+                ),
+              )
+            ],
+          ),
+        );
       }, childCount: examList.length),
     );
   }

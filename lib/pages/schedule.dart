@@ -323,7 +323,7 @@ class Grid extends StatelessWidget {
     TextStyle style = const TextStyle(fontSize: 12, color: Colors.white);
     return InkWell(
       onTap: () {
-        if (index != 0) {
+        if (index != 0||index2 != 0) {
           print(index2);
           print(index);
           scheduleDialog(context, week, weekDay, index.toString());
