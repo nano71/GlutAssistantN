@@ -7,8 +7,7 @@ import 'package:flutter_remix/flutter_remix.dart';
 import 'package:glutassistantn/common/get.dart';
 import 'package:glutassistantn/common/style.dart';
 import 'package:glutassistantn/widget/bars.dart';
-import 'package:noripple_overscroll/noripple_overscroll.dart';
-
+import 'package:glutassistantn/widget/dialog.dart';
 import '../config.dart';
 import '../data.dart';
 
@@ -52,6 +51,8 @@ class _CareerPageBodyState extends State<CareerPageBody> {
   _CareerPageBodyState({required this.type});
 
   bool login = true;
+
+  // ignore: cancel_subscriptions
   late StreamSubscription<CareerRe> eventBusFn;
   GlobalKey<CircularProgressDynamicStateForCareer> indicatorKey = GlobalKey();
   GlobalKey<TextProgressDynamicStateForCareer> textKey = GlobalKey();
@@ -67,7 +68,7 @@ class _CareerPageBodyState extends State<CareerPageBody> {
     eventBusFn = pageBus.on<CareerRe>().listen((event) {
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
       ScaffoldMessenger.of(context)
-          .showSnackBar(jwSnackBar(true, "获取数据...", Global.timeOutSec * 2));
+          .showSnackBar(jwSnackBar(2, "获取数据...", Global.timeOutSec * 2));
       getCareer().then((value) => process(value));
     });
     getCareer().then((value) => process(value));
@@ -77,10 +78,10 @@ class _CareerPageBodyState extends State<CareerPageBody> {
     if (value == "success") {
       login = false;
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
-      ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(true, "处理数据...", Global.timeOutSec));
+      ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "处理数据...", Global.timeOutSec));
       setState(() {});
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
-      ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(true, "数据已更新!", 1));
+      ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(1, "数据已更新!", 1));
       examAllNumber = 0;
       careerNumber = 0;
       careerJobNumber = 0;
@@ -109,7 +110,7 @@ class _CareerPageBodyState extends State<CareerPageBody> {
     } else {
       print(value);
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
-      ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(false, value, 4));
+      ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, value, 4));
     }
   }
 
@@ -159,7 +160,7 @@ class _CareerPageBodyState extends State<CareerPageBody> {
       if (login) {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
         ScaffoldMessenger.of(context)
-            .showSnackBar(jwSnackBar(true, "获取数据...", Global.timeOutSec * 2));
+            .showSnackBar(jwSnackBar(2, "获取数据...", Global.timeOutSec * 2));
       }
     });
     return Container(
@@ -258,20 +259,12 @@ class _CareerPageBodyState extends State<CareerPageBody> {
                               children: [
                                 Container(
                                   margin: EdgeInsets.only(right: 8),
-                                  // decoration: BoxDecoration(
-                                  //   border: Border(
-                                  //     bottom: BorderSide(
-                                  //       width: 0, //宽度
-                                  //       color: Colors.white, //边框颜色
-                                  //     ),
-                                  //   ),
-                                  // ),
                                   child: Text(
                                     careerNumber.toString() + "",
                                     style: TextStyle(
                                         fontSize: 38,
                                         color: Colors.white,
-                                        fontWeight: FontWeight.w100),
+                                        fontWeight: FontWeight.w300),
                                   ),
                                 ),
                                 Column(
@@ -303,20 +296,12 @@ class _CareerPageBodyState extends State<CareerPageBody> {
                               children: [
                                 Container(
                                   margin: EdgeInsets.only(right: 8),
-                                  // decoration: BoxDecoration(
-                                  //   border: Border(
-                                  //     bottom: BorderSide(
-                                  //       width: 3.5, //宽度
-                                  //       color: Colors.white, //边框颜色
-                                  //     ),
-                                  //   ),
-                                  // ),
                                   child: Text(
                                     careerJobNumber.toString() + "",
                                     style: TextStyle(
                                         fontSize: 38,
                                         color: Colors.white,
-                                        fontWeight: FontWeight.w100),
+                                        fontWeight: FontWeight.w300),
                                   ),
                                 ),
                                 Column(
@@ -386,7 +371,7 @@ class _CareerPageBodyState extends State<CareerPageBody> {
                               width: 50,
                               child: LinearProgressIndicator(
                                 color: Colors.white,
-                                backgroundColor: const Color.fromARGB(128, 255, 255, 255),
+                                backgroundColor: const Color.fromARGB(48, 255, 255, 255),
                                 value: careerCount[1] == careerNumber
                                     ? 0.0
                                     : careerCount[1] / careerNumber, //精确模式，进度20%
@@ -406,7 +391,7 @@ class _CareerPageBodyState extends State<CareerPageBody> {
                               width: 50,
                               child: LinearProgressIndicator(
                                 color: Colors.white,
-                                backgroundColor: const Color.fromARGB(128, 255, 255, 255),
+                                backgroundColor: const Color.fromARGB(48, 255, 255, 255),
                                 value: careerCount[0] == careerNumber
                                     ? 0.0
                                     : careerCount[0] / careerNumber, //精确模式，进度20%
@@ -426,7 +411,7 @@ class _CareerPageBodyState extends State<CareerPageBody> {
                               width: 50,
                               child: LinearProgressIndicator(
                                 color: Colors.white,
-                                backgroundColor: const Color.fromARGB(128, 255, 255, 255),
+                                backgroundColor: const Color.fromARGB(48, 255, 255, 255),
                                 value: careerCount[2] == careerNumber
                                     ? 0.0
                                     : careerCount[2] / careerNumber, //精确模式，进度20%
@@ -476,7 +461,7 @@ class CareerListProcessState extends State<CareerListProcess> {
   }
 
   String titleProcess() {
-    List chineseNumberCapitalization = ["一", "二", "三", "四", "五", "六", "七", "八"];
+    // List chineseNumberCapitalization = ["一", "二", "三", "四", "五", "六", "七", "八"];
     //波浪号取整
     return " ${startYear + index} - ${startYear + 1 + index} 学年";
   }
@@ -580,104 +565,7 @@ class CareerListProcessState extends State<CareerListProcess> {
   }
 }
 
-careerDialog(context, index, type, year) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return NoRippleOverScroll(
-        child: SimpleDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12.0),
-          ),
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("$year - ${type == 2 ? "春" : "秋"}学期"),
-                  Text(
-                    "课程计数: ${careerList2[(index * 2 + type / 2 >= 1 ? index * 2 + type / 2 : 0).toInt()].length} 门",
-                    style: TextStyle(color: Colors.grey, fontSize: 14),
-                  )
-                ],
-              ),
-              InkWell(
-                child: const Icon(FlutterRemix.close_line, size: 32),
-                onTap: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          ),
-          titlePadding: EdgeInsets.fromLTRB(16, 16, 16, 16),
-          titleTextStyle: TextStyle(
-            color: readColor(),
-            fontSize: 25,
-          ),
-          contentPadding: EdgeInsets.only(left: 0, right: 0, bottom: 0),
-          backgroundColor: Colors.white,
-          children: careerDialogLoop(index, type),
-        ),
-      );
-    },
-  );
-}
 
-careerDialogLoop(int index, int semester) {
-  List<Widget> list = [];
-  double newIndex = 0;
-  newIndex = index * 2 + semester / 2 >= 1 ? index * 2 + semester / 2 : 0;
-  careerList2[newIndex.toInt()].forEach((element) {
-    list.add(careerDialogItem(element));
-  });
-  return list;
-}
-
-careerDialogItem(element) {
-  return Container(
-      padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
-      margin: const EdgeInsets.fromLTRB(8, 0, 8, 8),
-      decoration: BoxDecoration(color: randomColors()),
-      height: 150,
-      child: Stack(
-        children: [
-          Align(
-            alignment: Alignment.bottomRight,
-            child: Container(
-              child: Text(
-                element[1][0],
-                style: TextStyle(fontSize: 128, color: Color(0x66f1f1f1)),
-              ),
-            ),
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                courseLongText2ShortName(element[1]),
-                style: TextStyle(fontSize: 18, color: Colors.white),
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              Text(element[0], style: TextStyle(color: Colors.white)),
-              Text(element[5], style: TextStyle(color: Colors.white)),
-              Text("性质: " + element[2], style: TextStyle(color: Colors.white)),
-              Text("学分: " + element[3], style: TextStyle(color: Colors.white)),
-              Text(
-                  "学时: " +
-                      element[4]
-                          .toString()
-                          .replaceAll(" ", "")
-                          .replaceAll(RegExp(r"\s+\b|\b\s\n"), "")
-                          .trim(),
-                  style: TextStyle(color: Colors.white)),
-            ],
-          ),
-        ],
-      ));
-}
 
 class CircularProgressDynamicForCareer extends StatefulWidget {
   const CircularProgressDynamicForCareer({Key? key}) : super(key: key);

@@ -76,14 +76,14 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
       writeConfig();
       setState(() {});
        ScaffoldMessenger.of(context).removeCurrentSnackBar();
-       ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(true, "暂无更新!", 5));
+       ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(1, "暂无更新!", 5));
     } else if (value.length == 1) {
        ScaffoldMessenger.of(context).removeCurrentSnackBar();
-       ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(false, value[0], 5));
+       ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, value[0], 5));
       networkError = true;
     } else {
        ScaffoldMessenger.of(context).removeCurrentSnackBar();
-       ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(true, "发现新版本!", 5));
+       ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(1, "发现新版本!", 5));
       newVersion = true;
       writeData["newVersion"] = value[1];
       writeData["newBody"] = value[3];
@@ -99,7 +99,7 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
     Future.delayed(const Duration(seconds: 0), () {
       if (!newVersion && !updating) {
          ScaffoldMessenger.of(context).removeCurrentSnackBar();
-         ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(true, "获取更新...", 24));
+         ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "获取更新...", 24));
       }
     });
     return Container(
@@ -130,7 +130,7 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
                   InkWell(
                     onTap: () {
                        ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                       ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(true, "获取更新...", 24));
+                       ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "获取更新...", 24));
                       getUpdate().then((value) => _next(value));
                     },
                     child: Image.asset(
@@ -157,7 +157,7 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
                       ? Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            mineItem4(FlutterRemix.arrow_up_line, const EdgeInsets.fromLTRB(16, 14, 0, 14),
+                            mineItem4(FlutterRemix.lightbulb_flash_line, const EdgeInsets.fromLTRB(16, 14, 0, 14),
                                 "有新版本可以更新!", Colors.red),
                             Container(
                               width: double.infinity,
@@ -200,7 +200,7 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
                       ? Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      mineItem4(Icons.lightbulb_outline, const EdgeInsets.fromLTRB(16, 14, 0, 14),
+                      mineItem4(FlutterRemix.lightbulb_line, const EdgeInsets.fromLTRB(16, 14, 0, 14),
                           "当前版本变更", Colors.blue),
                       Container(
                         width: double.infinity,
@@ -226,14 +226,14 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
                         onTap: () {
                           launch("https://www.coolapk.com/apk/289253");
                         },
-                        child: mineItem(Icons.local_mall,
+                        child: mineItem(FlutterRemix.store_2_line,
                             const EdgeInsets.fromLTRB(16, 14, 0, 14), "酷安", Colors.green),
                       ),
                       InkWell(
                         onTap: () {
                           launch("https://github.com/nano71/GlutAssistantN");
                         },
-                        child: mineItem(Icons.face, const EdgeInsets.fromLTRB(16, 14, 0, 14),
+                        child: mineItem(FlutterRemix.github_line, const EdgeInsets.fromLTRB(16, 14, 0, 14),
                             "Github", Colors.blueGrey),
                       ),
                     ],
@@ -254,14 +254,14 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
                               onTap: () {
                                 launch("https://www.coolapk.com/apk/289253");
                               },
-                              child: mineItem(Icons.local_mall,
+                              child: mineItem(FlutterRemix.store_2_line,
                                   const EdgeInsets.fromLTRB(16, 14, 0, 14), "酷安", Colors.green),
                             ),
                             InkWell(
                               onTap: () {
                                 launch("https://github.com/nano71/GlutAssistantN/releases/latest");
                               },
-                              child: mineItem(Icons.face, const EdgeInsets.fromLTRB(16, 14, 0, 14),
+                              child: mineItem(FlutterRemix.github_line, const EdgeInsets.fromLTRB(16, 14, 0, 14),
                                   "Github", Colors.blueGrey),
                             ),
                           ],

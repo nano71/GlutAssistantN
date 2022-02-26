@@ -38,6 +38,7 @@ class QueryExamBody extends StatefulWidget {
 
 class _QueryExamBodyState extends State<QueryExamBody> {
   bool login = true;
+  // ignore: cancel_subscriptions
   late StreamSubscription<QueryExamRe> eventBusFn;
   int _examAllNumber = examAllNumber;
 
@@ -54,10 +55,10 @@ class _QueryExamBodyState extends State<QueryExamBody> {
     if (value == "success") {
       login = false;
        ScaffoldMessenger.of(context).removeCurrentSnackBar();
-       ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(true, "处理数据...", 10));
+       ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "处理数据...", 10));
       setState(() {});
        ScaffoldMessenger.of(context).removeCurrentSnackBar();
-       ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(true, "数据已更新!", 1));
+       ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(1, "数据已更新!", 1));
     } else if (value == "fail") {
        ScaffoldMessenger.of(context).removeCurrentSnackBar();
        ScaffoldMessenger.of(context).showSnackBar(jwSnackBarActionQ2(
@@ -69,7 +70,7 @@ class _QueryExamBodyState extends State<QueryExamBody> {
     } else {
       print(value);
        ScaffoldMessenger.of(context).removeCurrentSnackBar();
-       ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(false, value, 4));
+       ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, value, 4));
     }
   }
 
@@ -78,7 +79,7 @@ class _QueryExamBodyState extends State<QueryExamBody> {
     Future.delayed(const Duration(seconds: 0), () {
       if (login) {
          ScaffoldMessenger.of(context).removeCurrentSnackBar();
-         ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(true, "获取数据...", 6));
+         ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "获取数据...", 6));
       }
     });
     return Container(

@@ -109,10 +109,10 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
       _goTopInitCount++;
       if (_goTopInitCount == 7) {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(false, "太快了吧..."));
+        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, "你太快了!"));
       } else if (_goTopInitCount == 1) {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(true, "准备更新...", 10));
+        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "准备更新...", 10));
       }
       _scrollController.animateTo(
         _scrollController.position.minScrollExtent,
@@ -121,18 +121,18 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
       );
       _next() async {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(true, "清除缓存...", 10));
+        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "清除缓存...", 10));
         schedule = {};
         todaySchedule = [];
         tomorrowSchedule = [];
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(true, "初始化...", 10));
+        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "初始化...", 10));
         await initSchedule();
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(true, "获取课表...", 10));
+        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "获取课表...", 10));
         await getSchedule();
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(true, "处理数据...", 10));
+        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "处理数据...", 10));
         await initTodaySchedule();
         await initTomorrowSchedule();
         pageBus.fire(ReState(1));
@@ -142,26 +142,26 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
         _endCount = 0;
         print("刷新结束${DateTime.now()}");
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(true, "数据已更新!", 1));
+        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(1, "数据已更新!", 1));
       }
 
       _time = Timer(const Duration(seconds: 1), () async {
         getWeek();
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(true, "获取数据...", 10));
+        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "连接教务...", 10));
         await getSchedule().then((value) => {
               if (value == "fail")
                 {
                   if (writeData["username"] == "")
                     {
                       // codeCheckDialog(context),
-                      Scaffold.of(context).removeCurrentSnackBar(),
-                      ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(false, "请先登录!")),
+                      ScaffoldMessenger.of(context).removeCurrentSnackBar(),
+                      ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, "请先登录!")),
                       _time2?.cancel()
                     }
                   else
                     {
-                      Scaffold.of(context).removeCurrentSnackBar(),
+                      ScaffoldMessenger.of(context).removeCurrentSnackBar(),
                       ScaffoldMessenger.of(context).showSnackBar(jwSnackBarAction(
                         false,
                         "需要验证",
@@ -175,8 +175,8 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 {_next()}
               else
                 {
-                  Scaffold.of(context).removeCurrentSnackBar(),
-                  ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(false, value, 4)),
+                  ScaffoldMessenger.of(context).removeCurrentSnackBar(),
+                  ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, value, 4)),
                   _time2?.cancel()
                 }
             });
@@ -197,7 +197,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
       if (_bk) {
         _bk = false;
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(false, "你慢一点!"));
+        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, "你慢一点!"));
         _time?.cancel();
         _time = Timer(const Duration(seconds: 5), () {
           Future.delayed(const Duration(seconds: 5), () {
@@ -228,7 +228,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
     Future.delayed(const Duration(seconds: 0), () {
       if (DateTime.now().minute == 59 && DateTime.now().hour == 23) {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(false, "明天再来!", 3));
+        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, "明天再来!", 3));
         Future.delayed(const Duration(seconds: 3), () {
           exit(0);
         });

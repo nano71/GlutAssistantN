@@ -45,7 +45,7 @@ Icon chevronUp = const Icon(
   color: Colors.black45,
 );
 Icon goCurrent = const Icon(
-  Icons.gps_fixed_outlined,
+  FlutterRemix.map_pin_line,
   color: Colors.black,
   size: 24,
 );
