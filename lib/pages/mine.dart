@@ -75,6 +75,7 @@ class MinePageState extends State<MinePage> {
                   InkWell(
                     onTap: () {
                       if (writeData["username"] == "") {
+                        // Navigator.push(context, SlideTopRoute(page: LoginPage()));
                         Navigator.of(context)
                             .push(MaterialPageRoute(builder: (context) => const LoginPage()));
                       } else {
@@ -112,7 +113,7 @@ class MinePageState extends State<MinePage> {
                       Navigator.of(context).push(
                           MaterialPageRoute(builder: (context) => const SettingPage(title: "设置2")));
                     },
-                    child: mineItem(FlutterRemix.settings_line,
+                    child: mineItem(FlutterRemix.settings_3_line,
                         const EdgeInsets.fromLTRB(16, 14, 0, 14), "设置", readColor()),
                   ),
                 ],

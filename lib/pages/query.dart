@@ -38,6 +38,7 @@ class _QueryBodyState extends State<QueryBody> {
   double _gpa = gpa;
   double _avg = avg;
   double _weight = weight;
+  // ignore: cancel_subscriptions
   late StreamSubscription<QueryScoreRe> eventBusFn;
 
   @override
@@ -48,10 +49,10 @@ class _QueryBodyState extends State<QueryBody> {
       _next(List list) {
         if (list.length == 0) {
           ScaffoldMessenger.of(context).removeCurrentSnackBar();
-          ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(true, "没有结果!", 5));
+          ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(1, "没有结果!", 5));
         } else {
           ScaffoldMessenger.of(context).removeCurrentSnackBar();
-          ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(true, "数据已更新!", 1));
+          ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(1, "数据已更新!", 1));
 
           queryScore = list;
           double sum = 0.0;
@@ -120,13 +121,13 @@ class _QueryBodyState extends State<QueryBody> {
       } else if (list.length == 1 &&
           (list[0] == Global.socketError || list[0] == Global.timeOutError)) {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(false, list[0], 4));
+        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, list[0], 4));
       } else if (list.length == 0) {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(true, "没有结果!", 5));
+        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(1, "没有结果!", 5));
       } else {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(true, "数据已更新!", 1));
+        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(1, "数据已更新!", 1));
         queryScore = list;
         double sum = 0.0;
         double _q = 0.0;
@@ -191,7 +192,7 @@ class _QueryBodyState extends State<QueryBody> {
       ));
     } else {
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
-      ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(true, "查询中...", 10));
+      ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "查询中...", 10));
       await getScore().then((value) => _next(value));
     }
   }

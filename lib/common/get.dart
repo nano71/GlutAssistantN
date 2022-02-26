@@ -38,9 +38,11 @@ Future<void> getWeek() async {
     print("getWeek End");
   } on TimeoutException catch (e) {
     print("超时");
+    print(e);
     readConfig();
   } on SocketException catch (e) {
     print("连接失败");
+    print(e);
     readConfig();
   }
 }
@@ -70,9 +72,7 @@ Future<String> getSchedule() async {
       print("登录过期");
       return "fail";
     } else {
-      dom.Document document = parse(gbk
-          .decode(response.bodyBytes)
-          .toString());
+      dom.Document document = parse(gbk.decode(response.bodyBytes).toString());
       var list = document.querySelectorAll(".infolist_common");
       num listLength = document.querySelectorAll(".infolist_common").length - 23;
       for (var i = 0; i < listLength; i++) {
@@ -84,8 +84,7 @@ Future<String> getSchedule() async {
               .innerHtml
               .trim()
               .replaceAll("第", "")
-              .replaceAll("节", "")
-          ;
+              .replaceAll("节", "");
           //周次
           String zc = list[i]
               .querySelectorAll("table.none>tbody>tr")[j]
@@ -95,8 +94,7 @@ Future<String> getSchedule() async {
               .replaceAll("第", "")
               .replaceAll("单", "")
               .replaceAll("双", "")
-              .replaceAll("周", "")
-          ; //课节
+              .replaceAll("周", ""); //课节
           List kjList = kj.trim().split('-');
           List zcList = zc.trim().split('-');
           String week = list[i]
@@ -130,7 +128,9 @@ Future<String> getSchedule() async {
                         ? list[i].querySelectorAll("a.infolist")[1].innerHtml.trim()
                         : null,
                     //上课地点
-                    area != "&nbsp" ? area : null
+                    area != "&nbsp" ? area : null,
+                    //备注
+                    list[i].querySelectorAll("table.none>tbody>tr")[j].text.trim().replaceAll(" ", ";")
                   ];
                 }
               } else {
@@ -140,13 +140,15 @@ Future<String> getSchedule() async {
                     .innerHtml
                     .trim()]]?[k.toString()] = [
                   //课程名
-                 list[i].querySelectorAll("a.infolist")[0].innerHtml.trim(),
+                  list[i].querySelectorAll("a.infolist")[0].innerHtml.trim(),
                   //老师名字
                   list[i].querySelectorAll("a.infolist").length > 1
                       ? list[i].querySelectorAll("a.infolist")[1].innerHtml.trim()
                       : null,
                   //上课地点
-                  area != "&nbsp" ? area : null
+                  area != "&nbsp" ? area : null,
+                  //备注
+                  list[i].querySelectorAll("table.none>tbody>tr")[j].text.trim().replaceAll(" ", ";")
                 ];
               }
             }
@@ -176,7 +178,6 @@ Future<String> getSchedule() async {
         if (tables.length >= 3) {
           dom.Element table = tables[2];
           List<dom.Element> trs = table.querySelectorAll(".infolist_hr_common");
-          int _index = 0;
           String _name = "";
           String _teacher = "";
           trs.forEach((element) {
@@ -269,7 +270,6 @@ Future<String> getSchedule() async {
                 }
               }
             }
-            _index++;
           });
         }
       }
@@ -282,9 +282,11 @@ Future<String> getSchedule() async {
     return "success";
   } on TimeoutException catch (e) {
     print("getExam Error");
+    print(e);
     return Global.timeOutError;
   } on SocketException catch (e) {
     print("getExam Error");
+    print(e);
     return Global.socketError;
   }
 }
@@ -355,9 +357,11 @@ Future<List> getScore() async {
     return list;
   } on TimeoutException catch (e) {
     print("getScore Error");
+    print(e);
     return [Global.timeOutError];
   } on SocketException catch (e) {
     print("getScore Error");
+    print(e);
     return [Global.socketError];
   }
 }
@@ -413,9 +417,11 @@ Future<String> getExam() async {
     }
   } on TimeoutException catch (e) {
     print("getExam Error");
+    print(e);
     return Global.timeOutError;
   } on SocketException catch (e) {
     print("getExam Error");
+    print(e);
     return Global.socketError;
   }
 }
@@ -513,9 +519,11 @@ Future getCareer() async {
     }
   } on TimeoutException catch (e) {
     print("getExam Error");
+    print(e);
     return Global.timeOutError;
   } on SocketException catch (e) {
     print("getExam Error");
+    print(e);
     return Global.socketError;
   }
 }

@@ -39,7 +39,7 @@ class HomeTopBar extends StatelessWidget {
                 ),
               ),
               InkWell(
-                child: const Icon(FlutterRemix.settings_line, size: 24),
+                child: const Icon(FlutterRemix.more_fill, size: 24),
                 onTap: () {
                   Navigator.of(context).push(
                       MaterialPageRoute(builder: (context) => const SettingPage(title: "设置")));
@@ -108,7 +108,7 @@ class ScheduleTopBarState extends State<ScheduleTopBar> {
             child: goCurrent,
             onTap: () {
               ScaffoldMessenger.of(context).removeCurrentSnackBar();
-              ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(true, "回到当前周!", 1));
+              ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(3, "回到当前!", 1));
               pageBus.fire(ReState(1));
             },
           )
@@ -174,6 +174,7 @@ class BottomNavBarState extends State<BottomNavBar> {
         }
         if (Global.pageIndex != index) {
           Global.pageControl.jumpToPage(index);
+          // Global.pageControl.animateToPage(index, duration: Duration(milliseconds: 500), curve: Curves.linear);
           Global.pageIndex = index;
         }
         setState(() {});
@@ -210,16 +211,31 @@ class BottomNavBarState extends State<BottomNavBar> {
   }
 }
 
-SnackBar jwSnackBar(bool result, String text, [int hideSnackBarSeconds = 2]) {
-  Widget resultIcon = result
-      ? const Icon(
-          FlutterRemix.checkbox_circle_line,
-          color: Colors.green,
-        )
-      : const Icon(
-          FlutterRemix.error_warning_line,
-          color: Colors.red,
-        );
+SnackBar jwSnackBar(int type, String text, [int hideSnackBarSeconds = 2]) {
+  Widget setIcon() {
+    if (type == 0)
+      return const Icon(
+        FlutterRemix.error_warning_line,
+        color: Colors.red,
+      );
+    if (type == 1)
+      return const Icon(
+        FlutterRemix.checkbox_circle_line,
+        color: Colors.green,
+      );
+    if (type == 2)
+      return const Icon(
+        FlutterRemix.link,
+        color: Colors.blue,
+      );
+    return Icon(
+      FlutterRemix.star_smile_line,
+      color: randomColors2(),
+    );
+  }
+
+  Widget resultIcon = setIcon();
+
   return SnackBar(
     margin: EdgeInsets.fromLTRB(100, 0, 100, 50),
     padding: EdgeInsets.all(12),

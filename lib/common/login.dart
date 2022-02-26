@@ -20,9 +20,11 @@ Future<String> codeCheck(String code) async {
     return result;
   } on TimeoutException catch (e) {
     print("getExam Error");
+    print(e);
     return Global.timeOutError;
   } on SocketException catch (e) {
     print("getExam Error");
+    print(e);
     return Global.socketError;
   }
 }
@@ -42,9 +44,11 @@ Future<String> login(String username, String password, String code) async {
     }
   } on TimeoutException catch (e) {
     print("getExam Error");
+    print(e);
     return Global.timeOutError;
   } on SocketException catch (e) {
     print("getExam Error");
+    print(e);
     return Global.socketError;
   }
 }

@@ -135,7 +135,7 @@ class _InfoPageState extends State<InfoPage> {
                                               const ClipboardData(text: "1742968988"));
                                           ScaffoldMessenger.of(context).removeCurrentSnackBar();
                                           ScaffoldMessenger.of(context)
-                                              .showSnackBar(jwSnackBar(true, "复制成功!"));
+                                              .showSnackBar(jwSnackBar(1, "复制成功!"));
                                         },
                                         child: const Text(
                                           "1742968988",
@@ -157,8 +157,8 @@ class _InfoPageState extends State<InfoPage> {
                                       onPressed: () {
                                         Clipboard.setData(const ClipboardData(text: "13520944872"));
                                         ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                                        Scaffold.of(context)
-                                            .showSnackBar(jwSnackBar(true, "复制成功!"));
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(jwSnackBar(1, "复制成功!"));
                                       },
                                       child: const Text(
                                         "13520944872",
