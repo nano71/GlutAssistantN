@@ -48,7 +48,7 @@ List _getStartTime(index) {
 
 String _timeText(int index) {
   if (index == -1) return "-1";
-  List value = _getStartTime(int.parse(todaySchedule[index][3]));
+  List value = _getStartTime(int.parse(todaySchedule[index][4]));
   if (value[0] >= 1) {
     return "";
   } else if (value[1] >= 4) {
@@ -73,7 +73,7 @@ String _timeText(int index) {
 
 // List<String> _timeText2(int index) {
 //   if (index == -1) return ["0", "0"];
-//   List value = _getStartTime(int.parse(todaySchedule[index][3]));
+//   List value = _getStartTime(int.parse(todaySchedule[index][4]));
 //   if (value[0] >= 1) {
 //     return ["0", "0"];
 //   } else if (value[1] >= 4) {
@@ -121,6 +121,7 @@ class TodayCourseListState extends State<TodayCourseList> {
     eventBusFn = pageBus.on<ReTodayListState>().listen((event) {
       reSate();
     });
+    print(_todaySchedule);
   }
 
   reSate() {
@@ -165,6 +166,7 @@ class TodayCourseListState extends State<TodayCourseList> {
 
   @override
   Widget build(BuildContext context) {
+
     return SliverList(
       delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
         timerRe(index);
@@ -178,27 +180,26 @@ class TodayCourseListItem extends StatefulWidget {
   final int index;
 
   const TodayCourseListItem({Key? key, this.index = -1}) : super(key: key);
-
   @override
   TodayCourseListItemState createState() => TodayCourseListItemState();
 }
 
 class TodayCourseListItemState extends State<TodayCourseListItem> {
   IconData _icon(int index) {
-    String result = _getStartTime(int.parse(todaySchedule[index][3]))[3];
+    String result = _getStartTime(int.parse(todaySchedule[index][4]))[3];
     if (result == "before") {
       return FlutterRemix.timer_2_line;
     } else {
       if (_timeText(index).contains("下课")) {
         return FlutterRemix.quill_pen_line;
       } else {
-        return FlutterRemix.medal_line;
+        return FlutterRemix.check_line;
       }
     }
   }
 
   Color _timeColors(int index) {
-    String result = _getStartTime(int.parse(todaySchedule[index][3]))[3];
+    String result = _getStartTime(int.parse(todaySchedule[index][4]))[3];
     if (result == "before") {
       return readColor();
     } else {
@@ -211,7 +212,7 @@ class TodayCourseListItemState extends State<TodayCourseListItem> {
   }
 
   Color _textColorsTop(int index) {
-    String result = _getStartTime(int.parse(todaySchedule[index][3]))[3];
+    String result = _getStartTime(int.parse(todaySchedule[index][4]))[3];
     if (result == "before") {
       return const Color(0xff333333);
     } else {
@@ -224,7 +225,7 @@ class TodayCourseListItemState extends State<TodayCourseListItem> {
   }
 
   Color _textColorsDown(int index) {
-    String result = _getStartTime(int.parse(todaySchedule[index][3]))[3];
+    String result = _getStartTime(int.parse(todaySchedule[index][4]))[3];
     if (result == "before") {
       return const Color(0xff999999);
     } else {
@@ -273,7 +274,7 @@ class TodayCourseListItemState extends State<TodayCourseListItem> {
                   ),
                   Row(
                     children: [
-                      Text('第${todaySchedule[widget.index][3]}节 | ',
+                      Text('第${todaySchedule[widget.index][4]}节 | ',
                           style: TextStyle(
                               decoration: TextDecoration.none,
                               fontSize: 12,
@@ -318,6 +319,7 @@ class TomorrowCourseListState extends State<TomorrowCourseList> {
     eventBusFn = pageBus.on<ReTomorrowListState>().listen((event) {
       reSate();
     });
+    print(_tomorrowSchedule[1]);
   }
 
   reSate() {
@@ -353,8 +355,9 @@ class TomorrowCourseListState extends State<TomorrowCourseList> {
                   Container(
                     margin: const EdgeInsets.fromLTRB(0, 0, 8, 0),
                     child: Icon(
-                      FlutterRemix.loader_2_line,
-                      color: (_tomorrowSchedule[index][3] == "1" && index == 0
+                      // FlutterRemix.time_line,
+                      Icons.hourglass_top_outlined,
+                      color: (_tomorrowSchedule[index][4] == "1" && index == 0
                           ? Colors.orange[900]
                           : readColor()),
                     ),
@@ -369,32 +372,32 @@ class TomorrowCourseListState extends State<TomorrowCourseList> {
                               style: TextStyle(
                                   decoration: TextDecoration.none,
                                   fontSize: 14,
-                                  color: (_tomorrowSchedule[index][3] == "1" && index == 0
+                                  color: (_tomorrowSchedule[index][4] == "1" && index == 0
                                       ? Colors.orange[900]
                                       : const Color(0xff333333)))),
                           Text(courseLongText2ShortName(_tomorrowSchedule[index][0]),
                               style: TextStyle(
                                   decoration: TextDecoration.none,
                                   fontSize: 16,
-                                  color: (_tomorrowSchedule[index][3] == "1" && index == 0
+                                  color: (_tomorrowSchedule[index][4] == "1" && index == 0
                                       ? Colors.orange[900]
                                       : const Color(0xff333333)))),
                         ],
                       ),
                       Row(
                         children: [
-                          Text('第${_tomorrowSchedule[index][3]}节 | ',
+                          Text('第${_tomorrowSchedule[index][4]}节 | ',
                               style: TextStyle(
                                   decoration: TextDecoration.none,
                                   fontSize: 12,
-                                  color: (_tomorrowSchedule[index][3] == "1" && index == 0
+                                  color: (_tomorrowSchedule[index][4] == "1" && index == 0
                                       ? Colors.orange[900]
                                       : const Color(0xff999999)))),
                           Text(_tomorrowSchedule[index][1],
                               style: TextStyle(
                                   decoration: TextDecoration.none,
                                   fontSize: 12,
-                                  color: (_tomorrowSchedule[index][3] == "1" && index == 0
+                                  color: (_tomorrowSchedule[index][4] == "1" && index == 0
                                       ? Colors.orange[900]
                                       : const Color(0xff999999)))),
                         ],
@@ -408,7 +411,7 @@ class TomorrowCourseListState extends State<TomorrowCourseList> {
                 children: [
                   Align(
                     alignment: Alignment.centerRight,
-                    child: Text((_tomorrowSchedule[index][3] == "1" && index == 0 ? "别睡懒觉😅" : ""),
+                    child: Text((_tomorrowSchedule[index][4] == "1" && index == 0 ? "别睡懒觉哦" : ""),
                         style: TextStyle(fontSize: 14, color: Colors.orange[900])),
                   ),
                 ],
@@ -541,7 +544,7 @@ class ExamListState extends State<ExamList> {
 
   _getIcon(int index) {
     if (examListC[index]) {
-      return FlutterRemix.checkbox_multiple_line;
+      return FlutterRemix.check_line;
     }
     return FlutterRemix.timer_line;
   }
