@@ -75,7 +75,7 @@ Future<String> getSchedule() async {
       dom.Document document = parse(gbk.decode(response.bodyBytes).toString());
       var list = document.querySelectorAll(".infolist_common");
       num listLength = document.querySelectorAll(".infolist_common").length - 23;
-      for (var i = 0; i < listLength; i++) {
+      for (int i = 0; i < listLength; i++) {
         for (var j = 0; j < list[i].querySelectorAll("table.none>tbody>tr").length; j++) {
           //课节
           String kj = list[i]
@@ -92,18 +92,17 @@ Future<String> getSchedule() async {
               .innerHtml
               .trim()
               .replaceAll("第", "")
-              .replaceAll("单", "")
-              .replaceAll("双", "")
-              .replaceAll("周", ""); //课节
-          List kjList = kj.trim().split('-');
-          List zcList = zc.trim().split('-');
+              .replaceAll("周", "");
+
+          //课节
+          List kjList = kj.trim().split("-");
+          //周次 1-9周 = [1,9]
+          List<String> zcList = zc.trim().split("-");
           String week = list[i]
               .querySelectorAll("table.none>tbody>tr")[j]
               .querySelectorAll("td")[1]
               .innerHtml
               .replaceAll("第", "")
-              .replaceAll("单", "")
-              .replaceAll("双", "")
               .replaceAll("周", "")
               .trim();
           String area = list[i]
@@ -112,9 +111,52 @@ Future<String> getSchedule() async {
               .innerHtml
               .trim();
 
-          if (kjList.length > 1 && week != "&nbsp;") {
-            for (var k = int.parse(kjList[0]); k < int.parse(kjList[1]) + 1; k++) {
-              if (zcList.length > 1) {
+          if (zc.indexOf("单") != -1) {
+            zc = zc.replaceAll("单", "");
+            zcList = zc.trim().split("-");
+            // print(int.parse(zcList.last));
+            List<String> _list = [];
+            for (int i = int.parse(zcList.first); i <= int.parse(zcList.last); i++) {
+              if (!i.isEven) if (_list.indexOf(i.toString()) == -1) _list.add(i.toString());
+            }
+            zcList = _list;
+          } else if (zc.indexOf("双") != -1) {
+            zc = zc.replaceAll("双", "");
+            zcList = zc.trim().split("-");
+            List<String> _list = [];
+            for (int i = int.parse(zcList.first); i < int.parse(zcList.last); i++) {
+              if (i.isEven) if (_list.indexOf(i.toString()) == -1) _list.add(i.toString());
+            }
+            zcList = _list;
+          }
+          if (kjList.length > 1 && week != "&nbsp;")
+            for (int k = int.parse(kjList[0]); k < int.parse(kjList[1]) + 1; k++) {
+              if (zcList.length > 2) {
+                print("zcList");
+                print(zcList);
+                zcList.forEach((element) {
+                  _schedule[element.toString()]?[_weekList[list[i]
+                      .querySelectorAll("table.none>tbody>tr")[j]
+                      .querySelectorAll("td")[1]
+                      .innerHtml
+                      .trim()]]?[k.toString()] = [
+                    //课程名
+                    list[i].querySelectorAll("a.infolist")[0].innerHtml.trim(),
+                    //老师名字
+                    list[i].querySelectorAll("a.infolist").length > 1
+                        ? list[i].querySelectorAll("a.infolist")[1].innerHtml.trim()
+                        : null,
+                    //上课地点
+                    area != "&nbsp" ? area : null,
+                    //备注
+                    list[i]
+                        .querySelectorAll("table.none>tbody>tr")[j]
+                        .text
+                        .trim()
+                        .replaceAll(" ", ";")
+                  ];
+                });
+              } else if (zcList.length > 1) {
                 for (var l = int.parse(zcList[0]); l < int.parse(zcList[1]) + 1; l++) {
                   _schedule[l.toString()]?[_weekList[list[i]
                       .querySelectorAll("table.none>tbody>tr")[j]
@@ -130,7 +172,11 @@ Future<String> getSchedule() async {
                     //上课地点
                     area != "&nbsp" ? area : null,
                     //备注
-                    list[i].querySelectorAll("table.none>tbody>tr")[j].text.trim().replaceAll(" ", ";")
+                    list[i]
+                        .querySelectorAll("table.none>tbody>tr")[j]
+                        .text
+                        .trim()
+                        .replaceAll(" ", ";")
                   ];
                 }
               } else {
@@ -148,11 +194,14 @@ Future<String> getSchedule() async {
                   //上课地点
                   area != "&nbsp" ? area : null,
                   //备注
-                  list[i].querySelectorAll("table.none>tbody>tr")[j].text.trim().replaceAll(" ", ";")
+                  list[i]
+                      .querySelectorAll("table.none>tbody>tr")[j]
+                      .text
+                      .trim()
+                      .replaceAll(" ", ";")
                 ];
               }
             }
-          }
         }
       }
       _next() async {
@@ -337,7 +386,7 @@ Future<List> getScore() async {
             .timeout(Duration(seconds: Global.timeOutSec));
 
     dom.Document document = parse(response.body);
-    print(response.contentLength);
+    // print(response.contentLength);
     if (response.contentLength == 0 || document.querySelector("title")!.text.contains("提示信息")) {
       return ["登录过期"];
     }
