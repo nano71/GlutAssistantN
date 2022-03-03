@@ -146,6 +146,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
       }
 
       _time = Timer(const Duration(seconds: 1), () async {
+        print("更新开始");
         getWeek();
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "连接教务...", 10));
@@ -172,7 +173,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     }
                 }
               else if (value == "success")
-                {_next()}
+                _next()
               else
                 {
                   ScaffoldMessenger.of(context).removeCurrentSnackBar(),

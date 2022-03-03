@@ -166,7 +166,6 @@ class TodayCourseListState extends State<TodayCourseList> {
 
   @override
   Widget build(BuildContext context) {
-
     return SliverList(
       delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
         timerRe(index);
@@ -180,6 +179,7 @@ class TodayCourseListItem extends StatefulWidget {
   final int index;
 
   const TodayCourseListItem({Key? key, this.index = -1}) : super(key: key);
+
   @override
   TodayCourseListItemState createState() => TodayCourseListItemState();
 }
@@ -245,8 +245,10 @@ class TodayCourseListItemState extends State<TodayCourseListItem> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        margin: const EdgeInsets.fromLTRB(16, 16, 16, 16),
-        child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+      margin: const EdgeInsets.fromLTRB(16, 16, 16, 16),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
           Row(
             children: [
               Container(
@@ -294,17 +296,20 @@ class TodayCourseListItemState extends State<TodayCourseListItem> {
             alignment: Alignment.centerRight,
             children: [
               Align(
-                  alignment: Alignment.centerRight,
-                  child: Text(
-                    (_timeText(widget.index - 1).contains("后") ? "" : _timeText(widget.index)),
-                    style: TextStyle(
-                        decoration: TextDecoration.none,
-                        fontSize: 14,
-                        color: _timeColors(widget.index)),
-                  ))
+                alignment: Alignment.centerRight,
+                child: Text(
+                  (_timeText(widget.index - 1).contains("后") ? "" : _timeText(widget.index)),
+                  style: TextStyle(
+                      decoration: TextDecoration.none,
+                      fontSize: 14,
+                      color: _timeColors(widget.index)),
+                ),
+              )
             ],
           ),
-        ]));
+        ],
+      ),
+    );
   }
 }
 
@@ -319,7 +324,7 @@ class TomorrowCourseListState extends State<TomorrowCourseList> {
     eventBusFn = pageBus.on<ReTomorrowListState>().listen((event) {
       reSate();
     });
-    print(_tomorrowSchedule[1]);
+    // print(_tomorrowSchedule[1]);
   }
 
   reSate() {

@@ -324,8 +324,8 @@ class Grid extends StatelessWidget {
     return InkWell(
       onTap: () {
         if (index != 0||index2 != 0) {
-          print(index2);
-          print(index);
+          // print(index2);
+          // print(index);
           scheduleDialog(context, week, weekDay, index.toString());
           // ScaffoldMessenger.of(context).removeCurrentSnackBar();
           // ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(1, teacher, 2));
