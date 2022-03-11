@@ -23,7 +23,10 @@ class QueryPage extends StatefulWidget {
 class _QueryPageState extends State<QueryPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(backgroundColor: Colors.white, body: QueryBody(),);
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: QueryBody(),
+    );
   }
 }
 
@@ -38,6 +41,7 @@ class _QueryBodyState extends State<QueryBody> {
   double _gpa = gpa;
   double _avg = avg;
   double _weight = weight;
+
   // ignore: cancel_subscriptions
   late StreamSubscription<QueryScoreRe> eventBusFn;
 
@@ -51,53 +55,7 @@ class _QueryBodyState extends State<QueryBody> {
           ScaffoldMessenger.of(context).removeCurrentSnackBar();
           ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(1, "没有结果!", 5));
         } else {
-          ScaffoldMessenger.of(context).removeCurrentSnackBar();
-          ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(1, "数据已更新!", 1));
-
-          queryScore = list;
-          double sum = 0.0;
-          double _q = 0.0;
-          double _xf = 0.0;
-          int no = 0;
-          for (int i = 0; i < list.length; i++) {
-            if (list[i][2].toString().contains("慕") && list[i][3] == "") {
-              no++;
-            } else {
-              if (list[i].length > 5) {
-                _q += (int.parse(levelToNumber(list[i]![4])) * double.parse(list[i]![5]));
-                _xf += double.parse(levelToNumber(list[i][5]));
-              }
-              if (list[i].length > 4) {
-                sum += int.parse(levelToNumber(list[i][4]));
-              }
-            }
-          }
-          _avg = double.parse((sum / (list.length - no)).toStringAsFixed(1));
-          _weight = double.parse((_q / _xf).toStringAsFixed(1));
-
-          if (_weight >= 90) {
-            _gpa = 4.0;
-          } else if (_weight >= 85) {
-            _gpa = 3.7;
-          } else if (_weight >= 82) {
-            _gpa = 3.3;
-          } else if (_weight >= 78) {
-            _gpa = 3.0;
-          } else if (_weight >= 75) {
-            _gpa = 2.7;
-          } else if (_weight >= 72) {
-            _gpa = 2.3;
-          } else if (_weight >= 68) {
-            _gpa = 2.0;
-          } else if (_weight >= 64) {
-            _gpa = 1.5;
-          } else if (_weight >= 60) {
-            _gpa = 1.0;
-          } else {}
-          weight = _weight;
-          gpa = _gpa;
-          avg = _avg;
-          setState(() {});
+          _dataProcess(list);
         }
       }
 
@@ -105,11 +63,68 @@ class _QueryBodyState extends State<QueryBody> {
     });
   }
 
+  _dataProcess(list) {
+    queryScore = list;
+    double sum = 0.0;
+    //学分*成绩
+    double a = 0.0;
+    double credit = 0.0;
+    int mooc = 0;
+    for (int i = 0; i < list.length; i++) {
+      int _score = int.parse(levelToNumber(list[i]![4]));
+      double _credit = double.parse(list[i]![5]);
+      String _courseName = list[i]![2].toString();
+      String _teacher = list[i]![3];
+      if (_courseName.contains("慕") && _teacher == "") {
+        mooc++;
+      } else {
+        if (list[i].length > 5) {
+          print(list[i]);
+          a += _score * _credit;
+          credit += _credit;
+        }
+        if (list[i].length > 4) {
+          sum += _score;
+        }
+      }
+    }
+    print(sum);
+    _avg = double.parse((sum / (list.length - mooc)).toStringAsFixed(1));
+    _weight = double.parse((a / credit).toStringAsFixed(1));
+    if (_avg.isNaN) _avg = 0.0;
+    if (_weight.isNaN) _weight = 0.0;
+    if (_weight >= 90) {
+      _gpa = 4.0;
+    } else if (_weight >= 85) {
+      _gpa = 3.7;
+    } else if (_weight >= 82) {
+      _gpa = 3.3;
+    } else if (_weight >= 78) {
+      _gpa = 3.0;
+    } else if (_weight >= 75) {
+      _gpa = 2.7;
+    } else if (_weight >= 72) {
+      _gpa = 2.3;
+    } else if (_weight >= 68) {
+      _gpa = 2.0;
+    } else if (_weight >= 64) {
+      _gpa = 1.5;
+    } else if (_weight >= 60) {
+      _gpa = 1.0;
+    } else {}
+    weight = _weight;
+    gpa = _gpa;
+    avg = _avg;
+    ScaffoldMessenger.of(context).removeCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(1, "数据已更新!", 1));
+    setState(() {});
+  }
+
   _query() async {
     // Global.cookie = {};
 
     _next(List list) {
-      print(list);
+      // print(list);
       if (list.length == 1 && list[0] == "登录过期") {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(jwSnackBarActionQ(
@@ -126,58 +141,7 @@ class _QueryBodyState extends State<QueryBody> {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(1, "没有结果!", 5));
       } else {
-        ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(1, "数据已更新!", 1));
-        queryScore = list;
-        double sum = 0.0;
-        double _q = 0.0;
-        double _xf = 0.0;
-        int no = 0;
-        for (int i = 0; i < list.length; i++) {
-          if (list[i][2].toString().contains("慕") && list[i][3] == "") {
-            no++;
-          } else {
-            if (list[i].length > 5) {
-              _q += (int.parse(levelToNumber(list[i]![4])) * double.parse(list[i]![5]));
-              _xf += double.parse(levelToNumber(list[i][5]));
-            }
-            if (list[i].length > 4) {
-              sum += int.parse(levelToNumber(list[i][4]));
-            }
-          }
-        }
-        _avg = double.parse((sum / (list.length - no)).toStringAsFixed(1));
-        _weight = double.parse((_q / _xf).toStringAsFixed(1));
-        if (_avg.isNaN) {
-          _avg = 0.0;
-        }
-        if (_weight.isNaN) {
-          _weight = 0.0;
-        }
-        if (_weight >= 90) {
-          _gpa = 4.0;
-        } else if (_weight >= 85) {
-          _gpa = 3.7;
-        } else if (_weight >= 82) {
-          _gpa = 3.3;
-        } else if (_weight >= 78) {
-          _gpa = 3.0;
-        } else if (_weight >= 75) {
-          _gpa = 2.7;
-        } else if (_weight >= 72) {
-          _gpa = 2.3;
-        } else if (_weight >= 68) {
-          _gpa = 2.0;
-        } else if (_weight >= 64) {
-          _gpa = 1.5;
-        } else if (_weight >= 60) {
-          _gpa = 1.0;
-        } else {}
-        weight = _weight;
-        gpa = _gpa;
-        avg = _avg;
-
-        setState(() {});
+        _dataProcess(list);
       }
     }
 
@@ -204,12 +168,21 @@ class _QueryBodyState extends State<QueryBody> {
       // color: readColor(),
       margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [readColor(),readColor(),Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent],
-            stops: [0,.5,.50001,.6,.61,1]
-        ),
+        gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [
+          readColor(),
+          readColor(),
+          Colors.transparent,
+          Colors.transparent,
+          Colors.transparent,
+          Colors.transparent
+        ], stops: [
+          0,
+          .5,
+          .50001,
+          .6,
+          .61,
+          1
+        ]),
       ),
       child: CustomScrollView(
         physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
