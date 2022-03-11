@@ -158,7 +158,7 @@ String levelToNumber(String value) {
   return value
       .replaceAll("优", "95")
       .replaceAll("良", "85")
-      .replaceAll("中", "65")
+      .replaceAll("中", "75")
       .replaceAll("及格", "65")
       .replaceAll("合格", "65")
       .replaceAll("不及格", "40")
