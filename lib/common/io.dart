@@ -67,19 +67,38 @@ Future<File> configLocalSupportFile() async {
   return File('${dir.path}/config.json');
 }
 
+Future<File> startTimeLocalSupportFile() async {
+  final dir = await getApplicationSupportDirectory();
+  return File('${dir.path}/startTime.json');
+}
+
+Future<File> endTimeLocalSupportFile() async {
+  final dir = await getApplicationSupportDirectory();
+  return File('${dir.path}/endTime.json');
+}
+
 Future<void> writeConfig() async {
   print("writeConfig");
   writeData["time"] = "${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}";
   writeData["weekDay"] = DateTime.now().weekday;
   print(jsonEncode(writeData));
   String str = jsonEncode(writeData);
+  String startTimeStr = jsonEncode(startTimeList);
+  String endTimeStr = jsonEncode(endTimeList);
   final file = await configLocalSupportFile();
+  final startTimeFile = await startTimeLocalSupportFile();
+  final endTimeFile = await endTimeLocalSupportFile();
   bool dirBool = await file.exists();
-  if (!dirBool) {
-    await file.create(recursive: true);
-  }
+  bool endTimeDirBool = await endTimeFile.exists();
+  bool startTimeDirBool = await startTimeFile.exists();
+  if (!dirBool) await file.create(recursive: true);
+  if (!endTimeDirBool) await endTimeFile.create(recursive: true);
+  if (!startTimeDirBool) await startTimeFile.create(recursive: true);
+
   try {
     await file.writeAsString(str);
+    await startTimeFile.writeAsString(startTimeStr);
+    await endTimeFile.writeAsString(endTimeStr);
     print("writeConfig End");
   } catch (e) {
     print(e);
@@ -89,14 +108,20 @@ Future<void> writeConfig() async {
 Future<void> readConfig() async {
   print("readConfig");
   final file = await configLocalSupportFile();
+  final startTimeFile = await startTimeLocalSupportFile();
+  final endTimeFile = await endTimeLocalSupportFile();
   bool dirBool = await file.exists();
-  print(dirBool);
-  if (!dirBool) {
-    print("文件不存在");
-    await file.create(recursive: true);
-  }
+  bool endTimeDirBool = await endTimeFile.exists();
+  bool startTimeDirBool = await startTimeFile.exists();
+  if (!dirBool) await file.create(recursive: true);
+  if (!endTimeDirBool) await endTimeFile.create(recursive: true);
+  if (!startTimeDirBool) await startTimeFile.create(recursive: true);
   try {
     final result = await file.readAsString();
+    final startTimeResult = await startTimeFile.readAsString();
+    final endTimeResult = await endTimeFile.readAsString();
+
+    //true = 不存在
     if (result.isNotEmpty) {
       print(result);
       writeData = jsonDecode(result);
@@ -108,11 +133,23 @@ Future<void> readConfig() async {
           getLocalWeek(DateTime(y, m, d),
               DateTime(int.parse(_timeList[0]), int.parse(_timeList[1]), int.parse(_timeList[2])));
       writeData["week"] = _nowWeek.toString();
-      print("readConfig End");
       await writeConfig();
-    } else {
+    } else
       await writeConfig();
-    }
+
+    //存在
+    if (startTimeResult.isNotEmpty) {
+      startTimeList = jsonDecode(startTimeResult);
+      await writeConfig();
+    } else
+      await writeConfig();
+    if (endTimeResult.isNotEmpty) {
+      endTimeList = jsonDecode(endTimeResult);
+      await writeConfig();
+    } else
+      await writeConfig();
+
+    print("readConfig End");
   } catch (e) {
     print(e);
   }
