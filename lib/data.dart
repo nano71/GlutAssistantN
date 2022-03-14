@@ -54,7 +54,7 @@ Map schedule = {};
 Map writeData = {
   "time": "",
   "week": "1",
-  "weekBk":"",
+  "weekBk": "",
   "weekDay": "",
   "username": "",
   "password": "",
@@ -88,7 +88,13 @@ int examListA = 0;
 int examListB = 0;
 String todayScheduleTitle = "";
 String tomorrowScheduleTitle = "";
-final List startTimeList = [
+List startTimeListBk = [
+
+];
+List endTimeListBk = [
+
+];
+List startTimeList = [
   [8, 40],
   [9, 25],
   [10, 25],
@@ -101,7 +107,33 @@ final List startTimeList = [
   [20, 15],
   [21, 00]
 ];
-final List endTimeList = [
+List endTimeList = [
+  [9, 20],
+  [10, 05],
+  [11, 05],
+  [11, 50],
+  [15, 10],
+  [15, 55],
+  [16, 45],
+  [17, 30],
+  [20, 10],
+  [20, 55],
+  [21, 40]
+];
+final List startTimeListRe = [
+  [8, 40],
+  [9, 25],
+  [10, 25],
+  [11, 10],
+  [14, 30],
+  [15, 15],
+  [16, 05],
+  [16, 50],
+  [19, 30],
+  [20, 15],
+  [21, 00]
+];
+final List endTimeListRe = [
   [9, 20],
   [10, 05],
   [11, 05],
@@ -175,4 +207,3 @@ String weekDay2Number(String value) {
       .replaceAll("周六", "6")
       .replaceAll("周日", "7");
 }
-
