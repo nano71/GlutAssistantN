@@ -75,7 +75,7 @@ class LoginPageState extends State<LoginPage> {
 
   void _getCode() async {
     try {
-      print("getCode...");
+      // print("getCode...");
       var response = await get(Global.getCodeUrl).timeout(const Duration(milliseconds: 6000));
       parseRawCookies(response.headers['set-cookie']);
       setState(() {
@@ -127,7 +127,7 @@ class LoginPageState extends State<LoginPage> {
         await writeConfig();
         await initTodaySchedule();
         await initTomorrowSchedule();
-        print("initSchedule End");
+        // print("initSchedule End");
         pageBus.fire(SetPageIndex(0));
         Navigator.pushAndRemoveUntil(
           context,

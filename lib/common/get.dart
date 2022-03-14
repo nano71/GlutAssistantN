@@ -16,7 +16,7 @@ import '../data.dart';
 
 Future<void> getWeek() async {
   try {
-    print("getWeek");
+    // print("getWeek");
     var response = await get(Global.getWeekUrl).timeout(Duration(seconds: Global.timeOutSec));
     dom.Document document = parse(gbk.decode(response.bodyBytes));
     String weekHtml = document.querySelector("#date p span")!.text.trim();
@@ -35,20 +35,20 @@ Future<void> getWeek() async {
       writeData["queryYear"] = n;
     }
     await writeConfig();
-    print("getWeek End");
+    // print("getWeek End");
   } on TimeoutException catch (e) {
-    print("超时");
-    print(e);
+    // print("超时");
+    // print(e);
     readConfig();
   } on SocketException catch (e) {
-    print("连接失败");
-    print(e);
+    // print("连接失败");
+    // print(e);
     readConfig();
   }
 }
 
 Future<String> getSchedule() async {
-  print("getSchedule...");
+  // print("getSchedule...");
   Map _schedule = schedule;
   Map<String, String> _weekList = {
     "星期一": "1",
@@ -60,8 +60,8 @@ Future<String> getSchedule() async {
     "星期日": "7"
   };
   try {
-    print(writeData["semesterBk"]);
-    print(writeData["yearBk"]);
+    // print(writeData["semesterBk"]);
+    // print(writeData["yearBk"]);
     Uri _url = Uri.http(Global.getScheduleUrl[0], Global.getScheduleUrl[1], {
       "year": ((int.parse(writeData["yearBk"])) - 1980).toString(),
       "term": writeData["semesterBk"] == "秋" ? "3" : "1"
@@ -69,7 +69,7 @@ Future<String> getSchedule() async {
     var response = await get(_url, headers: {"cookie": mapCookieToString()})
         .timeout(Duration(seconds: Global.timeOutSec));
     if (response.body.contains("j_username")) {
-      print("登录过期");
+      // print("登录过期");
       return "fail";
     } else {
       dom.Document document = parse(gbk.decode(response.bodyBytes).toString());
@@ -132,8 +132,8 @@ Future<String> getSchedule() async {
           if (kjList.length > 1 && week != "&nbsp;")
             for (int k = int.parse(kjList[0]); k < int.parse(kjList[1]) + 1; k++) {
               if (zcList.length > 2) {
-                print("zcList");
-                print(zcList);
+                // print("zcList");
+                // print(zcList);
                 zcList.forEach((element) {
                   _schedule[element.toString()]?[_weekList[list[i]
                       .querySelectorAll("table.none>tbody>tr")[j]
@@ -205,14 +205,14 @@ Future<String> getSchedule() async {
         }
       }
       _next() async {
-        print("获取课表变更(调课/停课/补课)");
+        // print("获取课表变更(调课/停课/补课)");
         String _id = document
             .querySelector(".button[value='个人课表']")!
             .attributes["onclick"]!
             .substring(61)
             .split("&year")[0];
 
-        print(_id);
+        // print(_id);
         Uri _url = Uri.http(Global.getScheduleNextUrl[0], Global.getScheduleNextUrl[1], {
           "id": _id,
           "yearid": ((int.parse(writeData["yearBk"])) - 1980).toString(),
@@ -232,7 +232,7 @@ Future<String> getSchedule() async {
           trs.forEach((element) {
             List<dom.Element> tds = element.querySelectorAll("td");
             int _length = tds.length;
-            print(_length);
+            // print(_length);
             if (_length == 17) {
               //周
               String _delWeek = tds[8].innerHtml.trim();
@@ -315,7 +315,7 @@ Future<String> getSchedule() async {
               if (_addWeek != "&nbsp;") {
                 for (int i = int.parse(_addTime[0]); i <= int.parse(_addTime[1]); i++) {
                   _schedule[_addWeek][_addWeekDay][i.toString()] = [_name, _teacher, _addRoom];
-                  print(_schedule[_addWeek][_addWeekDay][i.toString()]);
+                  // print(_schedule[_addWeek][_addWeekDay][i.toString()]);
                 }
               }
             }
@@ -323,25 +323,25 @@ Future<String> getSchedule() async {
         }
       }
 
-      print(writeData);
+      // print(writeData);
       await _next();
       await writeSchedule(jsonEncode(_schedule));
     }
-    print("getSchedule End");
+    // print("getSchedule End");
     return "success";
   } on TimeoutException catch (e) {
-    print("getExam Error");
-    print(e);
+    // print("getExam Error");
+    // print(e);
     return Global.timeOutError;
   } on SocketException catch (e) {
-    print("getExam Error");
-    print(e);
+    // print("getExam Error");
+    // print(e);
     return Global.socketError;
   }
 }
 
 Future<void> getName() async {
-  print("getName...");
+  // print("getName...");
   var response = await get(Global.getNameUrl, headers: {"cookie": mapCookieToString()})
       .timeout(Duration(seconds: Global.timeOutSec));
   dom.Document document = parse(response.body);
@@ -362,7 +362,7 @@ List getSemester() {
 }
 
 Future<List> getScore() async {
-  print("getScore");
+  // print("getScore");
   String _year = "";
   String _term = "";
   if (writeData["queryYear"] != "全部") {
@@ -402,21 +402,21 @@ Future<List> getScore() async {
       _list.add(dataList[i].querySelectorAll("td")[6].text.trim());
       list.add(_list);
     }
-    print("getScore End");
+    // print("getScore End");
     return list;
   } on TimeoutException catch (e) {
-    print("getScore Error");
-    print(e);
+    // print("getScore Error");
+    // print(e);
     return [Global.timeOutError];
   } on SocketException catch (e) {
-    print("getScore Error");
-    print(e);
+    // print("getScore Error");
+    // print(e);
     return [Global.socketError];
   }
 }
 
 Future<String> getExam() async {
-  print("getExam");
+  // print("getExam");
   try {
     var response = await post(Global.getExamUrl, headers: {"cookie": mapCookieToString()})
         .timeout(Duration(seconds: Global.timeOutSec));
@@ -461,22 +461,22 @@ Future<String> getExam() async {
 
         examList.add(_list);
       }
-      print("getExam End");
+      // print("getExam End");
       return "success";
     }
   } on TimeoutException catch (e) {
-    print("getExam Error");
-    print(e);
+    // print("getExam Error");
+    // print(e);
     return Global.timeOutError;
   } on SocketException catch (e) {
-    print("getExam Error");
-    print(e);
+    // print("getExam Error");
+    // print(e);
     return Global.socketError;
   }
 }
 
 Future getCareer() async {
-  print("getCareer");
+  // print("getCareer");
 
   try {
     _next(List url) async {
@@ -485,7 +485,7 @@ Future getCareer() async {
               {"z": "z", "studentId": url[0], "classId": url[1]}),
           headers: {"cookie": mapCookieToString()}).timeout(Duration(seconds: Global.timeOutSec));
       dom.Document document = parse(response.bodyBytes);
-      print(document.querySelectorAll("img.no_output").length);
+      // print(document.querySelectorAll("img.no_output").length);
       careerCount = [0, 0, 0, 0];
       document.querySelectorAll("img.no_output").forEach((element) {
         if (element.parent!.innerHtml.contains("/academic/styles/images/course_failed.png") ||
@@ -561,47 +561,47 @@ Future getCareer() async {
               "")
           .trim();
       List urlC = urlB.split('&classId=');
-      print(urlC);
+      // print(urlC);
       await _next(urlC);
-      print("getCareer End");
+      // print("getCareer End");
       return "success";
     }
   } on TimeoutException catch (e) {
-    print("getExam Error");
-    print(e);
+    // print("getExam Error");
+    // print(e);
     return Global.timeOutError;
   } on SocketException catch (e) {
-    print("getExam Error");
-    print(e);
+    // print("getExam Error");
+    // print(e);
     return Global.socketError;
   }
 }
 
 Future getUpdate() async {
-  print("getUpdate");
+  // print("getUpdate");
   try {
     var response = await get(Global.getUpdateUrl);
     if (response.body.toString().contains('"message":"API rate limit exceeded for')) {
-      print("getUpdate End");
+      // print("getUpdate End");
       return ["频繁的请求!"];
     }
     List list = jsonDecode(response.body)["name"].split("_");
     list.add(jsonDecode(response.body)["body"]);
     list.add(jsonDecode(response.body)["assets"][0]["browser_download_url"].toString().trim());
-    print(list);
-    print("getUpdate End");
+    // print(list);
+    // print("getUpdate End");
     return list;
   } on TimeoutException catch (e) {
-    print("getUpdate Error: " + e.toString());
+    // print("getUpdate Error: " + e.toString());
     return ["请求超时"];
   } on SocketException catch (e) {
-    print("getUpdate Error: " + e.toString());
+    // print("getUpdate Error: " + e.toString());
     return [Global.socketError];
   }
 }
 
 Future getUpdateForEveryday() async {
-  print("getUpdateForEveryday");
+  // print("getUpdateForEveryday");
   if ("${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}" !=
       writeData["newTime"]) {
     var response = await get(Global.getUpdateUrl);
@@ -613,8 +613,8 @@ Future getUpdateForEveryday() async {
       writeData["newBody"] = list[3];
       writeData["newTime"] = "${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}";
       writeConfig();
-      print("getUpdateForEveryday End");
+      // print("getUpdateForEveryday End");
     }
   }
-  print("getUpdateForEveryday Skip");
+  // print("getUpdateForEveryday Skip");
 }

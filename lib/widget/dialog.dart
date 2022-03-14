@@ -50,7 +50,7 @@ codeCheckDialog(BuildContext context) async {
     }
 
     Future<void> _next(String value) async {
-      print(value);
+      // print(value);
       if (value == "success") {
         await login(writeData["username"], writeData["password"], textFieldController.text)
             .then((String value) => _next2(value));
@@ -67,7 +67,7 @@ codeCheckDialog(BuildContext context) async {
       fn(() {
         clicked = !clicked;
       });
-      print(textFieldController.text);
+      // print(textFieldController.text);
       await codeCheck(textFieldController.text).then((String value) => _next(value));
     }
   }
@@ -161,7 +161,7 @@ codeCheckDialog(BuildContext context) async {
 }
 
 codeCheckDialogQ(BuildContext context) async {
-  print("codeCheckDialogQ");
+  // print("codeCheckDialogQ");
   TextEditingController textFieldController = TextEditingController();
   var response = await get(Global.getCodeUrl).timeout(const Duration(seconds: 3));
   bool clicked = false;
@@ -187,7 +187,7 @@ codeCheckDialogQ(BuildContext context) async {
     }
 
     Future<void> _next(String value) async {
-      print(value);
+      // print(value);
       if (value == "success") {
         await login(writeData["username"], writeData["password"], textFieldController.text)
             .then((String value) => _next2(value));
@@ -208,7 +208,7 @@ codeCheckDialogQ(BuildContext context) async {
       fn(() {
         clicked = !clicked;
       });
-      print(textFieldController.text);
+      // print(textFieldController.text);
       await codeCheck(textFieldController.text).then((String value) => _next(value));
     }
   }
@@ -323,7 +323,7 @@ codeCheckDialogQ2(BuildContext context) async {
     }
 
     Future<void> _next(String value) async {
-      print(value);
+      // print(value);
       if (value == "success") {
         await login(writeData["username"], writeData["password"], textFieldController.text)
             .then((String value) => _next2(value));
@@ -344,7 +344,7 @@ codeCheckDialogQ2(BuildContext context) async {
       fn(() {
         clicked = !clicked;
       });
-      print(textFieldController.text);
+      // print(textFieldController.text);
       await codeCheck(textFieldController.text).then((String value) => _next(value));
     }
   }
@@ -478,7 +478,7 @@ codeCheckDialogQ3(BuildContext context) async {
       fn(() {
         clicked = !clicked;
       });
-      print(textFieldController.text);
+      // print(textFieldController.text);
       await codeCheck(textFieldController.text).then((String value) => _next(value));
     }
   }

@@ -30,13 +30,13 @@ class MinePageState extends State<MinePage> {
     super.initState();
 
     PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
-      print(packageInfo.appName);
+      // print(packageInfo.appName);
       if (writeData["newVersion"] != "" && packageInfo.version != writeData["newVersion"]) {
         setState(() {
           newVersion = true;
         });
       }
-      print(newVersion);
+      // print(newVersion);
     });
   }
 
