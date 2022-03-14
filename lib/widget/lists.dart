@@ -121,7 +121,7 @@ class TodayCourseListState extends State<TodayCourseList> {
     eventBusFn = pageBus.on<ReTodayListState>().listen((event) {
       reSate();
     });
-    print(_todaySchedule);
+    // print(_todaySchedule);
   }
 
   reSate() {
@@ -150,7 +150,7 @@ class TodayCourseListState extends State<TodayCourseList> {
             sum++;
             if (writeData["threshold"] != "-1") if (sum > (int.parse(writeData["threshold"]) * 2))
               exit(0);
-            print("$index : ${DateTime.now().second}");
+            // print("$index : ${DateTime.now().second}");
             setState(() {
               timerS = !timerS;
             });

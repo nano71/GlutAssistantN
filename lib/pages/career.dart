@@ -63,8 +63,8 @@ class _CareerPageBodyState extends State<CareerPageBody> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    print("type:");
-    print(type);
+    // print("type:");
+    // print(type);
     eventBusFn = pageBus.on<CareerRe>().listen((event) {
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
       ScaffoldMessenger.of(context)
@@ -108,7 +108,7 @@ class _CareerPageBodyState extends State<CareerPageBody> {
         Global.timeOutSec,
       ));
     } else {
-      print(value);
+      // print(value);
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, value, 4));
     }
@@ -138,7 +138,7 @@ class _CareerPageBodyState extends State<CareerPageBody> {
           careerInfo[3].substring(careerInfo[3].toString().indexOf("年") - 1).replaceAll("年", ""));
       setState(() {});
     }
-    print(year.toString() + "年9月开学," + (year + allYear).toString() + "年6月毕业");
+    // print(year.toString() + "年9月开学," + (year + allYear).toString() + "年6月毕业");
     _next() {
       var d6 = new DateTime(year, 9);
       var d7 = new DateTime(year + allYear, 6);

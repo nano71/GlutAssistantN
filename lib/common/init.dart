@@ -4,7 +4,7 @@ import '../data.dart';
 import 'io.dart';
 
 initSchedule() async {
-  print("initSchedule");
+  // print("initSchedule");
   Map _schedule = {};
   for (var i = 1; i < 21; i++) {
     _schedule[i.toString()] = {};
@@ -16,12 +16,12 @@ initSchedule() async {
     }
   }
   schedule = _schedule;
-  print("initSchedule End");
+  // print("initSchedule End");
   await writeSchedule(jsonEncode(schedule));
 }
 
 initTodaySchedule() async {
-  print("initTodaySchedule");
+  // print("initTodaySchedule");
   final String _week = writeData["week"].toString();
   Map _schedule = schedule;
   List toDay = [];
@@ -43,11 +43,11 @@ initTodaySchedule() async {
   if (writeData["username"] == "") {
     todayScheduleTitle = "";
   }
-  print("initTodaySchedule End");
+  // print("initTodaySchedule End");
 }
 
 initTomorrowSchedule() async {
-  print("initTomorrowSchedule");
+  // print("initTomorrowSchedule");
   final String _week = writeData["week"].toString();
   Map _schedule = schedule;
   List tomorrow = [];
@@ -80,5 +80,5 @@ initTomorrowSchedule() async {
   if (writeData["username"] == "") {
     tomorrowScheduleTitle = "";
   }
-  print("initTomorrowSchedule End");
+  // print("initTomorrowSchedule End");
 }
