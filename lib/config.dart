@@ -5,7 +5,7 @@ import 'data.dart';
 
 class Global {
   static String appTitle = "桂工助手N";
-  static bool logined = false;
+  static bool login = false;
   static int pageIndex = 0;
   static PageController pageControl = PageController(
     initialPage: 0,
@@ -36,7 +36,7 @@ class Global {
   static double schedulePageGridHeight = 60.0;
 }
 
-readGradient() {
+LinearGradient readGradient() {
   if (writeData["color"] == "red") {
     return const LinearGradient(
       colors: [Color(0xFFfbab66), Color(0xFFf7418c)],
@@ -92,7 +92,7 @@ readColor() {
   }
 }
 
-readColorBegin() {
+Color readColorBegin() {
   if (writeData["color"] == "red"||writeData["color"] == "pink") {
     return const Color.fromARGB(42, 255, 229, 253);
   } else if (writeData["color"] == "blue") {
@@ -106,7 +106,7 @@ readColorBegin() {
   }
 }
 
-readColorEnd() {
+Color readColorEnd() {
   if (writeData["color"] == "red") {
     return const Color.fromARGB(110, 253, 199, 199);
   } else if (writeData["color"] == "pink") {
