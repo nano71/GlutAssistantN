@@ -113,7 +113,7 @@ class LoginPageState extends State<LoginPage> {
     String _password = passwordController.text.toString();
     Future<void> _next(String value) async {
       if (value == "success") {
-        Global.logined = true;
+        Global.login = true;
         logged = true;
         setState(() {
           messageColor = Colors.blue;
@@ -146,7 +146,7 @@ class LoginPageState extends State<LoginPage> {
         });
         _getCode();
       } else {
-        if (Global.logined) {
+        if (Global.login) {
           setState(() {
             messageColor = Colors.yellow;
             message = "登录成功,但程序发生了错误";
@@ -161,7 +161,7 @@ class LoginPageState extends State<LoginPage> {
         .then((String value) => _next(value));
   }
 
-  void tap() {
+  void _tap() {
     _scrollController.animateTo(
       56.0, //滚动到底部
       duration: const Duration(milliseconds: 300),
@@ -219,7 +219,7 @@ class LoginPageState extends State<LoginPage> {
                       ),
                       child: TextField(
                         onTap: () {
-                          tap();
+                          _tap();
                         },
                         cursorColor: readColor(),
                         keyboardType: TextInputType.number,
@@ -249,7 +249,7 @@ class LoginPageState extends State<LoginPage> {
                       ),
                       child: TextField(
                         onTap: () {
-                          tap();
+                          _tap();
                         },
                         focusNode: passwordFocusNode,
                         cursorColor: readColor(),
@@ -273,7 +273,7 @@ class LoginPageState extends State<LoginPage> {
                           Expanded(
                             child: TextField(
                               onTap: () {
-                                tap();
+                                _tap();
                               },
                               cursorColor: readColor(),
                               focusNode: checkCodeFocusNode,
