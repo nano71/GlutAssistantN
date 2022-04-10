@@ -131,7 +131,7 @@ Container topLine = Container(
     border: Border(
       top: BorderSide(
         width: 1, //宽度
-        color: Color(0xfff1f1f1), //边框颜色
+        color: Color(0x60eeeeee), //边框颜色
       ),
     ),
   ),
