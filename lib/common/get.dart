@@ -386,8 +386,7 @@ Future<List> getScore() async {
             .timeout(Duration(seconds: Global.timeOutSec));
 
     dom.Document document = parse(response.body);
-    // print(response.contentLength);
-    if (response.contentLength == 0 || document.querySelector("title")!.text.contains("提示信息")) {
+    if (await getExam() == "fail") {
       return ["登录过期"];
     }
     var dataList = document.querySelectorAll(".datalist > tbody >tr");

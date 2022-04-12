@@ -73,7 +73,11 @@ class _CareerPageBodyState extends State<CareerPageBody> {
     });
     getCareer().then((value) => process(value));
   }
-
+  @override
+  void dispose(){
+    eventBusFn.cancel();
+    super.dispose();
+  }
   process(String value) {
     if (value == "success") {
       login = false;

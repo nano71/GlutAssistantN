@@ -477,8 +477,9 @@ class ScoreListState extends State<ScoreList> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Container(
+                            width: MediaQuery.of(context).size.width - 60 - 32,
                             child: Text(
-                              courseLongText2ShortName(queryScore[index][2]),
+                              queryScore[index][2],
                               style: TextStyle(fontSize: 16),
                             ),
                           ),
@@ -494,8 +495,9 @@ class ScoreListState extends State<ScoreList> {
                   ),
                   //成绩
                   Container(
-                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-                    margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                    width: 60,
+                    padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
+                    margin: const EdgeInsets.fromLTRB(0, 5, 0, 5),
                     decoration: BoxDecoration(
                       borderRadius: const BorderRadius.all(Radius.circular(6.0)),
                       // color: Global.homeCardsColor,

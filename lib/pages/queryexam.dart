@@ -50,7 +50,11 @@ class _QueryExamBodyState extends State<QueryExamBody> {
     });
     getExam().then((value) => _process(value));
   }
-
+  @override
+  void dispose(){
+    eventBusFn.cancel();
+    super.dispose();
+  }
   void _process(String value) {
     if (value == "success") {
       login = false;
