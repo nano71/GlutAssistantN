@@ -62,7 +62,11 @@ class _QueryBodyState extends State<QueryBody> {
       await getScore().then((value) => _next(value));
     });
   }
-
+  @override
+  void dispose(){
+    eventBusFn.cancel();
+    super.dispose();
+  }
   _dataProcess(list) {
     queryScore = list;
     double sum = 0.0;
@@ -124,7 +128,6 @@ class _QueryBodyState extends State<QueryBody> {
     // Global.cookie = {};
 
     _next(List list) {
-      // print(list);
       if (list.length == 1 && list[0] == "登录过期") {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(jwSnackBarActionQ(
