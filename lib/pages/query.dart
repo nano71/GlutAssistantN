@@ -83,7 +83,7 @@ class _QueryBodyState extends State<QueryBody> {
         mooc++;
       } else {
         if (list[i].length > 5) {
-          // print(list[i]);
+          print(list[i]);
           a += _score * _credit;
           credit += _credit;
         }
@@ -92,7 +92,7 @@ class _QueryBodyState extends State<QueryBody> {
         }
       }
     }
-    // print(sum);
+    print(sum);
     _avg = double.parse((sum / (list.length - mooc)).toStringAsFixed(1));
     _weight = double.parse((a / credit).toStringAsFixed(1));
     if (_avg.isNaN) _avg = 0.0;
@@ -148,7 +148,7 @@ class _QueryBodyState extends State<QueryBody> {
       }
     }
 
-    // print(writeData["username"]);
+    print(writeData["username"]);
     if (writeData["username"] == "") {
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(jwSnackBarActionL(

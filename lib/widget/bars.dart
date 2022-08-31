@@ -136,7 +136,7 @@ class BottomNavBarState extends State<BottomNavBar> {
 
   @override
   void initState() {
-    // print("初始化");
+    print("初始化");
     super.initState();
     PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
       version = packageInfo.version;

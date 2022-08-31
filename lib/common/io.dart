@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:glutassistantn/common/get.dart';
 import 'package:glutassistantn/common/init.dart';
+import 'package:glutassistantn/config.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../data.dart';
@@ -12,8 +13,44 @@ Future<File> scheduleLocalSupportFile() async {
   return File('${dir.path}/schedule.json');
 }
 
+Future<File> cookieFile() async {
+  final dir = await getApplicationSupportDirectory();
+  return File('${dir.path}/cookie.json');
+}
+
+Future<void> writeCookie() async {
+  print("writeCookie");
+  final file = await cookieFile();
+  bool dirBool = await file.exists();
+  if (!dirBool) {
+    await file.create(recursive: true);
+  }
+  print(Global.cookie);
+  try {
+    await file.writeAsString(jsonEncode(Global.cookie));
+    print("writeCookie End");
+  } catch (e) {
+    print(e);
+  }
+}
+
+ readCookie() async {
+  print("readCookie");
+  final file = await cookieFile();
+  bool dirBool = await file.exists();
+  if (!dirBool) {
+    await file.create(recursive: true);
+  }
+  final result = await file.readAsString();
+  if (result.isNotEmpty) {
+    Global.cookie = jsonDecode(result);
+    print(Global.cookie);
+    print("readCookie End");
+  }
+}
+
 Future<void> writeSchedule(String str) async {
-  // print("writeSchedule");
+  print("writeSchedule");
   final file = await scheduleLocalSupportFile();
   bool dirBool = await file.exists();
   if (!dirBool) {
@@ -22,9 +59,9 @@ Future<void> writeSchedule(String str) async {
   try {
     await file.writeAsString("");
     await file.writeAsString(str);
-    // print("writeSchedule End");
+    print("writeSchedule End");
   } catch (e) {
-    // print(e);
+    print(e);
   }
 }
 
@@ -43,7 +80,7 @@ Future<void> clearAll() async {
 }
 
 Future<void> readSchedule() async {
-  // print("readSchedule");
+  print("readSchedule");
   final file = await scheduleLocalSupportFile();
   bool dirBool = await file.exists();
   if (!dirBool) {
@@ -53,12 +90,12 @@ Future<void> readSchedule() async {
     final result = await file.readAsString();
     if (result.isNotEmpty) {
       schedule = jsonDecode(result);
-      // print("readSchedule End");
+      print("readSchedule End");
     } else {
       await initSchedule();
     }
   } catch (e) {
-    // print(e);
+    print(e);
   }
 }
 
@@ -78,10 +115,10 @@ Future<File> endTimeLocalSupportFile() async {
 }
 
 Future<void> writeConfig() async {
-  // print("writeConfig");
+  print("writeConfig");
   writeData["time"] = "${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}";
   writeData["weekDay"] = DateTime.now().weekday;
-  // print(jsonEncode(writeData));
+  print(jsonEncode(writeData));
   String str = jsonEncode(writeData);
   String startTimeStr = jsonEncode(startTimeList);
   String endTimeStr = jsonEncode(endTimeList);
@@ -99,14 +136,14 @@ Future<void> writeConfig() async {
     await file.writeAsString(str);
     await startTimeFile.writeAsString(startTimeStr);
     await endTimeFile.writeAsString(endTimeStr);
-    // print("writeConfig End");
+    print("writeConfig End");
   } catch (e) {
-    // print(e);
+    print(e);
   }
 }
 
 Future<void> readConfig() async {
-  // print("readConfig");
+  print("readConfig");
   final file = await configLocalSupportFile();
   final startTimeFile = await startTimeLocalSupportFile();
   final endTimeFile = await endTimeLocalSupportFile();
@@ -123,7 +160,7 @@ Future<void> readConfig() async {
 
     //true = 不存在
     if (result.isNotEmpty) {
-      // print(result);
+      print(result);
       writeData = jsonDecode(result);
       List _timeList = writeData["time"].toString().split("-");
       int y = DateTime.now().year;
@@ -149,8 +186,8 @@ Future<void> readConfig() async {
     } else
       await writeConfig();
 
-    // print("readConfig End");
+    print("readConfig End");
   } catch (e) {
-    // print(e);
+    print(e);
   }
 }

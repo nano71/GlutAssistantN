@@ -72,7 +72,7 @@ class _QueryExamBodyState extends State<QueryExamBody> {
         10,
       ));
     } else {
-      // print(value);
+      print(value);
        ScaffoldMessenger.of(context).removeCurrentSnackBar();
        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, value, 4));
     }
@@ -153,7 +153,7 @@ class _QueryExamBodyState extends State<QueryExamBody> {
                                                 type: 1,
                                               )))
                                       .then((result) {
-                                    // print(examAllNumber);
+                                    print(examAllNumber);
                                     setState(() {
                                       _examAllNumber = examAllNumber;
                                     });

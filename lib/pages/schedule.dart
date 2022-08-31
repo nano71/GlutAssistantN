@@ -145,7 +145,7 @@ class SchedulePageState extends State<SchedulePage> with AutomaticKeepAliveClien
         if (_currentScheduleWeek == 25) {
           _warning1();
         } else {
-          // print("下一页");
+          print("下一页");
           _currentScheduleWeek++;
           _showWeekSnackBar();
           _findNewSchedule();
@@ -154,7 +154,7 @@ class SchedulePageState extends State<SchedulePage> with AutomaticKeepAliveClien
         if (_currentScheduleWeek == 1) {
           _warning1();
         } else {
-          // print("上一页");
+          print("上一页");
           _currentScheduleWeek--;
           _showWeekSnackBar();
           _findNewSchedule();
@@ -324,8 +324,8 @@ class Grid extends StatelessWidget {
     return InkWell(
       onTap: () {
         if (index != 0||index2 != 0) {
-          // print(index2);
-          // print(index);
+          print(index2);
+          print(index);
           scheduleDialog(context, week, weekDay, index.toString());
           // ScaffoldMessenger.of(context).removeCurrentSnackBar();
           // ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(1, teacher, 2));
@@ -398,8 +398,8 @@ class Grid extends StatelessWidget {
 //   return InkWell(
 //     onTap: () {
 //       if (index != 0) {
-//         // print(index2);
-//         // print(index);
+//         print(index2);
+//         print(index);
 //         // ScaffoldMessenger.of(context).removeCurrentSnackBar();
 //         // ScaffoldMessenger.of(context)
 //         //     .showSnackBar(jwSnackBar(1, "第" + _currentScheduleWeek.toString() + "周", 0));
