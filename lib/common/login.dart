@@ -7,7 +7,7 @@ import 'package:http/http.dart';
 import '../config.dart';
 
 Future<String> codeCheck(String code) async {
-  // print("codeCheck...");
+  print("codeCheck...");
   final _url = Uri.http(Global.codeCheckUrl[0], Global.codeCheckUrl[1], {"captchaCode": code});
   var postData = {
     "captchaCode": code,
@@ -19,19 +19,19 @@ Future<String> codeCheck(String code) async {
     if (response.body != "true") result = "fail";
     return result;
   } on TimeoutException catch (e) {
-    // print("getExam Error");
-    // print(e);
+    print("getExam Error");
+    print(e);
     return Global.timeOutError;
   } on SocketException catch (e) {
-    // print("getExam Error");
-    // print(e);
+    print("getExam Error");
+    print(e);
     return Global.socketError;
   }
 }
 
 Future<String> login(String username, String password, String code) async {
   try {
-    // print("loginJW...");
+    print("loginJW...");
     var postData = {"j_username": username, "j_password": password, "j_captcha": code};
     var response =
         await post(Global.loginUrl, body: postData, headers: {"cookie": mapCookieToString()})
@@ -43,12 +43,12 @@ Future<String> login(String username, String password, String code) async {
       return "fail";
     }
   } on TimeoutException catch (e) {
-    // print("getExam Error");
-    // print(e);
+    print("getExam Error");
+    print(e);
     return Global.timeOutError;
   } on SocketException catch (e) {
-    // print("getExam Error");
-    // print(e);
+    print("getExam Error");
+    print(e);
     return Global.socketError;
   }
 }

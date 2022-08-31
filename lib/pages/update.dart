@@ -49,7 +49,7 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
     super.initState();
 
     PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
-      // print(packageInfo.appName);
+      print(packageInfo.appName);
       appName = packageInfo.appName;
       packageName = packageInfo.packageName;
       version = packageInfo.version;
@@ -58,7 +58,7 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
         newVersion = true;
       }
       setState(() {});
-      // print(writeData["newTime"]);
+      print(writeData["newTime"]);
     });
 
     getUpdate().then((value) => _next(value));

@@ -44,12 +44,12 @@ class _TimeManagePageState extends State<TimeManagePage> {
 
     ScaffoldMessenger.of(context).removeCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(1, "已经恢复!", 2));
-    // print(startTimeListRe);
-    // print(endTimeListRe);
-    // print(startTimeList);
-    // print(endTimeList);
-    // print(startTimeListBk);
-    // print(endTimeListBk);
+    print(startTimeListRe);
+    print(endTimeListRe);
+    print(startTimeList);
+    print(endTimeList);
+    print(startTimeListBk);
+    print(endTimeListBk);
     writeConfig();
     pageBus.fire(SetPageIndex(0));
     Navigator.pushAndRemoveUntil(
@@ -70,17 +70,17 @@ class _TimeManagePageState extends State<TimeManagePage> {
       return;
     }
 
-    // print("save");
+    print("save");
     startTimeList = startTimeListBk;
     endTimeList = endTimeListBk;
     ScaffoldMessenger.of(context).removeCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "已经更改!", 2));
-    // print(startTimeListRe);
-    // print(endTimeListRe);
-    // print(startTimeList);
-    // print(endTimeList);
-    // print(startTimeListBk);
-    // print(endTimeListBk);
+    print(startTimeListRe);
+    print(endTimeListRe);
+    print(startTimeList);
+    print(endTimeList);
+    print(startTimeListBk);
+    print(endTimeListBk);
     writeConfig();
     pageBus.fire(SetPageIndex(0));
     Navigator.pushAndRemoveUntil(
@@ -221,12 +221,12 @@ class TimeManagerItemState extends State<TimeManagerItem> {
     if (int.parse(endTime2) < 10) endTime2 = "0" + endTime2;
     _controller.text = startTimeList[index][0].toString() + ":" + endTime;
     _controller2.text = endTimeList[index][0].toString() + ":" + endTime2;
-    // print(endTime2);
+    print(endTime2);
   }
 
   void _setStartTime(String value) {
     if (!value.contains(":") || value[value.length - 1] == ":" || value.isEmpty) {
-      // print("Error");
+      print("Error");
       _isError = true;
       return;
     }
@@ -234,12 +234,12 @@ class TimeManagerItemState extends State<TimeManagerItem> {
     int cache1 = int.parse(value.replaceAll(" ", "").split(":")[0]);
     int cache2 = int.parse(value.replaceAll(" ", "").split(":")[1]);
     startTimeListBk[index] = [cache1, cache2];
-    // print(startTimeListBk);
+    print(startTimeListBk);
   }
 
   void _setEndTime(String value) {
     if (!value.contains(":") || value[value.length - 1] == ":" || value.isEmpty) {
-      // print("Error");
+      print("Error");
       _isError = true;
       return;
     }
@@ -247,7 +247,7 @@ class TimeManagerItemState extends State<TimeManagerItem> {
     int cache1 = int.parse(value.replaceAll(" ", "").split(":")[0]);
     int cache2 = int.parse(value.replaceAll(" ", "").split(":")[1]);
     endTimeListBk[index] = [cache1, cache2];
-    // print(endTimeListBk);
+    print(endTimeListBk);
   }
 
   @override

@@ -105,7 +105,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
     _time2?.cancel();
     if (_goTopInitCount < 8) {
       int _endCount = 10000;
-      // print("刷新${DateTime.now()}");
+      print("刷新${DateTime.now()}");
       _goTopInitCount++;
       if (_goTopInitCount == 7) {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
@@ -140,13 +140,13 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
         pageBus.fire(ReTomorrowListState(1));
         setState(() {});
         _endCount = 0;
-        // print("刷新结束${DateTime.now()}");
+        print("刷新结束${DateTime.now()}");
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(1, "数据已更新!", 1));
       }
 
       _time = Timer(const Duration(seconds: 1), () async {
-        // print("更新开始");
+        print("更新开始");
         getWeek();
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "连接教务...", 10));

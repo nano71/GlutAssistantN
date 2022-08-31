@@ -9,7 +9,7 @@ import 'config.dart';
 main() {
   SystemUiOverlayStyle systemUiOverlayStyle = SystemUiOverlayStyle(statusBarColor: Colors.transparent);
   SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
-  // print("startApp...");
+  print("startApp...");
   runApp(const MyApp());
 
 }

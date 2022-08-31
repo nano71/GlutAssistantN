@@ -14,7 +14,7 @@ class Global {
   static String timeOutError = "教务无响应!";
   static String socketError = "网络错误!";
   static int timeOutSec = 12;
-  static Map<String, String> cookie = {};
+  static Map cookie = {};
   static String jwUrl = "jw.glutnn.cn";
   static String updateApiUrl = "api.github.com";
   static Uri getCodeUrl = Uri.http(jwUrl, "/academic/getCaptcha.do");
