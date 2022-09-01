@@ -7,6 +7,7 @@ import 'dart:io';
 import 'package:gbk2utf8/gbk2utf8.dart';
 import 'package:glutassistantn/common/cookie.dart';
 import 'package:glutassistantn/common/io.dart';
+import 'package:glutassistantn/common/parser.dart';
 import 'package:html/dom.dart' as dom;
 import 'package:html/parser.dart';
 import 'package:http/http.dart';
@@ -235,37 +236,22 @@ Future<String> getSchedule() async {
             print(_length);
             if (_length == 17) {
               //周
-              String _delWeek = tds[8].innerHtml.trim();
-              String _addWeek = tds[13].innerHtml.trim();
+              String _delWeek = innerHtmlTrim(tds[8]);
+              String _addWeek = innerHtmlTrim(tds[13]);
               //课节
-              List<String> _delTime = tds[10]
-                  .innerHtml
-                  .trim()
-                  .replaceAll("第", "")
-                  .replaceAll("节", "")
-                  .replaceAll("周", "")
-                  .replaceAll("单", "")
-                  .replaceAll("双", "")
-                  .split('-');
-              List<String> _addTime = tds[15]
-                  .innerHtml
-                  .trim()
-                  .replaceAll("第", "")
-                  .replaceAll("节", "")
-                  .replaceAll("周", "")
-                  .replaceAll("单", "")
-                  .replaceAll("双", "")
-                  .split('-');
+              List<String> _delTime = lessonParser(tds[10]);
+              List<String> _addTime = lessonParser(tds[15]);
               //星期
-              String _delWeekDay = weekDay2Number(tds[9].innerHtml.trim());
-              String _addWeekDay = weekDay2Number(tds[14].innerHtml.trim());
+              String _delWeekDay = weekDay2Number(innerHtmlTrim(tds[9]));
+              String _addWeekDay = weekDay2Number(innerHtmlTrim(tds[14]));
               //教室
-              String _addRoom = tds[16].innerHtml.trim();
+              String _addRoom = innerHtmlTrim(tds[16]);
               //老师
-              String _addTeacher = tds[4].innerHtml.trim();
-              _teacher = _addTeacher;
+              String _addTeacher = innerHtmlTrim(tds[4]);
+
               //课
-              String _addName = tds[2].innerHtml.trim();
+              String _addName = innerHtmlTrim(tds[2]);
+              _teacher = _addTeacher;
               _name = _addName;
               if (_delWeek != "&nbsp;") {
                 for (int i = int.parse(_delTime[0]); i <= int.parse(_delTime[1]); i++) {
@@ -280,32 +266,17 @@ Future<String> getSchedule() async {
               }
             } else if (_length == 10) {
               //周
-              String _delWeek = tds[1].innerHtml.trim();
-              String _addWeek = tds[6].innerHtml.trim();
-              //课节
-              List<String> _delTime = tds[3]
-                  .innerHtml
-                  .trim()
-                  .replaceAll("第", "")
-                  .replaceAll("节", "")
-                  .replaceAll("周", "")
-                  .replaceAll("单", "")
-                  .replaceAll("双", "")
-                  .split('-');
-              List<String> _addTime = tds[8]
-                  .innerHtml
-                  .trim()
-                  .replaceAll("第", "")
-                  .replaceAll("节", "")
-                  .replaceAll("周", "")
-                  .replaceAll("单", "")
-                  .replaceAll("双", "")
-                  .split('-');
+              String _delWeek = innerHtmlTrim(tds[1]);
               //星期
-              String _delWeekDay = weekDay2Number(tds[2].innerHtml.trim());
-              String _addWeekDay = weekDay2Number(tds[7].innerHtml.trim());
+              String _delWeekDay = weekDay2Number(innerHtmlTrim(tds[2]));
+
+              //课节
+              List<String> _delTime = lessonParser(tds[3]);
+              String _addWeek = innerHtmlTrim(tds[6]);
+              String _addWeekDay = weekDay2Number(innerHtmlTrim(tds[7]));
+              List<String> _addTime = lessonParser(tds[8]);
               //教室
-              String _addRoom = tds[9].innerHtml.trim();
+              String _addRoom = innerHtmlTrim(tds[9]);
 
               if (_delWeek != "&nbsp;") {
                 for (int i = int.parse(_delTime[0]); i <= int.parse(_delTime[1]); i++) {
@@ -390,15 +361,19 @@ Future<List> getScore() async {
       return ["登录过期"];
     }
     var dataList = document.querySelectorAll(".datalist > tbody >tr");
+    String parseData(int i, int number) {
+      return dataList[i].querySelectorAll("td")[number].text.trim();
+    }
+
     List list = [];
     for (int i = 1; i < dataList.length; i++) {
       List _list = [];
-      _list.add(dataList[i].querySelectorAll("td")[0].text.trim());
-      _list.add(dataList[i].querySelectorAll("td")[1].text.trim());
-      _list.add(dataList[i].querySelectorAll("td")[3].text.trim());
-      _list.add(dataList[i].querySelectorAll("td")[4].text.trim());
-      _list.add(dataList[i].querySelectorAll("td")[5].text.trim());
-      _list.add(dataList[i].querySelectorAll("td")[6].text.trim());
+      _list.add(parseData(i, 0));
+      _list.add(parseData(i, 1));
+      _list.add(parseData(i, 3));
+      _list.add(parseData(i, 4));
+      _list.add(parseData(i, 5));
+      _list.add(parseData(i, 6));
       list.add(_list);
     }
     print("getScore End");
