@@ -71,8 +71,6 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
       writeData["newVersion"] = value[1];
       writeData["newBody"] = value[3];
       writeData["githubDownload"] = value[4];
-
-      // writeData["newTime"] = "${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}";
       writeConfig();
       setState(() {});
        ScaffoldMessenger.of(context).removeCurrentSnackBar();

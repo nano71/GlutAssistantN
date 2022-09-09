@@ -112,6 +112,7 @@ Future<String> getSchedule() async {
               .innerHtml
               .trim();
 
+          //单周
           if (zc.indexOf("单") != -1) {
             zc = zc.replaceAll("单", "");
             zcList = zc.trim().split("-");
@@ -121,6 +122,7 @@ Future<String> getSchedule() async {
               if (!i.isEven) if (_list.indexOf(i.toString()) == -1) _list.add(i.toString());
             }
             zcList = _list;
+            //双周
           } else if (zc.indexOf("双") != -1) {
             zc = zc.replaceAll("双", "");
             zcList = zc.trim().split("-");
@@ -248,45 +250,59 @@ Future<String> getSchedule() async {
               String _addRoom = innerHtmlTrim(tds[16]);
               //老师
               String _addTeacher = innerHtmlTrim(tds[4]);
-
               //课
               String _addName = innerHtmlTrim(tds[2]);
               _teacher = _addTeacher;
               _name = _addName;
+              String remark = "第" +
+                  _addWeek.replaceAll("第", "").replaceAll("周", "") +
+                  "周;" +
+                  innerHtmlTrim(tds[14]) +
+                  ";" +
+                  innerHtmlTrim(tds[15]) +
+                  " - 调课/补课;$_addRoom";
+              print(remark);
+
               if (_delWeek != "&nbsp;") {
                 for (int i = int.parse(_delTime[0]); i <= int.parse(_delTime[1]); i++) {
-                  _schedule[_delWeek][_delWeekDay][i.toString()] = ["null", "null", "null"];
+                  _schedule[_delWeek][_delWeekDay][i.toString()] = ["null", "null", "null", "null"];
                 }
               }
               if (_addWeek != "&nbsp;") {
                 for (int i = int.parse(_addTime[0]); i <= int.parse(_addTime[1]); i++) {
                   _schedule[_addWeek][_addWeekDay]
-                      [i.toString()] = [_addName, _addTeacher, _addRoom];
+                      [i.toString()] = [_addName, _addTeacher, _addRoom, remark];
                 }
               }
             } else if (_length == 10) {
               //周
               String _delWeek = innerHtmlTrim(tds[1]);
+              String _addWeek = innerHtmlTrim(tds[6]);
               //星期
               String _delWeekDay = weekDay2Number(innerHtmlTrim(tds[2]));
-
+              String _addWeekDay = weekDay2Number(innerHtmlTrim(tds[7]));
               //课节
               List<String> _delTime = lessonParser(tds[3]);
-              String _addWeek = innerHtmlTrim(tds[6]);
-              String _addWeekDay = weekDay2Number(innerHtmlTrim(tds[7]));
               List<String> _addTime = lessonParser(tds[8]);
               //教室
               String _addRoom = innerHtmlTrim(tds[9]);
-
+              String remark = "第" +
+                  _addWeek.replaceAll("第", "").replaceAll("周", "") +
+                  "周;" +
+                  innerHtmlTrim(tds[7]) +
+                  ";" +
+                  innerHtmlTrim(tds[8]) +
+                  " - 调课/补课;$_addRoom";
+              print(remark);
               if (_delWeek != "&nbsp;") {
                 for (int i = int.parse(_delTime[0]); i <= int.parse(_delTime[1]); i++) {
-                  _schedule[_delWeek][_delWeekDay][i.toString()] = ["null", "null", "null"];
+                  _schedule[_delWeek][_delWeekDay][i.toString()] = ["null", "null", "null", "null"];
                 }
               }
               if (_addWeek != "&nbsp;") {
                 for (int i = int.parse(_addTime[0]); i <= int.parse(_addTime[1]); i++) {
-                  _schedule[_addWeek][_addWeekDay][i.toString()] = [_name, _teacher, _addRoom];
-                  print(_schedule[_addWeek][_addWeekDay][i.toString()]);
+                  _schedule[_addWeek][_addWeekDay]
+                      [i.toString()] = [_name, _teacher, _addRoom, remark];
                 }
               }
             }
