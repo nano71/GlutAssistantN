@@ -26,6 +26,17 @@ apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
+    productFlavors{
+        develop{
+            applicationId "com.nano71.developglutassistantn"
+            manifestPlaceholders = [TD_CHANNEL_ID:"develop"]
+        }
+        build{
+            applicationId "com.nano71.glutassistantn"
+            manifestPlaceholders = [TD_CHANNEL_ID:"build"]
+        }
+    }
+
     compileSdkVersion 30
 
     compileOptions {
@@ -42,6 +53,7 @@ android {
     }
 
     defaultConfig {
+        flavorDimensions "versionCode"
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "com.nano71.glutassistantn"
         minSdkVersion 16

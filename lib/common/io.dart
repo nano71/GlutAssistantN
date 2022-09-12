@@ -34,7 +34,7 @@ Future<void> writeCookie() async {
   }
 }
 
- readCookie() async {
+Future<void> readCookie() async {
   print("readCookie");
   final file = await cookieFile();
   bool dirBool = await file.exists();
@@ -166,10 +166,10 @@ Future<void> readConfig() async {
       int y = DateTime.now().year;
       int m = DateTime.now().month;
       int d = DateTime.now().day;
-      int _nowWeek = int.parse(writeData["week"]) +
+      int _currentWeek = int.parse(writeData["week"]) +
           getLocalWeek(DateTime(y, m, d),
               DateTime(int.parse(_timeList[0]), int.parse(_timeList[1]), int.parse(_timeList[2])));
-      writeData["week"] = _nowWeek.toString();
+      writeData["week"] = _currentWeek.toString();
       await writeConfig();
     } else
       await writeConfig();

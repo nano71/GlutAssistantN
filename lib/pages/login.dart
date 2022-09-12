@@ -164,7 +164,7 @@ class LoginPageState extends State<LoginPage> {
   void _tap() {
     _scrollController.animateTo(
       56.0, //滚动到底部
-      duration: const Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 500),
       curve: Curves.easeOut,
     );
     setState(() {});

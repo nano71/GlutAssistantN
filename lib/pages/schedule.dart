@@ -5,6 +5,7 @@ import 'package:event_bus/event_bus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:glutassistantn/common/io.dart';
 import 'package:glutassistantn/data.dart';
 import 'package:glutassistantn/widget/bars.dart';
 import 'package:glutassistantn/widget/dialog.dart';
@@ -35,7 +36,7 @@ class RowHeaderState extends State<RowHeader> {
   }
 }
 
-List<Widget> _loopRowHeader(bool nowWeek) {
+List<Widget> _loopRowHeader(bool currentWeek) {
   List _weekDayList = ["一", "二", "三", "四", "五", "六", "日"];
   List<Widget> list = [];
   for (int i = 0; i < 8; i++) {
@@ -50,8 +51,10 @@ List<Widget> _loopRowHeader(bool nowWeek) {
               child: Text(
                 "周${_weekDayList[i - 1]}",
                 style: TextStyle(
-                    color: nowWeek
-                        ? (i == DateTime.now().weekday ? readColor() : Colors.grey)
+                    color: currentWeek
+                        ? (i == DateTime
+                        .now()
+                        .weekday ? readColor() : Colors.grey)
                         : Colors.grey),
               ),
             ),
@@ -120,6 +123,19 @@ class SchedulePageState extends State<SchedulePage> with AutomaticKeepAliveClien
   void initState() {
     // TODO: implement initState
     super.initState();
+    Duration duration = Duration(milliseconds: 500);
+    Timer(duration, () {
+      if (writeData["prompt"] == null) {
+        writeData["prompt"] = "5";
+      }
+      int _number = int.parse(writeData["prompt"]);
+      if (_number > 0) {
+        _showPrompt();
+        _number--;
+        writeData["prompt"] = _number.toString();
+        writeConfig();
+      }
+    });
     eventBusFn = pageBus.on<ReState>().listen((event) {
       reState();
     });
@@ -134,6 +150,11 @@ class SchedulePageState extends State<SchedulePage> with AutomaticKeepAliveClien
     ScaffoldMessenger.of(context).removeCurrentSnackBar();
     ScaffoldMessenger.of(context)
         .showSnackBar(jwSnackBar(3, "第" + _currentScheduleWeek.toString() + "周", 0));
+  }
+
+  void _showPrompt() {
+    ScaffoldMessenger.of(context).removeCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(3, "左右划动 ~", 2));
   }
 
   void _touchListen(double eX, double eY) {
@@ -286,17 +307,41 @@ List<Widget> _loopWeekDayColGrid(String week, String weekDay) {
         s = i;
       } else if (courseName == courseLongText2ShortName(_schedule[(i - 1).toString()][0])) {
         if (i == 11) {
-          list.add(Grid(week, weekDay, i, s, courseName, studyArea, teacher, randomColors(),
+          list.add(Grid(
+              week,
+              weekDay,
+              i,
+              s,
+              courseName,
+              studyArea,
+              teacher,
+              randomColors(),
               Global.schedulePageGridHeight * (i - s + 1)));
         } else if (courseName != courseLongText2ShortName(_schedule[(i + 1).toString()][0])) {
-          list.add(Grid(week, weekDay, i, s, courseName, studyArea, teacher, randomColors(),
+          list.add(Grid(
+              week,
+              weekDay,
+              i,
+              s,
+              courseName,
+              studyArea,
+              teacher,
+              randomColors(),
               Global.schedulePageGridHeight * (i - s + 1)));
         }
       } else {
         s = i;
       }
     } else {
-      list.add(Grid(week, weekDay, 0, 0, "", "", "", Colors.white));
+      list.add(Grid(
+          week,
+          weekDay,
+          0,
+          0,
+          "",
+          "",
+          "",
+          Colors.white));
     }
   }
   return list;
@@ -323,7 +368,7 @@ class Grid extends StatelessWidget {
     TextStyle style = const TextStyle(fontSize: 12, color: Colors.white);
     return InkWell(
       onTap: () {
-        if (index != 0||index2 != 0) {
+        if (index != 0 || index2 != 0) {
           print(index2);
           print(index);
           scheduleDialog(context, week, weekDay, index.toString());

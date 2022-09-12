@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ffi';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
@@ -80,16 +81,18 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
     if (_timeOutBool) {
       int _offset = _scrollController.position.pixels.toInt();
       if (_offset < 0) {
-        iconKey.currentState!.onPressed((_offset / 25.0).abs() + offset_);
-        if ((_offset / 25.0).abs() >= 6.0) {
-          final double __offset = (_offset / 25.0).abs();
-          if (__offset == (_offset / 25.0).abs() || __offset + 0.25 < (_offset / 25.0).abs()) {
+        double _offsetAbs = (_offset / 25.0).abs();
+        iconKey.currentState!.onPressed(_offsetAbs + offset_);
+        if (_offsetAbs >= 5.0) {
+          final double __offset = _offsetAbs;
+          if (__offset == _offsetAbs || __offset + 0.25 < _offsetAbs) {
             Future.delayed(
               const Duration(milliseconds: 200),
               () {
                 if (_timeOutBool) {
-                  offset_ = (_offset / 25.0).abs();
+                  offset_ = _offsetAbs;
                   _goTop();
+                  getEmptyClassroom();
                 }
                 _timeOutBool = false;
               },

@@ -27,10 +27,16 @@ class Global {
   static Uri getScoreUrl = Uri.http(jwUrl, "/academic/manager/score/studentOwnScore.do");
   static Uri getCareerUrl =
       Uri.http(jwUrl, "/academic/manager/studyschedule/studentSelfSchedule.jsdo");
-  static Uri getUpdateUrl =
-      Uri.http(updateApiUrl, "/repos/nano71/GlutAssistantN/releases/latest");
+  static Uri getUpdateUrl = Uri.http(updateApiUrl, "/repos/nano71/GlutAssistantN/releases/latest");
+  static Uri getEmptyClassroomUrl =
+      Uri.http(jwUrl, "/academic/teacher/teachresource/roomschedulequery.jsdo");
+  static Uri getEmptyClassroomUrl2 =
+      Uri.http(jwUrl, "/academic/teacher/teachresource/roomschedule_week.jsdo");
   static List<String> getScheduleUrl = [jwUrl, "/academic/student/currcourse/currcourse.jsdo"];
-  static List<String> getScheduleNextUrl = [jwUrl, "/academic/manager/coursearrange/showTimetable.do"];
+  static List<String> getScheduleNextUrl = [
+    jwUrl,
+    "/academic/manager/coursearrange/showTimetable.do"
+  ];
   static List<String> codeCheckUrl = [jwUrl, "/academic/checkCaptcha.do"];
   static double schedulePageTouchMovesMinValue = 70.0;
   static double schedulePageGridHeight = 60.0;
@@ -49,7 +55,7 @@ LinearGradient readGradient() {
       begin: Alignment.centerLeft,
       end: Alignment.topRight,
     );
-  }else if (writeData["color"] == "blue") {
+  } else if (writeData["color"] == "blue") {
     return const LinearGradient(
       colors: [Color(0xff66cefb), Color(0xff4175f7)],
       begin: Alignment.centerLeft,
@@ -93,7 +99,7 @@ readColor() {
 }
 
 Color readColorBegin() {
-  if (writeData["color"] == "red"||writeData["color"] == "pink") {
+  if (writeData["color"] == "red" || writeData["color"] == "pink") {
     return const Color.fromARGB(42, 255, 229, 253);
   } else if (writeData["color"] == "blue") {
     return const Color.fromARGB(42, 199, 229, 253);
@@ -111,7 +117,7 @@ Color readColorEnd() {
     return const Color.fromARGB(110, 253, 199, 199);
   } else if (writeData["color"] == "pink") {
     return const Color.fromARGB(110, 253, 199, 228);
-  }else if (writeData["color"] == "blue") {
+  } else if (writeData["color"] == "blue") {
     return const Color.fromARGB(110, 199, 229, 253);
   } else if (writeData["color"] == "yellow") {
     return const Color.fromARGB(110, 253, 246, 199);

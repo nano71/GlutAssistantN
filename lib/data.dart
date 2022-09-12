@@ -88,12 +88,8 @@ int examListA = 0;
 int examListB = 0;
 String todayScheduleTitle = "";
 String tomorrowScheduleTitle = "";
-List startTimeListBk = [
-
-];
-List endTimeListBk = [
-
-];
+List startTimeListBk = [];
+List endTimeListBk = [];
 List startTimeList = [
   [8, 40],
   [9, 25],
