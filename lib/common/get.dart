@@ -608,3 +608,29 @@ Future getUpdateForEveryday() async {
   }
   print("getUpdateForEveryday Skip");
 }
+
+getEmptyClassroom() async {
+  print('getEmptyClassroom');
+  Map postData = {
+    "aid": "1",
+    "buildingid": "10", //1教:10
+    "room": "-1", //教室
+    "whichweek": "1", //第几周
+    "week": "1", //星期
+    "Submit": "%C8%B7+%B6%A8"
+  };
+  var response = await get(Global.getEmptyClassroomUrl, headers: {"cookie": mapCookieToString()})
+      .timeout(Duration(seconds: Global.timeOutSec));
+  dom.Document document = parse(gbk.decode(response.bodyBytes));
+  if (gbk.decode(response.bodyBytes).contains("提示信息")) {
+    return "fail";
+  } else {
+    List options = document.querySelectorAll("#buildingid > option");
+    Map<String, String> builds = {};
+    options.removeAt(0);
+    for (var element in options) {
+      builds[element.innerHtml] = element.attributes["value"];
+    }
+    print(builds);
+  }
+}
