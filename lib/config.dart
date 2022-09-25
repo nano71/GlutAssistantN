@@ -17,21 +17,20 @@ class Global {
   static Map cookie = {};
   static String jwUrl = "jw.glutnn.cn";
   static String updateApiUrl = "api.github.com";
-  static Uri getCodeUrl = Uri.http(jwUrl, "/academic/getCaptcha.do");
-  static Uri loginUrl = Uri.http(jwUrl, "/academic/j_acegi_security_check");
-  static Uri loginUrl2 = Uri.http(jwUrl, "/academic/index_new.jsp");
-  static Uri getWeekUrl = Uri.http(jwUrl, "/academic/listLeft.do");
-  static Uri getExamUrl = Uri.http(jwUrl, "/academic/manager/examstu/studentQueryAllExam.do");
-  static Uri getNameUrl = Uri.http(jwUrl, "/academic/student/studentinfo/studentInfoModifyIndex.do",
-      {"frombase": "0", "wantTag": "0"});
-  static Uri getScoreUrl = Uri.http(jwUrl, "/academic/manager/score/studentOwnScore.do");
-  static Uri getCareerUrl =
-      Uri.http(jwUrl, "/academic/manager/studyschedule/studentSelfSchedule.jsdo");
+  static Uri getCodeUrl = httpUri("/academic/getCaptcha.do");
+  static Uri loginUrl = httpUri("/academic/j_acegi_security_check");
+  static Uri loginUrl2 = httpUri("/academic/index_new.jsp");
+  static Uri getWeekUrl = httpUri("/academic/listLeft.do");
+  static Uri getExamUrl = httpUri("/academic/manager/examstu/studentQueryAllExam.do");
+  static Uri getNameUrl = httpUri(
+      "/academic/student/studentinfo/studentInfoModifyIndex.do", {"frombase": "0", "wantTag": "0"});
+  static Uri getScoreUrl = httpUri("/academic/manager/score/studentOwnScore.do");
+  static Uri getCareerUrl = httpUri("/academic/manager/studyschedule/studentSelfSchedule.jsdo");
   static Uri getUpdateUrl = Uri.http(updateApiUrl, "/repos/nano71/GlutAssistantN/releases/latest");
   static Uri getEmptyClassroomUrl =
-      Uri.http(jwUrl, "/academic/teacher/teachresource/roomschedulequery.jsdo");
+      httpUri("/academic/teacher/teachresource/roomschedulequery.jsdo");
   static Uri getEmptyClassroomUrl2 =
-      Uri.http(jwUrl, "/academic/teacher/teachresource/roomschedule_week.jsdo");
+      httpUri("/academic/teacher/teachresource/roomschedule_week.jsdo");
   static List<String> getScheduleUrl = [jwUrl, "/academic/student/currcourse/currcourse.jsdo"];
   static List<String> getScheduleNextUrl = [
     jwUrl,
@@ -40,6 +39,16 @@ class Global {
   static List<String> codeCheckUrl = [jwUrl, "/academic/checkCaptcha.do"];
   static double schedulePageTouchMovesMinValue = 70.0;
   static double schedulePageGridHeight = 60.0;
+  static String careerErrorText = "用户名不能为空！";
+  static String examErrorText = "<title>提示信息</title>";
+  static String scheduleErrorText = "j_username";
+}
+
+Uri httpUri(
+  path, [
+  Map<String, dynamic>? queryParameters,
+]) {
+  return Uri.http(Global.jwUrl, path, queryParameters);
 }
 
 LinearGradient readGradient() {

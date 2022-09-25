@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_remix/flutter_remix.dart';
 import 'package:glutassistantn/pages/career.dart';
+import 'package:glutassistantn/pages/queryroom.dart';
 import 'package:glutassistantn/pages/setting.dart';
 import 'package:glutassistantn/pages/update.dart';
 import 'package:glutassistantn/widget/bars.dart';
@@ -85,6 +86,20 @@ class MinePageState extends State<MinePage> {
                     },
                     child: mineItem(FlutterRemix.timer_flash_line,
                         const EdgeInsets.fromLTRB(16, 14, 0, 14), "课程生涯", readColor()),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      if (writeData["username"] == "") {
+                        // Navigator.push(context, SlideTopRoute(page: LoginPage()));
+                        Navigator.of(context)
+                            .push(MaterialPageRoute(builder: (context) => const LoginPage()));
+                      } else {
+                        Navigator.of(context)
+                            .push(MaterialPageRoute(builder: (context) => const QueryRoomPage()));
+                      }
+                    },
+                    child: mineItem(FlutterRemix.building_4_line,
+                        const EdgeInsets.fromLTRB(16, 14, 0, 14), "教室查询", readColor()),
                   ),
                   topLine,
                   InkWell(

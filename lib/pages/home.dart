@@ -92,7 +92,6 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 if (_timeOutBool) {
                   offset_ = _offsetAbs;
                   _goTop();
-                  getEmptyClassroom();
                 }
                 _timeOutBool = false;
               },
