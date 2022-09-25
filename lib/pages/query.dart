@@ -62,11 +62,13 @@ class _QueryBodyState extends State<QueryBody> {
       await getScore().then((value) => _next(value));
     });
   }
+
   @override
-  void dispose(){
+  void dispose() {
     eventBusFn.cancel();
     super.dispose();
   }
+
   _dataProcess(list) {
     queryScore = list;
     double sum = 0.0;
@@ -127,24 +129,27 @@ class _QueryBodyState extends State<QueryBody> {
   _query() async {
     // Global.cookie = {};
 
-    _next(List list) {
-      if (list.length == 1 && list[0] == "登录过期") {
-        ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        ScaffoldMessenger.of(context).showSnackBar(jwSnackBarActionQ(
-          false,
-          "需要验证",
-          context,
-          10,
-        ));
-      } else if (list.length == 1 &&
-          (list[0] == Global.socketError || list[0] == Global.timeOutError)) {
-        ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, list[0], 4));
-      } else if (list.length == 0) {
-        ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(1, "没有结果!", 5));
-      } else {
-        _dataProcess(list);
+    _next(value) {
+      if (value is String) {
+        if (value == "fail") {
+          ScaffoldMessenger.of(context).removeCurrentSnackBar();
+          ScaffoldMessenger.of(context).showSnackBar(jwSnackBarActionQ(
+            false,
+            "需要验证",
+            context,
+            10,
+          ));
+        } else {
+          ScaffoldMessenger.of(context).removeCurrentSnackBar();
+          ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, value, 4));
+        }
+      } else if (value is List) {
+        if (value.length == 0) {
+          ScaffoldMessenger.of(context).removeCurrentSnackBar();
+          ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(1, "没有结果!", 5));
+        } else {
+          _dataProcess(value);
+        }
       }
     }
 
@@ -239,7 +244,6 @@ class _QueryBodyState extends State<QueryBody> {
                           ),
                           DropdownButton(
                             iconEnabledColor: Colors.white,
-                            isDense: true,
                             elevation: 0,
                             hint: Text(writeData["querySemester"],
                                 style: TextStyle(

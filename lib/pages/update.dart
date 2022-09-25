@@ -1,11 +1,16 @@
+import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_remix/flutter_remix.dart';
-import 'package:glutassistantn/common/get.dart';
 import 'package:glutassistantn/common/io.dart';
 import 'package:glutassistantn/data.dart';
 import 'package:glutassistantn/widget/bars.dart';
+import 'package:http/http.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:package_info/package_info.dart';
+import '../config.dart';
 import 'mine.dart';
 
 class UpdatePage extends StatefulWidget {
@@ -273,4 +278,46 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
       ),
     );
   }
+}
+Future getUpdate() async {
+  print("getUpdate");
+  Response response;
+  try {
+    response = await get(Global.getUpdateUrl);
+  } on TimeoutException catch (e) {
+    print("getUpdate Error: " + e.toString());
+    return ["请求超时"];
+  } on SocketException catch (e) {
+    print("getUpdate Error: " + e.toString());
+    return [Global.socketError];
+  }
+  if (response.body.toString().contains('"message":"API rate limit exceeded for')) {
+    print("getUpdate End");
+    return ["频繁的请求!"];
+  }
+  List list = jsonDecode(response.body)["name"].split("_");
+  list.add(jsonDecode(response.body)["body"]);
+  list.add(jsonDecode(response.body)["assets"][0]["browser_download_url"].toString().trim());
+  print(list);
+  print("getUpdate End");
+  return list;
+}
+
+Future getUpdateForEveryday() async {
+  print("getUpdateForEveryday");
+  if ("${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}" !=
+      writeData["newTime"]) {
+    Response response = await get(Global.getUpdateUrl);
+    if (response.body.toString().contains('"message":"API rate limit exceeded for')) {
+    } else {
+      List list = jsonDecode(response.body)["name"].split("_");
+      list.add(jsonDecode(response.body)["body"]);
+      writeData["newVersion"] = list[1];
+      writeData["newBody"] = list[3];
+      writeData["newTime"] = "${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}";
+      writeConfig();
+      print("getUpdateForEveryday End");
+    }
+  }
+  print("getUpdateForEveryday Skip");
 }

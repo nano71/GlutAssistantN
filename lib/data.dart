@@ -90,6 +90,8 @@ String todayScheduleTitle = "";
 String tomorrowScheduleTitle = "";
 List startTimeListBk = [];
 List endTimeListBk = [];
+List weekList4CN = ["一", "二", "三", "四", "五", "六", "日"];
+
 List startTimeList = [
   [8, 40],
   [9, 25],

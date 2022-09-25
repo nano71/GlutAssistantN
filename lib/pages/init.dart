@@ -8,6 +8,7 @@ import 'package:glutassistantn/config.dart';
 import 'package:glutassistantn/pages/home.dart';
 import 'package:glutassistantn/pages/mine.dart';
 import 'package:glutassistantn/pages/schedule.dart';
+import 'package:glutassistantn/pages/update.dart';
 import 'package:glutassistantn/widget/bars.dart';
 
 class CustomRoute extends PageRouteBuilder {
