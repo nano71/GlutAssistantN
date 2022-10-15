@@ -17,8 +17,11 @@ class QueryRoomPage extends StatefulWidget {
 }
 
 class QueryRoomPageState extends State<QueryRoomPage> {
-  Map<String, Map> query = {"builds": {}};
-  Map<String, String> selects = {"builds": ""};
+  Map<String, Map> query = {"builds": {
+    "1":"请选择"
+  }};
+  Map<String, String> selects = {"builds": "请选择"};
+  String buildSelect = "请选择";
 
   @override
   void initState() {
@@ -32,14 +35,24 @@ class QueryRoomPageState extends State<QueryRoomPage> {
     query["builds"]!.forEach((key, value) {
       list.add(DropdownMenuItem(child: Text(value), value: key));
     });
+
+    if (list == []) {
+      list.add(DropdownMenuItem(child: Text("-"), value: "请选择"));
+    }
+    print('41');
     print(list);
     return list;
+  }
+
+  String hintText() {
+    return selects["builds"] == null ? "请选择" : query["builds"]?[selects["builds"]];
   }
 
   process(value) {
     print('process');
     if (value is Map<String, Map>) {
       query = value;
+      setState(() {});
     } else if (value == "fail") {
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(jwSnackBarActionQ3(
@@ -89,11 +102,11 @@ class QueryRoomPageState extends State<QueryRoomPage> {
                           children: [
                             DropdownButton(
                               elevation: 0,
-                              hint: Text(
-                                  query["builds"] == {} ? query["builds"]![selects["builds"]] : ""),
+                              hint: Text(buildSelect),
                               items: builds(),
                               onChanged: (value) {
                                 setState(() {
+                                  buildSelect = query["builds"]?[value.toString()];
                                   selects["builds"] = value.toString();
                                 });
                               },
@@ -178,3 +191,4 @@ List<DropdownMenuItem<Object>> weeksList() {
   }
   return list;
 }
+
