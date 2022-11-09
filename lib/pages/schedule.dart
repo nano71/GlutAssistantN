@@ -52,9 +52,7 @@ List<Widget> _loopRowHeader(bool currentWeek) {
                 "周${_weekDayList[i - 1]}",
                 style: TextStyle(
                     color: currentWeek
-                        ? (i == DateTime
-                        .now()
-                        .weekday ? readColor() : Colors.grey)
+                        ? (i == DateTime.now().weekday ? readColor() : Colors.grey)
                         : Colors.grey),
               ),
             ),
@@ -301,47 +299,32 @@ List<Widget> _loopWeekDayColGrid(String week, String weekDay) {
     String courseName = courseLongText2ShortName(_schedule[i.toString()][0]);
     String studyArea = _schedule[i.toString()][2];
     String teacher = _schedule[i.toString()][1];
+    bool courseNameNotNull() => courseName != "null";
 
-    if (courseName != "null") {
+    if (courseNameNotNull()) {
+      bool courseNameIsPreviousCourseName() =>
+          courseName == courseLongText2ShortName(_schedule[(i - 1).toString()][0]);
+      bool courseNameNotIsNextCourseName() =>
+          courseName != courseLongText2ShortName(_schedule[(i + 1).toString()][0]);
+      bool studyAreaNotIsNextStudyArea() => studyArea != _schedule[(i + 1).toString()][2];
+      bool studyAreaIsPreviousStudyArea() => studyArea == _schedule[(i - 1).toString()][2];
+
       if (i == 1) {
         s = i;
-      } else if (courseName == courseLongText2ShortName(_schedule[(i - 1).toString()][0])) {
+      } else if (studyAreaIsPreviousStudyArea() && courseNameIsPreviousCourseName()) {
+        double height = Global.schedulePageGridHeight * (i - s + 1);
         if (i == 11) {
-          list.add(Grid(
-              week,
-              weekDay,
-              i,
-              s,
-              courseName,
-              studyArea,
-              teacher,
-              randomColors(),
-              Global.schedulePageGridHeight * (i - s + 1)));
-        } else if (courseName != courseLongText2ShortName(_schedule[(i + 1).toString()][0])) {
-          list.add(Grid(
-              week,
-              weekDay,
-              i,
-              s,
-              courseName,
-              studyArea,
-              teacher,
-              randomColors(),
-              Global.schedulePageGridHeight * (i - s + 1)));
+          list.add(
+              Grid(week, weekDay, i, s, courseName, studyArea, teacher, randomColors(), height));
+        } else if (studyAreaNotIsNextStudyArea() || courseNameNotIsNextCourseName()) {
+          list.add(
+              Grid(week, weekDay, i, s, courseName, studyArea, teacher, randomColors(), height));
         }
       } else {
         s = i;
       }
     } else {
-      list.add(Grid(
-          week,
-          weekDay,
-          0,
-          0,
-          "",
-          "",
-          "",
-          Colors.white));
+      list.add(Grid(week, weekDay, 0, 0, "", "", "", Colors.white));
     }
   }
   return list;
