@@ -17,11 +17,12 @@ class QueryRoomPage extends StatefulWidget {
 }
 
 class QueryRoomPageState extends State<QueryRoomPage> {
-  Map<String, Map> query = {"builds": {
-    "1":"请选择"
-  }};
-  Map<String, String> selects = {"builds": "请选择"};
-  String buildSelect = "请选择";
+  Map<String, Map> query = {
+    "buildings": {"1": "请选择"}
+  };
+  String buildingSelect = "请选择";
+  String classroomSelect = "请选择";
+  Object? currentRadio = 0;
 
   @override
   void initState() {
@@ -30,9 +31,10 @@ class QueryRoomPageState extends State<QueryRoomPage> {
     getEmptyClassroom().then((value) => process(value));
   }
 
-  List<DropdownMenuItem<Object>> builds() {
+  List<DropdownMenuItem<Object>> classrooms() {
     List<DropdownMenuItem<Object>> list = [];
-    query["builds"]!.forEach((key, value) {
+    print(query);
+    query["classrooms"]?.forEach((key, value) {
       list.add(DropdownMenuItem(child: Text(value), value: key));
     });
 
@@ -40,16 +42,26 @@ class QueryRoomPageState extends State<QueryRoomPage> {
       list.add(DropdownMenuItem(child: Text("-"), value: "请选择"));
     }
     print('41');
-    print(list);
     return list;
   }
 
-  String hintText() {
-    return selects["builds"] == null ? "请选择" : query["builds"]?[selects["builds"]];
+  List<DropdownMenuItem<Object>> buildings() {
+    List<DropdownMenuItem<Object>> list = [];
+    print(query);
+    query["buildings"]!.forEach((key, value) {
+      list.add(DropdownMenuItem(child: Text(value), value: key));
+    });
+
+    if (list == []) {
+      list.add(DropdownMenuItem(child: Text("-"), value: "请选择"));
+    }
+    print('55');
+    return list;
   }
 
   process(value) {
     print('process');
+    print(value);
     if (value is Map<String, Map>) {
       query = value;
       setState(() {});
@@ -66,6 +78,12 @@ class QueryRoomPageState extends State<QueryRoomPage> {
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, value, 4));
     }
+  }
+
+  queryClassroomList(String value) {
+    print(value);
+    buildingSelect = query["buildings"]?[value];
+    getEmptyClassroom(building: value).then((value) => process(value));
   }
 
   @override
@@ -96,59 +114,122 @@ class QueryRoomPageState extends State<QueryRoomPage> {
                 child: Column(
                   children: [
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Row(
-                          children: [
-                            DropdownButton(
-                              elevation: 0,
-                              hint: Text(buildSelect),
-                              items: builds(),
-                              onChanged: (value) {
-                                setState(() {
-                                  buildSelect = query["builds"]?[value.toString()];
-                                  selects["builds"] = value.toString();
-                                });
-                              },
-                            ),
-                            SizedBox(
-                              width: 25,
-                            ),
-                            DropdownButton(
-                              elevation: 0,
-                              hint: Text(writeData["querySemester"]),
-                              items: const [
-                                DropdownMenuItem(child: Text("全部"), value: "全部"),
-                                DropdownMenuItem(child: Text("春"), value: "春"),
-                                DropdownMenuItem(child: Text("秋"), value: "秋"),
-                              ],
-                              onChanged: (value) {
-                                setState(() {
-                                  writeData["querySemester"] = value;
-                                });
-                              },
-                            ),
-                          ],
+                        SizedBox(
+                          width: 60,
+                          child: Text("教学楼:"),
                         ),
-                        InkWell(
-                          onTap: () {},
-                          child: Container(
-                            decoration: const BoxDecoration(
-                              borderRadius: BorderRadius.all(Radius.circular(6.0)),
-                              color: Color(0x1ff1f1f1),
-                            ),
-                            padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-                            child: Text(
-                              "查询",
-                              style: TextStyle(color: Colors.white),
-                            ),
+                        SizedBox(
+                          height: 40,
+                          child: Row(
+                            children: [
+                              DropdownButton(
+                                elevation: 0,
+                                hint: Text(buildingSelect, style: TextStyle(fontSize: 14)),
+                                items: buildings(),
+                                onChanged: (value) {
+                                  setState(() {
+                                    queryClassroomList(value.toString());
+                                  });
+                                },
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: 60,
+                          child: Text("教    室:"),
+                        ),
+                        SizedBox(
+                          height: 40,
+                          child: Row(
+                            children: [
+                              DropdownButton(
+                                elevation: 0,
+                                hint: Text(classroomSelect, style: TextStyle(fontSize: 14)),
+                                items: classrooms(),
+                                onChanged: (value) {
+                                  setState(() {
+                                    classroomSelect = query["classrooms"]?[value];
+                                  });
+                                },
+                              ),
+                            ],
                           ),
                         ),
                       ],
                     ),
+                    Row(children: [
+                      SizedBox(
+                        width: 60,
+                        child: Text("模    式:"),
+                      ),
+                      SizedBox(
+                          height: 40,
+                          child: Row(
+                            children: [
+                              Radio(
+                                  value: 0,
+                                  groupValue: currentRadio,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      this.currentRadio = value;
+                                    });
+                                  }),
+                              Text("教学楼模式"),
+                              Radio(
+                                  value: 1,
+                                  groupValue: currentRadio,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      this.currentRadio = value;
+                                    });
+                                  }),
+                            ],
+                          ))
+                    ]),
                     SizedBox(
                       height: 8,
                     ),
+                  ],
+                ),
+              ),
+            ),
+            SliverToBoxAdapter(
+              child: Container(
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+                color: Colors.white,
+                margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                child: Column(
+                  children: [
+                    SizedBox(
+                      width: double.infinity,
+                      height: 50,
+                      child: Container(
+                        margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                        child: TextButton(
+                            autofocus: true,
+                            style: ButtonStyle(
+                              //设置水波纹颜色
+                              overlayColor: MaterialStateProperty.all(Colors.yellow),
+                              backgroundColor: MaterialStateProperty.resolveWith((states) {
+                                return readColor();
+                              }),
+                              shape: MaterialStateProperty.all(
+                                  RoundedRectangleBorder(borderRadius: BorderRadius.circular(28))),
+                            ),
+                            child: Text(
+                              "查询",
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold, color: Colors.white, fontSize: 14),
+                            ),
+                            onPressed: () {}),
+                      ),
+                    )
                   ],
                 ),
               ),
@@ -191,4 +272,3 @@ List<DropdownMenuItem<Object>> weeksList() {
   }
   return list;
 }
-
