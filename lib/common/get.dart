@@ -349,7 +349,7 @@ Future getScore() async {
   if (writeData["querySemester"] != "全部") {
     _term = (writeData["querySemester"] == "秋" ? 3 : 1).toString();
   }
-  Map postData = {
+  Map<String, String> postData = {
     "year": _year,
     "term": _term,
     "prop": "",
@@ -553,17 +553,23 @@ Future getCareer() async {
   }
 }
 
-Future getEmptyClassroom() async {
+Future getEmptyClassroom({
+  String week = "1",
+  String whichWeek = "-1",
+  String building = "-1",
+  String classroom = "-1",
+}) async {
   // Global.cookie = {};
   print('getEmptyClassroom');
-  Map postData = {
+  Map<String, String> postData = {
     "aid": "1",
-    "buildingid": "10", //1教:10
-    "room": "-1", //教室
-    "whichweek": "1", //第几周
-    "week": "1", //星期
+    "buildingid": building, //1教:10
+    "room": classroom, //教室
+    "whichweek": whichWeek, //第几周
+    "week": week, //星期
     "Submit": "%C8%B7+%B6%A8"
   };
+  print(postData);
   Response response;
   try {
     response = await request("post", Global.getEmptyClassroomUrl, body: postData);
@@ -577,20 +583,28 @@ Future getEmptyClassroom() async {
     return "fail";
   } else {
     Document document = parse(html);
-    List options = document.querySelectorAll("#buildingid > option");
-    Map<String, String> builds = {};
-    Map<String, Map> result = {"builds": {}};
-    options.removeAt(0);
-    for (var element in options) {
-      builds[element.attributes["value"]] = element.innerHtml;
+    List<Element> buildingOptions = document.querySelectorAll("#buildingid > option");
+    List<Element> classroomOptions = document.querySelectorAll("select[name='room'] > option");
+    Map<String?, String> buildings = {};
+    Map<String?, String> classrooms = {};
+    Map<String, Map> result = {"buildings": {}, "classrooms": {}};
+    buildingOptions.removeAt(0);
+    classroomOptions.removeAt(0);
+    for (Element element in buildingOptions) {
+      buildings[element.attributes["value"]] = element.innerHtml;
     }
-    result["builds"] = builds;
+    for (Element element in classroomOptions) {
+      classrooms[element.attributes["value"]] = element.innerHtml;
+    }
+    result["buildings"] = buildings;
+    result["classrooms"] = classrooms;
     print(result);
     return result;
   }
 }
 
-Future<Response> request(String method, Uri uri, {Object? body, Encoding? encoding}) async {
+Future<Response> request(String method, Uri uri,
+    {Map<String, String>? body, Encoding? encoding}) async {
   Map<String, String>? headers = {"cookie": mapCookieToString()};
   if (method == "post") {
     return await post(uri, body: body, headers: headers, encoding: encoding)
