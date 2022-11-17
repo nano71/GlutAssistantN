@@ -74,7 +74,6 @@
 |-- README.md
 |-- build.bat
 |-- build.sh
-|-- pubspec.lock
 |-- pubspec.yaml
 `-- updateLogs.md
 ```
