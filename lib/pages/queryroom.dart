@@ -18,44 +18,39 @@ class QueryRoomPage extends StatefulWidget {
 
 class QueryRoomPageState extends State<QueryRoomPage> {
   Map<String, Map> query = {
-    "buildings": {"1": "请选择"}
+    "buildings": {"-1": "请选择"},
+    "whichWeeks": {"-1": "请选择"}
   };
   String buildingSelect = "请选择";
   String classroomSelect = "请选择";
+  String whichWeekSelect = "请选择";
   Object? currentRadio = 0;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    initWhichWeek();
     getEmptyClassroom().then((value) => process(value));
   }
 
-  List<DropdownMenuItem<Object>> classrooms() {
-    List<DropdownMenuItem<Object>> list = [];
-    print(query);
-    query["classrooms"]?.forEach((key, value) {
-      list.add(DropdownMenuItem(child: Text(value), value: key));
+  void initWhichWeek() {
+    setState(() {
+      for (int i = 1; i < 20; i++) {
+        String value = i.toString();
+        query["whichWeeks"]![value] = "第" + value + "周";
+      }
     });
-
-    if (list == []) {
-      list.add(DropdownMenuItem(child: Text("-"), value: "请选择"));
-    }
-    print('41');
-    return list;
   }
 
-  List<DropdownMenuItem<Object>> buildings() {
+  List<DropdownMenuItem<Object>> dropdownMenuItemList(String queryKey) {
     List<DropdownMenuItem<Object>> list = [];
-    print(query);
-    query["buildings"]!.forEach((key, value) {
+    query[queryKey]?.forEach((key, value) {
       list.add(DropdownMenuItem(child: Text(value), value: key));
     });
-
     if (list == []) {
       list.add(DropdownMenuItem(child: Text("-"), value: "请选择"));
     }
-    print('55');
     return list;
   }
 
@@ -63,7 +58,9 @@ class QueryRoomPageState extends State<QueryRoomPage> {
     print('process');
     print(value);
     if (value is Map<String, Map>) {
-      query = value;
+      value.forEach((key, value) {
+        query[key] = value;
+      });
       setState(() {});
     } else if (value == "fail") {
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
@@ -126,7 +123,7 @@ class QueryRoomPageState extends State<QueryRoomPage> {
                               DropdownButton(
                                 elevation: 0,
                                 hint: Text(buildingSelect, style: TextStyle(fontSize: 14)),
-                                items: buildings(),
+                                items: dropdownMenuItemList("buildings"),
                                 onChanged: (value) {
                                   setState(() {
                                     queryClassroomList(value.toString());
@@ -151,10 +148,36 @@ class QueryRoomPageState extends State<QueryRoomPage> {
                               DropdownButton(
                                 elevation: 0,
                                 hint: Text(classroomSelect, style: TextStyle(fontSize: 14)),
-                                items: classrooms(),
+                                items: dropdownMenuItemList("classrooms"),
                                 onChanged: (value) {
                                   setState(() {
                                     classroomSelect = query["classrooms"]?[value];
+                                  });
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: 60,
+                          child: Text("时    间:"),
+                        ),
+                        SizedBox(
+                          height: 40,
+                          child: Row(
+                            children: [
+                              DropdownButton(
+                                elevation: 0,
+                                hint: Text(whichWeekSelect, style: TextStyle(fontSize: 14)),
+                                items: dropdownMenuItemList("whichWeeks"),
+                                onChanged: (value) {
+                                  print(value);
+                                  setState(() {
+                                    whichWeekSelect = query["whichWeeks"]?[value];
                                   });
                                 },
                               ),

@@ -309,23 +309,20 @@ List<Widget> _loopWeekDayColGrid(String week, String weekDay) {
       bool studyAreaNotIsNextStudyArea() => studyArea != _schedule[(i + 1).toString()][2];
       bool studyAreaIsPreviousStudyArea() => studyArea == _schedule[(i - 1).toString()][2];
 
-      if (i == 1) {
+      if (i == 1)
         s = i;
-      } else if (studyAreaIsPreviousStudyArea() && courseNameIsPreviousCourseName()) {
+      else if (studyAreaIsPreviousStudyArea() && courseNameIsPreviousCourseName()) {
         double height = Global.schedulePageGridHeight * (i - s + 1);
-        if (i == 11) {
+        if (i == 11)
           list.add(
               Grid(week, weekDay, i, s, courseName, studyArea, teacher, randomColors(), height));
-        } else if (studyAreaNotIsNextStudyArea() || courseNameNotIsNextCourseName()) {
+        else if (studyAreaNotIsNextStudyArea() || courseNameNotIsNextCourseName())
           list.add(
               Grid(week, weekDay, i, s, courseName, studyArea, teacher, randomColors(), height));
-        }
-      } else {
+      } else
         s = i;
-      }
-    } else {
+    } else
       list.add(Grid(week, weekDay, 0, 0, "", "", "", Colors.white));
-    }
   }
   return list;
 }
