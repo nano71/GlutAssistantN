@@ -22,6 +22,7 @@ class QueryRoomPageState extends State<QueryRoomPage> {
     "whichWeeks": {"-1": "请选择"},
     "weeks": {"-1": "请选择"}
   };
+  List classrooms = [];
   String buildingSelect = "-1";
   String classroomSelect = "-1";
   String whichWeekSelect = "-1";
@@ -82,6 +83,8 @@ class QueryRoomPageState extends State<QueryRoomPage> {
         });
         // query["buildings"]!.remove("-1");
       });
+    } else if (value is List<Map>) {
+      classrooms = value;
     } else if (value == "fail") {
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(jwSnackBarActionQ3(
