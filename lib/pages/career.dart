@@ -67,17 +67,18 @@ class _CareerPageBodyState extends State<CareerPageBody> {
     print(type);
     eventBusFn = pageBus.on<CareerRe>().listen((event) {
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
-      ScaffoldMessenger.of(context)
-          .showSnackBar(jwSnackBar(2, "获取数据...", Global.timeOutSec * 2));
+      ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "获取数据...", Global.timeOutSec * 2));
       getCareer().then((value) => process(value));
     });
     getCareer().then((value) => process(value));
   }
+
   @override
-  void dispose(){
+  void dispose() {
     eventBusFn.cancel();
     super.dispose();
   }
+
   process(String value) {
     if (value == "success") {
       login = false;
@@ -163,8 +164,7 @@ class _CareerPageBodyState extends State<CareerPageBody> {
     Future.delayed(const Duration(seconds: 0), () {
       if (login) {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        ScaffoldMessenger.of(context)
-            .showSnackBar(jwSnackBar(2, "获取数据...", Global.timeOutSec * 2));
+        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "获取数据...", Global.timeOutSec * 2));
       }
     });
     return Container(
@@ -238,7 +238,10 @@ class _CareerPageBodyState extends State<CareerPageBody> {
               margin: const EdgeInsets.fromLTRB(16, 16, 16, 16),
               padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
               decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.all(Radius.circular(12.0)), color: readColor()),
+                borderRadius: const BorderRadius.all(Radius.circular(12.0)),
+                // color: readCardColor(),
+                gradient: readCardGradient(),
+              ),
               child: Column(
                 children: [
                   Row(
@@ -568,8 +571,6 @@ class CareerListProcessState extends State<CareerListProcess> {
     );
   }
 }
-
-
 
 class CircularProgressDynamicForCareer extends StatefulWidget {
   const CircularProgressDynamicForCareer({Key? key}) : super(key: key);

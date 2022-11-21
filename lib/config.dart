@@ -14,6 +14,7 @@ class Global {
   static String timeOutError = "教务无响应!";
   static String socketError = "网络错误!";
   static int timeOutSec = 12;
+  static double listLeftIconSize = 18;
   static Map cookie = {};
   static String jwUrl = "jw.glutnn.cn";
   static String updateApiUrl = "api.github.com";
@@ -107,6 +108,22 @@ readColor() {
   }
 }
 
+LinearGradient readCardGradient() {
+  if (writeData["color"] == "red") {
+    return setTemplate([Color(0xFFfbab66), Color(0xFFf7418c)]);
+  } else if (writeData["color"] == "pink") {
+    return setTemplate([Color(0xffeca299), Color(0xfffc6caa)]);
+  } else if (writeData["color"] == "blue") {
+    return setTemplate([Color(0xff66cefb), Color(0xff4175f7)]);
+  } else if (writeData["color"] == "yellow") {
+    return setTemplate([Color(0xfffbef66), Color(0xfff7a841)]);
+  } else if (writeData["color"] == "cyan") {
+    return setTemplate([Color(0xff66fbce), Color(0xff16bbb4)]);
+  } else {
+    return setTemplate([Color(0xff66cefb), Color(0xff4175f7)]);
+  }
+}
+
 Color readColorBegin() {
   if (writeData["color"] == "red" || writeData["color"] == "pink") {
     return const Color.fromARGB(42, 255, 229, 253);
@@ -135,4 +152,12 @@ Color readColorEnd() {
   } else {
     return const Color.fromARGB(110, 199, 229, 253);
   }
+}
+
+LinearGradient setTemplate(List<Color> colors) {
+  return LinearGradient(
+    colors: colors,
+    begin: Alignment.topRight,
+    end: Alignment.bottomCenter,
+  );
 }

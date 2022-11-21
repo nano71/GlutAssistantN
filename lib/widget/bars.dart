@@ -91,6 +91,17 @@ class ScheduleTopBar extends StatefulWidget {
 class ScheduleTopBarState extends State<ScheduleTopBar> {
   String _week = writeData["week"];
 
+  void back() {
+    ScaffoldMessenger.of(context).removeCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(3, "回到当前!", 1));
+    pageBus.fire(ReState(1));
+  }
+
+  String date() {
+    DateTime d = DateTime.now();
+    return "${d.year}-${d.month}-${d.day}";
+  }
+
   @override
   Widget build(BuildContext context) {
     return AppBar(
@@ -100,16 +111,27 @@ class ScheduleTopBarState extends State<ScheduleTopBar> {
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            "Week $_week",
-            style: const TextStyle(color: Colors.black),
+          InkWell(
+            child: Text(
+              "Week $_week",
+              style: const TextStyle(color: Colors.black),
+            ),
+            onTap: () {
+              back();
+            },
           ),
           InkWell(
-            child: goCurrent,
+            child: Row(
+              children: [
+                Text(
+                  date(),
+                  style: const TextStyle(color: Colors.black, fontSize: 14),
+                ),
+                goCurrent
+              ],
+            ),
             onTap: () {
-              ScaffoldMessenger.of(context).removeCurrentSnackBar();
-              ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(3, "回到当前!", 1));
-              pageBus.fire(ReState(1));
+              back();
             },
           )
         ],

@@ -17,7 +17,7 @@ class HomeCard extends StatefulWidget {
 class HomeCardState extends State<HomeCard> with AutomaticKeepAliveClientMixin {
   GlobalKey<CircularProgressDynamicState> indicatorKey = GlobalKey();
   GlobalKey<TextProgressDynamicState> textKey = GlobalKey();
-  final int _week = int.parse(writeData["week"]);
+  final int _week = weekInt();
 
   @override
   void initState() {

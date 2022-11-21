@@ -19,19 +19,35 @@ class QueryRoomPage extends StatefulWidget {
 class QueryRoomPageState extends State<QueryRoomPage> {
   Map<String, Map> query = {
     "buildings": {"-1": "请选择"},
-    "whichWeeks": {"-1": "请选择"}
+    "whichWeeks": {"-1": "请选择"},
+    "weeks": {"-1": "请选择"}
   };
-  String buildingSelect = "请选择";
-  String classroomSelect = "请选择";
-  String whichWeekSelect = "请选择";
-  Object? currentRadio = 0;
+  String buildingSelect = "-1";
+  String classroomSelect = "-1";
+  String whichWeekSelect = "-1";
+  String weekSelect = "-1";
+  String message = "查询选择的教学楼全部教室";
+  Color messageColor = Colors.grey;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     initWhichWeek();
+    initWeek();
     getEmptyClassroom().then((value) => process(value));
+  }
+
+  void initWeek() {
+    setState(() {
+      for (int i = 0; i < 7; i++) {
+        String value = i.toString();
+        query["weeks"]![value] = "周" + weekList4CN[i];
+      }
+      weekSelect = writeData["weekDay"];
+      query["weeks"]!.remove("-1");
+    });
+    print(query["weeks"]);
   }
 
   void initWhichWeek() {
@@ -40,6 +56,8 @@ class QueryRoomPageState extends State<QueryRoomPage> {
         String value = i.toString();
         query["whichWeeks"]![value] = "第" + value + "周";
       }
+      whichWeekSelect = writeData["week"];
+      query["whichWeeks"]!.remove("-1");
     });
   }
 
@@ -54,14 +72,16 @@ class QueryRoomPageState extends State<QueryRoomPage> {
     return list;
   }
 
-  process(value) {
+  void process(value) {
     print('process');
-    print(value);
+    // print(value);
     if (value is Map<String, Map>) {
-      value.forEach((key, value) {
-        query[key] = value;
+      setState(() {
+        value.forEach((key, value) {
+          query[key] = value;
+        });
+        // query["buildings"]!.remove("-1");
       });
-      setState(() {});
     } else if (value == "fail") {
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(jwSnackBarActionQ3(
@@ -77,10 +97,14 @@ class QueryRoomPageState extends State<QueryRoomPage> {
     }
   }
 
-  queryClassroomList(String value) {
-    print(value);
-    buildingSelect = query["buildings"]?[value];
-    getEmptyClassroom(building: value).then((value) => process(value));
+  void _getEmptyClassroom() {
+    if (buildingSelect != "-1") {
+      getEmptyClassroom(week: weekSelect, whichWeek: whichWeekSelect, building: buildingSelect)
+          .then((value) => null);
+    } else {
+      ScaffoldMessenger.of(context).removeCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, "请选择教学楼", 4));
+    }
   }
 
   @override
@@ -105,135 +129,142 @@ class QueryRoomPageState extends State<QueryRoomPage> {
             ),
             SliverToBoxAdapter(
               child: Container(
-                padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-                color: Colors.white,
-                margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                child: Column(
-                  children: [
-                    Row(
-                      children: [
-                        SizedBox(
-                          width: 60,
-                          child: Text("教学楼:"),
-                        ),
-                        SizedBox(
-                          height: 40,
-                          child: Row(
-                            children: [
-                              DropdownButton(
-                                elevation: 0,
-                                hint: Text(buildingSelect, style: TextStyle(fontSize: 14)),
-                                items: dropdownMenuItemList("buildings"),
-                                onChanged: (value) {
-                                  setState(() {
-                                    queryClassroomList(value.toString());
-                                  });
-                                },
-                              ),
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        SizedBox(
-                          width: 60,
-                          child: Text("教    室:"),
-                        ),
-                        SizedBox(
-                          height: 40,
-                          child: Row(
-                            children: [
-                              DropdownButton(
-                                elevation: 0,
-                                hint: Text(classroomSelect, style: TextStyle(fontSize: 14)),
-                                items: dropdownMenuItemList("classrooms"),
-                                onChanged: (value) {
-                                  setState(() {
-                                    classroomSelect = query["classrooms"]?[value];
-                                  });
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        SizedBox(
-                          width: 60,
-                          child: Text("时    间:"),
-                        ),
-                        SizedBox(
-                          height: 40,
-                          child: Row(
-                            children: [
-                              DropdownButton(
-                                elevation: 0,
-                                hint: Text(whichWeekSelect, style: TextStyle(fontSize: 14)),
-                                items: dropdownMenuItemList("whichWeeks"),
-                                onChanged: (value) {
-                                  print(value);
-                                  setState(() {
-                                    whichWeekSelect = query["whichWeeks"]?[value];
-                                  });
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(children: [
-                      SizedBox(
-                        width: 60,
-                        child: Text("模    式:"),
-                      ),
-                      SizedBox(
-                          height: 40,
-                          child: Row(
-                            children: [
-                              Radio(
-                                  value: 0,
-                                  groupValue: currentRadio,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      this.currentRadio = value;
-                                    });
-                                  }),
-                              Text("教学楼模式"),
-                              Radio(
-                                  value: 1,
-                                  groupValue: currentRadio,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      this.currentRadio = value;
-                                    });
-                                  }),
-                            ],
-                          ))
-                    ]),
-                    SizedBox(
-                      height: 8,
-                    ),
-                  ],
+                margin: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                child: Text(
+                  message,
+                  style: TextStyle(color: messageColor),
                 ),
               ),
             ),
             SliverToBoxAdapter(
               child: Container(
-                padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-                color: Colors.white,
-                margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.all(Radius.circular(12.0)),
+                  color: readColorBegin(),
+                ),
+                padding: const EdgeInsets.fromLTRB(16, 6, 16, 16),
+                margin: const EdgeInsets.fromLTRB(16, 16, 16, 16),
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        SizedBox(
+                          width: 60,
+                          child: Text("教学楼"),
+                        ),
+                        SizedBox(
+                          height: 40,
+                          child: DropdownButton(
+                            icon: Icon(FlutterRemix.arrow_right_s_line),
+                            iconSize: 14,
+                            underline: Container(),
+                            alignment: Alignment.centerRight,
+                            elevation: 0,
+                            hint: Text(query["buildings"]?[buildingSelect],
+                                style: TextStyle(fontSize: 14)),
+                            items: dropdownMenuItemList("buildings"),
+                            onChanged: (value) {
+                              setState(() {
+                                buildingSelect = value.toString();
+                                if (value != "-1") query["buildings"]?.remove("-1");
+                                // getEmptyClassroom(building: value.toString())
+                                //     .then((value) => process(value));
+                              });
+                            },
+                          ),
+                        )
+                      ],
+                    ),
+                    // Row(
+                    //   children: [
+                    //     SizedBox(
+                    //       width: 60,
+                    //       child: Text("教    室:"),
+                    //     ),
+                    //     SizedBox(
+                    //       height: 40,
+                    //       child: Row(
+                    //         children: [
+                    //           DropdownButton(
+                    //             elevation: 0,
+                    //             hint: Text(classroomSelect, style: TextStyle(fontSize: 14)),
+                    //             items: dropdownMenuItemList("classrooms"),
+                    //             onChanged: (value) {
+                    //               setState(() {
+                    //                 classroomSelect = query["classrooms"]?[value];
+                    //               });
+                    //             },
+                    //           ),
+                    //         ],
+                    //       ),
+                    //     ),
+                    //   ],
+                    // ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        SizedBox(
+                          width: 60,
+                          child: Text("时    间"),
+                        ),
+                        SizedBox(
+                          height: 40,
+                          child: DropdownButton(
+                            icon: Icon(FlutterRemix.arrow_right_s_line),
+                            iconSize: 14,
+                            underline: Container(),
+                            alignment: Alignment.centerRight,
+                            elevation: 0,
+                            hint: Text(query["whichWeeks"]?[whichWeekSelect],
+                                style: TextStyle(fontSize: 14)),
+                            items: dropdownMenuItemList("whichWeeks"),
+                            onChanged: (value) {
+                              print(value);
+                              setState(() {
+                                whichWeekSelect = value.toString();
+                              });
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        SizedBox(
+                          width: 60,
+                          child: Text("星    期"),
+                        ),
+                        SizedBox(
+                          height: 40,
+                          child: DropdownButton(
+                            icon: Icon(FlutterRemix.arrow_right_s_line),
+                            iconSize: 14,
+                            underline: Container(),
+                            alignment: Alignment.centerRight,
+                            elevation: 0,
+                            hint: Text(query["weeks"]?[weekSelect], style: TextStyle(fontSize: 14)),
+                            items: dropdownMenuItemList("weeks"),
+                            onChanged: (value) {
+                              print(value);
+                              setState(() {
+                                weekSelect = value.toString();
+                              });
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 8,
+                    ),
                     SizedBox(
                       width: double.infinity,
                       height: 50,
                       child: Container(
-                        margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                        margin: const EdgeInsets.fromLTRB(0, 8, 0, 0),
                         child: TextButton(
                             autofocus: true,
                             style: ButtonStyle(
@@ -243,14 +274,16 @@ class QueryRoomPageState extends State<QueryRoomPage> {
                                 return readColor();
                               }),
                               shape: MaterialStateProperty.all(
-                                  RoundedRectangleBorder(borderRadius: BorderRadius.circular(28))),
+                                  RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
                             ),
                             child: Text(
-                              "查询",
+                              "即刻查询",
                               style: const TextStyle(
                                   fontWeight: FontWeight.bold, color: Colors.white, fontSize: 14),
                             ),
-                            onPressed: () {}),
+                            onPressed: () {
+                              _getEmptyClassroom();
+                            }),
                       ),
                     )
                   ],

@@ -257,6 +257,7 @@ class TodayCourseListItemState extends State<TodayCourseListItem> {
                 child: Icon(
                   _icon(widget.index),
                   color: _timeColors(widget.index),
+                  size: Global.listLeftIconSize,
                 ),
               ),
               Column(
@@ -366,6 +367,7 @@ class TomorrowCourseListState extends State<TomorrowCourseList> {
                       color: (_tomorrowSchedule[index][4] == "1" && index == 0
                           ? Colors.orange[900]
                           : readColor()),
+                      size: Global.listLeftIconSize,
                     ),
                   ),
                   Column(
@@ -585,7 +587,13 @@ class ExamListState extends State<ExamList> {
                   Row(
                     children: [
                       Column(
-                        children: [Icon(_getIcon(index), color: _getColor(index))],
+                        children: [
+                          Icon(
+                            _getIcon(index),
+                            color: _getColor(index),
+                            size: Global.listLeftIconSize,
+                          )
+                        ],
                       ),
                       SizedBox(
                         width: 8,
@@ -597,7 +605,6 @@ class ExamListState extends State<ExamList> {
                             courseLongText2ShortName(examList[index][0]),
                             style: TextStyle(
                                 fontSize: 16,
-                                fontWeight: FontWeight.bold,
                                 color: _getColor2(index)),
                           ),
                           SizedBox(

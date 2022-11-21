@@ -205,3 +205,7 @@ String weekDay2Number(String value) {
       .replaceAll("周六", "6")
       .replaceAll("周日", "7");
 }
+
+int weekInt() {
+  return int.parse(writeData["week"]);
+}

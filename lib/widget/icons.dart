@@ -47,5 +47,5 @@ Icon chevronUp = const Icon(
 Icon goCurrent = const Icon(
   FlutterRemix.map_pin_line,
   color: Colors.black,
-  size: 24,
+  size: 14,
 );
