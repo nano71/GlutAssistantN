@@ -111,7 +111,7 @@ EventBus reState = EventBus();
 class SchedulePageState extends State<SchedulePage> with AutomaticKeepAliveClientMixin {
   late double _startPositionX;
   late double _startPositionY;
-  int _currentScheduleWeek = int.parse(writeData["week"]);
+  int _currentScheduleWeek = weekInt();
   GlobalKey<SchedulePageColumnState> weekKey = GlobalKey();
   GlobalKey<ScheduleTopBarState> barKey = GlobalKey();
   GlobalKey<RowHeaderState> rowHeaderKey = GlobalKey();
@@ -191,10 +191,10 @@ class SchedulePageState extends State<SchedulePage> with AutomaticKeepAliveClien
   reState() {
     setState(() {});
     if (writeData["week"] != _currentScheduleWeek.toString()) {
-      _currentScheduleWeek = int.parse(writeData["week"]);
-      weekKey.currentState!.onPressed(int.parse(writeData["week"]));
-      barKey.currentState!.onPressed(int.parse(writeData["week"]));
-      rowHeaderKey.currentState!.onPressed(int.parse(writeData["week"]));
+      _currentScheduleWeek = weekInt();
+      weekKey.currentState!.onPressed(weekInt());
+      barKey.currentState!.onPressed(weekInt());
+      rowHeaderKey.currentState!.onPressed(weekInt());
     }
   }
 

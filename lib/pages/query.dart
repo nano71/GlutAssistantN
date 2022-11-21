@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_remix/flutter_remix.dart';
 import 'package:glutassistantn/common/get.dart';
 import 'package:glutassistantn/pages/setting.dart';
@@ -207,13 +208,13 @@ class _QueryBodyState extends State<QueryBody> {
                   Navigator.of(context).pop();
                 },
               ),
-              readColor(),
+              readColorBegin(),
               Colors.white,
               0),
           SliverToBoxAdapter(
             child: Container(
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-              color: readColor(),
+              color: readColorBegin(),
               margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
               child: Column(
                 children: [
@@ -223,12 +224,17 @@ class _QueryBodyState extends State<QueryBody> {
                       Row(
                         children: [
                           DropdownButton(
+                            icon: Icon(FlutterRemix.arrow_down_s_line),
+                            iconSize: 18,
                             iconEnabledColor: Colors.white,
                             elevation: 0,
-                            hint: Text(
-                              writeData["queryYear"],
-                              style: TextStyle(
-                                color: Colors.white,
+                            hint: SizedBox(
+                              width: 40,
+                              child: Text(
+                                writeData["queryYear"],
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
                               ),
                             ),
                             items: yearList(0),
@@ -243,12 +249,19 @@ class _QueryBodyState extends State<QueryBody> {
                             width: 25,
                           ),
                           DropdownButton(
+                            icon: Icon(FlutterRemix.arrow_down_s_line),
+                            iconSize: 18,
                             iconEnabledColor: Colors.white,
                             elevation: 0,
-                            hint: Text(writeData["querySemester"],
+                            hint: SizedBox(
+                              width: 40,
+                              child: Text(
+                                writeData["querySemester"],
                                 style: TextStyle(
                                   color: Colors.white,
-                                )),
+                                ),
+                              ),
+                            ),
                             underline: Container(height: 0),
                             items: const [
                               DropdownMenuItem(child: Text("全部"), value: "全部"),

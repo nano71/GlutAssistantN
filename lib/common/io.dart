@@ -117,7 +117,7 @@ Future<File> endTimeLocalSupportFile() async {
 Future<void> writeConfig() async {
   print("writeConfig");
   writeData["time"] = "${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}";
-  writeData["weekDay"] = DateTime.now().weekday;
+  writeData["weekDay"] = DateTime.now().weekday.toString();
   print(jsonEncode(writeData));
   String str = jsonEncode(writeData);
   String startTimeStr = jsonEncode(startTimeList);
@@ -166,7 +166,7 @@ Future<void> readConfig() async {
       int y = DateTime.now().year;
       int m = DateTime.now().month;
       int d = DateTime.now().day;
-      int _currentWeek = int.parse(writeData["week"]) +
+      int _currentWeek = weekInt() +
           getLocalWeek(DateTime(y, m, d),
               DateTime(int.parse(_timeList[0]), int.parse(_timeList[1]), int.parse(_timeList[2])));
       writeData["week"] = _currentWeek.toString();

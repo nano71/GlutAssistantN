@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -7,11 +6,11 @@ import 'package:glutassistantn/pages/init.dart';
 import 'config.dart';
 
 main() {
-  SystemUiOverlayStyle systemUiOverlayStyle = SystemUiOverlayStyle(statusBarColor: Colors.transparent);
-  SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent, systemNavigationBarColor: Colors.white));
+
   print("startApp...");
   runApp(const MyApp());
-
 }
 
 class MyApp extends StatelessWidget {

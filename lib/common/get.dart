@@ -571,8 +571,13 @@ Future getEmptyClassroom({
   };
   print(postData);
   Response response;
+  bool weekMode = whichWeek != "-1" && week != "-1";
   try {
-    response = await request("post", Global.getEmptyClassroomUrl, body: postData);
+    if (weekMode) {
+      response = await request("post", Global.getEmptyClassroomUrl2, body: postData);
+    } else {
+      response = await request("post", Global.getEmptyClassroomUrl, body: postData);
+    }
   } on TimeoutException catch (e) {
     return timeOutError(e);
   } on SocketException catch (e) {
@@ -583,6 +588,23 @@ Future getEmptyClassroom({
     return "fail";
   } else {
     Document document = parse(html);
+    if (weekMode) {
+      List<Element> classrooms = document.querySelectorAll(".infolist_common");
+      List<Map> result = [];
+
+      classrooms.forEach((element) {
+        List<Element> tds = element.querySelectorAll("td");
+        String text(i) {
+          return tds[i].innerHtml;
+        }
+        result.add({
+          "classroom": text(0),
+          "seats": text(1),
+          "examSeats": text(3),
+          "type": text(5)
+        });
+      });
+    }
     List<Element> buildingOptions = document.querySelectorAll("#buildingid > option");
     List<Element> classroomOptions = document.querySelectorAll("select[name='room'] > option");
     Map<String?, String> buildings = {};
@@ -590,6 +612,7 @@ Future getEmptyClassroom({
     Map<String, Map> result = {"buildings": {}, "classrooms": {}};
     buildingOptions.removeAt(0);
     classroomOptions.removeAt(0);
+    buildings["-1"] = "请选择";
     for (Element element in buildingOptions) {
       buildings[element.attributes["value"]] = element.innerHtml;
     }
