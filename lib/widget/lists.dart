@@ -603,9 +603,7 @@ class ExamListState extends State<ExamList> {
                         children: [
                           Text(
                             courseLongText2ShortName(examList[index][0]),
-                            style: TextStyle(
-                                fontSize: 16,
-                                color: _getColor2(index)),
+                            style: TextStyle(fontSize: 16, color: _getColor2(index)),
                           ),
                           SizedBox(
                             height: 8,
@@ -638,5 +636,19 @@ class ExamListState extends State<ExamList> {
         );
       }, childCount: examList.length),
     );
+  }
+}
+
+class ClassroomList extends StatefulWidget {
+  ClassroomListState createState() => ClassroomListState();
+}
+
+class ClassroomListState extends State<ClassroomList> {
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    // throw UnimplementedError();
+    return SliverList(
+        delegate: SliverChildBuilderDelegate((BuildContext context, int index) {}, childCount: 0));
   }
 }

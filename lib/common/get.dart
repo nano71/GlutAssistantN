@@ -82,9 +82,13 @@ Future<String> getSchedule() async {
     return "fail";
   } else {
     var list = document.querySelectorAll(".infolist_common");
-    num listLength = document.querySelectorAll(".infolist_common").length - 23;
+    num listLength = document
+        .querySelectorAll(".infolist_common")
+        .length - 23;
     for (int i = 0; i < listLength; i++) {
-      for (var j = 0; j < list[i].querySelectorAll("table.none>tbody>tr").length; j++) {
+      for (var j = 0; j < list[i]
+          .querySelectorAll("table.none>tbody>tr")
+          .length; j++) {
         //课节
         String kj = list[i]
             .querySelectorAll("table.none>tbody>tr")[j]
@@ -153,7 +157,9 @@ Future<String> getSchedule() async {
                   //课程名
                   list[i].querySelectorAll("a.infolist")[0].innerHtml.trim(),
                   //老师名字
-                  list[i].querySelectorAll("a.infolist").length > 1
+                  list[i]
+                      .querySelectorAll("a.infolist")
+                      .length > 1
                       ? list[i].querySelectorAll("a.infolist")[1].innerHtml.trim()
                       : null,
                   //上课地点
@@ -176,7 +182,9 @@ Future<String> getSchedule() async {
                   //课程名
                   list[i].querySelectorAll("a.infolist")[0].innerHtml.trim(),
                   //老师名字
-                  list[i].querySelectorAll("a.infolist").length > 1
+                  list[i]
+                      .querySelectorAll("a.infolist")
+                      .length > 1
                       ? list[i].querySelectorAll("a.infolist")[1].innerHtml.trim()
                       : null,
                   //上课地点
@@ -198,7 +206,9 @@ Future<String> getSchedule() async {
                 //课程名
                 list[i].querySelectorAll("a.infolist")[0].innerHtml.trim(),
                 //老师名字
-                list[i].querySelectorAll("a.infolist").length > 1
+                list[i]
+                    .querySelectorAll("a.infolist")
+                    .length > 1
                     ? list[i].querySelectorAll("a.infolist")[1].innerHtml.trim()
                     : null,
                 //上课地点
@@ -273,7 +283,7 @@ Future<String> getSchedule() async {
             if (_addWeek != "&nbsp;") {
               for (int i = int.parse(_addTime[0]); i <= int.parse(_addTime[1]); i++) {
                 _schedule[_addWeek][_addWeekDay]
-                    [i.toString()] = [_addName, _addTeacher, _addRoom, remark];
+                [i.toString()] = [_addName, _addTeacher, _addRoom, remark];
               }
             }
           } else if (_length == 10) {
@@ -304,7 +314,7 @@ Future<String> getSchedule() async {
             if (_addWeek != "&nbsp;") {
               for (int i = int.parse(_addTime[0]); i <= int.parse(_addTime[1]); i++) {
                 _schedule[_addWeek][_addWeekDay]
-                    [i.toString()] = [_name, _teacher, _addRoom, remark];
+                [i.toString()] = [_name, _teacher, _addRoom, remark];
               }
             }
           }
@@ -327,13 +337,17 @@ Future<void> getName() async {
 }
 
 int getLocalWeek(DateTime nowDate, DateTime pastDate) {
-  int day = nowDate.difference(pastDate).inDays;
+  int day = nowDate
+      .difference(pastDate)
+      .inDays;
   int week = day.abs() ~/ 7;
   return week;
 }
 
 List getSemester() {
-  int y = DateTime.now().year;
+  int y = DateTime
+      .now()
+      .year;
   return [
     (y - 1980).toString(),
   ];
@@ -433,7 +447,9 @@ Future<String> getExam() async {
       DateTime startDate = DateTime.now();
       DateTime endDate = DateTime(int.parse(timeList[0]), int.parse(timeList[1]),
           int.parse(timeList[2].toString().substring(0, 2)));
-      int days = endDate.difference(startDate).inDays;
+      int days = endDate
+          .difference(startDate)
+          .inDays;
       if (days < 0) {
         examListC.add(true);
         examListA++;
@@ -533,17 +549,18 @@ Future getCareer() async {
   } else {
     Document document = parse(html);
     String url = document.querySelectorAll("a")[3].parent!.innerHtml.trim();
-    String urlA = url.substring(url.indexOf('修读顺序：按照课组及学年学期的顺序，用二维表方式显示教学计划课组及课程"></a>') +
-        '修读顺序：按照课组及学年学期的顺序，用二维表方式显示教学计划课组及课程"></a>'.length);
+    String urlA = url.substring(
+        url.indexOf('修读顺序：按照课组及学年学期的顺序，用二维表方式显示教学计划课组及课程"></a>') +
+            '修读顺序：按照课组及学年学期的顺序，用二维表方式显示教学计划课组及课程"></a>'.length);
     String urlB = urlA
         .replaceAll('<a href="', "")
         .replaceAll(
-            '" target="_blank"><img src="/academic/styles/images/Sort_Ascending.png" title="学期模式：按照学年学期的顺序，显示教学计划课程"></a>',
-            "")
+        '" target="_blank"><img src="/academic/styles/images/Sort_Ascending.png" title="学期模式：按照学年学期的顺序，显示教学计划课程"></a>',
+        "")
         .replaceAll("amp;", "")
         .replaceAll(
-            '/academic/manager/studyschedule/scheduleJump.jsp?link=studentScheduleShowByTerm.do&studentId=',
-            "")
+        '/academic/manager/studyschedule/scheduleJump.jsp?link=studentScheduleShowByTerm.do&studentId=',
+        "")
         .trim();
     List urlC = urlB.split('&classId=');
     print(urlC);
@@ -594,16 +611,29 @@ Future getEmptyClassroom({
 
       classrooms.forEach((element) {
         List<Element> tds = element.querySelectorAll("td");
+        List<Element> occupancyList = element.querySelectorAll("tr:last-child td");
+        List<bool> cache = [];
         String text(i) {
           return tds[i].innerHtml;
+        }
+
+        for (int i = 0; i < 11; i++) {
+          if (occupancyList[i].innerHtml.contains("color")) {
+            cache.add(true);
+          } else {
+            cache.add(false);
+          }
         }
         result.add({
           "classroom": text(0),
           "seats": text(1),
           "examSeats": text(3),
-          "type": text(5)
+          "type": text(5),
+          "occupancyList": cache
         });
       });
+      print(result);
+      return result;
     }
     List<Element> buildingOptions = document.querySelectorAll("#buildingid > option");
     List<Element> classroomOptions = document.querySelectorAll("select[name='room'] > option");
