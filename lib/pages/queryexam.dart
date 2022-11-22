@@ -119,13 +119,13 @@ class _QueryExamBodyState extends State<QueryExamBody> {
                   Navigator.of(context).pop();
                 },
               ),
-              readColor(),
+              readColorBegin(),
               Colors.white,
               0),
           SliverToBoxAdapter(
             child: Container(
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-              color: readColor(),
+              color: readColorBegin(),
               margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
               child: Row(
                 children: [
