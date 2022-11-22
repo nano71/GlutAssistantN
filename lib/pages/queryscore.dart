@@ -188,8 +188,6 @@ class _QueryBodyState extends State<QueryBody> {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Container(
-      // color: readColor(),
-      margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
       decoration: BoxDecoration(
         gradient: LinearGradient(
             begin: Alignment.topCenter,
@@ -197,6 +195,7 @@ class _QueryBodyState extends State<QueryBody> {
             colors: [readColor(), readColor(), Colors.transparent, Colors.transparent, Colors.transparent, Colors.transparent],
             stops: [0, .5, .50001, .6, .61, 1]),
       ),
+      margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
       child: CustomScrollView(
         physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
         slivers: [
