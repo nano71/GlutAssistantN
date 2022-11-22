@@ -3,48 +3,41 @@ import 'dart:math';
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
 
-EventBus pageBus = EventBus();
+EventBus eventBus = EventBus();
 
 class SetPageIndex {
-  int index;
+  late int index;
 
-  SetPageIndex(this.index);
+  // SetPageIndex({int index = 0}) {
+  //   this.index = index;
+  // }
+  SetPageIndex({this.index = 0});
 }
 
-class QueryExamRe {
-  int index;
-
-  QueryExamRe(this.index);
+class ReloadExamListState {
+  ReloadExamListState();
+}
+class ReloadClassroomListState{
+  ReloadClassroomListState();
+}
+class ReloadCareerPageState {
+  ReloadCareerPageState();
 }
 
-class CareerRe {
-  int index;
-
-  CareerRe(this.index);
+class ReloadScoreListState {
+  ReloadScoreListState();
 }
 
-class QueryScoreRe {
-  int index;
-
-  QueryScoreRe(this.index);
+class ReloadSchedulePageState {
+  ReloadSchedulePageState();
 }
 
-class ReState {
-  int index;
-
-  ReState(this.index);
+class ReloadTomorrowListState {
+  ReloadTomorrowListState();
 }
 
-class ReTomorrowListState {
-  int index;
-
-  ReTomorrowListState(this.index);
-}
-
-class ReTodayListState {
-  int index;
-
-  ReTodayListState(this.index);
+class ReloadTodayListState {
+  ReloadTodayListState();
 }
 
 double gpa = 0.0;
@@ -83,6 +76,7 @@ int careerNumber = 0;
 int careerJobNumber = 0;
 int examAllNumber = 0;
 List<List<String>> examList = [];
+List<Map> classroomList = [];
 List<bool> examListC = [];
 int examListA = 0;
 int examListB = 0;

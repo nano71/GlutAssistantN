@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_remix/flutter_remix.dart';
 import 'package:glutassistantn/common/cookie.dart';
-import 'package:glutassistantn/common/get.dart';
 import 'package:glutassistantn/common/login.dart';
 import 'package:glutassistantn/common/noripple.dart';
 import 'package:glutassistantn/common/style.dart';
 import 'package:glutassistantn/data.dart';
-import 'package:glutassistantn/pages/init.dart';
 import 'package:http/http.dart';
 
 import '../config.dart';
@@ -18,7 +16,7 @@ class CodeCheckDialog {
   static Color messageColor = Colors.grey;
 }
 
-codeCheckDialog(BuildContext context) async {
+codeCheckDialog(BuildContext context, Function callback) async {
   TextEditingController textFieldController = TextEditingController();
   var response = await get(Global.getCodeUrl).timeout(const Duration(seconds: 3));
   bool clicked = false;
@@ -32,34 +30,28 @@ codeCheckDialog(BuildContext context) async {
   void _codeCheck(Function fn) async {
     Future<void> _next2(String value) async {
       if (value == "success") {
-        await getSchedule().then((value) => {
-              if (value == "success")
-                {
-                  Navigator.pushAndRemoveUntil(
-                    context,
-                    CustomRouteMs300(
-                      const Index(
-                        type: 1,
-                      ),
-                    ),
-                    (route) => false,
-                  )
-                }
-            });
+        callback();
+      } else {
+        ScaffoldMessenger.of(context).removeCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, value, 4));
+        Navigator.pop(context);
       }
     }
 
     Future<void> _next(String value) async {
       print(value);
       if (value == "success") {
-        await login(writeData["username"], writeData["password"], textFieldController.text)
-            .then((String value) => _next2(value));
-      } else {
+        await login(writeData["username"], writeData["password"], textFieldController.text).then((String value) => _next2(value));
+      } else if (value == "fail") {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, "验证码错误!"));
         fn(() {
           clicked = !clicked;
         });
+      } else {
+        ScaffoldMessenger.of(context).removeCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, value, 4));
+        Navigator.pop(context);
       }
     }
 
@@ -177,7 +169,7 @@ codeCheckDialogQ(BuildContext context) async {
       if (value == "success") {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
         //  ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(1, "验证完成,请再次点击查询")),
-        pageBus.fire(QueryScoreRe(1));
+        eventBus.fire(ReloadScoreListState());
         Navigator.pop(context);
       } else {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
@@ -189,8 +181,7 @@ codeCheckDialogQ(BuildContext context) async {
     Future<void> _next(String value) async {
       print(value);
       if (value == "success") {
-        await login(writeData["username"], writeData["password"], textFieldController.text)
-            .then((String value) => _next2(value));
+        await login(writeData["username"], writeData["password"], textFieldController.text).then((String value) => _next2(value));
       } else if (value == "fail") {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, "验证码错误!"));
@@ -317,7 +308,7 @@ codeCheckDialogQ2(BuildContext context) async {
       if (value == "success") {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
         //  ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(1, "验证完成,请再次点击查询")),
-        pageBus.fire(QueryExamRe(1));
+        eventBus.fire(ReloadExamListState());
         Navigator.pop(context);
       }
     }
@@ -325,8 +316,7 @@ codeCheckDialogQ2(BuildContext context) async {
     Future<void> _next(String value) async {
       print(value);
       if (value == "success") {
-        await login(writeData["username"], writeData["password"], textFieldController.text)
-            .then((String value) => _next2(value));
+        await login(writeData["username"], writeData["password"], textFieldController.text).then((String value) => _next2(value));
       } else if (value == "fail") {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, "验证码错误!"));
@@ -452,15 +442,14 @@ codeCheckDialogQ3(BuildContext context) async {
     Future<void> _next2(String value) async {
       if (value == "success") {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        pageBus.fire(CareerRe(1));
+        eventBus.fire(ReloadCareerPageState());
         Navigator.pop(context);
       }
     }
 
     Future<void> _next(String value) async {
       if (value == "success") {
-        await login(writeData["username"], writeData["password"], textFieldController.text)
-            .then((String value) => _next2(value));
+        await login(writeData["username"], writeData["password"], textFieldController.text).then((String value) => _next2(value));
       } else if (value == "fail") {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, "验证码错误!"));
@@ -775,14 +764,7 @@ careerDialogItem(element) {
             Text(element[5], style: TextStyle(color: Colors.white)),
             Text("性质: " + element[2], style: TextStyle(color: Colors.white)),
             Text("学分: " + element[3], style: TextStyle(color: Colors.white)),
-            Text(
-                "学时: " +
-                    element[4]
-                        .toString()
-                        .replaceAll(" ", "")
-                        .replaceAll(RegExp(r"\s+\b|\b\s\n"), "")
-                        .trim(),
-                style: TextStyle(color: Colors.white)),
+            Text("学时: " + element[4].toString().replaceAll(" ", "").replaceAll(RegExp(r"\s+\b|\b\s\n"), "").trim(), style: TextStyle(color: Colors.white)),
           ],
         ),
       ],

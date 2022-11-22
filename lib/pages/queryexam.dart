@@ -38,43 +38,52 @@ class QueryExamBody extends StatefulWidget {
 
 class _QueryExamBodyState extends State<QueryExamBody> {
   bool login = true;
+
   // ignore: cancel_subscriptions
-  late StreamSubscription<QueryExamRe> eventBusFn;
+  late StreamSubscription<ReloadExamListState> eventBusListener;
   int _examAllNumber = examAllNumber;
 
   @override
   void initState() {
     super.initState();
-    eventBusFn = pageBus.on<QueryExamRe>().listen((event) {
+    eventBusListener = eventBus.on<ReloadExamListState>().listen((event) {
       getExam().then((value) => _process(value));
     });
     getExam().then((value) => _process(value));
   }
+
   @override
-  void dispose(){
-    eventBusFn.cancel();
+  void dispose() {
+    eventBusListener.cancel();
     super.dispose();
   }
+
   void _process(String value) {
     if (value == "success") {
       login = false;
-       ScaffoldMessenger.of(context).removeCurrentSnackBar();
-       ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "处理数据...", 10));
+      ScaffoldMessenger.of(context).removeCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "处理数据...", 10));
       setState(() {});
-       ScaffoldMessenger.of(context).removeCurrentSnackBar();
-       ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(1, "数据已更新!", 1));
+      ScaffoldMessenger.of(context).removeCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(1, "数据已更新!", 1));
     } else if (value == "fail") {
-       ScaffoldMessenger.of(context).removeCurrentSnackBar();
-       ScaffoldMessenger.of(context).showSnackBar(jwSnackBarActionQ2(
+      ScaffoldMessenger.of(context).removeCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(jwSnackBarAction(
         false,
         "需要验证",
         context,
-        10,
+        () => {
+          ScaffoldMessenger.of(context).removeCurrentSnackBar(),
+          //  ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(1, "验证完成,请再次点击查询")),
+          eventBus.fire(ReloadExamListState()),
+          Navigator.pop(context),
+        },
+        hideSnackBarSeconds: 10,
       ));
     } else {
       print(value);
-       ScaffoldMessenger.of(context).removeCurrentSnackBar();
-       ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, value, 4));
+      ScaffoldMessenger.of(context).removeCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, value, 4));
     }
   }
 
@@ -82,8 +91,8 @@ class _QueryExamBodyState extends State<QueryExamBody> {
   Widget build(BuildContext context) {
     Future.delayed(const Duration(seconds: 0), () {
       if (login) {
-         ScaffoldMessenger.of(context).removeCurrentSnackBar();
-         ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "获取数据...", 6));
+        ScaffoldMessenger.of(context).removeCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "获取数据...", 6));
       }
     });
     return Container(
@@ -91,9 +100,8 @@ class _QueryExamBodyState extends State<QueryExamBody> {
         gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [readColor(),readColor(),Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent],
-            stops: [0,.5,.50001,.6,.61,1]
-        ),
+            colors: [readColor(), readColor(), Colors.transparent, Colors.transparent, Colors.transparent, Colors.transparent],
+            stops: [0, .5, .50001, .6, .61, 1]),
       ),
       margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
       child: CustomScrollView(
@@ -160,9 +168,7 @@ class _QueryExamBodyState extends State<QueryExamBody> {
                                   });
                                 },
                                 child: Text(
-                                  (_examAllNumber.toString() == "0"
-                                      ? "获取"
-                                      : _examAllNumber.toString()),
+                                  (_examAllNumber.toString() == "0" ? "获取" : _examAllNumber.toString()),
                                   textAlign: TextAlign.center,
                                   style: TextStyle(color: Colors.white, fontSize: 24),
                                 ),
