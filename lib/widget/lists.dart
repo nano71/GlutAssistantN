@@ -617,6 +617,8 @@ class ClassroomListState extends State<ClassroomList> {
       setState(() {
         _classroomList = classroomList;
       });
+      ScaffoldMessenger.of(context).removeCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(1, "数据已更新!", 1));
     });
   }
 
@@ -644,13 +646,22 @@ class ClassroomListState extends State<ClassroomList> {
 
   String occupyMessage(List<bool> boolList) {
     String message = "第";
+    int j = 0;
     for (int i = 0; i < boolList.length; i++) {
       if (boolList[i]) {
-        message += " ${i + 1},";
+        message += "${i + 1} , ";
+        j++;
       }
     }
-    message.substring(0, message.length - 1);
-    message += "节被占用";
+    if (j == 0) {
+      message = "该教室全天为空";
+    } else if (j == 11) {
+      message = "该教室全天满课状态";
+    } else {
+      message = message.substring(0, message.length - 3);
+      message += "节被占用";
+    }
+
     return message;
   }
 
@@ -690,7 +701,7 @@ class ClassroomListState extends State<ClassroomList> {
                       ),
                     ],
                   ),
-                  onTap: () => {},
+                  onTap: () => {ScaffoldMessenger.of(context).removeCurrentSnackBar(), ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(3, "敬请期待!"))},
                 ),
                 Text(
                   item["type"],
@@ -741,7 +752,7 @@ class ClassroomListState extends State<ClassroomList> {
                         ),
                         onTap: () => {
                           ScaffoldMessenger.of(context).removeCurrentSnackBar(),
-                          ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, occupyMessage(item["occupancyList"]), 4))
+                          ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, occupyMessage(item["occupancyList"]), 4, 22))
                         },
                       )
                     ],
