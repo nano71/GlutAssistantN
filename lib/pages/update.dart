@@ -59,7 +59,9 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
       packageName = packageInfo.packageName;
       version = packageInfo.version;
       buildNumber = packageInfo.buildNumber;
-      if (writeData["newVersion"] != "" && version != writeData["newVersion"]) {
+      print("version");
+      print(version);
+      if (writeData["newVersion"] != "" && int.parse(version.replaceAll(".", "")) < int.parse(writeData["newVersion"].replaceAll(".", ""))) {
         newVersion = true;
       }
       setState(() {});
@@ -137,7 +139,7 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
                       getUpdate().then((value) => _next(value));
                     },
                     child: Image.asset(
-                      'images/g.png',
+                      'images/ic_launcher-playstore.png',
                       width: 72,
                     ),
                   ),
