@@ -10,6 +10,9 @@ import 'package:glutassistantn/pages/mine.dart';
 import 'package:glutassistantn/pages/schedule.dart';
 import 'package:glutassistantn/pages/update.dart';
 import 'package:glutassistantn/widget/bars.dart';
+import 'package:package_info/package_info.dart';
+
+import '../data.dart';
 
 class CustomRoute extends PageRouteBuilder {
   final Widget widget;
@@ -88,6 +91,12 @@ class InitPageState extends State<InitPage> {
   }
 
   _init() async {
+    PackageInfo.fromPlatform().then((PackageInfo info) {
+      packageInfo["appName"] = info.appName;
+      packageInfo["packageName"] = info.packageName;
+      packageInfo["version"] = info.version;
+      // packageInfo["version"] = "1.3.220801";
+    });
     await readConfig();
     await readCookie();
     getWeek();

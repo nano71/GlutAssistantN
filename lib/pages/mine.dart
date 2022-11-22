@@ -23,22 +23,12 @@ class MinePage extends StatefulWidget {
 }
 
 class MinePageState extends State<MinePage> {
-  bool newVersion = false;
-
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
 
-    PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
-      print(packageInfo.appName);
-      if (writeData["newVersion"] != "" && packageInfo.version != writeData["newVersion"]) {
-        setState(() {
-          newVersion = true;
-        });
-      }
-      print(newVersion);
-    });
+    // checkNewVersion(context, skipShowSnackBar: true);
   }
 
   @override
@@ -46,95 +36,80 @@ class MinePageState extends State<MinePage> {
     return Container(
       color: Colors.white,
       margin: const EdgeInsets.fromLTRB(0, 0, 0, 16),
-      child: CustomScrollView(
-          physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
-          slivers: [
-            publicTopBar(writeData["name"] != "" ? "Hi! " + writeData["name"] : "请先登录教务"),
-            SliverToBoxAdapter(
-                child: Container(
-              width: double.infinity,
-              padding: const EdgeInsets.fromLTRB(16, 14, 16, 0),
-              child: Column(
-                textDirection: TextDirection.ltr,
-                children: [
-                  InkWell(
-                    onTap: () {
-                      Navigator.of(context).push(
-                        // 在FormPage()里传入参数
-                        MaterialPageRoute(
-                          builder: (context) => const LoginPage(),
-                        ),
-                      );
-                    },
-                    child: mineItem(
-                      FlutterRemix.user_5_line,
-                      const EdgeInsets.fromLTRB(16, 14, 0, 14),
-                      (writeData["name"] != "" ? "更换账号" : "登录教务"),
-                      readColor(),
+      child: CustomScrollView(physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()), slivers: [
+        publicTopBar(writeData["name"] != "" ? "Hi! " + writeData["name"] : "请先登录教务"),
+        SliverToBoxAdapter(
+            child: Container(
+          width: double.infinity,
+          padding: const EdgeInsets.fromLTRB(16, 14, 16, 0),
+          child: Column(
+            textDirection: TextDirection.ltr,
+            children: [
+              InkWell(
+                onTap: () {
+                  Navigator.of(context).push(
+                    // 在FormPage()里传入参数
+                    MaterialPageRoute(
+                      builder: (context) => const LoginPage(),
                     ),
-                  ),
-                  InkWell(
-                    onTap: () {
-                      if (writeData["username"] == "") {
-                        // Navigator.push(context, SlideTopRoute(page: LoginPage()));
-                        Navigator.of(context)
-                            .push(MaterialPageRoute(builder: (context) => const LoginPage()));
-                      } else {
-                        Navigator.of(context)
-                            .push(MaterialPageRoute(builder: (context) => const CareerPage()));
-                      }
-                    },
-                    child: mineItem(FlutterRemix.timer_flash_line,
-                        const EdgeInsets.fromLTRB(16, 14, 0, 14), "课程生涯", readColor()),
-                  ),
-                  InkWell(
-                    onTap: () {
-                      if (writeData["username"] == "") {
-                        // Navigator.push(context, SlideTopRoute(page: LoginPage()));
-                        Navigator.of(context)
-                            .push(MaterialPageRoute(builder: (context) => const LoginPage()));
-                      } else {
-                        Navigator.of(context)
-                            .push(MaterialPageRoute(builder: (context) => const QueryRoomPage()));
-                      }
-                    },
-                    child: mineItem(FlutterRemix.building_4_line,
-                        const EdgeInsets.fromLTRB(16, 14, 0, 14), "教室查询", readColor()),
-                  ),
-                  topLine,
-                  InkWell(
-                    onTap: () {
-                      // launch("https://github.com/ChinaGamer/GlutAssistantN/releases/latest");
-
-                      Navigator.of(context)
-                          .push(MaterialPageRoute(builder: (context) => const UpdatePage()));
-                    },
-                    child: newVersion
-                        ? mineItem5(FlutterRemix.download_cloud_2_line,
-                            const EdgeInsets.fromLTRB(16, 14, 0, 14), "版本更新", readColor())
-                        : mineItem(FlutterRemix.download_cloud_2_line,
-                            const EdgeInsets.fromLTRB(16, 14, 0, 14), "版本更新", readColor()),
-                  ),
-                  InkWell(
-                    onTap: () {
-                      Navigator.of(context)
-                          .push(MaterialPageRoute(builder: (context) => const InfoPage()));
-                    },
-                    child: mineItem(FlutterRemix.information_line, const EdgeInsets.fromLTRB(16, 14, 0, 14),
-                        "说明", readColor()),
-                  ),
-                  InkWell(
-                    onTap: () {
-                      Navigator.of(context).push(
-                          MaterialPageRoute(builder: (context) => const SettingPage(title: "设置2")));
-                    },
-                    child: mineItem(FlutterRemix.settings_3_line,
-                        const EdgeInsets.fromLTRB(16, 14, 0, 14), "设置", readColor()),
-                  ),
-                ],
+                  );
+                },
+                child: mineItem(
+                  FlutterRemix.user_5_line,
+                  const EdgeInsets.fromLTRB(16, 14, 0, 14),
+                  (writeData["name"] != "" ? "更换账号" : "登录教务"),
+                  readColor(),
+                ),
               ),
-            )),
-          ]),
+              InkWell(
+                onTap: () {
+                  if (writeData["username"] == "") {
+                    // Navigator.push(context, SlideTopRoute(page: LoginPage()));
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => const LoginPage()));
+                  } else {
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => const CareerPage()));
+                  }
+                },
+                child: mineItem(FlutterRemix.timer_flash_line, const EdgeInsets.fromLTRB(16, 14, 0, 14), "课程生涯", readColor()),
+              ),
+              InkWell(
+                onTap: () {
+                  if (writeData["username"] == "") {
+                    // Navigator.push(context, SlideTopRoute(page: LoginPage()));
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => const LoginPage()));
+                  } else {
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => const QueryRoomPage()));
+                  }
+                },
+                child: mineItem(FlutterRemix.building_4_line, const EdgeInsets.fromLTRB(16, 14, 0, 14), "教室查询", readColor()),
+              ),
+              topLine,
+              InkWell(
+                onTap: () {
+                  // launch("https://github.com/ChinaGamer/GlutAssistantN/releases/latest");
+
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => const UpdatePage()));
+                },
+                child: hasNewVersion
+                    ? mineItem5(FlutterRemix.download_cloud_2_line, const EdgeInsets.fromLTRB(16, 14, 0, 14), "版本更新", readColor())
+                    : mineItem(FlutterRemix.download_cloud_2_line, const EdgeInsets.fromLTRB(16, 14, 0, 14), "版本更新", readColor()),
+              ),
+              InkWell(
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => const InfoPage()));
+                },
+                child: mineItem(FlutterRemix.information_line, const EdgeInsets.fromLTRB(16, 14, 0, 14), "说明", readColor()),
+              ),
+              InkWell(
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => const SettingPage(title: "设置2")));
+                },
+                child: mineItem(FlutterRemix.settings_3_line, const EdgeInsets.fromLTRB(16, 14, 0, 14), "设置", readColor()),
+              ),
+            ],
+          ),
+        )),
+      ]),
     );
   }
 }
@@ -183,6 +158,7 @@ Widget mineItem5(IconData icon, EdgeInsets padding, String title, Color color) {
           Container(
               padding: padding,
               child: Badge(
+                toAnimate: false,
                 badgeContent: Text(''),
                 child: Text(
                   title,

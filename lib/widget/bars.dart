@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_remix/flutter_remix.dart';
 import 'package:glutassistantn/config.dart';
 import 'package:glutassistantn/pages/setting.dart';
+import 'package:glutassistantn/pages/update.dart';
 import 'package:package_info/package_info.dart';
 
 import '../data.dart';
@@ -150,20 +151,16 @@ class BottomNavBar extends StatefulWidget {
 
 class BottomNavBarState extends State<BottomNavBar> {
   late StreamSubscription<SetPageIndex> eventBusListener;
-  String version = writeData["newVersion"];
-  bool newVersion = false;
 
   @override
   void initState() {
     print("初始化");
     super.initState();
-    PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
-      version = packageInfo.version;
-    });
     eventBusListener = eventBus.on<SetPageIndex>().listen((event) {
-      Global.pageControl.jumpToPage(event.index);
-      Global.pageIndex = event.index;
-      setState(() {});
+      setState(() {
+        Global.pageControl.jumpToPage(event.index);
+        Global.pageIndex = event.index;
+      });
     });
   }
 
@@ -175,6 +172,7 @@ class BottomNavBarState extends State<BottomNavBar> {
 
   @override
   Widget build(BuildContext context) {
+    checkNewVersion(context, skipShowSnackBar: true);
     return CupertinoTabBar(
       border: const Border(
         top: BorderSide(
@@ -186,11 +184,7 @@ class BottomNavBarState extends State<BottomNavBar> {
       inactiveColor: Colors.black87,
       currentIndex: Global.pageIndex,
       onTap: (int index) {
-        if (version != writeData["newVersion"]) if (index != 2) {
-          newVersion = true;
-        } else {
-          newVersion = false;
-        }
+        checkNewVersion(context, skipShowSnackBar: true);
         if (Global.pageIndex != index) {
           Global.pageControl.jumpToPage(index);
           // Global.pageControl.animateToPage(index, duration: Duration(milliseconds: 500), curve: Curves.linear);
@@ -214,8 +208,9 @@ class BottomNavBarState extends State<BottomNavBar> {
         BottomNavigationBarItem(
             tooltip: '',
             icon: Badge(
-              animationType: BadgeAnimationType.scale,
-              showBadge: newVersion,
+              // animationType: BadgeAnimationType.scale,
+              toAnimate: false,
+              showBadge: hasNewVersion,
               badgeContent: Text(
                 "1",
                 style: TextStyle(color: Colors.white),

@@ -17,9 +17,11 @@ class SetPageIndex {
 class ReloadExamListState {
   ReloadExamListState();
 }
-class ReloadClassroomListState{
+
+class ReloadClassroomListState {
   ReloadClassroomListState();
 }
+
 class ReloadCareerPageState {
   ReloadCareerPageState();
 }
@@ -65,6 +67,8 @@ Map writeData = {
   "newTime": "",
   "githubDownload": ""
 };
+Map packageInfo = {};
+bool hasNewVersion = false;
 List todaySchedule = [];
 List tomorrowSchedule = [];
 List queryScore = [];
