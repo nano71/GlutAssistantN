@@ -53,7 +53,7 @@ class _CareerPageBodyState extends State<CareerPageBody> {
   bool login = true;
 
   // ignore: cancel_subscriptions
-  late StreamSubscription<CareerRe> eventBusFn;
+  late StreamSubscription<ReloadCareerPageState> eventBusListener;
   GlobalKey<CircularProgressDynamicStateForCareer> indicatorKey = GlobalKey();
   GlobalKey<TextProgressDynamicStateForCareer> textKey = GlobalKey();
   int year = 0;
@@ -65,7 +65,7 @@ class _CareerPageBodyState extends State<CareerPageBody> {
     super.initState();
     print("type:");
     print(type);
-    eventBusFn = pageBus.on<CareerRe>().listen((event) {
+    eventBusListener = eventBus.on<ReloadCareerPageState>().listen((event) {
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "获取数据...", Global.timeOutSec * 2));
       getCareer().then((value) => process(value));
@@ -75,7 +75,7 @@ class _CareerPageBodyState extends State<CareerPageBody> {
 
   @override
   void dispose() {
-    eventBusFn.cancel();
+    eventBusListener.cancel();
     super.dispose();
   }
 
@@ -106,11 +106,16 @@ class _CareerPageBodyState extends State<CareerPageBody> {
       _weekProgressAnimation();
     } else if (value == "fail") {
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
-      ScaffoldMessenger.of(context).showSnackBar(jwSnackBarActionQ3(
+      ScaffoldMessenger.of(context).showSnackBar(jwSnackBarAction(
         false,
         "需要验证",
         context,
-        Global.timeOutSec,
+        () => {
+          ScaffoldMessenger.of(context).removeCurrentSnackBar(),
+          eventBus.fire(ReloadCareerPageState()),
+          Navigator.pop(context),
+        },
+        hideSnackBarSeconds: Global.timeOutSec,
       ));
     } else {
       print(value);
@@ -139,8 +144,7 @@ class _CareerPageBodyState extends State<CareerPageBody> {
       year = int.parse(careerInfo[2].replaceAll("级", "").trim());
       // 全部学年
 
-      allYear = int.parse(
-          careerInfo[3].substring(careerInfo[3].toString().indexOf("年") - 1).replaceAll("年", ""));
+      allYear = int.parse(careerInfo[3].substring(careerInfo[3].toString().indexOf("年") - 1).replaceAll("年", ""));
       setState(() {});
     }
     print(year.toString() + "年9月开学," + (year + allYear).toString() + "年6月毕业");
@@ -268,10 +272,7 @@ class _CareerPageBodyState extends State<CareerPageBody> {
                                   margin: EdgeInsets.only(right: 8),
                                   child: Text(
                                     careerNumber.toString() + "",
-                                    style: TextStyle(
-                                        fontSize: 38,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w300),
+                                    style: TextStyle(fontSize: 38, color: Colors.white, fontWeight: FontWeight.w300),
                                   ),
                                 ),
                                 Column(
@@ -305,10 +306,7 @@ class _CareerPageBodyState extends State<CareerPageBody> {
                                   margin: EdgeInsets.only(right: 8),
                                   child: Text(
                                     careerJobNumber.toString() + "",
-                                    style: TextStyle(
-                                        fontSize: 38,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w300),
+                                    style: TextStyle(fontSize: 38, color: Colors.white, fontWeight: FontWeight.w300),
                                   ),
                                 ),
                                 Column(
@@ -342,11 +340,7 @@ class _CareerPageBodyState extends State<CareerPageBody> {
                                 alignment: Alignment.center,
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    TextProgressDynamicForCareer(key: textKey),
-                                    Text("大学进程",
-                                        style: TextStyle(color: Colors.white, fontSize: 12))
-                                  ],
+                                  children: [TextProgressDynamicForCareer(key: textKey), Text("大学进程", style: TextStyle(color: Colors.white, fontSize: 12))],
                                 )),
                           ],
                         ),
@@ -379,9 +373,7 @@ class _CareerPageBodyState extends State<CareerPageBody> {
                               child: LinearProgressIndicator(
                                 color: Colors.white,
                                 backgroundColor: const Color.fromARGB(48, 255, 255, 255),
-                                value: careerCount[1] == careerNumber
-                                    ? 0.0
-                                    : careerCount[1] / careerNumber, //精确模式，进度20%
+                                value: careerCount[1] == careerNumber ? 0.0 : careerCount[1] / careerNumber, //精确模式，进度20%
                               ),
                             ),
                           ),
@@ -399,9 +391,7 @@ class _CareerPageBodyState extends State<CareerPageBody> {
                               child: LinearProgressIndicator(
                                 color: Colors.white,
                                 backgroundColor: const Color.fromARGB(48, 255, 255, 255),
-                                value: careerCount[0] == careerNumber
-                                    ? 0.0
-                                    : careerCount[0] / careerNumber, //精确模式，进度20%
+                                value: careerCount[0] == careerNumber ? 0.0 : careerCount[0] / careerNumber, //精确模式，进度20%
                               ),
                             ),
                           ),
@@ -419,9 +409,7 @@ class _CareerPageBodyState extends State<CareerPageBody> {
                               child: LinearProgressIndicator(
                                 color: Colors.white,
                                 backgroundColor: const Color.fromARGB(48, 255, 255, 255),
-                                value: careerCount[2] == careerNumber
-                                    ? 0.0
-                                    : careerCount[2] / careerNumber, //精确模式，进度20%
+                                value: careerCount[2] == careerNumber ? 0.0 : careerCount[2] / careerNumber, //精确模式，进度20%
                               ),
                             ),
                           ),
@@ -609,8 +597,7 @@ class TextProgressDynamicStateForCareer extends State<TextProgressDynamicForCare
 
   @override
   Widget build(BuildContext context) {
-    return Text((_value.toString() + "%"),
-        style: const TextStyle(color: Colors.white, fontSize: 20));
+    return Text((_value.toString() + "%"), style: const TextStyle(color: Colors.white, fontSize: 20));
   }
 
   void onPressed(int value) {

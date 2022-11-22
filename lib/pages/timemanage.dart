@@ -51,7 +51,7 @@ class _TimeManagePageState extends State<TimeManagePage> {
     print(startTimeListBk);
     print(endTimeListBk);
     writeConfig();
-    pageBus.fire(SetPageIndex(0));
+    eventBus.fire(SetPageIndex());
     Navigator.pushAndRemoveUntil(
       context,
       CustomRouteMs300(
@@ -82,7 +82,7 @@ class _TimeManagePageState extends State<TimeManagePage> {
     print(startTimeListBk);
     print(endTimeListBk);
     writeConfig();
-    pageBus.fire(SetPageIndex(0));
+    eventBus.fire(SetPageIndex());
     Navigator.pushAndRemoveUntil(
       context,
       CustomRouteMs300(

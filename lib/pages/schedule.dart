@@ -50,10 +50,7 @@ List<Widget> _loopRowHeader(bool currentWeek) {
             child: Center(
               child: Text(
                 "周${_weekDayList[i - 1]}",
-                style: TextStyle(
-                    color: currentWeek
-                        ? (i == DateTime.now().weekday ? readColor() : Colors.grey)
-                        : Colors.grey),
+                style: TextStyle(color: currentWeek ? (i == DateTime.now().weekday ? readColor() : Colors.grey) : Colors.grey),
               ),
             ),
           ),
@@ -115,7 +112,7 @@ class SchedulePageState extends State<SchedulePage> with AutomaticKeepAliveClien
   GlobalKey<SchedulePageColumnState> weekKey = GlobalKey();
   GlobalKey<ScheduleTopBarState> barKey = GlobalKey();
   GlobalKey<RowHeaderState> rowHeaderKey = GlobalKey();
-  late StreamSubscription<ReState> eventBusFn;
+  late StreamSubscription<ReloadSchedulePageState> eventBusListener;
 
   @override
   void initState() {
@@ -134,8 +131,14 @@ class SchedulePageState extends State<SchedulePage> with AutomaticKeepAliveClien
         writeConfig();
       }
     });
-    eventBusFn = pageBus.on<ReState>().listen((event) {
-      reState();
+    eventBusListener = eventBus.on<ReloadSchedulePageState>().listen((event) {
+      setState(() {});
+      if (writeData["week"] != _currentScheduleWeek.toString()) {
+        _currentScheduleWeek = weekInt();
+        weekKey.currentState!.onPressed(weekInt());
+        barKey.currentState!.onPressed(weekInt());
+        rowHeaderKey.currentState!.onPressed(weekInt());
+      }
     });
   }
 
@@ -146,8 +149,7 @@ class SchedulePageState extends State<SchedulePage> with AutomaticKeepAliveClien
 
   void _showWeekSnackBar() {
     ScaffoldMessenger.of(context).removeCurrentSnackBar();
-    ScaffoldMessenger.of(context)
-        .showSnackBar(jwSnackBar(3, "第" + _currentScheduleWeek.toString() + "周", 0));
+    ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(3, "第" + _currentScheduleWeek.toString() + "周", 0));
   }
 
   void _showPrompt() {
@@ -188,19 +190,9 @@ class SchedulePageState extends State<SchedulePage> with AutomaticKeepAliveClien
     rowHeaderKey.currentState!.onPressed(_currentScheduleWeek);
   }
 
-  reState() {
-    setState(() {});
-    if (writeData["week"] != _currentScheduleWeek.toString()) {
-      _currentScheduleWeek = weekInt();
-      weekKey.currentState!.onPressed(weekInt());
-      barKey.currentState!.onPressed(weekInt());
-      rowHeaderKey.currentState!.onPressed(weekInt());
-    }
-  }
-
   @override
   void dispose() {
-    eventBusFn.cancel();
+    eventBusListener.cancel();
     super.dispose();
   }
 
@@ -302,10 +294,8 @@ List<Widget> _loopWeekDayColGrid(String week, String weekDay) {
     bool courseNameNotNull() => courseName != "null";
 
     if (courseNameNotNull()) {
-      bool courseNameIsPreviousCourseName() =>
-          courseName == courseLongText2ShortName(_schedule[(i - 1).toString()][0]);
-      bool courseNameNotIsNextCourseName() =>
-          courseName != courseLongText2ShortName(_schedule[(i + 1).toString()][0]);
+      bool courseNameIsPreviousCourseName() => courseName == courseLongText2ShortName(_schedule[(i - 1).toString()][0]);
+      bool courseNameNotIsNextCourseName() => courseName != courseLongText2ShortName(_schedule[(i + 1).toString()][0]);
       bool studyAreaNotIsNextStudyArea() => studyArea != _schedule[(i + 1).toString()][2];
       bool studyAreaIsPreviousStudyArea() => studyArea == _schedule[(i - 1).toString()][2];
 
@@ -314,11 +304,9 @@ List<Widget> _loopWeekDayColGrid(String week, String weekDay) {
       else if (studyAreaIsPreviousStudyArea() && courseNameIsPreviousCourseName()) {
         double height = Global.schedulePageGridHeight * (i - s + 1);
         if (i == 11)
-          list.add(
-              Grid(week, weekDay, i, s, courseName, studyArea, teacher, randomColors(), height));
+          list.add(Grid(week, weekDay, i, s, courseName, studyArea, teacher, randomColors(), height));
         else if (studyAreaNotIsNextStudyArea() || courseNameNotIsNextCourseName())
-          list.add(
-              Grid(week, weekDay, i, s, courseName, studyArea, teacher, randomColors(), height));
+          list.add(Grid(week, weekDay, i, s, courseName, studyArea, teacher, randomColors(), height));
       } else
         s = i;
     } else
@@ -338,9 +326,7 @@ class Grid extends StatelessWidget {
   final String week;
   final String weekDay;
 
-  Grid(this.week, this.weekDay, this.index, this.index2, this.title, this.studyArea, this.teacher,
-      this.color,
-      [this.height = 60.0]);
+  Grid(this.week, this.weekDay, this.index, this.index2, this.title, this.studyArea, this.teacher, this.color, [this.height = 60.0]);
 
   @override
   Widget build(BuildContext context) {

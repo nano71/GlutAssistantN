@@ -128,7 +128,7 @@ class LoginPageState extends State<LoginPage> {
         await initTodaySchedule();
         await initTomorrowSchedule();
         print("initSchedule End");
-        pageBus.fire(SetPageIndex(0));
+        eventBus.fire(SetPageIndex());
         Navigator.pushAndRemoveUntil(
           context,
           CustomRouteMs300(

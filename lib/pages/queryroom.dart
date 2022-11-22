@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_remix/flutter_remix.dart';
 import 'package:glutassistantn/common/get.dart';
 import 'package:glutassistantn/data.dart';
 import 'package:glutassistantn/widget/bars.dart';
+import 'package:glutassistantn/widget/lists.dart';
 
 import '../config.dart';
 
@@ -22,7 +25,6 @@ class QueryRoomPageState extends State<QueryRoomPage> {
     "whichWeeks": {"-1": "请选择"},
     "weeks": {"-1": "请选择"}
   };
-  List classrooms = [];
   String buildingSelect = "-1";
   String classroomSelect = "-1";
   String whichWeekSelect = "-1";
@@ -75,7 +77,7 @@ class QueryRoomPageState extends State<QueryRoomPage> {
 
   void process(value) {
     print('process');
-    // print(value);
+    // print(value is List<Map>);
     if (value is Map<String, Map>) {
       setState(() {
         value.forEach((key, value) {
@@ -84,14 +86,19 @@ class QueryRoomPageState extends State<QueryRoomPage> {
         // query["buildings"]!.remove("-1");
       });
     } else if (value is List<Map>) {
-      classrooms = value;
+      // print("赋值");
+      setState(() {
+        classroomList = value;
+      });
+      eventBus.fire(ReloadClassroomListState());
     } else if (value == "fail") {
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
-      ScaffoldMessenger.of(context).showSnackBar(jwSnackBarActionQ3(
+      ScaffoldMessenger.of(context).showSnackBar(jwSnackBarAction(
         false,
         "需要验证",
         context,
-        Global.timeOutSec,
+        () => {ScaffoldMessenger.of(context).removeCurrentSnackBar(), getEmptyClassroom().then((value) => process(value)), Navigator.pop(context)},
+        hideSnackBarSeconds: Global.timeOutSec,
       ));
     } else {
       print(value);
@@ -102,8 +109,7 @@ class QueryRoomPageState extends State<QueryRoomPage> {
 
   void _getEmptyClassroom() {
     if (buildingSelect != "-1") {
-      getEmptyClassroom(week: weekSelect, whichWeek: whichWeekSelect, building: buildingSelect)
-          .then((value) => null);
+      getEmptyClassroom(week: weekSelect, whichWeek: whichWeekSelect, building: buildingSelect).then((value) => process(value));
     } else {
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, "请选择教学楼", 4));
@@ -141,10 +147,7 @@ class QueryRoomPageState extends State<QueryRoomPage> {
             ),
             SliverToBoxAdapter(
               child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.all(Radius.circular(12.0)),
-                  color: readColorBegin(),
-                ),
+                decoration: BoxDecoration(borderRadius: const BorderRadius.all(Radius.circular(12.0)), color: readColorBegin(), gradient: readGradient()),
                 padding: const EdgeInsets.fromLTRB(16, 6, 16, 16),
                 margin: const EdgeInsets.fromLTRB(16, 16, 16, 16),
                 child: Column(
@@ -165,8 +168,7 @@ class QueryRoomPageState extends State<QueryRoomPage> {
                             underline: Container(),
                             alignment: Alignment.centerRight,
                             elevation: 0,
-                            hint: Text(query["buildings"]?[buildingSelect],
-                                style: TextStyle(fontSize: 14)),
+                            hint: Text(query["buildings"]?[buildingSelect], style: TextStyle(fontSize: 14)),
                             items: dropdownMenuItemList("buildings"),
                             onChanged: (value) {
                               setState(() {
@@ -220,8 +222,7 @@ class QueryRoomPageState extends State<QueryRoomPage> {
                             underline: Container(),
                             alignment: Alignment.centerRight,
                             elevation: 0,
-                            hint: Text(query["whichWeeks"]?[whichWeekSelect],
-                                style: TextStyle(fontSize: 14)),
+                            hint: Text(query["whichWeeks"]?[whichWeekSelect], style: TextStyle(fontSize: 14)),
                             items: dropdownMenuItemList("whichWeeks"),
                             onChanged: (value) {
                               print(value);
@@ -276,13 +277,11 @@ class QueryRoomPageState extends State<QueryRoomPage> {
                               backgroundColor: MaterialStateProperty.resolveWith((states) {
                                 return readColor();
                               }),
-                              shape: MaterialStateProperty.all(
-                                  RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+                              shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
                             ),
                             child: Text(
                               "即刻查询",
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold, color: Colors.white, fontSize: 14),
+                              style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 14),
                             ),
                             onPressed: () {
                               _getEmptyClassroom();
@@ -293,7 +292,7 @@ class QueryRoomPageState extends State<QueryRoomPage> {
                 ),
               ),
             ),
-            // RoomList()
+            ClassroomList(),
           ],
         ),
       ),

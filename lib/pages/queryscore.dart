@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_remix/flutter_remix.dart';
 import 'package:glutassistantn/common/get.dart';
 import 'package:glutassistantn/pages/setting.dart';
@@ -10,6 +9,7 @@ import 'package:glutassistantn/widget/lists.dart';
 
 import '../config.dart';
 import '../data.dart';
+import 'login.dart';
 
 class QueryPage extends StatefulWidget {
   final String title;
@@ -44,13 +44,13 @@ class _QueryBodyState extends State<QueryBody> {
   double _weight = weight;
 
   // ignore: cancel_subscriptions
-  late StreamSubscription<QueryScoreRe> eventBusFn;
+  late StreamSubscription<ReloadScoreListState> eventBusListener;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    eventBusFn = pageBus.on<QueryScoreRe>().listen((event) async {
+    eventBusListener = eventBus.on<ReloadScoreListState>().listen((event) async {
       _next(List list) {
         if (list.length == 0) {
           ScaffoldMessenger.of(context).removeCurrentSnackBar();
@@ -66,7 +66,7 @@ class _QueryBodyState extends State<QueryBody> {
 
   @override
   void dispose() {
-    eventBusFn.cancel();
+    eventBusListener.cancel();
     super.dispose();
   }
 
@@ -134,11 +134,17 @@ class _QueryBodyState extends State<QueryBody> {
       if (value is String) {
         if (value == "fail") {
           ScaffoldMessenger.of(context).removeCurrentSnackBar();
-          ScaffoldMessenger.of(context).showSnackBar(jwSnackBarActionQ(
+          ScaffoldMessenger.of(context).showSnackBar(jwSnackBarAction(
             false,
             "需要验证",
             context,
-            10,
+            () => {
+              ScaffoldMessenger.of(context).removeCurrentSnackBar(),
+              //  ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(1, "验证完成,请再次点击查询")),
+              eventBus.fire(ReloadScoreListState()),
+              Navigator.pop(context)
+            },
+            hideSnackBarSeconds: 10,
           ));
         } else {
           ScaffoldMessenger.of(context).removeCurrentSnackBar();
@@ -157,11 +163,19 @@ class _QueryBodyState extends State<QueryBody> {
     print(writeData["username"]);
     if (writeData["username"] == "") {
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
-      ScaffoldMessenger.of(context).showSnackBar(jwSnackBarActionL(
+      ScaffoldMessenger.of(context).showSnackBar(jwSnackBarAction(
         false,
         "请先登录!",
         context,
-        10,
+        () => {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const LoginPage(),
+              ))
+        },
+        hideSnackBarSeconds: 10,
+        isDialogCallback: true,
       ));
     } else {
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
@@ -177,21 +191,11 @@ class _QueryBodyState extends State<QueryBody> {
       // color: readColor(),
       margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
       decoration: BoxDecoration(
-        gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [
-          readColor(),
-          readColor(),
-          Colors.transparent,
-          Colors.transparent,
-          Colors.transparent,
-          Colors.transparent
-        ], stops: [
-          0,
-          .5,
-          .50001,
-          .6,
-          .61,
-          1
-        ]),
+        gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [readColor(), readColor(), Colors.transparent, Colors.transparent, Colors.transparent, Colors.transparent],
+            stops: [0, .5, .50001, .6, .61, 1]),
       ),
       child: CustomScrollView(
         physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),

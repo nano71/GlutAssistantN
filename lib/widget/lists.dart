@@ -7,6 +7,7 @@ import 'package:flutter_remix/flutter_remix.dart';
 import 'package:glutassistantn/config.dart';
 
 import '../data.dart';
+import 'bars.dart';
 
 GlobalKey<TodayCourseListState> todayCourseListKey = GlobalKey();
 GlobalKey<TomorrowCourseListState> tomorrowCourseListKey = GlobalKey();
@@ -24,22 +25,13 @@ List _getStartTime(index) {
   var difference = DateTime(y, m, d, startH, startM).difference(DateTime(y, m, d, h, mm));
   var difference2 = DateTime(y, m, d, endH, endM).difference(DateTime(y, m, d, h, mm));
   bool studying = false;
-  List returnList = [
-    difference.inDays,
-    difference.inHours,
-    difference.inMinutes < 0 ? difference.inMinutes % 60 - 60 : difference.inMinutes % 60
-  ];
+  List returnList = [difference.inDays, difference.inHours, difference.inMinutes < 0 ? difference.inMinutes % 60 - 60 : difference.inMinutes % 60];
   for (int i = 0; i < returnList.length; i++) {
     studying = returnList[i] < 0;
     if (returnList[0] == returnList[1] && returnList[0] == returnList[2]) studying = true;
   }
   if (studying) {
-    return [
-      difference2.inDays,
-      difference2.inHours,
-      difference2.inMinutes < 0 ? difference2.inMinutes % 60 - 60 : difference2.inMinutes % 60,
-      "after"
-    ];
+    return [difference2.inDays, difference2.inHours, difference2.inMinutes < 0 ? difference2.inMinutes % 60 - 60 : difference2.inMinutes % 60, "after"];
   } else {
     returnList.add("before");
     return returnList;
@@ -112,19 +104,19 @@ class TomorrowCourseList extends StatefulWidget {
 
 class TodayCourseListState extends State<TodayCourseList> {
   List _todaySchedule = todaySchedule;
-  late StreamSubscription<ReTodayListState> eventBusFn;
+  late StreamSubscription<ReloadTodayListState> eventBusListener;
 
   @override
   void initState() {
     super.initState();
 
-    eventBusFn = pageBus.on<ReTodayListState>().listen((event) {
-      reSate();
+    eventBusListener = eventBus.on<ReloadTodayListState>().listen((event) {
+      reloadState();
     });
     print(_todaySchedule);
   }
 
-  reSate() {
+  reloadState() {
     setState(() {
       _todaySchedule = todaySchedule;
     });
@@ -132,7 +124,7 @@ class TodayCourseListState extends State<TodayCourseList> {
 
   @override
   void dispose() {
-    eventBusFn.cancel();
+    eventBusListener.cancel();
     super.dispose();
   }
 
@@ -148,8 +140,7 @@ class TodayCourseListState extends State<TodayCourseList> {
         () {
           if (DateTime.now().second < 2) {
             sum++;
-            if (writeData["threshold"] != "-1") if (sum > (int.parse(writeData["threshold"]) * 2))
-              exit(0);
+            if (writeData["threshold"] != "-1") if (sum > (int.parse(writeData["threshold"]) * 2)) exit(0);
             print("$index : ${DateTime.now().second}");
             setState(() {
               timerS = !timerS;
@@ -266,28 +257,17 @@ class TodayCourseListItemState extends State<TodayCourseListItem> {
                 children: [
                   Row(
                     children: [
-                      Text(todaySchedule[widget.index][2] + " ",
-                          style: TextStyle(
-                              decoration: TextDecoration.none,
-                              color: _textColorsTop(widget.index))),
+                      Text(todaySchedule[widget.index][2] + " ", style: TextStyle(decoration: TextDecoration.none, color: _textColorsTop(widget.index))),
                       Text(courseLongText2ShortName(todaySchedule[widget.index][0]),
-                          style: TextStyle(
-                              decoration: TextDecoration.none,
-                              color: _textColorsTop(widget.index))),
+                          style: TextStyle(decoration: TextDecoration.none, color: _textColorsTop(widget.index))),
                     ],
                   ),
                   Row(
                     children: [
                       Text('第${todaySchedule[widget.index][4]}节 | ',
-                          style: TextStyle(
-                              decoration: TextDecoration.none,
-                              fontSize: 12,
-                              color: _textColorsDown(widget.index))),
+                          style: TextStyle(decoration: TextDecoration.none, fontSize: 12, color: _textColorsDown(widget.index))),
                       Text(todaySchedule[widget.index][1],
-                          style: TextStyle(
-                              decoration: TextDecoration.none,
-                              fontSize: 12,
-                              color: _textColorsDown(widget.index))),
+                          style: TextStyle(decoration: TextDecoration.none, fontSize: 12, color: _textColorsDown(widget.index))),
                     ],
                   ),
                 ],
@@ -301,10 +281,7 @@ class TodayCourseListItemState extends State<TodayCourseListItem> {
                 alignment: Alignment.centerRight,
                 child: Text(
                   (_timeText(widget.index - 1).contains("后") ? "" : _timeText(widget.index)),
-                  style: TextStyle(
-                      decoration: TextDecoration.none,
-                      fontSize: 14,
-                      color: _timeColors(widget.index)),
+                  style: TextStyle(decoration: TextDecoration.none, fontSize: 14, color: _timeColors(widget.index)),
                 ),
               )
             ],
@@ -317,19 +294,19 @@ class TodayCourseListItemState extends State<TodayCourseListItem> {
 
 class TomorrowCourseListState extends State<TomorrowCourseList> {
   List _tomorrowSchedule = tomorrowSchedule;
-  late StreamSubscription<ReTomorrowListState> eventBusFn;
+  late StreamSubscription<ReloadTomorrowListState> eventBusListener;
 
   @override
   void initState() {
     super.initState();
 
-    eventBusFn = pageBus.on<ReTomorrowListState>().listen((event) {
-      reSate();
+    eventBusListener = eventBus.on<ReloadTomorrowListState>().listen((event) {
+      reloadState();
     });
     // print(_tomorrowSchedule[1]);
   }
 
-  reSate() {
+  reloadState() {
     setState(() {
       _tomorrowSchedule = tomorrowSchedule;
     });
@@ -337,7 +314,7 @@ class TomorrowCourseListState extends State<TomorrowCourseList> {
 
   @override
   void dispose() {
-    eventBusFn.cancel();
+    eventBusListener.cancel();
     super.dispose();
   }
 
@@ -346,9 +323,7 @@ class TomorrowCourseListState extends State<TomorrowCourseList> {
     return SliverList(
       delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
         return Container(
-          padding: _tomorrowSchedule[index][3] == "1" && index == 0
-              ? const EdgeInsets.fromLTRB(16, 0, 16, 4)
-              : const EdgeInsets.fromLTRB(16, 0, 16, 0),
+          padding: _tomorrowSchedule[index][3] == "1" && index == 0 ? const EdgeInsets.fromLTRB(16, 0, 16, 4) : const EdgeInsets.fromLTRB(16, 0, 16, 0),
           margin: const EdgeInsets.fromLTRB(0, 0, 0, 16),
           height: 50,
           decoration: BoxDecoration(
@@ -364,9 +339,7 @@ class TomorrowCourseListState extends State<TomorrowCourseList> {
                     child: Icon(
                       // FlutterRemix.time_line,
                       Icons.hourglass_top_outlined,
-                      color: (_tomorrowSchedule[index][4] == "1" && index == 0
-                          ? Colors.orange[900]
-                          : readColor()),
+                      color: (_tomorrowSchedule[index][4] == "1" && index == 0 ? Colors.orange[900] : readColor()),
                       size: Global.listLeftIconSize,
                     ),
                   ),
@@ -380,16 +353,12 @@ class TomorrowCourseListState extends State<TomorrowCourseList> {
                               style: TextStyle(
                                   decoration: TextDecoration.none,
                                   fontSize: 14,
-                                  color: (_tomorrowSchedule[index][4] == "1" && index == 0
-                                      ? Colors.orange[900]
-                                      : const Color(0xff333333)))),
+                                  color: (_tomorrowSchedule[index][4] == "1" && index == 0 ? Colors.orange[900] : const Color(0xff333333)))),
                           Text(courseLongText2ShortName(_tomorrowSchedule[index][0]),
                               style: TextStyle(
                                   decoration: TextDecoration.none,
                                   fontSize: 16,
-                                  color: (_tomorrowSchedule[index][4] == "1" && index == 0
-                                      ? Colors.orange[900]
-                                      : const Color(0xff333333)))),
+                                  color: (_tomorrowSchedule[index][4] == "1" && index == 0 ? Colors.orange[900] : const Color(0xff333333)))),
                         ],
                       ),
                       Row(
@@ -398,16 +367,12 @@ class TomorrowCourseListState extends State<TomorrowCourseList> {
                               style: TextStyle(
                                   decoration: TextDecoration.none,
                                   fontSize: 12,
-                                  color: (_tomorrowSchedule[index][4] == "1" && index == 0
-                                      ? Colors.orange[900]
-                                      : const Color(0xff999999)))),
+                                  color: (_tomorrowSchedule[index][4] == "1" && index == 0 ? Colors.orange[900] : const Color(0xff999999)))),
                           Text(_tomorrowSchedule[index][1],
                               style: TextStyle(
                                   decoration: TextDecoration.none,
                                   fontSize: 12,
-                                  color: (_tomorrowSchedule[index][4] == "1" && index == 0
-                                      ? Colors.orange[900]
-                                      : const Color(0xff999999)))),
+                                  color: (_tomorrowSchedule[index][4] == "1" && index == 0 ? Colors.orange[900] : const Color(0xff999999)))),
                         ],
                       ),
                     ],
@@ -419,8 +384,7 @@ class TomorrowCourseListState extends State<TomorrowCourseList> {
                 children: [
                   Align(
                     alignment: Alignment.centerRight,
-                    child: Text((_tomorrowSchedule[index][4] == "1" && index == 0 ? "别睡懒觉哦" : ""),
-                        style: TextStyle(fontSize: 14, color: Colors.orange[900])),
+                    child: Text((_tomorrowSchedule[index][4] == "1" && index == 0 ? "别睡懒觉哦" : ""), style: TextStyle(fontSize: 14, color: Colors.orange[900])),
                   ),
                 ],
               ),
@@ -440,9 +404,7 @@ class ScoreListState extends State<ScoreList> {
   @override
   Widget build(BuildContext context) {
     if (queryScore.length == 1) {
-      if (queryScore[0] == Global.socketError ||
-          queryScore[0] == Global.timeOutError ||
-          queryScore[0] == "登录过期") {
+      if (queryScore[0] == Global.socketError || queryScore[0] == Global.timeOutError || queryScore[0] == "登录过期") {
         return SliverList(
           delegate: SliverChildBuilderDelegate(
             (BuildContext context, int index) {},
@@ -511,8 +473,7 @@ class ScoreListState extends State<ScoreList> {
                           // "不及格",
                           queryScore[index][4],
                           style: TextStyle(fontSize: 16, color: Colors.white)),
-                      Text(queryScore[index][5],
-                          style: TextStyle(color: Colors.white, fontSize: 12)),
+                      Text(queryScore[index][5], style: TextStyle(color: Colors.white, fontSize: 12)),
                     ]),
                   ),
                 ],
@@ -644,11 +605,161 @@ class ClassroomList extends StatefulWidget {
 }
 
 class ClassroomListState extends State<ClassroomList> {
+  // ignore: cancel_subscriptions
+  late StreamSubscription<ReloadClassroomListState> eventBusListener;
+  List<Map> _classroomList = classroomList;
+
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    eventBusListener = eventBus.on<ReloadClassroomListState>().listen((event) {
+      print("reloadState");
+      setState(() {
+        _classroomList = classroomList;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    eventBusListener.cancel();
+    super.dispose();
+  }
+
+  List<Widget> header(List<bool> boolList) {
+    List<Widget> list = [];
+    int j = 0;
+    for (int i = 0; i < boolList.length; i++) {
+      String text = (i + 1).toString();
+      list.add(Expanded(
+        child: Text(
+          text,
+          textAlign: TextAlign.center,
+          style: TextStyle(color: boolList[i] ? Colors.white : readColorBegin(), fontSize: 12),
+        ),
+      ));
+    }
+    return list;
+  }
+
+  String occupyMessage(List<bool> boolList) {
+    String message = "第";
+    for (int i = 0; i < boolList.length; i++) {
+      if (boolList[i]) {
+        message += " ${i + 1},";
+      }
+    }
+    message.substring(0, message.length - 1);
+    message += "节被占用";
+    return message;
+  }
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     // throw UnimplementedError();
     return SliverList(
-        delegate: SliverChildBuilderDelegate((BuildContext context, int index) {}, childCount: 0));
+        delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
+      Map item = _classroomList[index];
+      // print(632);
+      // print(item);
+      return Container(
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.all(Radius.circular(12.0)),
+          color: item["todayEmpty"] ? Colors.grey : randomColors2(),
+        ),
+        padding: const EdgeInsets.fromLTRB(12, 12, 12, 12),
+        margin: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                InkWell(
+                  child: Row(
+                    children: [
+                      Text(
+                        item["classroom"],
+                        style: TextStyle(color: Colors.white, fontSize: 20),
+                      ),
+                      Icon(
+                        FlutterRemix.arrow_right_s_line,
+                        color: Colors.white,
+                        size: 18,
+                      ),
+                    ],
+                  ),
+                  onTap: () => {},
+                ),
+                Text(
+                  item["type"],
+                  style: TextStyle(color: Colors.white, fontSize: 12),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 4,
+            ),
+            Row(
+              children: [
+                Text(
+                  "座位容量: " + item["seats"],
+                  style: TextStyle(color: Colors.white),
+                ),
+                SizedBox(
+                  width: 16,
+                ),
+                Text(
+                  "考试容量: " + item["examSeats"],
+                  style: TextStyle(color: Colors.white),
+                )
+              ],
+            ),
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.all(Radius.circular(12.0)),
+                color: readColorBegin(),
+              ),
+              padding: const EdgeInsets.fromLTRB(12, 12, 12, 12),
+              margin: const EdgeInsets.fromLTRB(0, 16, 0, 0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        item["todayEmpty"] ? "占用情况 - 全天为空" : "占用情况",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      InkWell(
+                        child: Icon(
+                          FlutterRemix.information_line,
+                          color: Colors.white,
+                          size: 16,
+                        ),
+                        onTap: () => {
+                          ScaffoldMessenger.of(context).removeCurrentSnackBar(),
+                          ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, occupyMessage(item["occupancyList"]), 4))
+                        },
+                      )
+                    ],
+                  ),
+                  SizedBox(
+                    height: 12,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: header(item["occupancyList"]),
+                  ),
+                  Row(),
+                ],
+              ),
+            )
+          ],
+        ),
+      );
+    }, childCount: _classroomList.length));
   }
 }

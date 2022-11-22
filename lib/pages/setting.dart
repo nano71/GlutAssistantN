@@ -267,7 +267,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                                 writeData["color"] = value;
                               });
                               writeConfig();
-                              pageBus.fire(SetPageIndex(0));
+                              eventBus.fire(SetPageIndex());
                               Navigator.pushAndRemoveUntil(
                                 context,
                                 CustomRouteMs300(
@@ -442,9 +442,9 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
     await initSchedule();
     todaySchedule = [];
     tomorrowSchedule = [];
-    await todayCourseListKey.currentState!.reSate();
-    await tomorrowCourseListKey.currentState!.reSate();
-    pageBus.fire(SetPageIndex(0));
+    await todayCourseListKey.currentState!.reloadState();
+    await tomorrowCourseListKey.currentState!.reloadState();
+    eventBus.fire(SetPageIndex());
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(

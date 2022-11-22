@@ -6,7 +6,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_remix/flutter_remix.dart';
 import 'package:glutassistantn/config.dart';
-import 'package:glutassistantn/pages/login.dart';
 import 'package:glutassistantn/pages/setting.dart';
 import 'package:package_info/package_info.dart';
 
@@ -41,8 +40,7 @@ class HomeTopBar extends StatelessWidget {
               InkWell(
                 child: const Icon(FlutterRemix.more_fill, size: 24),
                 onTap: () {
-                  Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => const SettingPage(title: "设置")));
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => const SettingPage(title: "设置")));
                 },
               )
             ],
@@ -52,8 +50,7 @@ class HomeTopBar extends StatelessWidget {
   }
 }
 
-SliverAppBar publicTopBar(String title,
-    [inkWell = const Text(""), color = Colors.white, color2 = Colors.black, double e = 0.3]) {
+SliverAppBar publicTopBar(String title, [inkWell = const Text(""), color = Colors.white, color2 = Colors.black, double e = 0.3]) {
   return SliverAppBar(
     pinned: true,
     shadowColor: color,
@@ -94,7 +91,7 @@ class ScheduleTopBarState extends State<ScheduleTopBar> {
   void back() {
     ScaffoldMessenger.of(context).removeCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(3, "回到当前!", 1));
-    pageBus.fire(ReState(1));
+    eventBus.fire(ReloadSchedulePageState());
   }
 
   String date() {
@@ -152,7 +149,7 @@ class BottomNavBar extends StatefulWidget {
 }
 
 class BottomNavBarState extends State<BottomNavBar> {
-  late StreamSubscription<SetPageIndex> eventBusFn;
+  late StreamSubscription<SetPageIndex> eventBusListener;
   String version = writeData["newVersion"];
   bool newVersion = false;
 
@@ -163,7 +160,7 @@ class BottomNavBarState extends State<BottomNavBar> {
     PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
       version = packageInfo.version;
     });
-    eventBusFn = pageBus.on<SetPageIndex>().listen((event) {
+    eventBusListener = eventBus.on<SetPageIndex>().listen((event) {
       Global.pageControl.jumpToPage(event.index);
       Global.pageIndex = event.index;
       setState(() {});
@@ -173,7 +170,7 @@ class BottomNavBarState extends State<BottomNavBar> {
   @override
   void dispose() {
     super.dispose();
-    eventBusFn.cancel();
+    eventBusListener.cancel();
   }
 
   @override
@@ -283,12 +280,7 @@ SnackBar jwSnackBar(int type, String text, [int hideSnackBarSeconds = 2]) {
   );
 }
 
-SnackBar jwSnackBarAction(
-  bool result,
-  String text,
-  BuildContext context, [
-  int hideSnackBarSeconds = 2,
-]) {
+SnackBar jwSnackBarAction(bool result, String text, BuildContext context, Function callback, {int hideSnackBarSeconds = 2, bool isDialogCallback = true}) {
   Widget resultIcon = result
       ? const Icon(
           FlutterRemix.checkbox_circle_line,
@@ -313,155 +305,11 @@ SnackBar jwSnackBarAction(
     action: SnackBarAction(
       label: text,
       onPressed: () {
-        codeCheckDialog(context);
-      },
-    ),
-  );
-}
-
-SnackBar jwSnackBarActionL(
-  bool result,
-  String text,
-  BuildContext context, [
-  int hideSnackBarSeconds = 2,
-]) {
-  Widget resultIcon = result
-      ? const Icon(
-          FlutterRemix.checkbox_circle_line,
-          color: Colors.green,
-        )
-      : const Icon(
-          FlutterRemix.error_warning_line,
-          color: Colors.red,
-        );
-  return SnackBar(
-    elevation: 2,
-    margin: EdgeInsets.fromLTRB(100, 0, 100, 50),
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(50.0),
-    ),
-    duration: Duration(seconds: hideSnackBarSeconds),
-    content: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[resultIcon],
-    ),
-    behavior: SnackBarBehavior.floating,
-    action: SnackBarAction(
-      label: text,
-      onPressed: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const LoginPage(),
-            ));
-      },
-    ),
-  );
-}
-
-SnackBar jwSnackBarActionQ(
-  bool result,
-  String text,
-  BuildContext context, [
-  int hideSnackBarSeconds = 2,
-]) {
-  Widget resultIcon = result
-      ? const Icon(
-          FlutterRemix.checkbox_circle_line,
-          color: Colors.green,
-        )
-      : const Icon(
-          FlutterRemix.error_warning_line,
-          color: Colors.red,
-        );
-  return SnackBar(
-    elevation: 2,
-    margin: EdgeInsets.fromLTRB(100, 0, 100, 50),
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(50.0),
-    ),
-    duration: Duration(seconds: hideSnackBarSeconds),
-    content: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[resultIcon],
-    ),
-    behavior: SnackBarBehavior.floating,
-    action: SnackBarAction(
-      label: text,
-      onPressed: () {
-        codeCheckDialogQ(context);
-      },
-    ),
-  );
-}
-
-SnackBar jwSnackBarActionQ2(
-  bool result,
-  String text,
-  BuildContext context, [
-  int hideSnackBarSeconds = 2,
-]) {
-  Widget resultIcon = result
-      ? const Icon(
-          FlutterRemix.checkbox_circle_line,
-          color: Colors.green,
-        )
-      : const Icon(
-          FlutterRemix.error_warning_line,
-          color: Colors.red,
-        );
-  return SnackBar(
-    elevation: 2,
-    margin: EdgeInsets.fromLTRB(100, 0, 100, 50),
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(50.0),
-    ),
-    duration: Duration(seconds: hideSnackBarSeconds),
-    content: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[resultIcon],
-    ),
-    behavior: SnackBarBehavior.floating,
-    action: SnackBarAction(
-      label: text,
-      onPressed: () {
-        codeCheckDialogQ2(context);
-      },
-    ),
-  );
-}
-
-SnackBar jwSnackBarActionQ3(
-  bool result,
-  String text,
-  BuildContext context, [
-  int hideSnackBarSeconds = 2,
-]) {
-  Widget resultIcon = result
-      ? const Icon(
-          FlutterRemix.checkbox_circle_line,
-          color: Colors.green,
-        )
-      : const Icon(
-          FlutterRemix.error_warning_line,
-          color: Colors.red,
-        );
-  return SnackBar(
-    elevation: 2,
-    margin: EdgeInsets.fromLTRB(100, 0, 100, 50),
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(50.0),
-    ),
-    duration: Duration(seconds: hideSnackBarSeconds),
-    content: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[resultIcon],
-    ),
-    behavior: SnackBarBehavior.floating,
-    action: SnackBarAction(
-      label: text,
-      onPressed: () {
-        codeCheckDialogQ3(context);
+        if (isDialogCallback) {
+          codeCheckDialog(context, callback);
+        } else {
+          callback();
+        }
       },
     ),
   );

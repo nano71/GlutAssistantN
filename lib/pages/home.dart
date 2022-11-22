@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:ffi';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
@@ -7,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:glutassistantn/common/get.dart';
 import 'package:glutassistantn/common/init.dart';
-import 'package:glutassistantn/pages/query.dart';
+import 'package:glutassistantn/pages/queryscore.dart';
 import 'package:glutassistantn/pages/queryexam.dart';
 import 'package:glutassistantn/widget/bars.dart';
 import 'package:glutassistantn/widget/cards.dart';
@@ -16,6 +15,7 @@ import 'package:glutassistantn/widget/lists.dart';
 
 import '../config.dart';
 import '../data.dart';
+import 'init.dart';
 import 'login.dart';
 
 class HomePage extends StatefulWidget {
@@ -137,9 +137,9 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
         ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "处理数据...", 10));
         await initTodaySchedule();
         await initTomorrowSchedule();
-        pageBus.fire(ReState(1));
-        pageBus.fire(ReTodayListState(1));
-        pageBus.fire(ReTomorrowListState(1));
+        eventBus.fire(ReloadSchedulePageState());
+        eventBus.fire(ReloadTodayListState());
+        eventBus.fire(ReloadTomorrowListState());
         setState(() {});
         _endCount = 0;
         print("刷新结束${DateTime.now()}");
@@ -169,7 +169,18 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         false,
                         "需要验证",
                         context,
-                        10,
+                        () async => await getSchedule().then((value) => {
+                              if (value == "success")
+                                {
+                                  Navigator.pushAndRemoveUntil(
+                                      context,
+                                      CustomRouteMs300(Index(
+                                        type: 1,
+                                      )),
+                                      (route) => false)
+                                }
+                            }),
+                        hideSnackBarSeconds: 10,
                       )),
                       _time2?.cancel()
                     }
@@ -177,11 +188,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
               else if (value == "success")
                 _next()
               else
-                {
-                  ScaffoldMessenger.of(context).removeCurrentSnackBar(),
-                  ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, value, 4)),
-                  _time2?.cancel()
-                }
+                {ScaffoldMessenger.of(context).removeCurrentSnackBar(), ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, value, 4)), _time2?.cancel()}
             });
         _timeOutBool = true;
         _goTopInitCount = 0;
@@ -263,8 +270,8 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
               children: [
                 InkWell(
                   onTap: () {
-                    pageBus.fire(SetPageIndex(1));
-                    pageBus.fire(ReState(1));
+                    eventBus.fire(SetPageIndex(index: 1));
+                    eventBus.fire(ReloadSchedulePageState());
                   },
                   child: const HomeCard(),
                 ),
@@ -279,8 +286,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       onTapUp: (d) {
                         Future.delayed(const Duration(milliseconds: 100), () {
                           if (writeData["username"] == "") {
-                            Navigator.of(context)
-                                .push(MaterialPageRoute(builder: (context) => const LoginPage()));
+                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => const LoginPage()));
                           } else {
                             _goTop();
                           }
@@ -294,9 +300,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         margin: const EdgeInsets.fromLTRB(0, 8, 4, 16),
                         height: 100,
                         width: width / 3 - 48 / 3,
-                        decoration: BoxDecoration(
-                            borderRadius: const BorderRadius.all(Radius.circular(12.0)),
-                            color: _animationForHomeCards1.value),
+                        decoration: BoxDecoration(borderRadius: const BorderRadius.all(Radius.circular(12.0)), color: _animationForHomeCards1.value),
                         child: Stack(
                           children: [
                             Align(
@@ -325,11 +329,9 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       onTapUp: (d) {
                         Future.delayed(const Duration(milliseconds: 100), () {
                           if (writeData["username"] == "") {
-                            Navigator.of(context)
-                                .push(MaterialPageRoute(builder: (context) => const LoginPage()));
+                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => const LoginPage()));
                           } else {
-                            Navigator.of(context)
-                                .push(MaterialPageRoute(builder: (context) => const QueryPage()));
+                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => const QueryPage()));
                           }
                           _animationControllerForHomeCards2.reverse();
                         });
@@ -341,9 +343,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         margin: const EdgeInsets.fromLTRB(4, 8, 4, 16),
                         height: 100,
                         width: width / 3 - 48 / 3,
-                        decoration: BoxDecoration(
-                            borderRadius: const BorderRadius.all(Radius.circular(12.0)),
-                            color: _animationForHomeCards2.value),
+                        decoration: BoxDecoration(borderRadius: const BorderRadius.all(Radius.circular(12.0)), color: _animationForHomeCards2.value),
                         child: Stack(
                           children: [
                             Align(
@@ -359,8 +359,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                             Align(
                               child: Container(
                                 margin: HomeCardsState.textMargin,
-                                child: Text(HomeCardsState.iconTexts[1],
-                                    style: HomeCardsState.textStyle),
+                                child: Text(HomeCardsState.iconTexts[1], style: HomeCardsState.textStyle),
                               ),
                             ),
                           ],
@@ -374,11 +373,9 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       onTapUp: (d) {
                         Future.delayed(const Duration(milliseconds: 100), () {
                           if (writeData["username"] == "") {
-                            Navigator.of(context)
-                                .push(MaterialPageRoute(builder: (context) => const LoginPage()));
+                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => const LoginPage()));
                           } else {
-                            Navigator.of(context).push(
-                                MaterialPageRoute(builder: (context) => const QueryExamPage()));
+                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => const QueryExamPage()));
                           }
                           _animationControllerForHomeCards3.reverse();
                         });
@@ -390,9 +387,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         margin: const EdgeInsets.fromLTRB(4, 8, 0, 16),
                         height: 100,
                         width: width / 3 - 48 / 3,
-                        decoration: BoxDecoration(
-                            borderRadius: const BorderRadius.all(Radius.circular(12.0)),
-                            color: _animationForHomeCards3.value),
+                        decoration: BoxDecoration(borderRadius: const BorderRadius.all(Radius.circular(12.0)), color: _animationForHomeCards3.value),
                         child: Stack(
                           children: [
                             Align(
@@ -408,8 +403,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                             Align(
                               child: Container(
                                 margin: HomeCardsState.textMargin,
-                                child: Text(HomeCardsState.iconTexts[2],
-                                    style: HomeCardsState.textStyle),
+                                child: Text(HomeCardsState.iconTexts[2], style: HomeCardsState.textStyle),
                               ),
                             ),
                           ],
@@ -431,9 +425,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
           SliverToBoxAdapter(
               child: Container(
             padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
-            child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text(tomorrowScheduleTitle, style: _tomorrowAndTodayTextStyle())),
+            child: Align(alignment: Alignment.centerLeft, child: Text(tomorrowScheduleTitle, style: _tomorrowAndTodayTextStyle())),
           )),
           TomorrowCourseList(
             key: tomorrowCourseListKey,
