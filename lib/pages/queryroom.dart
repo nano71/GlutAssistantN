@@ -109,6 +109,8 @@ class QueryRoomPageState extends State<QueryRoomPage> {
 
   void _getEmptyClassroom() {
     if (buildingSelect != "-1") {
+      ScaffoldMessenger.of(context).removeCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "查询中...", 10));
       getEmptyClassroom(week: weekSelect, whichWeek: whichWeekSelect, building: buildingSelect).then((value) => process(value));
     } else {
       ScaffoldMessenger.of(context).removeCurrentSnackBar();

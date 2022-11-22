@@ -230,7 +230,7 @@ class BottomNavBarState extends State<BottomNavBar> {
   }
 }
 
-SnackBar jwSnackBar(int type, String text, [int hideSnackBarSeconds = 2]) {
+SnackBar jwSnackBar(int type, String text, [int hideSnackBarSeconds = 2, double margin = 100]) {
   Widget setIcon() {
     if (type == 0)
       return const Icon(
@@ -256,7 +256,7 @@ SnackBar jwSnackBar(int type, String text, [int hideSnackBarSeconds = 2]) {
   Widget resultIcon = setIcon();
 
   return SnackBar(
-    margin: EdgeInsets.fromLTRB(100, 0, 100, 50),
+    margin: EdgeInsets.fromLTRB(margin, 0, margin, 50),
     padding: EdgeInsets.all(12),
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(50.0),
