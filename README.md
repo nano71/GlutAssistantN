@@ -102,4 +102,4 @@ flutter build apk --obfuscate --split-debug-info=xxx_Struggle --target-platform 
 
 #### 附言:
 
-分校教务提供的东西太少 , 只能取到这些了 , UI也确实一言难尽 , 有空我再改改  
+分校教务提供的东西太少 , 目前只能拿到这些 , UI也确实一言难尽 , 有空我再改改  
