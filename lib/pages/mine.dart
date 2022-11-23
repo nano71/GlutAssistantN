@@ -1,5 +1,4 @@
 import 'package:badges/badges.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_remix/flutter_remix.dart';
 import 'package:glutassistantn/pages/career.dart';
@@ -8,7 +7,6 @@ import 'package:glutassistantn/pages/setting.dart';
 import 'package:glutassistantn/pages/update.dart';
 import 'package:glutassistantn/widget/bars.dart';
 import 'package:glutassistantn/widget/icons.dart';
-import 'package:package_info/package_info.dart';
 
 import '../config.dart';
 import '../data.dart';

@@ -95,6 +95,7 @@ class _QueryExamBodyState extends State<QueryExamBody> {
         ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "获取数据...", 6));
       }
     });
+    // TODO: implement build
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -119,13 +120,13 @@ class _QueryExamBodyState extends State<QueryExamBody> {
                   Navigator.of(context).pop();
                 },
               ),
-              readColorBegin(),
+              readColor(),
               Colors.white,
               0),
           SliverToBoxAdapter(
             child: Container(
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-              color: readColorBegin(),
+              color: readColor(),
               margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
               child: Row(
                 children: [

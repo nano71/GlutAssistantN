@@ -1,5 +1,3 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:glutassistantn/common/get.dart';
 import 'package:glutassistantn/common/init.dart';
@@ -8,7 +6,6 @@ import 'package:glutassistantn/config.dart';
 import 'package:glutassistantn/pages/home.dart';
 import 'package:glutassistantn/pages/mine.dart';
 import 'package:glutassistantn/pages/schedule.dart';
-import 'package:glutassistantn/pages/update.dart';
 import 'package:glutassistantn/widget/bars.dart';
 import 'package:package_info/package_info.dart';
 

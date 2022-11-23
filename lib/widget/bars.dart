@@ -8,7 +8,6 @@ import 'package:flutter_remix/flutter_remix.dart';
 import 'package:glutassistantn/config.dart';
 import 'package:glutassistantn/pages/setting.dart';
 import 'package:glutassistantn/pages/update.dart';
-import 'package:package_info/package_info.dart';
 
 import '../data.dart';
 import 'dialog.dart';
