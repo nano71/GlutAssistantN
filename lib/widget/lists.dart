@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_remix/flutter_remix.dart';
 import 'package:glutassistantn/config.dart';
 
@@ -407,7 +406,9 @@ class ScoreListState extends State<ScoreList> {
       if (queryScore[0] == Global.socketError || queryScore[0] == Global.timeOutError || queryScore[0] == "登录过期") {
         return SliverList(
           delegate: SliverChildBuilderDelegate(
-            (BuildContext context, int index) {},
+            (BuildContext context, int index) {
+              return null;
+            },
           ),
         );
       }
@@ -630,7 +631,6 @@ class ClassroomListState extends State<ClassroomList> {
 
   List<Widget> header(List<bool> boolList) {
     List<Widget> list = [];
-    int j = 0;
     for (int i = 0; i < boolList.length; i++) {
       String text = (i + 1).toString();
       list.add(Expanded(
