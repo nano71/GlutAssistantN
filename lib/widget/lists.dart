@@ -8,8 +8,8 @@ import 'package:glutassistantn/config.dart';
 import '../data.dart';
 import 'bars.dart';
 
-GlobalKey<TodayCourseListState> todayCourseListKey = GlobalKey();
-GlobalKey<TomorrowCourseListState> tomorrowCourseListKey = GlobalKey();
+final GlobalKey<TodayCourseListState> todayCourseListKey = GlobalKey();
+final GlobalKey<TomorrowCourseListState> tomorrowCourseListKey = GlobalKey();
 
 List _getStartTime(index) {
   var startH = startTimeList[index - 1][0];
