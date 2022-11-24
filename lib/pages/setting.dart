@@ -223,6 +223,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                         ),
                         Builder(builder: (BuildContext context) {
                           return DropdownButton(
+                            icon: Icon(FlutterRemix.arrow_down_s_line),
                             iconEnabledColor: readColor(),
                             elevation: 0,
                             hint: Text(
@@ -298,6 +299,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                         ),
                         Builder(builder: (BuildContext context) {
                           return DropdownButton(
+                            icon: Icon(FlutterRemix.arrow_down_s_line),
                             iconEnabledColor: readColor(),
                             elevation: 0,
                             hint: Text(

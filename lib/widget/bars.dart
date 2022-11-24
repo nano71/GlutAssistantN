@@ -255,7 +255,7 @@ SnackBar jwSnackBar(int type, String text, [int hideSnackBarSeconds = 2, double 
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(50.0),
     ),
-    elevation: 2,
+    elevation: 0,
     duration: Duration(seconds: hideSnackBarSeconds),
     content: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -285,7 +285,7 @@ SnackBar jwSnackBarAction(bool result, String text, BuildContext context, Functi
           color: Colors.red,
         );
   return SnackBar(
-    elevation: 2,
+    elevation: 0,
     margin: EdgeInsets.fromLTRB(100, 0, 100, 50),
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(50.0),
