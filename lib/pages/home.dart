@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -11,6 +12,7 @@ import 'package:glutassistantn/widget/cards.dart';
 import 'package:glutassistantn/widget/icons.dart';
 import 'package:glutassistantn/widget/lists.dart';
 
+import '../common/io.dart';
 import '../config.dart';
 import '../data.dart';
 import 'init.dart';
@@ -101,6 +103,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 
   void _goTop() {
+    print('_goTop');
     _time?.cancel();
     _time2?.cancel();
     if (_goTopInitCount < 8) {
@@ -120,6 +123,8 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
         curve: Curves.linear,
       );
       _next() async {
+        await readSchedule();
+        Map _schedule = schedule;
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "清除缓存...", 10));
         schedule = {};
@@ -130,7 +135,8 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
         await initSchedule();
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "获取课表...", 10));
-        await getSchedule();
+        schedule = _schedule;
+        await writeSchedule(jsonEncode(_schedule));
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "处理数据...", 10));
         await initTodaySchedule();
@@ -145,41 +151,41 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
         ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(1, "数据已更新!", 1));
       }
 
+      _scheduleParser(String response) {
+        if (response == "fail") {
+          if (writeData["username"] == "") {
+            // codeCheckDialog(context),
+            ScaffoldMessenger.of(context).removeCurrentSnackBar();
+            ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, "请先登录!"));
+            _time2?.cancel();
+          } else {
+            ScaffoldMessenger.of(context).removeCurrentSnackBar();
+            ScaffoldMessenger.of(context).showSnackBar(jwSnackBarAction(
+              false,
+              "需要验证",
+              context,
+              () async => await getSchedule().then((value) => {
+                    if (value == "success") {Navigator.pushAndRemoveUntil(context, CustomRoute(View(refresh: true)), (route) => false)}
+                  }),
+              hideSnackBarSeconds: 10,
+            ));
+            _time2?.cancel();
+          }
+        } else if (response == "success")
+          _next();
+        else {
+          ScaffoldMessenger.of(context).removeCurrentSnackBar();
+          ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, response, 4));
+          _time2?.cancel();
+        }
+      }
+
       _time = Timer(const Duration(seconds: 1), () async {
         print("更新开始");
         getWeek();
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "连接教务...", 10));
-        await getSchedule().then((value) => {
-              if (value == "fail")
-                {
-                  if (writeData["username"] == "")
-                    {
-                      // codeCheckDialog(context),
-                      ScaffoldMessenger.of(context).removeCurrentSnackBar(),
-                      ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, "请先登录!")),
-                      _time2?.cancel()
-                    }
-                  else
-                    {
-                      ScaffoldMessenger.of(context).removeCurrentSnackBar(),
-                      ScaffoldMessenger.of(context).showSnackBar(jwSnackBarAction(
-                        false,
-                        "需要验证",
-                        context,
-                        () async => await getSchedule().then((value) => {
-                              if (value == "success") {Navigator.pushAndRemoveUntil(context, CustomRoute(View(refresh: true)), (route) => false)}
-                            }),
-                        hideSnackBarSeconds: 10,
-                      )),
-                      _time2?.cancel()
-                    }
-                }
-              else if (value == "success")
-                _next()
-              else
-                {ScaffoldMessenger.of(context).removeCurrentSnackBar(), ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, value, 4)), _time2?.cancel()}
-            });
+        await getSchedule().then((response) => _scheduleParser(response));
         _timeOutBool = true;
         _goTopInitCount = 0;
       });
