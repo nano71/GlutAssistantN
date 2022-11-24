@@ -101,3 +101,37 @@ class View extends StatelessWidget {
     );
   }
 }
+
+class CustomBottomNavigationBar extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    // TODO: implement createState
+    // throw UnimplementedError();
+    return CustomBottomNavigationBarState();
+  }
+}
+
+class CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return BottomNavigationBar(
+      currentIndex: Global.pageIndex,
+      items: [
+        new BottomNavigationBarItem(icon: Icon(Icons.home_outlined), label: "首页"),
+        new BottomNavigationBarItem(icon: Icon(Icons.schedule_outlined), label: "课表"),
+        new BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: "我的"),
+      ],
+      onTap: (index) => {
+        if (Global.pageIndex != index)
+          {
+            Global.pageControl.jumpToPage(index),
+            // Global.pageControl.animateToPage(index, duration: Duration(milliseconds: 500), curve: Curves.linear);
+            Global.pageIndex = index,
+            setState(() {})
+          }
+      },
+    );
+    throw UnimplementedError();
+  }
+}
