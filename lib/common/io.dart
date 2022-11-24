@@ -118,7 +118,6 @@ Future<void> writeConfig() async {
   print("writeConfig");
   writeData["time"] = "${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}";
   writeData["weekDay"] = DateTime.now().weekday.toString();
-  print(jsonEncode(writeData));
   String str = jsonEncode(writeData);
   String startTimeStr = jsonEncode(startTimeList);
   String endTimeStr = jsonEncode(endTimeList);
@@ -160,32 +159,24 @@ Future<void> readConfig() async {
 
     //true = 不存在
     if (result.isNotEmpty) {
-      print(result);
+      print("缓存文件存在");
       writeData = jsonDecode(result);
       List _timeList = writeData["time"].toString().split("-");
       int y = DateTime.now().year;
       int m = DateTime.now().month;
       int d = DateTime.now().day;
-      int _currentWeek = weekInt() +
-          getLocalWeek(DateTime(y, m, d),
-              DateTime(int.parse(_timeList[0]), int.parse(_timeList[1]), int.parse(_timeList[2])));
+      int _currentWeek = weekInt() + getLocalWeek(DateTime(y, m, d), DateTime(int.parse(_timeList[0]), int.parse(_timeList[1]), int.parse(_timeList[2])));
       writeData["week"] = _currentWeek.toString();
-      await writeConfig();
-    } else
-      await writeConfig();
-
+    }
     //存在
     if (startTimeResult.isNotEmpty) {
       startTimeList = jsonDecode(startTimeResult);
-      await writeConfig();
-    } else
-      await writeConfig();
+    }
     if (endTimeResult.isNotEmpty) {
       endTimeList = jsonDecode(endTimeResult);
-      await writeConfig();
-    } else
-      await writeConfig();
-
+    }
+    print("readConfig save");
+    await writeConfig();
     print("readConfig End");
   } catch (e) {
     print(e);

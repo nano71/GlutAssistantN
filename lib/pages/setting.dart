@@ -270,11 +270,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                               eventBus.fire(SetPageIndex());
                               Navigator.pushAndRemoveUntil(
                                 context,
-                                CustomRouteMs300(
-                                  const Index(
-                                    type: 0,
-                                  ),
-                                ),
+                                CustomRoute(View()),
                                 (route) => false,
                               );
                             },
@@ -448,7 +444,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(
-        builder: (context) => const InitPage(),
+        builder: (context) => const Init(),
       ),
       (route) => false,
     );

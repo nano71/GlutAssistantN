@@ -54,11 +54,7 @@ class _TimeManagePageState extends State<TimeManagePage> {
     eventBus.fire(SetPageIndex());
     Navigator.pushAndRemoveUntil(
       context,
-      CustomRouteMs300(
-        const Index(
-          type: 0,
-        ),
-      ),
+      CustomRoute(const View()),
       (route) => false,
     );
   }
@@ -85,11 +81,7 @@ class _TimeManagePageState extends State<TimeManagePage> {
     eventBus.fire(SetPageIndex());
     Navigator.pushAndRemoveUntil(
       context,
-      CustomRouteMs300(
-        const Index(
-          type: 0,
-        ),
-      ),
+      CustomRoute(const View()),
       (route) => false,
     );
   }

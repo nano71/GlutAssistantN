@@ -153,7 +153,7 @@ class BottomNavBarState extends State<BottomNavBar> {
 
   @override
   void initState() {
-    print("初始化");
+    print("BottomNavBar init");
     super.initState();
     eventBusListener = eventBus.on<SetPageIndex>().listen((event) {
       setState(() {

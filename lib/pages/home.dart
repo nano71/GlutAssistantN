@@ -17,9 +17,9 @@ import 'init.dart';
 import 'login.dart';
 
 class HomePage extends StatefulWidget {
-  final int type;
+  final bool refresh;
 
-  const HomePage({Key? key, this.type = 0}) : super(key: key);
+  const HomePage({Key? key, this.refresh = false}) : super(key: key);
 
   @override
   HomePageState createState() => HomePageState();
@@ -43,7 +43,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   bool _bk = true;
   Timer? _time;
   Timer? _time2;
-  bool _type = true;
+  bool firstBuild = true;
 
   @override
   void initState() {
@@ -168,15 +168,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         "需要验证",
                         context,
                         () async => await getSchedule().then((value) => {
-                              if (value == "success")
-                                {
-                                  Navigator.pushAndRemoveUntil(
-                                      context,
-                                      CustomRouteMs300(Index(
-                                        type: 1,
-                                      )),
-                                      (route) => false)
-                                }
+                              if (value == "success") {Navigator.pushAndRemoveUntil(context, CustomRoute(View(refresh: true)), (route) => false)}
                             }),
                         hideSnackBarSeconds: 10,
                       )),
@@ -242,10 +234,10 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
         });
       }
     });
-    if (widget.type == 1 && _type) {
+    if (widget.refresh && firstBuild) {
       Future.delayed(const Duration(seconds: 0), () {
         _goTop();
-        _type = false;
+        firstBuild = false;
       });
     }
     double width = MediaQuery.of(context).size.width;

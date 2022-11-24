@@ -14,11 +14,11 @@ import '../data.dart';
 class CustomRoute extends PageRouteBuilder {
   final Widget widget;
 
-  CustomRoute(this.widget, [int s = 2])
+  CustomRoute(this.widget, [int milliseconds = 300])
       : super(
             //父类的方法
             //设置动画持续的时间，建议再1和2之间
-            transitionDuration: Duration(seconds: s),
+            transitionDuration: Duration(milliseconds: milliseconds),
             //页面的构造器
             pageBuilder: (
               BuildContext context,
@@ -29,8 +29,7 @@ class CustomRoute extends PageRouteBuilder {
               return widget;
             },
             //过度效果
-            transitionsBuilder: (BuildContext context, Animation<double> animation,
-                Animation<double> secondaryAnimation, Widget child) {
+            transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
               // 过度的动画的值
               return FadeTransition(
                 // 过度的透明的效果
@@ -42,70 +41,38 @@ class CustomRoute extends PageRouteBuilder {
             });
 }
 
-class CustomRouteMs300 extends PageRouteBuilder {
-  final Widget widget;
-
-  CustomRouteMs300(this.widget)
-      : super(
-            //父类的方法
-            //设置动画持续的时间，建议再1和2之间
-            transitionDuration: const Duration(milliseconds: 300),
-            //页面的构造器
-            pageBuilder: (
-              BuildContext context,
-              Animation<double> animation,
-              //次级动画
-              Animation<double> secondaryAnimation,
-            ) {
-              return widget;
-            },
-            //过度效果
-            transitionsBuilder: (BuildContext context, Animation<double> animation,
-                Animation<double> secondaryAnimation, Widget child) {
-              // 过度的动画的值
-              return FadeTransition(
-                // 过度的透明的效果
-                opacity: Tween(begin: 0.0, end: 1.0)
-                    // 给他个透明度的动画   CurvedAnimation：设置动画曲线
-                    .animate(CurvedAnimation(parent: animation, curve: Curves.ease)),
-                child: child,
-              );
-            });
-}
-
-class InitPage extends StatefulWidget {
-  const InitPage({Key? key}) : super(key: key);
+class Init extends StatefulWidget {
+  const Init({Key? key}) : super(key: key);
 
   @override
-  InitPageState createState() => InitPageState();
+  InitState createState() => InitState();
 }
 
-class InitPageState extends State<InitPage> {
+class InitState extends State<Init> {
   @override
   void initState() {
     super.initState();
-    _init();
+    init();
   }
 
-  _init() async {
+  void init() async {
     PackageInfo.fromPlatform().then((PackageInfo info) {
       packageInfo["appName"] = info.appName;
       packageInfo["packageName"] = info.packageName;
       packageInfo["version"] = info.version;
       // packageInfo["version"] = "1.3.220801";
     });
+
     await readConfig();
     await readCookie();
-    getWeek();
     await readSchedule();
     await initTodaySchedule();
     await initTomorrowSchedule();
+    getWeek();
     getUpdateForEveryday();
     Navigator.pushAndRemoveUntil(
       context,
-      CustomRoute(
-        const Index(),
-      ),
+      CustomRoute(const View(), 2000),
       (route) => false,
     );
   }
@@ -116,31 +83,21 @@ class InitPageState extends State<InitPage> {
   }
 }
 
-class Index extends StatelessWidget {
-  final int type;
+class View extends StatelessWidget {
+  final bool refresh;
 
-  const Index({Key? key, this.type = 0}) : super(key: key);
+  const View({Key? key, this.refresh = false}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Body(type: type),
-      bottomNavigationBar: const BottomNavBar(),
-    );
-  }
-}
-
-class Body extends StatelessWidget {
-  final int type;
-
-  const Body({Key? key, this.type = 0}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return PageView(
+      body: PageView(
         physics: const NeverScrollableScrollPhysics(),
         controller: Global.pageControl,
-        children: [HomePage(type: type), const SchedulePage(), const MinePage()]);
+        children: [HomePage(refresh: refresh), const SchedulePage(), const MinePage()],
+      ),
+      bottomNavigationBar: const BottomNavBar(),
+    );
   }
 }
