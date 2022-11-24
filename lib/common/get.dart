@@ -14,6 +14,7 @@ import 'package:http/http.dart';
 
 import '../config.dart';
 import '../data.dart';
+import '../pages/update.dart';
 
 Future<void> getWeek() async {
   print("getWeek");
@@ -45,8 +46,9 @@ Future<void> getWeek() async {
     writeData["querySemester"] = q;
     writeData["queryYear"] = n;
   }
+  print("getWeek save");
+  await writeConfig();
   print("getWeek End");
-  writeConfig();
 }
 
 Future<String> getSchedule() async {
@@ -56,7 +58,7 @@ Future<String> getSchedule() async {
   print(writeData["semesterBk"]);
   print(writeData["yearBk"]);
   Uri _url = Uri.http(Global.getScheduleUrl[0], Global.getScheduleUrl[1],
-      {"year": ((int.parse(writeData["yearBk"])) - 1980).toString(), "term": writeData["semesterBk"] == "秋" ? "3" : "1"});
+      {"year": ((int.parse(writeData["yearBk"] ?? "")) - 1980).toString(), "term": writeData["semesterBk"] == "秋" ? "3" : "1"});
   Response response;
   try {
     response = await request("", _url);
@@ -156,12 +158,12 @@ Future<String> getSchedule() async {
     }
     _next() async {
       print("获取课表变更(调课/停课/补课)");
-      String _id = document.querySelector(".button[value='个人课表']")!.attributes["onclick"]!.substring(61).split("&year")[0];
+      String _id = document.querySelector(".button[value='个人课表']")!.attributes["onclick"] ?? "".substring(61).split("&year")[0];
 
       print(_id);
       Uri _url = Uri.http(Global.getScheduleNextUrl[0], Global.getScheduleNextUrl[1], {
         "id": _id,
-        "yearid": ((int.parse(writeData["yearBk"])) - 1980).toString(),
+        "yearid": ((int.parse(writeData["yearBk"] ?? "")) - 1980).toString(),
         "termid": writeData["semesterBk"] == "秋" ? "3" : "1",
         "timetableType": "STUDENT",
         "sectionType": "BASE"
@@ -251,7 +253,7 @@ Future<String> getSchedule() async {
 Future<void> getName() async {
   print("getName...");
   Response response = await request("get", Global.getNameUrl);
-  writeData["name"] = parse(response.body).querySelector('[name="realname"]')!.parentNode!.text;
+  writeData["name"] = parse(response.body).querySelector('[name="realname"]')!.parentNode!.text ?? "";
 }
 
 int getLocalWeek(DateTime nowDate, DateTime pastDate) {
@@ -272,7 +274,7 @@ Future getScore() async {
   String _year = "";
   String _term = "";
   if (writeData["queryYear"] != "全部") {
-    _year = (int.parse(writeData["queryYear"]) - 1980).toString();
+    _year = (int.parse(writeData["queryYear"] ?? "") - 1980).toString();
   }
   if (writeData["querySemester"] != "全部") {
     _term = (writeData["querySemester"] == "秋" ? 3 : 1).toString();
@@ -578,6 +580,7 @@ Future getUpdateForEveryday() async {
       writeData["newBody"] = list[3];
       writeData["newTime"] = "${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}";
       writeConfig();
+      checkNewVersion();
       print("getUpdateForEveryday End");
     }
   }

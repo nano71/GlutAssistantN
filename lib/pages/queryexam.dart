@@ -13,7 +13,7 @@ import 'career.dart';
 class QueryExamPage extends StatefulWidget {
   final String title;
 
-  const QueryExamPage({Key? key, this.title = "生涯"}) : super(key: key);
+  QueryExamPage({Key? key, this.title = "生涯"}) : super(key: key);
 
   @override
   State<QueryExamPage> createState() => _QueryExamPageState();
@@ -30,7 +30,7 @@ class _QueryExamPageState extends State<QueryExamPage> {
 }
 
 class QueryExamBody extends StatefulWidget {
-  const QueryExamBody({Key? key}) : super(key: key);
+  QueryExamBody({Key? key}) : super(key: key);
 
   @override
   State<QueryExamBody> createState() => _QueryExamBodyState();
@@ -89,7 +89,7 @@ class _QueryExamBodyState extends State<QueryExamBody> {
 
   @override
   Widget build(BuildContext context) {
-    Future.delayed(const Duration(seconds: 0), () {
+    Future.delayed(Duration(seconds: 0), () {
       if (login) {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "获取数据...", 6));
@@ -104,14 +104,14 @@ class _QueryExamBodyState extends State<QueryExamBody> {
             colors: [readColor(), readColor(), Colors.transparent, Colors.transparent, Colors.transparent, Colors.transparent],
             stops: [0, .5, .50001, .6, .61, 1]),
       ),
-      margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+      margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
       child: CustomScrollView(
-        physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+        physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
         slivers: [
           publicTopBar(
               "我的考试",
               InkWell(
-                child: const Icon(
+                child: Icon(
                   FlutterRemix.close_line,
                   size: 24,
                   color: Colors.white,
@@ -125,9 +125,9 @@ class _QueryExamBodyState extends State<QueryExamBody> {
               0),
           SliverToBoxAdapter(
             child: Container(
-              padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+              padding: EdgeInsets.fromLTRB(16, 8, 16, 16),
               color: readColor(),
-              margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+              margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
               child: Row(
                 children: [
                   Expanded(
@@ -156,12 +156,7 @@ class _QueryExamBodyState extends State<QueryExamBody> {
                               width: 50,
                               child: InkWell(
                                 onTap: () {
-                                  Navigator.of(context)
-                                      .push(MaterialPageRoute(
-                                          builder: (context) => const CareerPage(
-                                                type: 1
-                                              )))
-                                      .then((result) {
+                                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => CareerPage(type: 1))).then((result) {
                                     print(examAllNumber);
                                     setState(() {
                                       _examAllNumber = examAllNumber;

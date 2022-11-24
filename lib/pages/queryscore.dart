@@ -15,7 +15,7 @@ class QueryPage extends StatefulWidget {
   final String title;
   final int type;
 
-  const QueryPage({Key? key, this.title = "查询", this.type = 0}) : super(key: key);
+  QueryPage({Key? key, this.title = "查询", this.type = 0}) : super(key: key);
 
   @override
   State<QueryPage> createState() => _QueryPageState();
@@ -32,7 +32,7 @@ class _QueryPageState extends State<QueryPage> {
 }
 
 class QueryBody extends StatefulWidget {
-  const QueryBody({Key? key}) : super(key: key);
+  QueryBody({Key? key}) : super(key: key);
 
   @override
   State<QueryBody> createState() => _QueryBodyState();
@@ -171,7 +171,7 @@ class _QueryBodyState extends State<QueryBody> {
           Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => const LoginPage(),
+                builder: (context) => LoginPage(),
               ))
         },
         hideSnackBarSeconds: 10,
@@ -195,14 +195,14 @@ class _QueryBodyState extends State<QueryBody> {
             colors: [readColor(), readColor(), Colors.transparent, Colors.transparent, Colors.transparent, Colors.transparent],
             stops: [0, .5, .50001, .6, .61, 1]),
       ),
-      margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+      margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
       child: CustomScrollView(
-        physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+        physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
         slivers: [
           publicTopBar(
               "成绩查询",
               InkWell(
-                child: const Icon(
+                child: Icon(
                   FlutterRemix.close_line,
                   size: 24,
                   color: Colors.white,
@@ -216,9 +216,9 @@ class _QueryBodyState extends State<QueryBody> {
               0),
           SliverToBoxAdapter(
             child: Container(
-              padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+              padding: EdgeInsets.fromLTRB(16, 8, 16, 16),
               color: readColor(),
-              margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+              margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
               child: Column(
                 children: [
                   Row(
@@ -234,7 +234,7 @@ class _QueryBodyState extends State<QueryBody> {
                             hint: SizedBox(
                               width: 40,
                               child: Text(
-                                writeData["queryYear"],
+                                writeData["queryYear"] ?? "",
                                 style: TextStyle(
                                   color: Colors.white,
                                 ),
@@ -244,7 +244,7 @@ class _QueryBodyState extends State<QueryBody> {
                             underline: Container(height: 0),
                             onChanged: (value) {
                               setState(() {
-                                writeData["queryYear"] = value;
+                                writeData["queryYear"] = value.toString();
                               });
                             },
                           ),
@@ -259,21 +259,21 @@ class _QueryBodyState extends State<QueryBody> {
                             hint: SizedBox(
                               width: 40,
                               child: Text(
-                                writeData["querySemester"],
+                                writeData["querySemester"] ?? "",
                                 style: TextStyle(
                                   color: Colors.white,
                                 ),
                               ),
                             ),
                             underline: Container(height: 0),
-                            items: const [
+                            items: [
                               DropdownMenuItem(child: Text("全部"), value: "全部"),
                               DropdownMenuItem(child: Text("春"), value: "春"),
                               DropdownMenuItem(child: Text("秋"), value: "秋"),
                             ],
                             onChanged: (value) {
                               setState(() {
-                                writeData["querySemester"] = value;
+                                writeData["querySemester"] = value.toString();
                               });
                             },
                           ),
@@ -284,11 +284,11 @@ class _QueryBodyState extends State<QueryBody> {
                           _query();
                         },
                         child: Container(
-                          decoration: const BoxDecoration(
+                          decoration: BoxDecoration(
                             borderRadius: BorderRadius.all(Radius.circular(6.0)),
                             color: Color(0x1ff1f1f1),
                           ),
-                          padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                          padding: EdgeInsets.fromLTRB(16, 8, 16, 8),
                           child: Text(
                             "查询",
                             style: TextStyle(color: Colors.white),

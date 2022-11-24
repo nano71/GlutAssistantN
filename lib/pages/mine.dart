@@ -14,7 +14,7 @@ import 'info.dart';
 import 'login.dart';
 
 class MinePage extends StatefulWidget {
-  const MinePage({Key? key}) : super(key: key);
+  MinePage({Key? key}) : super(key: key);
 
   @override
   MinePageState createState() => MinePageState();
@@ -33,13 +33,13 @@ class MinePageState extends State<MinePage> {
   Widget build(BuildContext context) {
     return Container(
       color: Colors.white,
-      margin: const EdgeInsets.fromLTRB(0, 0, 0, 16),
-      child: CustomScrollView(physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()), slivers: [
-        publicTopBar(writeData["name"] != "" ? "Hi! " + writeData["name"] : "请先登录教务"),
+      margin: EdgeInsets.fromLTRB(0, 0, 0, 16),
+      child: CustomScrollView(physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()), slivers: [
+        publicTopBar(writeData["name"] != "" ? "Hi! " + (writeData["name"] ?? "") : "请先登录教务"),
         SliverToBoxAdapter(
             child: Container(
           width: double.infinity,
-          padding: const EdgeInsets.fromLTRB(16, 14, 16, 0),
+          padding: EdgeInsets.fromLTRB(16, 14, 16, 0),
           child: Column(
             textDirection: TextDirection.ltr,
             children: [
@@ -48,13 +48,13 @@ class MinePageState extends State<MinePage> {
                   Navigator.of(context).push(
                     // 在FormPage()里传入参数
                     MaterialPageRoute(
-                      builder: (context) => const LoginPage(),
+                      builder: (context) => LoginPage(),
                     ),
                   );
                 },
                 child: mineItem(
                   FlutterRemix.user_5_line,
-                  const EdgeInsets.fromLTRB(16, 14, 0, 14),
+                  EdgeInsets.fromLTRB(16, 14, 0, 14),
                   (writeData["name"] != "" ? "更换账号" : "登录教务"),
                   readColor(),
                 ),
@@ -63,46 +63,46 @@ class MinePageState extends State<MinePage> {
                 onTap: () {
                   if (writeData["username"] == "") {
                     // Navigator.push(context, SlideTopRoute(page: LoginPage()));
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => const LoginPage()));
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => LoginPage()));
                   } else {
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => const CareerPage()));
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => CareerPage()));
                   }
                 },
-                child: mineItem(FlutterRemix.timer_flash_line, const EdgeInsets.fromLTRB(16, 14, 0, 14), "课程生涯", readColor()),
+                child: mineItem(FlutterRemix.timer_flash_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "课程生涯", readColor()),
               ),
               InkWell(
                 onTap: () {
                   if (writeData["username"] == "") {
                     // Navigator.push(context, SlideTopRoute(page: LoginPage()));
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => const LoginPage()));
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => LoginPage()));
                   } else {
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => const QueryRoomPage()));
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => QueryRoomPage()));
                   }
                 },
-                child: mineItem(FlutterRemix.building_4_line, const EdgeInsets.fromLTRB(16, 14, 0, 14), "教室查询", readColor()),
+                child: mineItem(FlutterRemix.building_4_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "教室查询", readColor()),
               ),
               topLine,
               InkWell(
                 onTap: () {
                   // launch("https://github.com/ChinaGamer/GlutAssistantN/releases/latest");
 
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => const UpdatePage()));
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => UpdatePage()));
                 },
                 child: hasNewVersion
-                    ? mineItem5(FlutterRemix.download_cloud_2_line, const EdgeInsets.fromLTRB(16, 14, 0, 14), "版本更新", readColor())
-                    : mineItem(FlutterRemix.download_cloud_2_line, const EdgeInsets.fromLTRB(16, 14, 0, 14), "版本更新", readColor()),
+                    ? mineItem5(FlutterRemix.download_cloud_2_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "版本更新", readColor())
+                    : mineItem(FlutterRemix.download_cloud_2_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "版本更新", readColor()),
               ),
               InkWell(
                 onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => const InfoPage()));
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => InfoPage()));
                 },
-                child: mineItem(FlutterRemix.information_line, const EdgeInsets.fromLTRB(16, 14, 0, 14), "说明", readColor()),
+                child: mineItem(FlutterRemix.information_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "说明", readColor()),
               ),
               InkWell(
                 onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => const SettingPage(title: "设置2")));
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => SettingPage(title: "设置2")));
                 },
-                child: mineItem(FlutterRemix.settings_3_line, const EdgeInsets.fromLTRB(16, 14, 0, 14), "设置", readColor()),
+                child: mineItem(FlutterRemix.settings_3_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "设置", readColor()),
               ),
             ],
           ),
@@ -114,8 +114,8 @@ class MinePageState extends State<MinePage> {
 
 Container topLine = Container(
   width: double.infinity,
-  margin: const EdgeInsets.fromLTRB(16, 14, 16, 14),
-  decoration: const BoxDecoration(
+  margin: EdgeInsets.fromLTRB(16, 14, 16, 14),
+  decoration: BoxDecoration(
     border: Border(
       top: BorderSide(
         width: 1, //宽度
@@ -136,7 +136,7 @@ Widget mineItem(IconData icon, EdgeInsets padding, String title, Color color) {
             padding: padding,
             child: Text(
               title,
-              style: const TextStyle(fontSize: 16),
+              style: TextStyle(fontSize: 16),
             ),
           )
         ],
@@ -160,7 +160,7 @@ Widget mineItem5(IconData icon, EdgeInsets padding, String title, Color color) {
                 badgeContent: Text(''),
                 child: Text(
                   title,
-                  style: const TextStyle(fontSize: 16),
+                  style: TextStyle(fontSize: 16),
                 ),
               ))
         ],
@@ -181,7 +181,7 @@ Widget mineItem4(IconData icon, EdgeInsets padding, String title, Color color) {
             padding: padding,
             child: Text(
               title,
-              style: const TextStyle(fontSize: 16),
+              style: TextStyle(fontSize: 16),
             ),
           )
         ],
@@ -201,7 +201,7 @@ Widget mineItem3(IconData icon, EdgeInsets padding, String title, Color color) {
             padding: padding,
             child: Text(
               title,
-              style: const TextStyle(fontSize: 16),
+              style: TextStyle(fontSize: 16),
             ),
           )
         ],
@@ -227,7 +227,7 @@ Widget mineItem2(IconData icon, EdgeInsets padding, String title) {
             padding: padding,
             child: Text(
               title,
-              style: const TextStyle(fontSize: 16),
+              style: TextStyle(fontSize: 16),
             ),
           )
         ],

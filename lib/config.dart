@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:glutassistantn/widget/lists.dart';
 
 import 'data.dart';
 
@@ -6,6 +7,8 @@ class Global {
   static String appTitle = "桂工助手N";
   static bool login = false;
   static int pageIndex = 0;
+  static final GlobalKey<TodayCourseListState> todayCourseListKey = GlobalKey();
+  static final GlobalKey<TomorrowCourseListState> tomorrowCourseListKey = GlobalKey();
   static PageController pageControl = PageController(
     initialPage: 0,
     keepPage: true,
@@ -22,20 +25,14 @@ class Global {
   static Uri loginUrl2 = httpUri("/academic/index_new.jsp");
   static Uri getWeekUrl = httpUri("/academic/listLeft.do");
   static Uri getExamUrl = httpUri("/academic/manager/examstu/studentQueryAllExam.do");
-  static Uri getNameUrl = httpUri(
-      "/academic/student/studentinfo/studentInfoModifyIndex.do", {"frombase": "0", "wantTag": "0"});
+  static Uri getNameUrl = httpUri("/academic/student/studentinfo/studentInfoModifyIndex.do", {"frombase": "0", "wantTag": "0"});
   static Uri getScoreUrl = httpUri("/academic/manager/score/studentOwnScore.do");
   static Uri getCareerUrl = httpUri("/academic/manager/studyschedule/studentSelfSchedule.jsdo");
   static Uri getUpdateUrl = Uri.http(updateApiUrl, "/repos/nano71/GlutAssistantN/releases/latest");
-  static Uri getEmptyClassroomUrl =
-      httpUri("/academic/teacher/teachresource/roomschedulequery.jsdo");
-  static Uri getEmptyClassroomUrl2 =
-      httpUri("/academic/teacher/teachresource/roomschedule_week.jsdo");
+  static Uri getEmptyClassroomUrl = httpUri("/academic/teacher/teachresource/roomschedulequery.jsdo");
+  static Uri getEmptyClassroomUrl2 = httpUri("/academic/teacher/teachresource/roomschedule_week.jsdo");
   static List<String> getScheduleUrl = [jwUrl, "/academic/student/currcourse/currcourse.jsdo"];
-  static List<String> getScheduleNextUrl = [
-    jwUrl,
-    "/academic/manager/coursearrange/showTimetable.do"
-  ];
+  static List<String> getScheduleNextUrl = [jwUrl, "/academic/manager/coursearrange/showTimetable.do"];
   static List<String> codeCheckUrl = [jwUrl, "/academic/checkCaptcha.do"];
   static double schedulePageTouchMovesMinValue = 70.0;
   static double schedulePageGridHeight = 60.0;
@@ -53,37 +50,37 @@ Uri httpUri(
 
 LinearGradient readGradient() {
   if (writeData["color"] == "red") {
-    return const LinearGradient(
+    return LinearGradient(
       colors: [Color(0xFFfbab66), Color(0xFFf7418c)],
       begin: Alignment.centerLeft,
       end: Alignment.topRight,
     );
   } else if (writeData["color"] == "pink") {
-    return const LinearGradient(
+    return LinearGradient(
       colors: [Color(0xffeca299), Color(0xfffc6caa)],
       begin: Alignment.centerLeft,
       end: Alignment.topRight,
     );
   } else if (writeData["color"] == "blue") {
-    return const LinearGradient(
+    return LinearGradient(
       colors: [Color(0xff66cefb), Color(0xff4175f7)],
       begin: Alignment.centerLeft,
       end: Alignment.topRight,
     );
   } else if (writeData["color"] == "yellow") {
-    return const LinearGradient(
+    return LinearGradient(
       colors: [Color(0xfffbef66), Color(0xfff7a841)],
       begin: Alignment.centerLeft,
       end: Alignment.topRight,
     );
   } else if (writeData["color"] == "cyan") {
-    return const LinearGradient(
+    return LinearGradient(
       colors: [Color(0xff66fbce), Color(0xff16bbb4)],
       begin: Alignment.centerLeft,
       end: Alignment.topRight,
     );
   } else {
-    return const LinearGradient(
+    return LinearGradient(
       colors: [Color(0xff66cefb), Color(0xff4175f7)],
       begin: Alignment.centerLeft,
       end: Alignment.topRight,
@@ -125,31 +122,31 @@ LinearGradient readCardGradient() {
 
 Color readColorBegin() {
   if (writeData["color"] == "red" || writeData["color"] == "pink") {
-    return const Color.fromARGB(42, 255, 229, 253);
+    return Color.fromARGB(42, 255, 229, 253);
   } else if (writeData["color"] == "blue") {
-    return const Color.fromARGB(42, 199, 229, 253);
+    return Color.fromARGB(42, 199, 229, 253);
   } else if (writeData["color"] == "yellow") {
-    return const Color.fromARGB(42, 253, 249, 199);
+    return Color.fromARGB(42, 253, 249, 199);
   } else if (writeData["color"] == "cyan") {
-    return const Color.fromARGB(42, 199, 251, 253);
+    return Color.fromARGB(42, 199, 251, 253);
   } else {
-    return const Color.fromARGB(42, 199, 229, 253);
+    return Color.fromARGB(42, 199, 229, 253);
   }
 }
 
 Color readColorEnd() {
   if (writeData["color"] == "red") {
-    return const Color.fromARGB(110, 253, 199, 199);
+    return Color.fromARGB(110, 253, 199, 199);
   } else if (writeData["color"] == "pink") {
-    return const Color.fromARGB(110, 253, 199, 228);
+    return Color.fromARGB(110, 253, 199, 228);
   } else if (writeData["color"] == "blue") {
-    return const Color.fromARGB(110, 199, 229, 253);
+    return Color.fromARGB(110, 199, 229, 253);
   } else if (writeData["color"] == "yellow") {
-    return const Color.fromARGB(110, 253, 246, 199);
+    return Color.fromARGB(110, 253, 246, 199);
   } else if (writeData["color"] == "cyan") {
-    return const Color.fromARGB(110, 199, 251, 253);
+    return Color.fromARGB(110, 199, 251, 253);
   } else {
-    return const Color.fromARGB(110, 199, 229, 253);
+    return Color.fromARGB(110, 199, 229, 253);
   }
 }
 

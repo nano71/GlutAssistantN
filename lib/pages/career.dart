@@ -1,17 +1,19 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_remix/flutter_remix.dart';
 import 'package:glutassistantn/common/get.dart';
 import 'package:glutassistantn/common/style.dart';
 import 'package:glutassistantn/widget/bars.dart';
 import 'package:glutassistantn/widget/dialog.dart';
+
 import '../config.dart';
 import '../data.dart';
 
 class CareerPage extends StatefulWidget {
   final int type;
 
-  const CareerPage({Key? key, this.type = 0}) : super(key: key);
+  CareerPage({Key? key, this.type = 0}) : super(key: key);
 
   @override
   State<CareerPage> createState() => _CareerPageState(type: this.type);
@@ -36,7 +38,7 @@ class _CareerPageState extends State<CareerPage> {
 class CareerPageBody extends StatefulWidget {
   final int type;
 
-  const CareerPageBody({Key? key, required this.type}) : super(key: key);
+  CareerPageBody({Key? key, required this.type}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _CareerPageBodyState(type: this.type);
@@ -123,12 +125,12 @@ class _CareerPageBodyState extends State<CareerPageBody> {
 
   void _weekProgressAnimation() {
     double _count = 0.0;
-    const period = Duration(milliseconds: 10);
+    Duration period = Duration(milliseconds: 10);
     final double max = _weekProgressDouble();
     Timer.periodic(period, (timer) {
       _count += 0.01;
-      indicatorKey.currentState?.onPressed(_count);
-      textKey.currentState?.onPressed((_count * 100).toInt());
+      indicatorKey.currentState!.onPressed(_count);
+      textKey.currentState!.onPressed((_count * 100).toInt());
       if (_count >= max) {
         timer.cancel();
       }
@@ -162,7 +164,7 @@ class _CareerPageBodyState extends State<CareerPageBody> {
 
   @override
   Widget build(BuildContext context) {
-    Future.delayed(const Duration(seconds: 0), () {
+    Future.delayed(Duration(seconds: 0), () {
       if (login) {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "获取数据...", Global.timeOutSec * 2));
@@ -170,14 +172,14 @@ class _CareerPageBodyState extends State<CareerPageBody> {
     });
     return Container(
       color: Colors.white,
-      margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+      margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
       child: CustomScrollView(
-        physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+        physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
         slivers: [
           publicTopBar(
             "我的大学生涯",
             InkWell(
-              child: const Icon(FlutterRemix.close_line, size: 24),
+              child: Icon(FlutterRemix.close_line, size: 24),
               onTap: () {
                 if (type == 0) {
                   Navigator.of(context).pop();
@@ -189,18 +191,18 @@ class _CareerPageBodyState extends State<CareerPageBody> {
           ),
           SliverToBoxAdapter(
             child: Container(
-                // margin: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                // padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
+                // margin:  EdgeInsets.fromLTRB(16, 0, 16, 0),
+                // padding:  EdgeInsets.fromLTRB(8, 8, 8, 8),
                 // decoration: BoxDecoration(
-                //     borderRadius: const BorderRadius.all(Radius.circular(12.0)), color: readColor()),
+                //     borderRadius:  BorderRadius.all(Radius.circular(12.0)), color: readColor()),
                 // child: Row(
                 //   children: [
                 //     Container(
                 //       decoration: BoxDecoration(
-                //           borderRadius: const BorderRadius.all(Radius.circular(12.0)),
+                //           borderRadius:  BorderRadius.all(Radius.circular(12.0)),
                 //           color: readColor()),
-                //       margin: const EdgeInsets.fromLTRB(16, 0, 0, 0),
-                //       padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
+                //       margin:  EdgeInsets.fromLTRB(16, 0, 0, 0),
+                //       padding:  EdgeInsets.fromLTRB(8, 8, 8, 8),
                 //       child: Icon(
                 //         FlutterRemix.checkbox_circle_line,
                 //         size: 64,
@@ -209,11 +211,11 @@ class _CareerPageBodyState extends State<CareerPageBody> {
                 //     ),
                 //     Expanded(
                 //         child: Container(
-                //       margin: const EdgeInsets.fromLTRB(0, 0, 16, 0),
-                //       padding: const EdgeInsets.fromLTRB(8, 12, 8, 0),
+                //       margin:  EdgeInsets.fromLTRB(0, 0, 16, 0),
+                //       padding:  EdgeInsets.fromLTRB(8, 12, 8, 0),
                 //       height: 80,
                 //       decoration: BoxDecoration(
-                //         borderRadius: const BorderRadius.all(Radius.circular(12.0)),
+                //         borderRadius:  BorderRadius.all(Radius.circular(12.0)),
                 //       ),
                 //       child: Column(
                 //         crossAxisAlignment: CrossAxisAlignment.start,
@@ -236,10 +238,10 @@ class _CareerPageBodyState extends State<CareerPageBody> {
           ),
           SliverToBoxAdapter(
             child: Container(
-              margin: const EdgeInsets.fromLTRB(16, 16, 16, 16),
-              padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
+              margin: EdgeInsets.fromLTRB(16, 16, 16, 16),
+              padding: EdgeInsets.fromLTRB(16, 16, 16, 16),
               decoration: BoxDecoration(
-                borderRadius: const BorderRadius.all(Radius.circular(12.0)),
+                borderRadius: BorderRadius.all(Radius.circular(12.0)),
                 // color: readCardColor(),
                 gradient: readCardGradient(),
               ),
@@ -253,7 +255,7 @@ class _CareerPageBodyState extends State<CareerPageBody> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Container(
-                            padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
+                            padding: EdgeInsets.fromLTRB(8, 0, 0, 0),
                             decoration: BoxDecoration(
                               border: Border(
                                 left: BorderSide(
@@ -287,7 +289,7 @@ class _CareerPageBodyState extends State<CareerPageBody> {
                             height: 10,
                           ),
                           Container(
-                            padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
+                            padding: EdgeInsets.fromLTRB(8, 0, 0, 0),
                             decoration: BoxDecoration(
                               border: Border(
                                 left: BorderSide(
@@ -321,7 +323,7 @@ class _CareerPageBodyState extends State<CareerPageBody> {
                       Container(
                         height: 100,
                         width: 100,
-                        margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                        margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
                         child: Stack(
                           children: [
                             Align(
@@ -346,7 +348,7 @@ class _CareerPageBodyState extends State<CareerPageBody> {
                   ),
                   Container(
                     height: 0.5,
-                    margin: const EdgeInsets.fromLTRB(0, 18, 0, 12),
+                    margin: EdgeInsets.fromLTRB(0, 18, 0, 12),
                     decoration: BoxDecoration(
                       border: Border(
                         bottom: BorderSide(
@@ -363,13 +365,13 @@ class _CareerPageBodyState extends State<CareerPageBody> {
                         children: [
                           Text("成绩合格", style: TextStyle(color: Colors.white)),
                           Container(
-                            margin: const EdgeInsets.fromLTRB(0, 4, 0, 4),
+                            margin: EdgeInsets.fromLTRB(0, 4, 0, 4),
                             child: SizedBox(
                               height: 3.5,
                               width: 50,
                               child: LinearProgressIndicator(
                                 color: Colors.white,
-                                backgroundColor: const Color.fromARGB(48, 255, 255, 255),
+                                backgroundColor: Color.fromARGB(48, 255, 255, 255),
                                 value: careerCount[1] == careerNumber ? 0.0 : careerCount[1] / careerNumber, //精确模式，进度20%
                               ),
                             ),
@@ -381,13 +383,13 @@ class _CareerPageBodyState extends State<CareerPageBody> {
                         children: [
                           Text("重修/补考", style: TextStyle(color: Colors.white)),
                           Container(
-                            margin: const EdgeInsets.fromLTRB(0, 4, 0, 4),
+                            margin: EdgeInsets.fromLTRB(0, 4, 0, 4),
                             child: SizedBox(
                               height: 3.5,
                               width: 50,
                               child: LinearProgressIndicator(
                                 color: Colors.white,
-                                backgroundColor: const Color.fromARGB(48, 255, 255, 255),
+                                backgroundColor: Color.fromARGB(48, 255, 255, 255),
                                 value: careerCount[0] == careerNumber ? 0.0 : careerCount[0] / careerNumber, //精确模式，进度20%
                               ),
                             ),
@@ -399,13 +401,13 @@ class _CareerPageBodyState extends State<CareerPageBody> {
                         children: [
                           Text("成绩未知", style: TextStyle(color: Colors.white)),
                           Container(
-                            margin: const EdgeInsets.fromLTRB(0, 4, 0, 4),
+                            margin: EdgeInsets.fromLTRB(0, 4, 0, 4),
                             child: SizedBox(
                               height: 3.5,
                               width: 50,
                               child: LinearProgressIndicator(
                                 color: Colors.white,
-                                backgroundColor: const Color.fromARGB(48, 255, 255, 255),
+                                backgroundColor: Color.fromARGB(48, 255, 255, 255),
                                 value: careerCount[2] == careerNumber ? 0.0 : careerCount[2] / careerNumber, //精确模式，进度20%
                               ),
                             ),
@@ -433,7 +435,7 @@ class _CareerPageBodyState extends State<CareerPageBody> {
 class CareerListProcess extends StatefulWidget {
   final int index;
 
-  const CareerListProcess(this.index, {Key? key}) : super(key: key);
+  CareerListProcess(this.index, {Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => CareerListProcessState(index);
@@ -471,7 +473,7 @@ class CareerListProcessState extends State<CareerListProcess> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+      margin: EdgeInsets.fromLTRB(16, 0, 16, 0),
       child: ExpansionTile(
         onExpansionChanged: (e) {
           setState(() {
@@ -480,7 +482,7 @@ class CareerListProcessState extends State<CareerListProcess> {
         },
         collapsedIconColor: Colors.black45,
         iconColor: readColor(),
-        tilePadding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+        tilePadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
         title: Row(
           children: [
             Icon(
@@ -488,7 +490,7 @@ class CareerListProcessState extends State<CareerListProcess> {
               color: _isExpanded ? readColor() : randomColors2(),
             ),
             Container(
-              padding: const EdgeInsets.fromLTRB(16, 14, 0, 14),
+              padding: EdgeInsets.fromLTRB(16, 14, 0, 14),
               child: Text(
                 titleProcess(),
                 style: TextStyle(
@@ -521,8 +523,8 @@ class CareerListProcessState extends State<CareerListProcess> {
             ],
           ),
           Container(
-            margin: const EdgeInsets.fromLTRB(16, 4, 24, 4),
-            decoration: const BoxDecoration(
+            margin: EdgeInsets.fromLTRB(16, 4, 24, 4),
+            decoration: BoxDecoration(
               border: Border(
                 top: BorderSide(
                   width: 1, //宽度
@@ -558,7 +560,7 @@ class CareerListProcessState extends State<CareerListProcess> {
 }
 
 class CircularProgressDynamicForCareer extends StatefulWidget {
-  const CircularProgressDynamicForCareer({Key? key}) : super(key: key);
+  CircularProgressDynamicForCareer({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => CircularProgressDynamicStateForCareer();
@@ -572,8 +574,8 @@ class CircularProgressDynamicStateForCareer extends State<CircularProgressDynami
     return CircularProgressIndicator(
       strokeWidth: 3.5,
       value: _value,
-      backgroundColor: const Color.fromARGB(48, 255, 255, 255),
-      valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
+      backgroundColor: Color.fromARGB(48, 255, 255, 255),
+      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
     );
   }
 
@@ -583,7 +585,7 @@ class CircularProgressDynamicStateForCareer extends State<CircularProgressDynami
 }
 
 class TextProgressDynamicForCareer extends StatefulWidget {
-  const TextProgressDynamicForCareer({Key? key}) : super(key: key);
+  TextProgressDynamicForCareer({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => TextProgressDynamicStateForCareer();
@@ -594,7 +596,7 @@ class TextProgressDynamicStateForCareer extends State<TextProgressDynamicForCare
 
   @override
   Widget build(BuildContext context) {
-    return Text((_value.toString() + "%"), style: const TextStyle(color: Colors.white, fontSize: 20));
+    return Text((_value.toString() + "%"), style: TextStyle(color: Colors.white, fontSize: 20));
   }
 
   void onPressed(int value) {

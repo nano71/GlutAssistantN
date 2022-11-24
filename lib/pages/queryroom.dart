@@ -10,7 +10,7 @@ import '../config.dart';
 class QueryRoomPage extends StatefulWidget {
   final String title;
 
-  const QueryRoomPage({Key? key, this.title = "空教室查询"}) : super(key: key);
+  QueryRoomPage({Key? key, this.title = "空教室查询"}) : super(key: key);
 
   @override
   State<QueryRoomPage> createState() => QueryRoomPageState();
@@ -44,7 +44,7 @@ class QueryRoomPageState extends State<QueryRoomPage> {
         String value = i.toString();
         query["weeks"]![value] = "周" + weekList4CN[i];
       }
-      weekSelect = writeData["weekDay"];
+      weekSelect = writeData["weekDay"] ?? "";
       query["weeks"]!.remove("-1");
     });
     print(query["weeks"]);
@@ -56,14 +56,14 @@ class QueryRoomPageState extends State<QueryRoomPage> {
         String value = i.toString();
         query["whichWeeks"]![value] = "第" + value + "周";
       }
-      whichWeekSelect = writeData["week"];
+      whichWeekSelect = writeData["week"] ?? "";
       query["whichWeeks"]!.remove("-1");
     });
   }
 
   List<DropdownMenuItem<Object>> dropdownMenuItemList(String queryKey) {
     List<DropdownMenuItem<Object>> list = [];
-    query[queryKey]?.forEach((key, value) {
+    query[queryKey]!.forEach((key, value) {
       list.add(DropdownMenuItem(child: Text(value), value: key));
     });
     if (list == []) {
@@ -80,7 +80,7 @@ class QueryRoomPageState extends State<QueryRoomPage> {
         value.forEach((key, value) {
           query[key] = value;
         });
-        // query["buildings"]!.remove("-1");
+        // query["buildings"]??"";.remove("-1");
       });
     } else if (value is List<Map>) {
       // print("赋值");
@@ -122,14 +122,14 @@ class QueryRoomPageState extends State<QueryRoomPage> {
       backgroundColor: Colors.white,
       body: Container(
         color: Colors.white,
-        margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+        margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
         child: CustomScrollView(
-          physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+          physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
           slivers: [
             publicTopBar(
               "教室查询",
               InkWell(
-                child: const Icon(FlutterRemix.close_line, size: 24),
+                child: Icon(FlutterRemix.close_line, size: 24),
                 onTap: () {
                   Navigator.of(context).pop();
                 },
@@ -137,7 +137,7 @@ class QueryRoomPageState extends State<QueryRoomPage> {
             ),
             SliverToBoxAdapter(
               child: Container(
-                margin: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                margin: EdgeInsets.fromLTRB(16, 0, 16, 0),
                 child: Text(
                   message,
                   style: TextStyle(color: messageColor),
@@ -146,9 +146,9 @@ class QueryRoomPageState extends State<QueryRoomPage> {
             ),
             SliverToBoxAdapter(
               child: Container(
-                decoration: BoxDecoration(borderRadius: const BorderRadius.all(Radius.circular(12.0)), color: readColorBegin(), gradient: readGradient()),
-                padding: const EdgeInsets.fromLTRB(16, 6, 16, 16),
-                margin: const EdgeInsets.fromLTRB(16, 16, 16, 16),
+                decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(12.0)), color: readColorBegin(), gradient: readGradient()),
+                padding: EdgeInsets.fromLTRB(16, 6, 16, 16),
+                margin: EdgeInsets.fromLTRB(16, 16, 16, 16),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -172,7 +172,7 @@ class QueryRoomPageState extends State<QueryRoomPage> {
                             onChanged: (value) {
                               setState(() {
                                 buildingSelect = value.toString();
-                                if (value != "-1") query["buildings"]?.remove("-1");
+                                if (value != "-1") query["buildings"]!.remove("-1");
                                 // getEmptyClassroom(building: value.toString())
                                 //     .then((value) => process(value));
                               });
@@ -267,7 +267,7 @@ class QueryRoomPageState extends State<QueryRoomPage> {
                       width: double.infinity,
                       height: 50,
                       child: Container(
-                        margin: const EdgeInsets.fromLTRB(0, 8, 0, 0),
+                        margin: EdgeInsets.fromLTRB(0, 8, 0, 0),
                         child: TextButton(
                             autofocus: true,
                             style: ButtonStyle(
@@ -280,7 +280,7 @@ class QueryRoomPageState extends State<QueryRoomPage> {
                             ),
                             child: Text(
                               "即刻查询",
-                              style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 14),
+                              style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 14),
                             ),
                             onPressed: () {
                               _getEmptyClassroom();

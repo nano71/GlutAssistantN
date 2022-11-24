@@ -160,7 +160,9 @@ Future<void> readConfig() async {
     //true = 不存在
     if (result.isNotEmpty) {
       print("缓存文件存在");
-      writeData = jsonDecode(result);
+      jsonDecode(result).forEach((key, value) {
+        writeData[key] = value.toString();
+      });
       List _timeList = writeData["time"].toString().split("-");
       int y = DateTime.now().year;
       int m = DateTime.now().month;

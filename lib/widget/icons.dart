@@ -5,7 +5,7 @@ import '../config.dart';
 import 'cards.dart';
 
 class RefreshIconWidgetDynamic extends StatefulWidget {
-  const RefreshIconWidgetDynamic({Key? key}) : super(key: key);
+  RefreshIconWidgetDynamic({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => RefreshIconWidgetDynamicState();
@@ -31,19 +31,19 @@ class RefreshIconWidgetDynamicState extends State<RefreshIconWidgetDynamic> {
   }
 }
 
-Icon chevronRight = const Icon(
+Icon chevronRight = Icon(
   FlutterRemix.arrow_right_s_line,
   color: Colors.black45,
 );
-Icon chevronDown = const Icon(
+Icon chevronDown = Icon(
   FlutterRemix.arrow_down_s_line,
   color: Colors.black45,
 );
-Icon chevronUp = const Icon(
+Icon chevronUp = Icon(
   FlutterRemix.arrow_up_s_line,
   color: Colors.black45,
 );
-Icon goCurrent = const Icon(
+Icon goCurrent = Icon(
   FlutterRemix.map_pin_line,
   color: Colors.black,
   size: 14,

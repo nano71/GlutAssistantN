@@ -19,7 +19,7 @@ class SlideTopRoute extends PageRouteBuilder {
           ) =>
               SlideTransition(
             position: Tween<Offset>(
-              begin: const Offset(0,1),
+              begin: Offset(0, 1),
               end: Offset.zero,
             ).animate(animation),
             child: child,

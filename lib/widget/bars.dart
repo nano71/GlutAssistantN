@@ -7,14 +7,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_remix/flutter_remix.dart';
 import 'package:glutassistantn/config.dart';
 import 'package:glutassistantn/pages/setting.dart';
-import 'package:glutassistantn/pages/update.dart';
 
 import '../data.dart';
 import 'dialog.dart';
 import 'icons.dart';
 
 class HomeTopBar extends StatelessWidget {
-  const HomeTopBar({Key? key}) : super(key: key);
+  HomeTopBar({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -31,26 +30,26 @@ class HomeTopBar extends StatelessWidget {
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
+              Text(
                 "今日一览",
                 style: TextStyle(
                   color: Colors.black,
                 ),
               ),
               InkWell(
-                child: const Icon(FlutterRemix.more_fill, size: 24),
+                child: Icon(FlutterRemix.more_fill, size: 24),
                 onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => const SettingPage(title: "设置")));
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => SettingPage(title: "设置")));
                 },
               )
             ],
           ),
-          titlePadding: const EdgeInsets.fromLTRB(16, 0, 16, 12)),
+          titlePadding: EdgeInsets.fromLTRB(16, 0, 16, 12)),
     );
   }
 }
 
-SliverAppBar publicTopBar(String title, [inkWell = const Text(""), color = Colors.white, color2 = Colors.black, double e = 0.3]) {
+SliverAppBar publicTopBar(String title, [dynamic inkWell = const Text(""), color = Colors.white, color2 = Colors.black, double e = 0.3]) {
   return SliverAppBar(
     pinned: true,
     shadowColor: color,
@@ -62,31 +61,32 @@ SliverAppBar publicTopBar(String title, [inkWell = const Text(""), color = Color
     elevation: e,
     automaticallyImplyLeading: false,
     flexibleSpace: FlexibleSpaceBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              (title),
-              style: TextStyle(
-                color: color2,
-              ),
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            (title),
+            style: TextStyle(
+              color: color2,
             ),
-            inkWell,
-          ],
-        ),
-        titlePadding: const EdgeInsets.fromLTRB(16, 0, 16, 12)),
+          ),
+          inkWell,
+        ],
+      ),
+      titlePadding: EdgeInsets.fromLTRB(16, 0, 16, 12),
+    ),
   );
 }
 
 class ScheduleTopBar extends StatefulWidget {
-  const ScheduleTopBar({Key? key}) : super(key: key);
+  ScheduleTopBar({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => ScheduleTopBarState();
 }
 
 class ScheduleTopBarState extends State<ScheduleTopBar> {
-  String _week = writeData["week"];
+  String _week = writeData["week"] ?? "";
 
   void back() {
     ScaffoldMessenger.of(context).removeCurrentSnackBar();
@@ -111,7 +111,7 @@ class ScheduleTopBarState extends State<ScheduleTopBar> {
           InkWell(
             child: Text(
               "Week $_week",
-              style: const TextStyle(color: Colors.black),
+              style: TextStyle(color: Colors.black),
             ),
             onTap: () {
               back();
@@ -122,7 +122,7 @@ class ScheduleTopBarState extends State<ScheduleTopBar> {
               children: [
                 Text(
                   date(),
-                  style: const TextStyle(color: Colors.black, fontSize: 14),
+                  style: TextStyle(color: Colors.black, fontSize: 14),
                 ),
                 goCurrent
               ],
@@ -142,7 +142,7 @@ class ScheduleTopBarState extends State<ScheduleTopBar> {
 }
 
 class BottomNavBar extends StatefulWidget {
-  const BottomNavBar({Key? key}) : super(key: key);
+  BottomNavBar({Key? key}) : super(key: key);
 
   @override
   BottomNavBarState createState() => BottomNavBarState();
@@ -153,7 +153,6 @@ class BottomNavBarState extends State<BottomNavBar> {
 
   @override
   void initState() {
-    print("BottomNavBar init");
     super.initState();
     eventBusListener = eventBus.on<SetPageIndex>().listen((event) {
       setState(() {
@@ -171,9 +170,9 @@ class BottomNavBarState extends State<BottomNavBar> {
 
   @override
   Widget build(BuildContext context) {
-    checkNewVersion(context, skipShowSnackBar: true);
+    // print("BottomNavBar create");
     return CupertinoTabBar(
-      border: const Border(
+      border: Border(
         top: BorderSide(
           color: Colors.white,
         ),
@@ -183,7 +182,6 @@ class BottomNavBarState extends State<BottomNavBar> {
       inactiveColor: Colors.black87,
       currentIndex: Global.pageIndex,
       onTap: (int index) {
-        checkNewVersion(context, skipShowSnackBar: true);
         if (Global.pageIndex != index) {
           Global.pageControl.jumpToPage(index);
           // Global.pageControl.animateToPage(index, duration: Duration(milliseconds: 500), curve: Curves.linear);
@@ -227,17 +225,17 @@ class BottomNavBarState extends State<BottomNavBar> {
 SnackBar jwSnackBar(int type, String text, [int hideSnackBarSeconds = 2, double margin = 100]) {
   Widget setIcon() {
     if (type == 0)
-      return const Icon(
+      return Icon(
         FlutterRemix.error_warning_line,
         color: Colors.red,
       );
     if (type == 1)
-      return const Icon(
+      return Icon(
         FlutterRemix.checkbox_circle_line,
         color: Colors.green,
       );
     if (type == 2)
-      return const Icon(
+      return Icon(
         FlutterRemix.link,
         color: Colors.blue,
       );
@@ -276,11 +274,11 @@ SnackBar jwSnackBar(int type, String text, [int hideSnackBarSeconds = 2, double 
 
 SnackBar jwSnackBarAction(bool result, String text, BuildContext context, Function callback, {int hideSnackBarSeconds = 2, bool isDialogCallback = true}) {
   Widget resultIcon = result
-      ? const Icon(
+      ? Icon(
           FlutterRemix.checkbox_circle_line,
           color: Colors.green,
         )
-      : const Icon(
+      : Icon(
           FlutterRemix.error_warning_line,
           color: Colors.red,
         );

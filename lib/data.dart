@@ -46,7 +46,7 @@ double gpa = 0.0;
 double avg = 0.0;
 double weight = 0.0;
 Map schedule = {};
-Map writeData = {
+Map<String, String> writeData = {
   "time": "",
   "week": "1",
   "weekBk": "",
@@ -205,5 +205,5 @@ String weekDay2Number(String value) {
 }
 
 int weekInt() {
-  return int.parse(writeData["week"]);
+  return int.parse(writeData["week"] ?? "");
 }

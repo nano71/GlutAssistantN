@@ -26,13 +26,13 @@ initTodaySchedule() async {
   Map _schedule = schedule;
   List toDay = [];
   if (int.parse(_week) < 21)
-  await _schedule[_week][DateTime.now().weekday.toString()].forEach((key, value) => {
-        if (value[1] != "null")
-          {
-            if (value.length < 5) {value.add(key)},
-            toDay.add(value)
-          }
-      });
+    await _schedule[_week][DateTime.now().weekday.toString()].forEach((key, value) => {
+          if (value[1] != "null")
+            {
+              if (value.length < 5) {value.add(key)},
+              toDay.add(value)
+            }
+        });
 
   if (toDay.isNotEmpty) {
     todayScheduleTitle = "今天的";
@@ -61,9 +61,9 @@ initTomorrowSchedule() async {
 
   if (DateTime.now().weekday <= 6) {
     if (int.parse(_week) < 21)
-    await _schedule[_week][_getWeekDay()].forEach((key, value) => {
-          if (value[1] != "null") {value.add(key), tomorrow.add(value)}
-        });
+      await _schedule[_week][_getWeekDay()].forEach((key, value) => {
+            if (value[1] != "null") {value.add(key), tomorrow.add(value)}
+          });
   } else {
     if (int.parse(_week) < 20)
       await _schedule[(int.parse(_week) + 1).toString()][_getWeekDay()].forEach((key, value) => {

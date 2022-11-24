@@ -6,7 +6,6 @@ import 'package:glutassistantn/common/style.dart';
 import 'package:glutassistantn/pages/schedulemanage.dart';
 import 'package:glutassistantn/pages/timemanage.dart';
 import 'package:glutassistantn/widget/bars.dart';
-import 'package:glutassistantn/widget/lists.dart';
 
 import '../config.dart';
 import '../data.dart';
@@ -16,7 +15,7 @@ import 'mine.dart';
 class SettingPage extends StatefulWidget {
   final String title;
 
-  const SettingPage({Key? key, this.title = "设置"}) : super(key: key);
+  SettingPage({Key? key, this.title = "设置"}) : super(key: key);
 
   @override
   State<SettingPage> createState() => _SettingPageState();
@@ -36,8 +35,8 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
     // TODO: implement initState
     super.initState();
 
-    _textFieldController1.text = writeData["year"];
-    _textFieldController2.text = writeData["semester"];
+    _textFieldController1.text = writeData["year"] ?? "";
+    _textFieldController2.text = writeData["semester"] ?? "";
   }
 
   @override
@@ -46,14 +45,14 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
       backgroundColor: Colors.white,
       body: Container(
         color: Colors.white,
-        margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+        margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
         child: CustomScrollView(
-          physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+          physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
           slivers: [
             publicTopBar(
               "设置",
               InkWell(
-                child: const Icon(FlutterRemix.close_line, size: 24),
+                child: Icon(FlutterRemix.close_line, size: 24),
                 onTap: () {
                   Navigator.of(context).pop();
                 },
@@ -62,7 +61,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
             SliverToBoxAdapter(
               child: Container(
                 width: double.infinity,
-                padding: const EdgeInsets.fromLTRB(16, 14, 16, 0),
+                padding: EdgeInsets.fromLTRB(16, 14, 16, 0),
                 child: Column(
                   textDirection: TextDirection.ltr,
                   children: [
@@ -76,8 +75,8 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                               color: readColor(),
                             ),
                             Container(
-                              padding: const EdgeInsets.fromLTRB(16, 14, 0, 14),
-                              child: const Text(
+                              padding: EdgeInsets.fromLTRB(16, 14, 0, 14),
+                              child: Text(
                                 "当前学年",
                                 style: TextStyle(fontSize: 16, color: Colors.black),
                               ),
@@ -85,7 +84,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                           ],
                         ),
                         Text(
-                          writeData["yearBk"],
+                          writeData["yearBk"] ?? "",
                           style: TextStyle(
                             color: readColor(),
                           ),
@@ -119,8 +118,8 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                               color: readColor(),
                             ),
                             Container(
-                              padding: const EdgeInsets.fromLTRB(16, 14, 0, 14),
-                              child: const Text(
+                              padding: EdgeInsets.fromLTRB(16, 14, 0, 14),
+                              child: Text(
                                 "当前学期",
                                 style: TextStyle(
                                   fontSize: 16,
@@ -129,7 +128,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                             )
                           ],
                         ),
-                        Text(writeData["semester"],
+                        Text(writeData["semester"] ?? "",
                             style: TextStyle(
                               color: readColor(),
                             )),
@@ -142,7 +141,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                         //         color: readColor(),
                         //       )),
                         //   underline: Container(height: 0),
-                        //   items: const [
+                        //   items:  [
                         //     DropdownMenuItem(child: Text("春"), value: "春"),
                         //     DropdownMenuItem(child: Text("秋"), value: "秋"),
                         //   ],
@@ -153,7 +152,6 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                         //     });
                         //   },
                         // ),
-
                       ],
                     ),
                     Row(
@@ -166,8 +164,8 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                               color: readColor(),
                             ),
                             Container(
-                              padding: const EdgeInsets.fromLTRB(16, 14, 0, 14),
-                              child: const Text(
+                              padding: EdgeInsets.fromLTRB(16, 14, 0, 14),
+                              child: Text(
                                 "当前周数",
                                 style: TextStyle(
                                   fontSize: 16,
@@ -176,7 +174,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                             )
                           ],
                         ),
-                        Text(writeData["week"],
+                        Text(writeData["week"] ?? "",
                             style: TextStyle(
                               color: readColor(),
                             )),
@@ -213,8 +211,8 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                               color: readColor(),
                             ),
                             Container(
-                              padding: const EdgeInsets.fromLTRB(16, 14, 0, 14),
-                              child: const Text(
+                              padding: EdgeInsets.fromLTRB(16, 14, 0, 14),
+                              child: Text(
                                 "主题颜色",
                                 style: TextStyle(fontSize: 16, color: Colors.black),
                               ),
@@ -227,7 +225,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                             iconEnabledColor: readColor(),
                             elevation: 0,
                             hint: Text(
-                              writeData["color"],
+                              writeData["color"] ?? "",
                               style: TextStyle(color: readColor()),
                             ),
                             items: [
@@ -265,7 +263,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                             underline: Container(height: 0),
                             onChanged: (value) {
                               setState(() {
-                                writeData["color"] = value;
+                                writeData["color"] = value.toString();
                               });
                               writeConfig();
                               eventBus.fire(SetPageIndex());
@@ -289,8 +287,8 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                               color: readColor(),
                             ),
                             Container(
-                              padding: const EdgeInsets.fromLTRB(16, 14, 0, 14),
-                              child: const Text(
+                              padding: EdgeInsets.fromLTRB(16, 14, 0, 14),
+                              child: Text(
                                 "APP生命",
                                 style: TextStyle(fontSize: 16, color: Colors.black),
                               ),
@@ -303,9 +301,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                             iconEnabledColor: readColor(),
                             elevation: 0,
                             hint: Text(
-                              writeData["threshold"] != null
-                                  ? writeData["threshold"] + "分钟"
-                                  : "5分钟",
+                              (writeData["threshold"] ?? "5") + "分钟",
                               style: TextStyle(color: readColor()),
                             ),
                             items: [
@@ -343,7 +339,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                             underline: Container(height: 0),
                             onChanged: (value) {
                               setState(() {
-                                writeData["threshold"] = value;
+                                writeData["threshold"] = value.toString();
                               });
                               writeConfig();
                             },
@@ -353,19 +349,15 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                     ),
                     InkWell(
                       onTap: () {
-                        Navigator.of(context).push(
-                            MaterialPageRoute(builder: (context) => const ScheduleManagePage()));
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => ScheduleManagePage()));
                       },
-                      child: mineItem(FlutterRemix.edit_box_line,
-                          const EdgeInsets.fromLTRB(16, 14, 0, 14), "课程管理", readColor()),
+                      child: mineItem(FlutterRemix.edit_box_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "课程管理", readColor()),
                     ),
                     InkWell(
                       onTap: () {
-                        Navigator.of(context)
-                            .push(MaterialPageRoute(builder: (context) => const TimeManagePage()));
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => TimeManagePage()));
                       },
-                      child: mineItem(Icons.more_time_outlined,
-                          const EdgeInsets.fromLTRB(16, 14, 0, 14), "课节时间", readColor()),
+                      child: mineItem(Icons.more_time_outlined, EdgeInsets.fromLTRB(16, 14, 0, 14), "课节时间", readColor()),
                     ),
                     ExpansionTile(
                       onExpansionChanged: (e) {
@@ -375,17 +367,15 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                       },
                       collapsedIconColor: Colors.black45,
                       iconColor: Colors.redAccent,
-                      tilePadding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                      tilePadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                       title: Row(
                         children: [
                           Icon(
-                            _isExpanded
-                                ? Icons.warning_amber_rounded
-                                : Icons.cleaning_services_outlined,
+                            _isExpanded ? Icons.warning_amber_rounded : Icons.cleaning_services_outlined,
                             color: _isExpanded ? Colors.redAccent : readColor(),
                           ),
                           Container(
-                            padding: const EdgeInsets.fromLTRB(16, 14, 0, 14),
+                            padding: EdgeInsets.fromLTRB(16, 14, 0, 14),
                             child: Text(
                               "清除数据",
                               style: TextStyle(
@@ -440,13 +430,13 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
     await initSchedule();
     todaySchedule = [];
     tomorrowSchedule = [];
-    await todayCourseListKey.currentState!.reloadState();
-    await tomorrowCourseListKey.currentState!.reloadState();
+    await Global.todayCourseListKey.currentState!.reloadState();
+    await Global.tomorrowCourseListKey.currentState!.reloadState();
     eventBus.fire(SetPageIndex());
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(
-        builder: (context) => const Init(),
+        builder: (context) => Init(),
       ),
       (route) => false,
     );
@@ -464,7 +454,7 @@ Widget settingItem(IconData icon, EdgeInsets padding, String title, int type) {
             padding: padding,
             child: Text(
               title,
-              style: const TextStyle(fontSize: 16),
+              style: TextStyle(fontSize: 16),
             ),
           )
         ],
@@ -474,7 +464,7 @@ Widget settingItem(IconData icon, EdgeInsets padding, String title, int type) {
         child: TextField(
           keyboardType: (type == 0 ? TextInputType.number : TextInputType.text),
           textAlign: TextAlign.end,
-          decoration: const InputDecoration(
+          decoration: InputDecoration(
             border: InputBorder.none,
           ),
         ),
@@ -490,12 +480,10 @@ List<DropdownMenuItem<Object>>? yearList(int type) {
       DropdownMenuItem(child: Text("全部"), value: "全部"),
     );
   } else {
-    list.add(DropdownMenuItem(
-        child: Text((int.parse(writeData["year"]) + 1).toString()),
-        value: (int.parse(writeData["year"]) + 1).toString()));
+    list.add(DropdownMenuItem(child: Text((int.parse(writeData["year"] ?? "") + 1).toString()), value: (int.parse(writeData["year"] ?? "") + 1).toString()));
   }
 
-  for (int i = int.parse(writeData["year"]); i > (int.parse(writeData["year"]) - 5); i--) {
+  for (int i = int.parse(writeData["year"] ?? ""); i > (int.parse(writeData["year"] ?? "") - 5); i--) {
     list.add(DropdownMenuItem(child: Text(i.toString()), value: i.toString()));
   }
   return list;
