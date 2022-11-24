@@ -11,14 +11,14 @@ import 'package:glutassistantn/widget/dialog.dart';
 import '../config.dart';
 
 class RowHeader extends StatefulWidget {
-  const RowHeader({Key? key}) : super(key: key);
+  RowHeader({Key? key}) : super(key: key);
 
   @override
   RowHeaderState createState() => RowHeaderState();
 }
 
 class RowHeaderState extends State<RowHeader> {
-  String _week = writeData["week"];
+  String _week = writeData["week"] ?? "";
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +39,7 @@ List<Widget> _loopRowHeader(bool currentWeek) {
   List<Widget> list = [];
   for (int i = 0; i < 8; i++) {
     if (i == 0) {
-      list.add(const SizedBox(width: 20));
+      list.add(SizedBox(width: 20));
     } else {
       list.add(
         Expanded(
@@ -94,7 +94,7 @@ List<Widget> _loopLeftGrid() {
 }
 
 class SchedulePage extends StatefulWidget {
-  const SchedulePage({Key? key}) : super(key: key);
+  SchedulePage({Key? key}) : super(key: key);
 
   @override
   SchedulePageState createState() => SchedulePageState();
@@ -121,7 +121,7 @@ class SchedulePageState extends State<SchedulePage> with AutomaticKeepAliveClien
       if (writeData["prompt"] == null) {
         writeData["prompt"] = "5";
       }
-      int _number = int.parse(writeData["prompt"]);
+      int _number = int.parse(writeData["prompt"] ?? "");
       if (_number > 0) {
         _showPrompt();
         _number--;
@@ -198,7 +198,7 @@ class SchedulePageState extends State<SchedulePage> with AutomaticKeepAliveClien
     super.build(context);
     return Container(
       color: Colors.white,
-      margin: const EdgeInsets.fromLTRB(0, 0, 0, 16),
+      margin: EdgeInsets.fromLTRB(0, 0, 0, 16),
       child: Column(
         children: [
           ScheduleTopBar(key: barKey),
@@ -213,7 +213,7 @@ class SchedulePageState extends State<SchedulePage> with AutomaticKeepAliveClien
                 _touchListen(e.position.dx, e.position.dy);
               },
               child: SingleChildScrollView(
-                physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+                physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
                 scrollDirection: Axis.vertical,
                 child: Row(
                   children: [
@@ -238,14 +238,14 @@ class SchedulePageState extends State<SchedulePage> with AutomaticKeepAliveClien
 
 //星期几
 class SchedulePageColumn extends StatefulWidget {
-  const SchedulePageColumn({Key? key}) : super(key: key);
+  SchedulePageColumn({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => SchedulePageColumnState();
 }
 
 class SchedulePageColumnState extends State<SchedulePageColumn> {
-  String _findWeek = writeData["week"];
+  String _findWeek = writeData["week"] ?? "";
 
   @override
   Widget build(BuildContext context) {
@@ -329,7 +329,7 @@ class Grid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    TextStyle style = const TextStyle(fontSize: 12, color: Colors.white);
+    TextStyle style = TextStyle(fontSize: 12, color: Colors.white);
     return InkWell(
       onTap: () {
         if (index != 0 || index2 != 0) {
@@ -362,9 +362,9 @@ class Grid extends StatelessWidget {
                 color: Colors.white, //边框颜色
               ),
             ),
-            borderRadius: const BorderRadius.all(Radius.circular(6.0)),
+            borderRadius: BorderRadius.all(Radius.circular(6.0)),
           ),
-          padding: const EdgeInsets.only(left: 5, right: 5, top: 5, bottom: 5),
+          padding: EdgeInsets.only(left: 5, right: 5, top: 5, bottom: 5),
           alignment: Alignment.center,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -376,7 +376,7 @@ class Grid extends StatelessWidget {
                 softWrap: true,
                 style: style,
               ),
-              const SizedBox(
+              SizedBox(
                 height: 10,
               ),
               Column(
@@ -403,7 +403,7 @@ class Grid extends StatelessWidget {
 
 // Widget _grid(int index, int index2, String title, String studyArea, String teacher, Color color,
 //     [double height = 60.0]) {
-//   TextStyle style = const TextStyle(fontSize: 12, color: Colors.white);
+//   TextStyle style =  TextStyle(fontSize: 12, color: Colors.white);
 //   return InkWell(
 //     onTap: () {
 //       if (index != 0) {
@@ -436,9 +436,9 @@ class Grid extends StatelessWidget {
 //               color: Colors.white, //边框颜色
 //             ),
 //           ),
-//           borderRadius: const BorderRadius.all(Radius.circular(6.0)),
+//           borderRadius:  BorderRadius.all(Radius.circular(6.0)),
 //         ),
-//         padding: const EdgeInsets.only(left: 5, right: 5, top: 5, bottom: 5),
+//         padding:  EdgeInsets.only(left: 5, right: 5, top: 5, bottom: 5),
 //         alignment: Alignment.center,
 //         child: Column(
 //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -450,7 +450,7 @@ class Grid extends StatelessWidget {
 //               softWrap: true,
 //               style: style,
 //             ),
-//             const SizedBox(
+//              SizedBox(
 //               height: 10,
 //             ),
 //             Column(

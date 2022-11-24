@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 // 取消涟漪效果
 /// Cancel ripples caused by excessive Listview scrolling.
 class NoRippleOverScroll extends StatefulWidget {
@@ -23,8 +24,7 @@ class NoRippleOverScrollState extends State<NoRippleOverScroll> {
 class _OverScrollBehavior extends ScrollBehavior {
   @override
   Widget buildViewportChrome(BuildContext context, Widget child, AxisDirection axisDirection) {
-    if (getPlatform(context) == TargetPlatform.android ||
-        getPlatform(context) == TargetPlatform.fuchsia) {
+    if (getPlatform(context) == TargetPlatform.android || getPlatform(context) == TargetPlatform.fuchsia) {
       return GlowingOverscrollIndicator(
         child: child,
         showLeading: false,

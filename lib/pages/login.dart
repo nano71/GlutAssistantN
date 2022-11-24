@@ -18,7 +18,7 @@ import 'init.dart';
 class LoginPage extends StatefulWidget {
   final String title;
 
-  const LoginPage({Key? key, this.title = "表单"}) : super(key: key);
+  LoginPage({Key? key, this.title = "表单"}) : super(key: key);
 
   @override
   State<LoginPage> createState() => LoginPageState();
@@ -31,20 +31,20 @@ class LoginPageState extends State<LoginPage> {
   final checkCodeController = TextEditingController();
   String message = "不辜负每一次相遇";
   Color messageColor = Colors.grey;
-  Uint8List _codeImgSrc = const Base64Decoder().convert(
+  Uint8List _codeImgSrc = Base64Decoder().convert(
       "iVBORw0KGgoAAAANSUhEUgAAAEgAAAAeCAYAAACPOlitAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAHYcAAB2HAY/l8WUAAABYSURBVGhD7dChAcAgEMDAb/ffGSpqIQvcmfg86zMcvX85MCgYFAwKBgWDgkHBoGBQMCgYFAwKBgWDgkHBoGBQMCgYFAwKBgWDgkHBoGBQMCgYFAwKBl3NbAiZBDiX3e/AAAAAAElFTkSuQmCC");
   String buttonTitle = "即刻登录";
   bool logged = false;
 
-  FocusNode? studentIdFocusNode = FocusNode();
-  FocusNode? passwordFocusNode = FocusNode();
-  FocusNode? checkCodeFocusNode = FocusNode();
+  FocusNode studentIdFocusNode = FocusNode();
+  FocusNode passwordFocusNode = FocusNode();
+  FocusNode checkCodeFocusNode = FocusNode();
 
   @override
   initState() {
     super.initState();
-    studentIdController.text = writeData["username"];
-    passwordController.text = writeData["password"];
+    studentIdController.text = writeData["username"] ?? "";
+    passwordController.text = writeData["password"] ?? "";
     _getCode();
   }
 
@@ -75,7 +75,7 @@ class LoginPageState extends State<LoginPage> {
   void _getCode() async {
     try {
       print("getCode...");
-      var response = await get(Global.getCodeUrl).timeout(const Duration(milliseconds: 6000));
+      var response = await get(Global.getCodeUrl).timeout(Duration(milliseconds: 6000));
       parseRawCookies(response.headers['set-cookie']);
       setState(() {
         _codeImgSrc = response.bodyBytes;
@@ -130,7 +130,7 @@ class LoginPageState extends State<LoginPage> {
         eventBus.fire(SetPageIndex());
         Navigator.pushAndRemoveUntil(
           context,
-          CustomRoute(const View(refresh: true)),
+          CustomRoute(View(refresh: true)),
           (route) => false,
         );
       } else if (value == "fail") {
@@ -158,7 +158,7 @@ class LoginPageState extends State<LoginPage> {
   void _tap() {
     _scrollController.animateTo(
       56.0, //滚动到底部
-      duration: const Duration(milliseconds: 500),
+      duration: Duration(milliseconds: 500),
       curve: Curves.easeOut,
     );
     setState(() {});
@@ -170,22 +170,22 @@ class LoginPageState extends State<LoginPage> {
       backgroundColor: Colors.white,
       body: Container(
         color: Colors.white,
-        margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+        margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
         child: CustomScrollView(
           controller: _scrollController,
-          physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+          physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
           slivers: [
             publicTopBar(
                 "桂工助手N",
                 InkWell(
-                  child: const Icon(FlutterRemix.close_line, size: 24),
+                  child: Icon(FlutterRemix.close_line, size: 24),
                   onTap: () {
                     Navigator.of(context).pop();
                   },
                 )),
             SliverToBoxAdapter(
               child: Container(
-                margin: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                margin: EdgeInsets.fromLTRB(16, 0, 16, 0),
                 child: Text(
                   message,
                   style: TextStyle(color: messageColor),
@@ -196,14 +196,14 @@ class LoginPageState extends State<LoginPage> {
               child: Container(
                 height: MediaQuery.of(context).size.height * 0.7 - 125,
                 width: double.infinity,
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Container(
-                      margin: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                      padding: const EdgeInsets.fromLTRB(0, 4, 0, 4),
-                      decoration: const BoxDecoration(
+                      margin: EdgeInsets.fromLTRB(16, 0, 16, 0),
+                      padding: EdgeInsets.fromLTRB(0, 4, 0, 4),
+                      decoration: BoxDecoration(
                         border: Border(
                           bottom: BorderSide(
                             width: 0, //宽度
@@ -223,7 +223,7 @@ class LoginPageState extends State<LoginPage> {
                         decoration: InputDecoration(
                           icon: Icon(
                             FlutterRemix.user_3_line,
-                            color: studentIdFocusNode!.hasFocus ? readColor() : null,
+                            color: studentIdFocusNode.hasFocus ? readColor() : null,
                           ),
                           border: InputBorder.none,
                           hintText: "请输入学号", //类似placeholder效果
@@ -231,9 +231,9 @@ class LoginPageState extends State<LoginPage> {
                       ),
                     ),
                     Container(
-                      margin: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                      padding: const EdgeInsets.fromLTRB(0, 4, 0, 4),
-                      decoration: const BoxDecoration(
+                      margin: EdgeInsets.fromLTRB(16, 0, 16, 0),
+                      padding: EdgeInsets.fromLTRB(0, 4, 0, 4),
+                      decoration: BoxDecoration(
                         border: Border(
                           bottom: BorderSide(
                             width: 0, //宽度
@@ -251,7 +251,7 @@ class LoginPageState extends State<LoginPage> {
                         decoration: InputDecoration(
                           icon: Icon(
                             FlutterRemix.key_line,
-                            color: passwordFocusNode!.hasFocus ? readColor() : null,
+                            color: passwordFocusNode.hasFocus ? readColor() : null,
                           ),
                           border: InputBorder.none,
                           hintText: "请输入密码", //类似placeholder效果
@@ -259,8 +259,8 @@ class LoginPageState extends State<LoginPage> {
                       ),
                     ),
                     Container(
-                      margin: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                      padding: const EdgeInsets.fromLTRB(0, 4, 0, 4),
+                      margin: EdgeInsets.fromLTRB(16, 0, 16, 16),
+                      padding: EdgeInsets.fromLTRB(0, 4, 0, 4),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -275,7 +275,7 @@ class LoginPageState extends State<LoginPage> {
                               decoration: InputDecoration(
                                 icon: Icon(
                                   FlutterRemix.magic_line,
-                                  color: checkCodeFocusNode!.hasFocus ? readColor() : null,
+                                  color: checkCodeFocusNode.hasFocus ? readColor() : null,
                                 ),
                                 border: InputBorder.none,
                                 hintText: "请输入验证码", //类似placeholder效果
@@ -299,7 +299,7 @@ class LoginPageState extends State<LoginPage> {
                       width: double.infinity,
                       height: 50,
                       child: Container(
-                        margin: const EdgeInsets.fromLTRB(12, 0, 12, 0),
+                        margin: EdgeInsets.fromLTRB(12, 0, 12, 0),
                         child: TextButton(
                             autofocus: true,
                             style: ButtonStyle(
@@ -312,7 +312,7 @@ class LoginPageState extends State<LoginPage> {
                             ),
                             child: Text(
                               buttonTitle,
-                              style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 14),
+                              style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 14),
                             ),
                             onPressed: () {
                               _check();

@@ -1,6 +1,7 @@
 // ignore_for_file: deprecated_member_use
 
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_remix/flutter_remix.dart';
 import 'package:glutassistantn/common/get.dart';
@@ -8,10 +9,11 @@ import 'package:glutassistantn/common/io.dart';
 import 'package:glutassistantn/data.dart';
 import 'package:glutassistantn/widget/bars.dart';
 import 'package:url_launcher/url_launcher.dart';
+
 import 'mine.dart';
 
 class UpdatePage extends StatefulWidget {
-  const UpdatePage({Key? key}) : super(key: key);
+  UpdatePage({Key? key}) : super(key: key);
 
   @override
   State<UpdatePage> createState() => _UpdatePageState();
@@ -28,7 +30,7 @@ class _UpdatePageState extends State<UpdatePage> {
 }
 
 class UpdatePageBody extends StatefulWidget {
-  const UpdatePageBody({Key? key}) : super(key: key);
+  UpdatePageBody({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => UpdatePageBodyState();
@@ -58,12 +60,12 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
       writeData["githubDownload"] = value[4];
     });
     writeConfig();
-    checkNewVersion(context);
+    checkNewVersion(false, context);
   }
 
   @override
   Widget build(BuildContext context) {
-    Future.delayed(const Duration(seconds: 0), () {
+    Future.delayed(Duration(seconds: 0), () {
       if (!hasNewVersion && !updating) {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "获取更新...", 24));
@@ -71,14 +73,14 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
     });
     return Container(
       color: Colors.white,
-      margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+      margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
       child: CustomScrollView(
-        physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+        physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
         slivers: [
           publicTopBar(
             "获取新版本",
             InkWell(
-              child: const Icon(FlutterRemix.close_line, size: 24),
+              child: Icon(FlutterRemix.close_line, size: 24),
               onTap: () {
                 Navigator.of(context).pop();
               },
@@ -91,7 +93,7 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
           ),
           SliverToBoxAdapter(
             child: Container(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+              padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
               child: Column(
                 children: [
                   InkWell(
@@ -118,28 +120,28 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
                   ),
                   Container(
                     width: double.infinity,
-                    margin: const EdgeInsets.fromLTRB(0, 64, 0, 16),
+                    margin: EdgeInsets.fromLTRB(0, 64, 0, 16),
                   ),
                   hasNewVersion
                       ? Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            mineItem4(FlutterRemix.lightbulb_flash_line, const EdgeInsets.fromLTRB(16, 14, 0, 14), "有新版本可以更新!", Colors.red),
+                            mineItem4(FlutterRemix.lightbulb_flash_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "有新版本可以更新!", Colors.red),
                             Container(
                               width: double.infinity,
-                              margin: const EdgeInsets.fromLTRB(0, 0, 0, 7),
+                              margin: EdgeInsets.fromLTRB(0, 0, 0, 7),
                               child: Text(
-                                "版本号:" + packageInfo["version"] + "  >  " + writeData["newVersion"],
+                                "版本号:" + packageInfo["version"] + "  >  " + (writeData["newVersion"] ?? ""),
                                 style: TextStyle(color: Colors.black54),
                               ),
                             ),
                             Text(
-                              writeData["newBody"],
+                              writeData["newBody"] ?? "",
                               style: TextStyle(color: Colors.grey),
                             ),
                             Container(
                               width: double.infinity,
-                              margin: const EdgeInsets.fromLTRB(0, 32, 0, 8),
+                              margin: EdgeInsets.fromLTRB(0, 32, 0, 8),
                               child: Text(
                                 "选择以下渠道获取更新",
                                 style: TextStyle(color: Colors.black),
@@ -149,13 +151,13 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
                               onTap: () {
                                 launch("https://www.coolapk.com/apk/289253");
                               },
-                              child: mineItem(FlutterRemix.store_2_line, const EdgeInsets.fromLTRB(16, 14, 0, 14), "酷安", Colors.green),
+                              child: mineItem(FlutterRemix.store_2_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "酷安", Colors.green),
                             ),
                             InkWell(
                               onTap: () {
-                                launch(writeData["githubDownload"]);
+                                launch(writeData["githubDownload"] ?? "");
                               },
-                              child: mineItem(FlutterRemix.github_line, const EdgeInsets.fromLTRB(16, 14, 0, 14), "Github", Colors.blueGrey),
+                              child: mineItem(FlutterRemix.github_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "Github", Colors.blueGrey),
                             ),
                           ],
                         )
@@ -164,22 +166,22 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
                       ? Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            mineItem4(FlutterRemix.lightbulb_line, const EdgeInsets.fromLTRB(16, 14, 0, 14), "当前版本变更", Colors.blue),
+                            mineItem4(FlutterRemix.lightbulb_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "当前版本变更", Colors.blue),
                             Container(
                               width: double.infinity,
-                              margin: const EdgeInsets.fromLTRB(0, 0, 0, 7),
+                              margin: EdgeInsets.fromLTRB(0, 0, 0, 7),
                               child: Text(
                                 "版本号:" + packageInfo["version"],
                                 style: TextStyle(color: Colors.black54),
                               ),
                             ),
                             Text(
-                              writeData["newBody"],
+                              writeData["newBody"] ?? "",
                               style: TextStyle(color: Colors.grey),
                             ),
                             Container(
                               width: double.infinity,
-                              margin: const EdgeInsets.fromLTRB(0, 32, 0, 8),
+                              margin: EdgeInsets.fromLTRB(0, 32, 0, 8),
                               child: Text(
                                 "以下方式,关注项目",
                                 style: TextStyle(color: Colors.black),
@@ -189,13 +191,13 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
                               onTap: () {
                                 launch("https://www.coolapk.com/apk/289253");
                               },
-                              child: mineItem(FlutterRemix.store_2_line, const EdgeInsets.fromLTRB(16, 14, 0, 14), "酷安", Colors.green),
+                              child: mineItem(FlutterRemix.store_2_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "酷安", Colors.green),
                             ),
                             InkWell(
                               onTap: () {
                                 launch("https://github.com/nano71/GlutAssistantN");
                               },
-                              child: mineItem(FlutterRemix.github_line, const EdgeInsets.fromLTRB(16, 14, 0, 14), "Github", Colors.blueGrey),
+                              child: mineItem(FlutterRemix.github_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "Github", Colors.blueGrey),
                             ),
                           ],
                         )
@@ -205,7 +207,7 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
                           children: [
                             Container(
                               width: double.infinity,
-                              margin: const EdgeInsets.fromLTRB(0, 32, 0, 8),
+                              margin: EdgeInsets.fromLTRB(0, 32, 0, 8),
                               child: Text(
                                 "选择以下渠道手动获取更新",
                                 style: TextStyle(color: Colors.black),
@@ -215,13 +217,13 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
                               onTap: () {
                                 launch("https://www.coolapk.com/apk/289253");
                               },
-                              child: mineItem(FlutterRemix.store_2_line, const EdgeInsets.fromLTRB(16, 14, 0, 14), "酷安", Colors.green),
+                              child: mineItem(FlutterRemix.store_2_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "酷安", Colors.green),
                             ),
                             InkWell(
                               onTap: () {
                                 launch("https://github.com/nano71/GlutAssistantN/releases/latest");
                               },
-                              child: mineItem(FlutterRemix.github_line, const EdgeInsets.fromLTRB(16, 14, 0, 14), "Github", Colors.blueGrey),
+                              child: mineItem(FlutterRemix.github_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "Github", Colors.blueGrey),
                             ),
                           ],
                         )
@@ -236,12 +238,16 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
   }
 }
 
-void checkNewVersion(BuildContext context, {bool skipShowSnackBar = false}) {
-  if (writeData["newVersion"] != "") {
-    ScaffoldMessenger.of(context).removeCurrentSnackBar();
+void checkNewVersion([bool skipShowSnackBar = true, BuildContext? context]) {
+  print('checkNewVersion');
+  if ((writeData["newVersion"] ?? "").isNotEmpty) {
+    print('writeData["newVersion"]:');
+    print(writeData["newVersion"] ?? "空");
+    print(writeData);
+    if (!skipShowSnackBar) ScaffoldMessenger.of(context!).removeCurrentSnackBar();
     late String message;
     int currentVersion = int.parse(packageInfo["version"].replaceAll(".", ""));
-    int compareVersion = int.parse(writeData["newVersion"].replaceAll(".", ""));
+    int compareVersion = int.parse(writeData["newVersion"]!.replaceAll(".", ""));
     if (currentVersion < compareVersion) {
       hasNewVersion = true;
       message = "发现新版本!";
@@ -252,6 +258,7 @@ void checkNewVersion(BuildContext context, {bool skipShowSnackBar = false}) {
       hasNewVersion = false;
       message = "测试版本!";
     }
-    if (!skipShowSnackBar) ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(1, message, 5));
+    if (!skipShowSnackBar) ScaffoldMessenger.of(context!).showSnackBar(jwSnackBar(1, message, 5));
   }
+  print('checkNewVersion end');
 }

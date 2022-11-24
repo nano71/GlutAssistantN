@@ -7,7 +7,7 @@ import '../config.dart';
 import '../data.dart';
 
 class HomeCard extends StatefulWidget {
-  const HomeCard({Key? key}) : super(key: key);
+  HomeCard({Key? key}) : super(key: key);
 
   @override
   HomeCardState createState() => HomeCardState();
@@ -27,8 +27,7 @@ class HomeCardState extends State<HomeCard> with AutomaticKeepAliveClientMixin {
 
   void _weekProgressAnimation() {
     double _count = 0.0;
-    const period = Duration(milliseconds: 10);
-
+    Duration period = Duration(milliseconds: 10);
     Timer.periodic(period, (timer) {
       _count += 0.01;
       indicatorKey.currentState!.onPressed(_count);
@@ -70,7 +69,7 @@ class HomeCardState extends State<HomeCard> with AutomaticKeepAliveClientMixin {
     return Container(
       height: 100,
       decoration: BoxDecoration(
-        borderRadius: const BorderRadius.all(Radius.circular(12.0)),
+        borderRadius: BorderRadius.all(Radius.circular(12.0)),
         // color: Global.homeCardsColor,
         gradient: readGradient(),
       ),
@@ -78,7 +77,7 @@ class HomeCardState extends State<HomeCard> with AutomaticKeepAliveClientMixin {
         Align(
           alignment: Alignment.centerRight,
           child: Container(
-            margin: const EdgeInsets.fromLTRB(0, 0, 18, 0),
+            margin: EdgeInsets.fromLTRB(0, 0, 18, 0),
             child: SizedBox(
               //限制进度条的高度
               height: 60.0,
@@ -91,35 +90,32 @@ class HomeCardState extends State<HomeCard> with AutomaticKeepAliveClientMixin {
         Align(
             alignment: Alignment.centerRight,
             child: Container(
-              margin: const EdgeInsets.fromLTRB(0, 0, 32, 0),
+              margin: EdgeInsets.fromLTRB(0, 0, 32, 0),
               child: TextProgressDynamic(key: textKey),
             )),
         Align(
           alignment: Alignment.topRight,
           child: Container(
-            margin: const EdgeInsets.fromLTRB(0, 24, 90, 0),
+            margin: EdgeInsets.fromLTRB(0, 24, 90, 0),
             child: Text(
               "第$_week周",
-              style:
-                  const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w900),
+              style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w900),
             ),
           ),
         ),
         Align(
             alignment: Alignment.bottomRight,
             child: Container(
-              margin: const EdgeInsets.fromLTRB(0, 0, 90, 24),
-              child: Text(_weekText(), style: const TextStyle(color: Colors.white)),
+              margin: EdgeInsets.fromLTRB(0, 0, 90, 24),
+              child: Text(_weekText(), style: TextStyle(color: Colors.white)),
             )),
         Align(
             alignment: Alignment.centerLeft,
             child: Container(
                 width: 60,
-                margin: const EdgeInsets.fromLTRB(12, 0, 0, 0),
-                child: Center(
-                    child: Text(DateTime.now().weekday.toString(),
-                        style: const TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.w900, fontSize: 14)))))
+                margin: EdgeInsets.fromLTRB(12, 0, 0, 0),
+                child:
+                    Center(child: Text(DateTime.now().weekday.toString(), style: TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 14)))))
       ]),
     );
   }
@@ -174,18 +170,18 @@ class HomeCardsState {
   static double iconSize = 36;
   static List icons = [FlutterRemix.restart_line, FlutterRemix.search_eye_line, FlutterRemix.file_list_3_line];
   static List iconTexts = ["课表刷新", "成绩查询", "我的考试"];
-  static EdgeInsetsGeometry textMargin = const EdgeInsets.fromLTRB(0, 44, 0, 0);
-  static EdgeInsetsGeometry iconMargin = const EdgeInsets.fromLTRB(0, 0, 0, 32);
-  static Decoration? cardDecoration = const BoxDecoration(
+  static EdgeInsetsGeometry textMargin = EdgeInsets.fromLTRB(0, 44, 0, 0);
+  static EdgeInsetsGeometry iconMargin = EdgeInsets.fromLTRB(0, 0, 0, 32);
+  static Decoration? cardDecoration = BoxDecoration(
     borderRadius: BorderRadius.all(Radius.circular(12.0)),
     color: Color.fromARGB(42, 199, 229, 253),
   );
   static double width = double.infinity;
-  static TextStyle textStyle = const TextStyle(color: Colors.black54);
+  static TextStyle textStyle = TextStyle(color: Colors.black54);
 }
 
 class CircularProgressDynamic extends StatefulWidget {
-  const CircularProgressDynamic({Key? key}) : super(key: key);
+  CircularProgressDynamic({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => CircularProgressDynamicState();
@@ -199,8 +195,8 @@ class CircularProgressDynamicState extends State<CircularProgressDynamic> {
     return CircularProgressIndicator(
       strokeWidth: 3.5,
       value: _value,
-      backgroundColor: const Color.fromARGB(48, 255, 255, 255),
-      valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
+      backgroundColor: Color.fromARGB(48, 255, 255, 255),
+      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
     );
   }
 
@@ -210,7 +206,7 @@ class CircularProgressDynamicState extends State<CircularProgressDynamic> {
 }
 
 class TextProgressDynamic extends StatefulWidget {
-  const TextProgressDynamic({Key? key}) : super(key: key);
+  TextProgressDynamic({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => TextProgressDynamicState();
@@ -221,8 +217,7 @@ class TextProgressDynamicState extends State<TextProgressDynamic> {
 
   @override
   Widget build(BuildContext context) {
-    return Text((_value < 10 ? "0" + _value.toString() + "%" : _value.toString() + "%"),
-        style: const TextStyle(color: Colors.white));
+    return Text((_value < 10 ? "0" + _value.toString() + "%" : _value.toString() + "%"), style: TextStyle(color: Colors.white));
   }
 
   void onPressed(int value) {

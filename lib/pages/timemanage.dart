@@ -12,7 +12,7 @@ bool _isError = false;
 class TimeManagePage extends StatefulWidget {
   final String title;
 
-  const TimeManagePage({Key? key, this.title = "时间"}) : super(key: key);
+  TimeManagePage({Key? key, this.title = "时间"}) : super(key: key);
 
   @override
   State<TimeManagePage> createState() => _TimeManagePageState();
@@ -54,7 +54,7 @@ class _TimeManagePageState extends State<TimeManagePage> {
     eventBus.fire(SetPageIndex());
     Navigator.pushAndRemoveUntil(
       context,
-      CustomRoute(const View()),
+      CustomRoute(View()),
       (route) => false,
     );
   }
@@ -81,7 +81,7 @@ class _TimeManagePageState extends State<TimeManagePage> {
     eventBus.fire(SetPageIndex());
     Navigator.pushAndRemoveUntil(
       context,
-      CustomRoute(const View()),
+      CustomRoute(View()),
       (route) => false,
     );
   }
@@ -92,14 +92,14 @@ class _TimeManagePageState extends State<TimeManagePage> {
       backgroundColor: Colors.white,
       body: Container(
         color: Colors.white,
-        margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+        margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
         child: CustomScrollView(
-          physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+          physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
           slivers: [
             publicTopBar(
               "时间定义",
               InkWell(
-                child: const Icon(FlutterRemix.close_line, size: 24),
+                child: Icon(FlutterRemix.close_line, size: 24),
                 onTap: () {
                   Navigator.of(context).pop();
                 },
@@ -107,8 +107,8 @@ class _TimeManagePageState extends State<TimeManagePage> {
             ),
             SliverToBoxAdapter(
               child: Container(
-                padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-                margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                padding: EdgeInsets.fromLTRB(16, 8, 16, 16),
+                margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
                 child: Column(
                   children: [
                     Row(
@@ -125,11 +125,11 @@ class _TimeManagePageState extends State<TimeManagePage> {
                         InkWell(
                           onTap: _reset,
                           child: Container(
-                            decoration: const BoxDecoration(
+                            decoration: BoxDecoration(
                               borderRadius: BorderRadius.all(Radius.circular(6.0)),
                               color: Color(0x8ff1f1f1),
                             ),
-                            padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                            padding: EdgeInsets.fromLTRB(16, 8, 16, 8),
                             child: Text(
                               "恢复",
                               style: TextStyle(color: Colors.green),
@@ -139,11 +139,11 @@ class _TimeManagePageState extends State<TimeManagePage> {
                         InkWell(
                           onTap: _save,
                           child: Container(
-                            decoration: const BoxDecoration(
+                            decoration: BoxDecoration(
                               borderRadius: BorderRadius.all(Radius.circular(6.0)),
                               color: Color(0x8ff1f1f1),
                             ),
-                            padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                            padding: EdgeInsets.fromLTRB(16, 8, 16, 8),
                             child: Text(
                               "保存",
                               style: TextStyle(color: Colors.red),
@@ -180,7 +180,7 @@ class _TimeManagePageState extends State<TimeManagePage> {
 class TimeManagerItem extends StatefulWidget {
   final int index;
 
-  const TimeManagerItem(this.index);
+  TimeManagerItem(this.index);
 
   @override
   State<StatefulWidget> createState() => TimeManagerItemState(index);
@@ -251,7 +251,7 @@ class TimeManagerItemState extends State<TimeManagerItem> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Container(
-            padding: const EdgeInsets.fromLTRB(0, 14, 0, 14),
+            padding: EdgeInsets.fromLTRB(0, 14, 0, 14),
             child: Text(
               "第${index + 1}节",
             ),

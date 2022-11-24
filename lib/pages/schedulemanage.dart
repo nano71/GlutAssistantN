@@ -7,7 +7,7 @@ import '../config.dart';
 class ScheduleManagePage extends StatefulWidget {
   final String title;
 
-  const ScheduleManagePage({Key? key, this.title = "生涯"}) : super(key: key);
+  ScheduleManagePage({Key? key, this.title = "生涯"}) : super(key: key);
 
   @override
   State<ScheduleManagePage> createState() => _ScheduleManagePageState();
@@ -27,14 +27,14 @@ class _ScheduleManagePageState extends State<ScheduleManagePage> {
       backgroundColor: Colors.white,
       body: Container(
         color: Colors.white,
-        margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+        margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
         child: CustomScrollView(
-          physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+          physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
           slivers: [
             publicTopBar(
               "课程管理",
               InkWell(
-                child: const Icon(FlutterRemix.close_line, size: 24),
+                child: Icon(FlutterRemix.close_line, size: 24),
                 onTap: () {
                   Navigator.of(context).pop();
                 },

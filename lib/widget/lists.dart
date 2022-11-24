@@ -8,9 +8,6 @@ import 'package:glutassistantn/config.dart';
 import '../data.dart';
 import 'bars.dart';
 
-final GlobalKey<TodayCourseListState> todayCourseListKey = GlobalKey();
-final GlobalKey<TomorrowCourseListState> tomorrowCourseListKey = GlobalKey();
-
 List _getStartTime(index) {
   var startH = startTimeList[index - 1][0];
   var endH = endTimeList[index - 1][0];
@@ -88,14 +85,14 @@ String _timeText(int index) {
 // }
 
 class TodayCourseList extends StatefulWidget {
-  const TodayCourseList({Key? key}) : super(key: key);
+  TodayCourseList({Key? key}) : super(key: key);
 
   @override
   TodayCourseListState createState() => TodayCourseListState();
 }
 
 class TomorrowCourseList extends StatefulWidget {
-  const TomorrowCourseList({Key? key}) : super(key: key);
+  TomorrowCourseList({Key? key}) : super(key: key);
 
   @override
   TomorrowCourseListState createState() => TomorrowCourseListState();
@@ -136,11 +133,11 @@ class TodayCourseListState extends State<TodayCourseList> {
     if (!timerS && index == 0) {
       timerS = !timerS;
       Future.delayed(
-        const Duration(seconds: 1),
+        Duration(seconds: 1),
         () {
           if (DateTime.now().second < 2) {
             sum++;
-            if (writeData["threshold"] != "-1") if (sum > (int.parse(writeData["threshold"]) * 2)) exit(0);
+            if (writeData["threshold"] != "-1") if (sum > (int.parse(writeData["threshold"] ?? "") * 2)) exit(0);
             print("$index : ${DateTime.now().second}");
             setState(() {
               timerS = !timerS;
@@ -170,7 +167,7 @@ class TodayCourseListState extends State<TodayCourseList> {
 class TodayCourseListItem extends StatefulWidget {
   final int index;
 
-  const TodayCourseListItem({Key? key, this.index = -1}) : super(key: key);
+  TodayCourseListItem({Key? key, this.index = -1}) : super(key: key);
 
   @override
   TodayCourseListItemState createState() => TodayCourseListItemState();
@@ -206,7 +203,7 @@ class TodayCourseListItemState extends State<TodayCourseListItem> {
   Color _textColorsTop(int index) {
     String result = _getStartTime(int.parse(todaySchedule[index][4]))[3];
     if (result == "before") {
-      return const Color(0xff333333);
+      return Color(0xff333333);
     } else {
       if (_timeText(index).contains("下课")) {
         return Colors.teal;
@@ -219,7 +216,7 @@ class TodayCourseListItemState extends State<TodayCourseListItem> {
   Color _textColorsDown(int index) {
     String result = _getStartTime(int.parse(todaySchedule[index][4]))[3];
     if (result == "before") {
-      return const Color(0xff999999);
+      return Color(0xff999999);
     } else {
       if (_timeText(index).contains("下课")) {
         return Colors.teal;
@@ -237,14 +234,14 @@ class TodayCourseListItemState extends State<TodayCourseListItem> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.fromLTRB(16, 16, 16, 16),
+      margin: EdgeInsets.fromLTRB(16, 16, 16, 16),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Row(
             children: [
               Container(
-                margin: const EdgeInsets.fromLTRB(0, 0, 8, 0),
+                margin: EdgeInsets.fromLTRB(0, 0, 8, 0),
                 child: Icon(
                   _icon(widget.index),
                   color: _timeColors(widget.index),
@@ -323,8 +320,8 @@ class TomorrowCourseListState extends State<TomorrowCourseList> {
     return SliverList(
       delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
         return Container(
-          padding: _tomorrowSchedule[index][3] == "1" && index == 0 ? const EdgeInsets.fromLTRB(16, 0, 16, 4) : const EdgeInsets.fromLTRB(16, 0, 16, 0),
-          margin: const EdgeInsets.fromLTRB(0, 0, 0, 16),
+          padding: _tomorrowSchedule[index][3] == "1" && index == 0 ? EdgeInsets.fromLTRB(16, 0, 16, 4) : EdgeInsets.fromLTRB(16, 0, 16, 0),
+          margin: EdgeInsets.fromLTRB(0, 0, 0, 16),
           height: 50,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(6.0)),
@@ -335,7 +332,7 @@ class TomorrowCourseListState extends State<TomorrowCourseList> {
               Row(
                 children: [
                   Container(
-                    margin: const EdgeInsets.fromLTRB(0, 0, 8, 0),
+                    margin: EdgeInsets.fromLTRB(0, 0, 8, 0),
                     child: Icon(
                       // FlutterRemix.time_line,
                       Icons.hourglass_top_outlined,
@@ -353,12 +350,12 @@ class TomorrowCourseListState extends State<TomorrowCourseList> {
                               style: TextStyle(
                                   decoration: TextDecoration.none,
                                   fontSize: 14,
-                                  color: (_tomorrowSchedule[index][4] == "1" && index == 0 ? Colors.orange[900] : const Color(0xff333333)))),
+                                  color: (_tomorrowSchedule[index][4] == "1" && index == 0 ? Colors.orange[900] : Color(0xff333333)))),
                           Text(courseLongText2ShortName(_tomorrowSchedule[index][0]),
                               style: TextStyle(
                                   decoration: TextDecoration.none,
                                   fontSize: 16,
-                                  color: (_tomorrowSchedule[index][4] == "1" && index == 0 ? Colors.orange[900] : const Color(0xff333333)))),
+                                  color: (_tomorrowSchedule[index][4] == "1" && index == 0 ? Colors.orange[900] : Color(0xff333333)))),
                         ],
                       ),
                       Row(
@@ -367,12 +364,12 @@ class TomorrowCourseListState extends State<TomorrowCourseList> {
                               style: TextStyle(
                                   decoration: TextDecoration.none,
                                   fontSize: 12,
-                                  color: (_tomorrowSchedule[index][4] == "1" && index == 0 ? Colors.orange[900] : const Color(0xff999999)))),
+                                  color: (_tomorrowSchedule[index][4] == "1" && index == 0 ? Colors.orange[900] : Color(0xff999999)))),
                           Text(_tomorrowSchedule[index][1],
                               style: TextStyle(
                                   decoration: TextDecoration.none,
                                   fontSize: 12,
-                                  color: (_tomorrowSchedule[index][4] == "1" && index == 0 ? Colors.orange[900] : const Color(0xff999999)))),
+                                  color: (_tomorrowSchedule[index][4] == "1" && index == 0 ? Colors.orange[900] : Color(0xff999999)))),
                         ],
                       ),
                     ],
@@ -463,10 +460,10 @@ class ScoreListState extends State<ScoreList> {
                   //成绩
                   Container(
                     width: 60,
-                    padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
-                    margin: const EdgeInsets.fromLTRB(0, 5, 0, 5),
+                    padding: EdgeInsets.fromLTRB(0, 8, 0, 8),
+                    margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
                     decoration: BoxDecoration(
-                      borderRadius: const BorderRadius.all(Radius.circular(6.0)),
+                      borderRadius: BorderRadius.all(Radius.circular(6.0)),
                       // color: Global.homeCardsColor,
                       color: queryScore[index][4] == "不及格" ? Colors.red : randomColors(),
                     ),
@@ -483,7 +480,7 @@ class ScoreListState extends State<ScoreList> {
             ),
             Container(
               color: Colors.white,
-              padding: const EdgeInsets.fromLTRB(36, 16, 36, 16),
+              padding: EdgeInsets.fromLTRB(36, 16, 36, 16),
               child: Container(
                 color: Color(0xfffafafa),
                 height: 1,
@@ -588,7 +585,7 @@ class ExamListState extends State<ExamList> {
               ),
               Container(
                 color: Colors.white,
-                padding: const EdgeInsets.fromLTRB(36, 16, 36, 16),
+                padding: EdgeInsets.fromLTRB(36, 16, 36, 16),
                 child: Container(
                   color: Color(0xfffafafa),
                   height: 1,
@@ -677,11 +674,11 @@ class ClassroomListState extends State<ClassroomList> {
       // print(item);
       return Container(
         decoration: BoxDecoration(
-          borderRadius: const BorderRadius.all(Radius.circular(12.0)),
+          borderRadius: BorderRadius.all(Radius.circular(12.0)),
           color: item["todayEmpty"] ? Colors.grey : randomColors2(),
         ),
-        padding: const EdgeInsets.fromLTRB(12, 12, 12, 12),
-        margin: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+        padding: EdgeInsets.fromLTRB(12, 12, 12, 12),
+        margin: EdgeInsets.fromLTRB(16, 0, 16, 16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -730,11 +727,11 @@ class ClassroomListState extends State<ClassroomList> {
             ),
             Container(
               decoration: BoxDecoration(
-                borderRadius: const BorderRadius.all(Radius.circular(12.0)),
+                borderRadius: BorderRadius.all(Radius.circular(12.0)),
                 color: readColorBegin(),
               ),
-              padding: const EdgeInsets.fromLTRB(12, 12, 12, 12),
-              margin: const EdgeInsets.fromLTRB(0, 16, 0, 0),
+              padding: EdgeInsets.fromLTRB(12, 12, 12, 12),
+              margin: EdgeInsets.fromLTRB(0, 16, 0, 0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

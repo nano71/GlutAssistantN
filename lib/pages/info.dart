@@ -6,7 +6,7 @@ import 'package:glutassistantn/widget/bars.dart';
 class InfoPage extends StatefulWidget {
   final String title;
 
-  const InfoPage({Key? key, this.title = "说明"}) : super(key: key);
+  InfoPage({Key? key, this.title = "说明"}) : super(key: key);
 
   @override
   State<InfoPage> createState() => _InfoPageState();
@@ -19,14 +19,14 @@ class _InfoPageState extends State<InfoPage> {
       backgroundColor: Colors.white,
       body: Container(
         color: Colors.white,
-        margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+        margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
         child: CustomScrollView(
-          physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+          physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
           slivers: [
             publicTopBar(
               "说明",
               InkWell(
-                child: const Icon(FlutterRemix.close_line, size: 24),
+                child: Icon(FlutterRemix.close_line, size: 24),
                 onTap: () {
                   Navigator.of(context).pop();
                 },
@@ -34,8 +34,8 @@ class _InfoPageState extends State<InfoPage> {
             ),
             SliverToBoxAdapter(
               child: Container(
-                margin: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                child: const Text(
+                margin: EdgeInsets.fromLTRB(16, 0, 16, 0),
+                child: Text(
                   "一些有必要的说明",
                   style: TextStyle(color: Colors.grey),
                 ),
@@ -43,8 +43,8 @@ class _InfoPageState extends State<InfoPage> {
             ),
             SliverToBoxAdapter(
                 child: Container(
-              width: double.infinity,
-              padding: const EdgeInsets.fromLTRB(16, 42, 16, 64),
+                  width: double.infinity,
+              padding: EdgeInsets.fromLTRB(16, 42, 16, 64),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -54,13 +54,12 @@ class _InfoPageState extends State<InfoPage> {
                       collapsedIconColor: Colors.black45,
                       iconColor: Colors.black45,
                       textColor: Colors.black,
-                      tilePadding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                      title: infoItem(Icons.privacy_tip_outlined,
-                          const EdgeInsets.fromLTRB(16, 14, 0, 14), "隐私"),
+                      tilePadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                      title: infoItem(Icons.privacy_tip_outlined, EdgeInsets.fromLTRB(16, 14, 0, 14), "隐私"),
                       children: [
                         Container(
-                          padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                          child: const Text(
+                          padding: EdgeInsets.fromLTRB(16, 0, 16, 16),
+                          child: Text(
                             "此APP没有请求任何的权限,所有网络通信只请求教务服务器数据以及Github版本更新,不会对其他服务器数据上传.",
                             style: TextStyle(color: Colors.grey),
                           ),
@@ -71,13 +70,12 @@ class _InfoPageState extends State<InfoPage> {
                       collapsedIconColor: Colors.black45,
                       iconColor: Colors.black45,
                       textColor: Colors.black,
-                      tilePadding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                      title: infoItem(Icons.insert_emoticon_sharp,
-                          const EdgeInsets.fromLTRB(16, 14, 0, 14), "可信"),
+                      tilePadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                      title: infoItem(Icons.insert_emoticon_sharp, EdgeInsets.fromLTRB(16, 14, 0, 14), "可信"),
                       children: [
                         Container(
-                          padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                          child: const Text(
+                          padding: EdgeInsets.fromLTRB(16, 0, 16, 16),
+                          child: Text(
                             "我是一名本校学生,也是学校计算机应用系官网唯一前端开发,编写此APP是出于对学校的热爱,如果你并不信任此APP,请卸载就行.",
                             style: TextStyle(color: Colors.grey),
                           ),
@@ -88,13 +86,12 @@ class _InfoPageState extends State<InfoPage> {
                       collapsedIconColor: Colors.black45,
                       iconColor: Colors.black45,
                       textColor: Colors.black,
-                      tilePadding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                      title: infoItem(Icons.check_circle_outline,
-                          const EdgeInsets.fromLTRB(16, 14, 0, 14), "验证"),
+                      tilePadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                      title: infoItem(Icons.check_circle_outline, EdgeInsets.fromLTRB(16, 14, 0, 14), "验证"),
                       children: [
                         Container(
-                          padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                          child: const Text(
+                          padding: EdgeInsets.fromLTRB(16, 0, 16, 16),
+                          child: Text(
                             "初次使用时需要进行一次登录,以后执行的任何操作只需要输入验证码即可,每验证一次可以维持15分钟免验证操作.",
                             style: TextStyle(color: Colors.grey),
                           ),
@@ -105,25 +102,24 @@ class _InfoPageState extends State<InfoPage> {
                       collapsedIconColor: Colors.black45,
                       iconColor: Colors.black45,
                       textColor: Colors.black,
-                      tilePadding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                      title: infoItem(
-                          Icons.feedback_outlined, const EdgeInsets.fromLTRB(16, 14, 0, 14), "反馈"),
+                      tilePadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                      title: infoItem(Icons.feedback_outlined, EdgeInsets.fromLTRB(16, 14, 0, 14), "反馈"),
                       children: [
                         Container(
-                          padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                          child: const Text(
+                          padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
+                          child: Text(
                             "可以在`酷安APP`搜索桂工助手N,在应用详情下方评论,或者在Github搜索GlutAssistantN,也可以点击下面的文本联系我:",
                             style: TextStyle(color: Colors.grey),
                           ),
                         ),
                         Container(
-                          padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                          padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Row(
                                 children: [
-                                  const Text(
+                                  Text(
                                     "QQ:",
                                     style: TextStyle(color: Colors.grey),
                                   ),
@@ -131,13 +127,11 @@ class _InfoPageState extends State<InfoPage> {
                                     builder: (BuildContext context) {
                                       return TextButton(
                                         onPressed: () {
-                                          Clipboard.setData(
-                                              const ClipboardData(text: "1742968988"));
+                                          Clipboard.setData(ClipboardData(text: "1742968988"));
                                           ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(jwSnackBar(1, "复制成功!"));
+                                          ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(1, "复制成功!"));
                                         },
-                                        child: const Text(
+                                        child: Text(
                                           "1742968988",
                                           style: TextStyle(color: Colors.blue),
                                         ),
@@ -148,19 +142,18 @@ class _InfoPageState extends State<InfoPage> {
                               ),
                               Row(
                                 children: [
-                                  const Text(
+                                  Text(
                                     "WX:",
                                     style: TextStyle(color: Colors.grey),
                                   ),
                                   Builder(builder: (BuildContext context) {
                                     return TextButton(
                                       onPressed: () {
-                                        Clipboard.setData(const ClipboardData(text: "13520944872"));
+                                        Clipboard.setData(ClipboardData(text: "13520944872"));
                                         ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(jwSnackBar(1, "复制成功!"));
+                                        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(1, "复制成功!"));
                                       },
-                                      child: const Text(
+                                      child: Text(
                                         "13520944872",
                                         style: TextStyle(color: Colors.green),
                                       ),
@@ -193,7 +186,7 @@ Widget infoItem(IconData icon, EdgeInsets padding, String title) {
             padding: padding,
             child: Text(
               title,
-              style: const TextStyle(fontSize: 16),
+              style: TextStyle(fontSize: 16),
             ),
           ),
         ],

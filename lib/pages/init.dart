@@ -42,7 +42,7 @@ class CustomRoute extends PageRouteBuilder {
 }
 
 class Init extends StatefulWidget {
-  const Init({Key? key}) : super(key: key);
+  Init({Key? key}) : super(key: key);
 
   @override
   InitState createState() => InitState();
@@ -72,7 +72,7 @@ class InitState extends State<Init> {
     getUpdateForEveryday();
     Navigator.pushAndRemoveUntil(
       context,
-      CustomRoute(const View(), 2000),
+      CustomRoute(View(), 2000),
       (route) => false,
     );
   }
@@ -86,52 +86,19 @@ class InitState extends State<Init> {
 class View extends StatelessWidget {
   final bool refresh;
 
-  const View({Key? key, this.refresh = false}) : super(key: key);
+  View({Key? key, this.refresh = false}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    print("View build");
     return Scaffold(
       backgroundColor: Colors.white,
       body: PageView(
-        physics: const NeverScrollableScrollPhysics(),
+        physics: NeverScrollableScrollPhysics(),
         controller: Global.pageControl,
-        children: [HomePage(refresh: refresh), const SchedulePage(), const MinePage()],
+        children: [HomePage(refresh: refresh), SchedulePage(), MinePage()],
       ),
-      bottomNavigationBar: const BottomNavBar(),
+      bottomNavigationBar: BottomNavBar(),
     );
-  }
-}
-
-class CustomBottomNavigationBar extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() {
-    // TODO: implement createState
-    // throw UnimplementedError();
-    return CustomBottomNavigationBarState();
-  }
-}
-
-class CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    return BottomNavigationBar(
-      currentIndex: Global.pageIndex,
-      items: [
-        new BottomNavigationBarItem(icon: Icon(Icons.home_outlined), label: "首页"),
-        new BottomNavigationBarItem(icon: Icon(Icons.schedule_outlined), label: "课表"),
-        new BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: "我的"),
-      ],
-      onTap: (index) => {
-        if (Global.pageIndex != index)
-          {
-            Global.pageControl.jumpToPage(index),
-            // Global.pageControl.animateToPage(index, duration: Duration(milliseconds: 500), curve: Curves.linear);
-            Global.pageIndex = index,
-            setState(() {})
-          }
-      },
-    );
-    throw UnimplementedError();
   }
 }

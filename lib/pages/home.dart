@@ -5,8 +5,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:glutassistantn/common/get.dart';
 import 'package:glutassistantn/common/init.dart';
-import 'package:glutassistantn/pages/queryscore.dart';
 import 'package:glutassistantn/pages/queryexam.dart';
+import 'package:glutassistantn/pages/queryscore.dart';
 import 'package:glutassistantn/widget/bars.dart';
 import 'package:glutassistantn/widget/cards.dart';
 import 'package:glutassistantn/widget/icons.dart';
@@ -21,7 +21,7 @@ import 'login.dart';
 class HomePage extends StatefulWidget {
   final bool refresh;
 
-  const HomePage({Key? key, this.refresh = false}) : super(key: key);
+  HomePage({Key? key, this.refresh = false}) : super(key: key);
 
   @override
   HomePageState createState() => HomePageState();
@@ -43,8 +43,8 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   ColorTween homeCardsColorTween = ColorTween(begin: readColorBegin(), end: readColorEnd());
   int _goTopInitCount = 0;
   bool _bk = true;
-  Timer? _time;
-  Timer? _time2;
+  Timer _time = Timer(Duration(), () {});
+  Timer _time2 = Timer(Duration(), () {});
   bool firstBuild = true;
 
   @override
@@ -53,19 +53,19 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
     _animationControllerForHomeCards1 = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 150),
+      duration: Duration(milliseconds: 150),
     )..addListener(() {
         setState(() {});
       });
     _animationControllerForHomeCards2 = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 150),
+      duration: Duration(milliseconds: 150),
     )..addListener(() {
         setState(() {});
       });
     _animationControllerForHomeCards3 = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 150),
+      duration: Duration(milliseconds: 150),
     )..addListener(() {
         setState(() {});
       });
@@ -87,7 +87,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
           final double __offset = _offsetAbs;
           if (__offset == _offsetAbs || __offset + 0.25 < _offsetAbs) {
             Future.delayed(
-              const Duration(milliseconds: 200),
+              Duration(milliseconds: 200),
               () {
                 if (_timeOutBool) {
                   offset_ = _offsetAbs;
@@ -104,8 +104,8 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   void _goTop() {
     print('_goTop');
-    _time?.cancel();
-    _time2?.cancel();
+    _time.cancel();
+    _time2.cancel();
     if (_goTopInitCount < 8) {
       int _endCount = 10000;
       print("刷新${DateTime.now()}");
@@ -119,7 +119,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
       }
       _scrollController.animateTo(
         _scrollController.position.minScrollExtent,
-        duration: const Duration(milliseconds: 300),
+        duration: Duration(milliseconds: 300),
         curve: Curves.linear,
       );
       _next() async {
@@ -157,7 +157,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
             // codeCheckDialog(context),
             ScaffoldMessenger.of(context).removeCurrentSnackBar();
             ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, "请先登录!"));
-            _time2?.cancel();
+            _time2.cancel();
           } else {
             ScaffoldMessenger.of(context).removeCurrentSnackBar();
             ScaffoldMessenger.of(context).showSnackBar(jwSnackBarAction(
@@ -169,18 +169,18 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   }),
               hideSnackBarSeconds: 10,
             ));
-            _time2?.cancel();
+            _time2.cancel();
           }
         } else if (response == "success")
           _next();
         else {
           ScaffoldMessenger.of(context).removeCurrentSnackBar();
           ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, response, 4));
-          _time2?.cancel();
+          _time2.cancel();
         }
       }
 
-      _time = Timer(const Duration(seconds: 1), () async {
+      _time = Timer(Duration(seconds: 1), () async {
         print("更新开始");
         getWeek();
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
@@ -190,7 +190,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
         _goTopInitCount = 0;
       });
       int _count = 0;
-      const period = Duration(milliseconds: 10);
+      Duration period = Duration(milliseconds: 10);
       _time2 = Timer.periodic(period, (timer) {
         _count++;
         offset_ += 0.15;
@@ -204,9 +204,9 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
         _bk = false;
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, "你慢一点!"));
-        _time?.cancel();
-        _time = Timer(const Duration(seconds: 5), () {
-          Future.delayed(const Duration(seconds: 5), () {
+        _time.cancel();
+        _time = Timer(Duration(seconds: 5), () {
+          Future.delayed(Duration(seconds: 5), () {
             _timeOutBool = true;
             _bk = true;
             _goTopInitCount = 0;
@@ -226,39 +226,40 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 
   TextStyle _tomorrowAndTodayTextStyle() {
-    return const TextStyle(fontSize: 14, color: Colors.black, decoration: TextDecoration.none);
+    return TextStyle(fontSize: 14, color: Colors.black, decoration: TextDecoration.none);
   }
 
   @override
   Widget build(BuildContext context) {
-    Future.delayed(const Duration(seconds: 0), () {
+    Future.delayed(Duration(seconds: 0), () {
       if (DateTime.now().minute == 59 && DateTime.now().hour == 23) {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, "明天再来!", 3));
-        Future.delayed(const Duration(seconds: 3), () {
+        Future.delayed(Duration(seconds: 3), () {
           exit(0);
         });
       }
     });
     if (widget.refresh && firstBuild) {
-      Future.delayed(const Duration(seconds: 0), () {
+      Future.delayed(Duration(seconds: 0), () {
         _goTop();
         firstBuild = false;
       });
     }
     double width = MediaQuery.of(context).size.width;
+    // print("HomePage create");
     return Container(
       color: Colors.white,
-      margin: const EdgeInsets.fromLTRB(0, 0, 0, 16),
+      margin: EdgeInsets.fromLTRB(0, 0, 0, 16),
       child: CustomScrollView(
         controller: _scrollController,
-        physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+        physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
         slivers: [
-          const HomeTopBar(),
+          HomeTopBar(),
           SliverToBoxAdapter(
               child: Container(
             width: double.infinity,
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+            padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               verticalDirection: VerticalDirection.down,
@@ -269,7 +270,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     eventBus.fire(SetPageIndex(index: 1));
                     eventBus.fire(ReloadSchedulePageState());
                   },
-                  child: const HomeCard(),
+                  child: HomeCard(),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -280,9 +281,9 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         _animationControllerForHomeCards1.reverse();
                       },
                       onTapUp: (d) {
-                        Future.delayed(const Duration(milliseconds: 100), () {
+                        Future.delayed(Duration(milliseconds: 100), () {
                           if (writeData["username"] == "") {
-                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => const LoginPage()));
+                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => LoginPage()));
                           } else {
                             _goTop();
                           }
@@ -293,10 +294,10 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         _animationControllerForHomeCards1.forward();
                       },
                       child: Container(
-                        margin: const EdgeInsets.fromLTRB(0, 8, 4, 16),
+                        margin: EdgeInsets.fromLTRB(0, 8, 4, 16),
                         height: 100,
                         width: width / 3 - 48 / 3,
-                        decoration: BoxDecoration(borderRadius: const BorderRadius.all(Radius.circular(12.0)), color: _animationForHomeCards1.value),
+                        decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(12.0)), color: _animationForHomeCards1.value),
                         child: Stack(
                           children: [
                             Align(
@@ -323,11 +324,11 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         _animationControllerForHomeCards2.reverse();
                       },
                       onTapUp: (d) {
-                        Future.delayed(const Duration(milliseconds: 100), () {
+                        Future.delayed(Duration(milliseconds: 100), () {
                           if (writeData["username"] == "") {
-                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => const LoginPage()));
+                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => LoginPage()));
                           } else {
-                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => const QueryPage()));
+                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => QueryPage()));
                           }
                           _animationControllerForHomeCards2.reverse();
                         });
@@ -336,10 +337,10 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         _animationControllerForHomeCards2.forward();
                       },
                       child: Container(
-                        margin: const EdgeInsets.fromLTRB(4, 8, 4, 16),
+                        margin: EdgeInsets.fromLTRB(4, 8, 4, 16),
                         height: 100,
                         width: width / 3 - 48 / 3,
-                        decoration: BoxDecoration(borderRadius: const BorderRadius.all(Radius.circular(12.0)), color: _animationForHomeCards2.value),
+                        decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(12.0)), color: _animationForHomeCards2.value),
                         child: Stack(
                           children: [
                             Align(
@@ -367,11 +368,11 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         _animationControllerForHomeCards3.reverse();
                       },
                       onTapUp: (d) {
-                        Future.delayed(const Duration(milliseconds: 100), () {
+                        Future.delayed(Duration(milliseconds: 100), () {
                           if (writeData["username"] == "") {
-                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => const LoginPage()));
+                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => LoginPage()));
                           } else {
-                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => const QueryExamPage()));
+                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => QueryExamPage()));
                           }
                           _animationControllerForHomeCards3.reverse();
                         });
@@ -380,10 +381,10 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         _animationControllerForHomeCards3.forward();
                       },
                       child: Container(
-                        margin: const EdgeInsets.fromLTRB(4, 8, 0, 16),
+                        margin: EdgeInsets.fromLTRB(4, 8, 0, 16),
                         height: 100,
                         width: width / 3 - 48 / 3,
-                        decoration: BoxDecoration(borderRadius: const BorderRadius.all(Radius.circular(12.0)), color: _animationForHomeCards3.value),
+                        decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(12.0)), color: _animationForHomeCards3.value),
                         child: Stack(
                           children: [
                             Align(
@@ -416,17 +417,17 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
             ),
           )),
           TodayCourseList(
-            key: todayCourseListKey,
+            key: Global.todayCourseListKey,
           ),
           SliverToBoxAdapter(
               child: Container(
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
+            padding: EdgeInsets.fromLTRB(16, 16, 16, 16),
             child: Align(alignment: Alignment.centerLeft, child: Text(tomorrowScheduleTitle, style: _tomorrowAndTodayTextStyle())),
           )),
           TomorrowCourseList(
-            key: tomorrowCourseListKey,
+            key: Global.tomorrowCourseListKey,
           ),
-          const LoginCheck(),
+          LoginCheck(),
         ],
       ),
     );
@@ -434,12 +435,12 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
 }
 
 class LoginCheck extends StatelessWidget {
-  const LoginCheck({Key? key}) : super(key: key);
+  LoginCheck({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     if (writeData["username"] != "") {
-      return const SliverToBoxAdapter(child: Center());
+      return SliverToBoxAdapter(child: Center());
     }
     return SliverToBoxAdapter(
       child: Center(
@@ -448,7 +449,7 @@ class LoginCheck extends StatelessWidget {
             Navigator.of(context).push(
               // 在FormPage()里传入参数
               MaterialPageRoute(
-                builder: (context) => const LoginPage(),
+                builder: (context) => LoginPage(),
               ),
             );
           },

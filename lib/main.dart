@@ -8,14 +8,14 @@ main() {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarColor: Colors.transparent, systemNavigationBarColor: Colors.white));
 
   print("startApp...");
-  runApp(const App());
+  runApp(App());
 }
 
 class App extends StatelessWidget {
-  const App({Key? key}) : super(key: key);
+  App({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(debugShowCheckedModeBanner: false, theme: ThemeData(), title: Global.appTitle, home: const Init());
+    return MaterialApp(debugShowCheckedModeBanner: false, theme: ThemeData(), title: Global.appTitle, home: Init());
   }
 }
