@@ -112,7 +112,8 @@ class TodayCourseListState extends State<TodayCourseList> {
     eventBusListener = eventBus.on<ReloadTodayListState>().listen((event) {
       reloadState();
     });
-    print(_todaySchedule);
+    // print(115);
+    // print(_todaySchedule[0]);
   }
 
   reloadState() {

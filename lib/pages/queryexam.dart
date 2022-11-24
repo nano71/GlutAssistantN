@@ -159,7 +159,7 @@ class _QueryExamBodyState extends State<QueryExamBody> {
                                   Navigator.of(context)
                                       .push(MaterialPageRoute(
                                           builder: (context) => const CareerPage(
-                                                type: 1,
+                                                type: 1
                                               )))
                                       .then((result) {
                                     print(examAllNumber);

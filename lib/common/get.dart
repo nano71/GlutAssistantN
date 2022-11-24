@@ -45,8 +45,8 @@ Future<void> getWeek() async {
     writeData["querySemester"] = q;
     writeData["queryYear"] = n;
   }
-  await writeConfig();
   print("getWeek End");
+  writeConfig();
 }
 
 Future<String> getSchedule() async {

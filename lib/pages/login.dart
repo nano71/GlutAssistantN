@@ -130,11 +130,7 @@ class LoginPageState extends State<LoginPage> {
         eventBus.fire(SetPageIndex());
         Navigator.pushAndRemoveUntil(
           context,
-          CustomRouteMs300(
-            const Index(
-              type: 1,
-            ),
-          ),
+          CustomRoute(const View(refresh: true)),
           (route) => false,
         );
       } else if (value == "fail") {
@@ -155,8 +151,7 @@ class LoginPageState extends State<LoginPage> {
       }
     }
 
-    await login(studentIdController.text.toString(), passwordController.text.toString(),
-            checkCodeController.text.toString())
+    await login(studentIdController.text.toString(), passwordController.text.toString(), checkCodeController.text.toString())
         .then((String value) => _next(value));
   }
 
@@ -313,13 +308,11 @@ class LoginPageState extends State<LoginPage> {
                               backgroundColor: MaterialStateProperty.resolveWith((states) {
                                 return readColor();
                               }),
-                              shape: MaterialStateProperty.all(
-                                  RoundedRectangleBorder(borderRadius: BorderRadius.circular(28))),
+                              shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(28))),
                             ),
                             child: Text(
                               buttonTitle,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold, color: Colors.white, fontSize: 14),
+                              style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 14),
                             ),
                             onPressed: () {
                               _check();
