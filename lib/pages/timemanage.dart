@@ -33,19 +33,19 @@ class _TimeManagePageState extends State<TimeManagePage> {
     startTimeListBk = [];
     endTimeList = [];
     endTimeListBk = [];
-    for (List value in startTimeListRe) {
+    for (List value in startTimeListRestore) {
       startTimeList.add(value);
       startTimeListBk.add(value);
     }
-    for (List value in endTimeListRe) {
+    for (List value in endTimeListRestore) {
       endTimeList.add(value);
       endTimeListBk.add(value);
     }
 
     ScaffoldMessenger.of(context).removeCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(1, "已经恢复!", 2));
-    print(startTimeListRe);
-    print(endTimeListRe);
+    print(startTimeListRestore);
+    print(endTimeListRestore);
     print(startTimeList);
     print(endTimeList);
     print(startTimeListBk);
@@ -71,8 +71,8 @@ class _TimeManagePageState extends State<TimeManagePage> {
     endTimeList = endTimeListBk;
     ScaffoldMessenger.of(context).removeCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "已经更改!", 2));
-    print(startTimeListRe);
-    print(endTimeListRe);
+    print(startTimeListRestore);
+    print(endTimeListRestore);
     print(startTimeList);
     print(endTimeList);
     print(startTimeListBk);

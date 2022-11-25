@@ -138,11 +138,11 @@ class _QueryBodyState extends State<QueryBody> {
             false,
             "需要验证",
             context,
-            () => {
-              ScaffoldMessenger.of(context).removeCurrentSnackBar(),
+            () {
+              ScaffoldMessenger.of(context).removeCurrentSnackBar();
               //  ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(1, "验证完成,请再次点击查询")),
-              eventBus.fire(ReloadScoreListState()),
-              Navigator.pop(context)
+              eventBus.fire(ReloadScoreListState());
+              Navigator.pop(context);
             },
             hideSnackBarSeconds: 10,
           ));
@@ -167,12 +167,12 @@ class _QueryBodyState extends State<QueryBody> {
         false,
         "请先登录!",
         context,
-        () => {
+            () {
           Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (context) => LoginPage(),
-              ))
+              ));
         },
         hideSnackBarSeconds: 10,
         isDialogCallback: true,
@@ -227,8 +227,9 @@ class _QueryBodyState extends State<QueryBody> {
                       Row(
                         children: [
                           DropdownButton(
+                            enableFeedback: true,
                             icon: Icon(FlutterRemix.arrow_down_s_line),
-                            iconSize: 18,
+                            iconSize: 16,
                             iconEnabledColor: Colors.white,
                             elevation: 0,
                             hint: SizedBox(
@@ -252,8 +253,9 @@ class _QueryBodyState extends State<QueryBody> {
                             width: 25,
                           ),
                           DropdownButton(
+                            enableFeedback: true,
                             icon: Icon(FlutterRemix.arrow_down_s_line),
-                            iconSize: 18,
+                            iconSize: 16,
                             iconEnabledColor: Colors.white,
                             elevation: 0,
                             hint: SizedBox(

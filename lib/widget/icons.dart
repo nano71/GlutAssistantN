@@ -34,6 +34,7 @@ class RefreshIconWidgetDynamicState extends State<RefreshIconWidgetDynamic> {
 Icon chevronRight = Icon(
   FlutterRemix.arrow_right_s_line,
   color: Colors.black45,
+  size: 18,
 );
 Icon chevronDown = Icon(
   FlutterRemix.arrow_down_s_line,

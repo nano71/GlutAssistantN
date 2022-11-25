@@ -109,10 +109,10 @@ class _CareerPageBodyState extends State<CareerPageBody> {
         false,
         "需要验证",
         context,
-        () => {
-          ScaffoldMessenger.of(context).removeCurrentSnackBar(),
-          eventBus.fire(ReloadCareerPageState()),
-          Navigator.pop(context),
+        () {
+          ScaffoldMessenger.of(context).removeCurrentSnackBar();
+          eventBus.fire(ReloadCareerPageState());
+          Navigator.pop(context);
         },
         hideSnackBarSeconds: Global.timeOutSec,
       ));

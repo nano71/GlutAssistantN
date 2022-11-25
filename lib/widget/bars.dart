@@ -12,41 +12,36 @@ import '../data.dart';
 import 'dialog.dart';
 import 'icons.dart';
 
-class HomeTopBar extends StatelessWidget {
-  HomeTopBar({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return SliverAppBar(
-      pinned: true,
-      collapsedHeight: 56.00,
-      primary: true,
-      backgroundColor: Colors.white,
-      stretch: true,
-      expandedHeight: 125.0,
-      elevation: 0.3,
-      automaticallyImplyLeading: false,
-      flexibleSpace: FlexibleSpaceBar(
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "今日一览",
-                style: TextStyle(
-                  color: Colors.black,
-                ),
+SliverAppBar homeTopBar(BuildContext context) {
+  return SliverAppBar(
+    pinned: true,
+    collapsedHeight: 56.00,
+    primary: true,
+    backgroundColor: Colors.white,
+    stretch: true,
+    expandedHeight: 125.0,
+    elevation: 0.3,
+    automaticallyImplyLeading: false,
+    flexibleSpace: FlexibleSpaceBar(
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              "今日一览",
+              style: TextStyle(
+                color: Colors.black,
               ),
-              InkWell(
-                child: Icon(FlutterRemix.more_fill, size: 24),
-                onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => SettingPage(title: "设置")));
-                },
-              )
-            ],
-          ),
-          titlePadding: EdgeInsets.fromLTRB(16, 0, 16, 12)),
-    );
-  }
+            ),
+            InkWell(
+              child: Icon(FlutterRemix.more_fill, size: 24),
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) => SettingPage(title: "设置")));
+              },
+            )
+          ],
+        ),
+        titlePadding: EdgeInsets.fromLTRB(16, 0, 16, 12)),
+  );
 }
 
 SliverAppBar publicTopBar(String title, [dynamic inkWell = const Text(""), color = Colors.white, color2 = Colors.black, double e = 0.3]) {

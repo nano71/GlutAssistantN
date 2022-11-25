@@ -72,11 +72,11 @@ class _QueryExamBodyState extends State<QueryExamBody> {
         false,
         "需要验证",
         context,
-        () => {
-          ScaffoldMessenger.of(context).removeCurrentSnackBar(),
+        () {
+          ScaffoldMessenger.of(context).removeCurrentSnackBar();
           //  ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(1, "验证完成,请再次点击查询")),
-          eventBus.fire(ReloadExamListState()),
-          Navigator.pop(context),
+          eventBus.fire(ReloadExamListState());
+          Navigator.pop(context);
         },
         hideSnackBarSeconds: 10,
       ));

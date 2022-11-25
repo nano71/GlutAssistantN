@@ -3,6 +3,7 @@ import 'package:flutter_remix/flutter_remix.dart';
 import 'package:glutassistantn/common/init.dart';
 import 'package:glutassistantn/common/io.dart';
 import 'package:glutassistantn/common/style.dart';
+import 'package:glutassistantn/custom/expansiontile.dart' as CustomExpansionTile;
 import 'package:glutassistantn/pages/schedulemanage.dart';
 import 'package:glutassistantn/pages/timemanage.dart';
 import 'package:glutassistantn/widget/bars.dart';
@@ -207,7 +208,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                         Row(
                           children: [
                             Icon(
-                              !focusNodeType ? FlutterRemix.palette_line : Icons.edit_outlined,
+                              FlutterRemix.palette_line,
                               color: readColor(),
                             ),
                             Container(
@@ -221,13 +222,14 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                         ),
                         Builder(builder: (BuildContext context) {
                           return DropdownButton(
-                            icon: Icon(FlutterRemix.arrow_down_s_line),
+                            value: writeData["color"] ?? null,
+                            icon: Icon(
+                              FlutterRemix.arrow_down_s_line,
+                              size: 18,
+                            ),
+                            enableFeedback: true,
                             iconEnabledColor: readColor(),
                             elevation: 0,
-                            hint: Text(
-                              writeData["color"] ?? "",
-                              style: TextStyle(color: readColor()),
-                            ),
                             items: [
                               DropdownMenuItem(
                                   child: Text(
@@ -260,7 +262,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                                   ),
                                   value: "yellow"),
                             ],
-                            underline: Container(height: 0),
+                            underline: Container(),
                             onChanged: (value) {
                               setState(() {
                                 writeData["color"] = value.toString();
@@ -283,7 +285,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                         Row(
                           children: [
                             Icon(
-                              Icons.flip_to_back,
+                              FlutterRemix.apps_2_line,
                               color: readColor(),
                             ),
                             Container(
@@ -297,45 +299,19 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                         ),
                         Builder(builder: (BuildContext context) {
                           return DropdownButton(
-                            icon: Icon(FlutterRemix.arrow_down_s_line),
+                            icon: Icon(
+                              FlutterRemix.arrow_down_s_line,
+                              size: 18,
+                            ),
+                            enableFeedback: true,
+                            // style: TextStyle(color: readColor()),
                             iconEnabledColor: readColor(),
                             elevation: 0,
                             hint: Text(
                               (writeData["threshold"] ?? "5") + "分钟",
-                              style: TextStyle(color: readColor()),
+                              style: TextStyle(color: readColor(), fontSize: 14),
                             ),
-                            items: [
-                              DropdownMenuItem(
-                                  child: Text(
-                                    "5分钟",
-                                  ),
-                                  value: "5"),
-                              DropdownMenuItem(
-                                  child: Text(
-                                    "10分钟",
-                                  ),
-                                  value: "10"),
-                              DropdownMenuItem(
-                                  child: Text(
-                                    "20分钟",
-                                  ),
-                                  value: "20"),
-                              DropdownMenuItem(
-                                  child: Text(
-                                    "30分钟",
-                                  ),
-                                  value: "30"),
-                              DropdownMenuItem(
-                                  child: Text(
-                                    "40分钟",
-                                  ),
-                                  value: "40"),
-                              DropdownMenuItem(
-                                  child: Text(
-                                    "不限",
-                                  ),
-                                  value: "-1"),
-                            ],
+                            items: thresholdItemList(),
                             underline: Container(height: 0),
                             onChanged: (value) {
                               setState(() {
@@ -357,9 +333,9 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(builder: (context) => TimeManagePage()));
                       },
-                      child: mineItem(Icons.more_time_outlined, EdgeInsets.fromLTRB(16, 14, 0, 14), "课节时间", readColor()),
+                      child: mineItem(FlutterRemix.timer_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "课节时间", readColor()),
                     ),
-                    ExpansionTile(
+                    CustomExpansionTile.ExpansionTile(
                       onExpansionChanged: (e) {
                         setState(() {
                           _isExpanded = !_isExpanded;
@@ -370,10 +346,8 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                       tilePadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                       title: Row(
                         children: [
-                          Icon(
-                            _isExpanded ? Icons.warning_amber_rounded : Icons.cleaning_services_outlined,
-                            color: _isExpanded ? Colors.redAccent : readColor(),
-                          ),
+                          Icon(_isExpanded ? FlutterRemix.alarm_warning_line : FlutterRemix.delete_bin_2_line,
+                              color: _isExpanded ? Colors.redAccent : readColor()),
                           Container(
                             padding: EdgeInsets.fromLTRB(16, 14, 0, 14),
                             child: Text(
@@ -430,8 +404,10 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
     await initSchedule();
     todaySchedule = [];
     tomorrowSchedule = [];
-    await Global.todayCourseListKey.currentState!.reloadState();
-    await Global.tomorrowCourseListKey.currentState!.reloadState();
+    eventBus.fire(ReloadTodayListState());
+    eventBus.fire(ReloadTomorrowListState());
+    // await Global.todayCourseListKey.currentState!.reloadState();
+    // await Global.tomorrowCourseListKey.currentState!.reloadState();
     eventBus.fire(SetPageIndex());
     Navigator.pushAndRemoveUntil(
       context,
@@ -486,5 +462,23 @@ List<DropdownMenuItem<Object>>? yearList(int type) {
   for (int i = int.parse(writeData["year"] ?? ""); i > (int.parse(writeData["year"] ?? "") - 5); i--) {
     list.add(DropdownMenuItem(child: Text(i.toString()), value: i.toString()));
   }
+  return list;
+}
+
+List<DropdownMenuItem<String>> thresholdItemList() {
+  List<DropdownMenuItem<String>> list = [];
+  Map<String, String> cache = const {"5分钟": "5", "10分钟": "10", "20分钟": "20", "40分钟": "40", "不限": "-1"};
+
+  cache.forEach((key, value) {
+    print(key);
+    print(value);
+    list.add(DropdownMenuItem(
+        child: Text(
+          key,
+          style: TextStyle(fontSize: 14),
+        ),
+        value: value));
+  });
+  print(list[0]);
   return list;
 }
