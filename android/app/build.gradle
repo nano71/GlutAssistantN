@@ -28,7 +28,7 @@ apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 android {
     productFlavors{
         develop{
-            applicationId "com.nano71.developglutassistantn"
+            applicationId "com.develop.glutassistantn"
             manifestPlaceholders = [TD_CHANNEL_ID:"develop"]
         }
         build{
