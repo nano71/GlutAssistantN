@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_remix/flutter_remix.dart';
+import 'package:glutassistantn/custom/expansiontile.dart' as CustomExpansionTile;
 import 'package:glutassistantn/widget/bars.dart';
 
 class InfoPage extends StatefulWidget {
@@ -49,7 +50,7 @@ class _InfoPageState extends State<InfoPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  ExpansionTile(
+                  CustomExpansionTile.ExpansionTile(
                       initiallyExpanded: true,
                       collapsedIconColor: Colors.black45,
                       iconColor: Colors.black45,
@@ -65,7 +66,7 @@ class _InfoPageState extends State<InfoPage> {
                           ),
                         ),
                       ]),
-                  ExpansionTile(
+                      CustomExpansionTile.ExpansionTile(
                       initiallyExpanded: true,
                       collapsedIconColor: Colors.black45,
                       iconColor: Colors.black45,
@@ -81,7 +82,7 @@ class _InfoPageState extends State<InfoPage> {
                           ),
                         ),
                       ]),
-                  ExpansionTile(
+                      CustomExpansionTile.ExpansionTile(
                       initiallyExpanded: true,
                       collapsedIconColor: Colors.black45,
                       iconColor: Colors.black45,
@@ -97,7 +98,7 @@ class _InfoPageState extends State<InfoPage> {
                           ),
                         ),
                       ]),
-                  ExpansionTile(
+                      CustomExpansionTile.ExpansionTile(
                       initiallyExpanded: true,
                       collapsedIconColor: Colors.black45,
                       iconColor: Colors.black45,

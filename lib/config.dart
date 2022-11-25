@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:glutassistantn/widget/lists.dart';
 
 import 'data.dart';
 
@@ -7,8 +6,6 @@ class Global {
   static String appTitle = "桂工助手N";
   static bool login = false;
   static int pageIndex = 0;
-  static final GlobalKey<TodayCourseListState> todayCourseListKey = GlobalKey();
-  static final GlobalKey<TomorrowCourseListState> tomorrowCourseListKey = GlobalKey();
   static PageController pageControl = PageController(
     initialPage: 0,
     keepPage: true,
@@ -50,41 +47,17 @@ Uri httpUri(
 
 LinearGradient readGradient() {
   if (writeData["color"] == "red") {
-    return LinearGradient(
-      colors: [Color(0xFFfbab66), Color(0xFFf7418c)],
-      begin: Alignment.centerLeft,
-      end: Alignment.topRight,
-    );
+    return setCardTemplate([Color(0xFFfbab66), Color(0xFFf7418c)]);
   } else if (writeData["color"] == "pink") {
-    return LinearGradient(
-      colors: [Color(0xffeca299), Color(0xfffc6caa)],
-      begin: Alignment.centerLeft,
-      end: Alignment.topRight,
-    );
+    return setCardTemplate([Color(0xffeca299), Color(0xfffc6caa)]);
   } else if (writeData["color"] == "blue") {
-    return LinearGradient(
-      colors: [Color(0xff66cefb), Color(0xff4175f7)],
-      begin: Alignment.centerLeft,
-      end: Alignment.topRight,
-    );
+    return setCardTemplate([Color(0xff66cefb), Color(0xff4175f7)]);
   } else if (writeData["color"] == "yellow") {
-    return LinearGradient(
-      colors: [Color(0xfffbef66), Color(0xfff7a841)],
-      begin: Alignment.centerLeft,
-      end: Alignment.topRight,
-    );
+    return setCardTemplate([Color(0xfffbef66), Color(0xfff7a841)]);
   } else if (writeData["color"] == "cyan") {
-    return LinearGradient(
-      colors: [Color(0xff66fbce), Color(0xff16bbb4)],
-      begin: Alignment.centerLeft,
-      end: Alignment.topRight,
-    );
+    return setCardTemplate([Color(0xff66fbce), Color(0xff16bbb4)]);
   } else {
-    return LinearGradient(
-      colors: [Color(0xff66cefb), Color(0xff4175f7)],
-      begin: Alignment.centerLeft,
-      end: Alignment.topRight,
-    );
+    return setCardTemplate([Color(0xff66cefb), Color(0xff4175f7)]);
   }
 }
 
@@ -106,17 +79,17 @@ readColor() {
 
 LinearGradient readCardGradient() {
   if (writeData["color"] == "red") {
-    return setTemplate([Color(0xFFfbab66), Color(0xFFf7418c)]);
+    return setCardTemplate([Color(0xFFfbab66), Color(0xFFf7418c)]);
   } else if (writeData["color"] == "pink") {
-    return setTemplate([Color(0xffeca299), Color(0xfffc6caa)]);
+    return setCardTemplate([Color(0xffeca299), Color(0xfffc6caa)]);
   } else if (writeData["color"] == "blue") {
-    return setTemplate([Color(0xff66cefb), Color(0xff4175f7)]);
+    return setCardTemplate([Color(0xff66cefb), Color(0xff4175f7)]);
   } else if (writeData["color"] == "yellow") {
-    return setTemplate([Color(0xfffbef66), Color(0xfff7a841)]);
+    return setCardTemplate([Color(0xfffbef66), Color(0xfff7a841)]);
   } else if (writeData["color"] == "cyan") {
-    return setTemplate([Color(0xff66fbce), Color(0xff16bbb4)]);
+    return setCardTemplate([Color(0xff66fbce), Color(0xff16bbb4)]);
   } else {
-    return setTemplate([Color(0xff66cefb), Color(0xff4175f7)]);
+    return setCardTemplate([Color(0xff66cefb), Color(0xff4175f7)]);
   }
 }
 
@@ -150,10 +123,18 @@ Color readColorEnd() {
   }
 }
 
-LinearGradient setTemplate(List<Color> colors) {
+LinearGradient setCardTemplate(List<Color> colors) {
   return LinearGradient(
     colors: colors,
     begin: Alignment.topRight,
     end: Alignment.bottomCenter,
+  );
+}
+
+LinearGradient setTemplate(List<Color> colors) {
+  return LinearGradient(
+    colors: colors,
+    begin: Alignment.centerLeft,
+    end: Alignment.topRight,
   );
 }

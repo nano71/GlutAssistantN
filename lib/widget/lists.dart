@@ -125,28 +125,24 @@ class TodayCourseListState extends State<TodayCourseList> {
     super.dispose();
   }
 
-  bool timerS = false;
-  int sum = 0;
+  bool timerStart = false;
+  int thresholdCount = 0;
 
-  timerRe(int index) {
+  refreshTimer(int index) {
     // print("timerRe");
-    if (!timerS && index == 0) {
-      timerS = !timerS;
+    if (!timerStart && index == 0) {
+      timerStart = !timerStart;
       Future.delayed(
         Duration(seconds: 1),
         () {
+          timerStart = !timerStart;
           if (DateTime.now().second < 2) {
-            sum++;
-            if (writeData["threshold"] != "-1") if (sum > (int.parse(writeData["threshold"] ?? "") * 2)) exit(0);
+            thresholdCount++;
+            if (writeData["threshold"] != "-1") if (thresholdCount > (int.parse(writeData["threshold"] ?? "") * 2)) exit(0);
             print("$index : ${DateTime.now().second}");
-            setState(() {
-              timerS = !timerS;
-            });
           } else {
             // print("timerRe End ${DateTime.now().second}");
-
-            timerS = !timerS;
-            timerRe(0);
+            refreshTimer(0);
           }
         },
       );
@@ -157,7 +153,7 @@ class TodayCourseListState extends State<TodayCourseList> {
   Widget build(BuildContext context) {
     return SliverList(
       delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
-        timerRe(index);
+        refreshTimer(index);
         return TodayCourseListItem(index: index);
       }, childCount: _todaySchedule.length),
     );
@@ -627,22 +623,7 @@ class ClassroomListState extends State<ClassroomList> {
     super.dispose();
   }
 
-  List<Widget> header(List<bool> boolList) {
-    List<Widget> list = [];
-    for (int i = 0; i < boolList.length; i++) {
-      String text = (i + 1).toString();
-      list.add(Expanded(
-        child: Text(
-          text,
-          textAlign: TextAlign.center,
-          style: TextStyle(color: boolList[i] ? Colors.white : readColorBegin(), fontSize: 12),
-        ),
-      ));
-    }
-    return list;
-  }
-
-  String occupyMessage(List<bool> boolList) {
+  static String promptMessage(List<bool> boolList) {
     String message = "第";
     int j = 0;
     for (int i = 0; i < boolList.length; i++) {
@@ -672,103 +653,136 @@ class ClassroomListState extends State<ClassroomList> {
       Map item = _classroomList[index];
       // print(632);
       // print(item);
-      return Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(12.0)),
-          color: item["todayEmpty"] ? Colors.grey : randomColors2(),
-        ),
-        padding: EdgeInsets.fromLTRB(12, 12, 12, 12),
-        margin: EdgeInsets.fromLTRB(16, 0, 16, 16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      return ClassroomListItem(item);
+    }, childCount: _classroomList.length));
+  }
+}
+
+class ClassroomListItem extends StatelessWidget {
+  late final Map item;
+
+  ClassroomListItem([item]) {
+    this.item = item;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(12.0)),
+        color: item["todayEmpty"] ? Colors.grey : randomColors2(),
+      ),
+      padding: EdgeInsets.fromLTRB(12, 12, 12, 12),
+      margin: EdgeInsets.fromLTRB(16, 0, 16, 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              InkWell(
+                child: Row(
+                  children: [
+                    Text(
+                      item["classroom"],
+                      style: TextStyle(color: Colors.white, fontSize: 20),
+                    ),
+                    Icon(
+                      FlutterRemix.arrow_right_s_line,
+                      color: Colors.white,
+                      size: 18,
+                    ),
+                  ],
+                ),
+                onTap: () {
+                  ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                  ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(3, "敬请期待!"));
+                },
+              ),
+              Text(
+                item["type"],
+                style: TextStyle(color: Colors.white, fontSize: 12),
+              ),
+            ],
+          ),
+          SizedBox(
+            height: 4,
+          ),
+          Row(
+            children: [
+              Text(
+                "座位容量: " + item["seats"],
+                style: TextStyle(color: Colors.white),
+              ),
+              SizedBox(
+                width: 16,
+              ),
+              Text(
+                "考试容量: " + item["examSeats"],
+                style: TextStyle(color: Colors.white),
+              )
+            ],
+          ),
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(12.0)),
+              color: readColorBegin(),
+            ),
+            padding: EdgeInsets.fromLTRB(12, 12, 12, 12),
+            margin: EdgeInsets.fromLTRB(0, 16, 0, 0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                InkWell(
-                  child: Row(
-                    children: [
-                      Text(
-                        item["classroom"],
-                        style: TextStyle(color: Colors.white, fontSize: 20),
-                      ),
-                      Icon(
-                        FlutterRemix.arrow_right_s_line,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      item["todayEmpty"] ? "占用情况 - 全天为空" : "占用情况",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    InkWell(
+                      child: Icon(
+                        FlutterRemix.information_line,
                         color: Colors.white,
                         size: 18,
                       ),
-                    ],
-                  ),
-                  onTap: () => {ScaffoldMessenger.of(context).removeCurrentSnackBar(), ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(3, "敬请期待!"))},
-                ),
-                Text(
-                  item["type"],
-                  style: TextStyle(color: Colors.white, fontSize: 12),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 4,
-            ),
-            Row(
-              children: [
-                Text(
-                  "座位容量: " + item["seats"],
-                  style: TextStyle(color: Colors.white),
+                      onTap: () {
+                        ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, ClassroomListState.promptMessage(item["occupancyList"]), 4, 22));
+                      },
+                    )
+                  ],
                 ),
                 SizedBox(
-                  width: 16,
+                  height: 12,
                 ),
-                Text(
-                  "考试容量: " + item["examSeats"],
-                  style: TextStyle(color: Colors.white),
-                )
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: occupancyList(item["occupancyList"]),
+                ),
+                Row(),
               ],
             ),
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(12.0)),
-                color: readColorBegin(),
-              ),
-              padding: EdgeInsets.fromLTRB(12, 12, 12, 12),
-              margin: EdgeInsets.fromLTRB(0, 16, 0, 0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        item["todayEmpty"] ? "占用情况 - 全天为空" : "占用情况",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      InkWell(
-                        child: Icon(
-                          FlutterRemix.information_line,
-                          color: Colors.white,
-                          size: 16,
-                        ),
-                        onTap: () => {
-                          ScaffoldMessenger.of(context).removeCurrentSnackBar(),
-                          ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, occupyMessage(item["occupancyList"]), 4, 22))
-                        },
-                      )
-                    ],
-                  ),
-                  SizedBox(
-                    height: 12,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: header(item["occupancyList"]),
-                  ),
-                  Row(),
-                ],
-              ),
-            )
-          ],
-        ),
-      );
-    }, childCount: _classroomList.length));
+          )
+        ],
+      ),
+    );
+    throw UnimplementedError();
   }
+}
+
+List<Widget> occupancyList(List<bool> boolList) {
+  List<Widget> list = [];
+  for (int i = 0; i < boolList.length; i++) {
+    String text = (i + 1).toString();
+    list.add(Expanded(
+      child: Text(
+        text,
+        textAlign: TextAlign.center,
+        style: TextStyle(color: boolList[i] ? Colors.white : readColorBegin(), fontSize: 12),
+      ),
+    ));
+  }
+  return list;
 }

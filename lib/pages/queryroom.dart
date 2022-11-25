@@ -17,6 +17,63 @@ class QueryRoomPage extends StatefulWidget {
 }
 
 class QueryRoomPageState extends State<QueryRoomPage> {
+  String message = "查询选择的教学楼全部教室";
+  Color messageColor = Colors.grey;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Container(
+        color: Colors.white,
+        margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
+        child: CustomScrollView(
+          physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+          slivers: [
+            publicTopBar(
+              "教室查询",
+              InkWell(
+                child: Icon(FlutterRemix.close_line, size: 24),
+                onTap: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ),
+            SliverToBoxAdapter(
+              child: Container(
+                margin: EdgeInsets.fromLTRB(16, 0, 16, 0),
+                child: Text(
+                  message,
+                  style: TextStyle(color: messageColor),
+                ),
+              ),
+            ),
+            QueryConditionCard(),
+            ClassroomList(),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class QueryConditionCard extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    // TODO: implement createState
+    return QueryConditionCardState();
+    throw UnimplementedError();
+  }
+}
+
+class QueryConditionCardState extends State<QueryConditionCard> {
   Map<String, Map> query = {
     "buildings": {"-1": "请选择"},
     "whichWeeks": {"-1": "请选择"},
@@ -26,8 +83,6 @@ class QueryRoomPageState extends State<QueryRoomPage> {
   String classroomSelect = "-1";
   String whichWeekSelect = "-1";
   String weekSelect = "-1";
-  String message = "查询选择的教学楼全部教室";
-  Color messageColor = Colors.grey;
 
   @override
   void initState() {
@@ -61,13 +116,24 @@ class QueryRoomPageState extends State<QueryRoomPage> {
     });
   }
 
-  List<DropdownMenuItem<Object>> dropdownMenuItemList(String queryKey) {
+  List<DropdownMenuItem<Object>> dropdownMenuItemList(String queryKey, [bool isBuilder = false]) {
     List<DropdownMenuItem<Object>> list = [];
     query[queryKey]!.forEach((key, value) {
-      list.add(DropdownMenuItem(child: Text(value), value: key));
+      list.add(DropdownMenuItem(
+        child: Text(
+          value,
+          style: TextStyle(fontSize: 14, color: isBuilder ? Colors.black.withOpacity(0.6) : null),
+        ),
+        value: key,
+      ));
     });
     if (list == []) {
-      list.add(DropdownMenuItem(child: Text("-"), value: "请选择"));
+      list.add(DropdownMenuItem(
+          child: Text(
+            "-",
+            style: isBuilder ? TextStyle(fontSize: 14, color: Colors.black.withOpacity(0.6)) : null,
+          ),
+          value: "请选择"));
     }
     return list;
   }
@@ -94,7 +160,11 @@ class QueryRoomPageState extends State<QueryRoomPage> {
         false,
         "需要验证",
         context,
-        () => {ScaffoldMessenger.of(context).removeCurrentSnackBar(), getEmptyClassroom().then((value) => process(value)), Navigator.pop(context)},
+        () {
+          ScaffoldMessenger.of(context).removeCurrentSnackBar();
+          getEmptyClassroom().then((value) => process(value));
+          Navigator.pop(context);
+        },
         hideSnackBarSeconds: Global.timeOutSec,
       ));
     } else {
@@ -117,215 +187,147 @@ class QueryRoomPageState extends State<QueryRoomPage> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Container(
-        color: Colors.white,
-        margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
-        child: CustomScrollView(
-          physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
-          slivers: [
-            publicTopBar(
-              "教室查询",
-              InkWell(
-                child: Icon(FlutterRemix.close_line, size: 24),
-                onTap: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ),
-            SliverToBoxAdapter(
-              child: Container(
-                margin: EdgeInsets.fromLTRB(16, 0, 16, 0),
-                child: Text(
-                  message,
-                  style: TextStyle(color: messageColor),
+    return SliverToBoxAdapter(
+      child: Container(
+        decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(12.0)), color: readColorBegin(), gradient: readGradient()),
+        padding: EdgeInsets.fromLTRB(16, 6, 16, 16),
+        margin: EdgeInsets.fromLTRB(16, 16, 16, 16),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "教学楼",
+                  style: TextStyle(fontSize: 16),
                 ),
-              ),
+                SizedBox(
+                  height: 40,
+                  child: DropdownButton(
+                    enableFeedback: true,
+                    icon: Icon(FlutterRemix.arrow_right_s_line),
+                    iconSize: 16,
+                    underline: Container(),
+                    alignment: Alignment.centerRight,
+                    elevation: 0,
+                    hint: Text(
+                      query["buildings"]?[buildingSelect],
+                      style: TextStyle(fontSize: 14),
+                    ),
+                    items: dropdownMenuItemList("buildings"),
+                    onTap: () {
+                      if (query["buildings"]!.length == 1) getEmptyClassroom().then((value) => process(value));
+                    },
+                    onChanged: (value) {
+                      setState(() {
+                        if (value != "-1") query["buildings"]!.remove("-1");
+                        buildingSelect = value.toString();
+                      });
+                      // getEmptyClassroom(building: value.toString())
+                      //     .then((value) => process(value));
+                    },
+                  ),
+                )
+              ],
             ),
-            SliverToBoxAdapter(
-              child: Container(
-                decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(12.0)), color: readColorBegin(), gradient: readGradient()),
-                padding: EdgeInsets.fromLTRB(16, 6, 16, 16),
-                margin: EdgeInsets.fromLTRB(16, 16, 16, 16),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        SizedBox(
-                          width: 60,
-                          child: Text("教学楼"),
-                        ),
-                        SizedBox(
-                          height: 40,
-                          child: DropdownButton(
-                            icon: Icon(FlutterRemix.arrow_right_s_line),
-                            iconSize: 14,
-                            underline: Container(),
-                            alignment: Alignment.centerRight,
-                            elevation: 0,
-                            hint: Text(query["buildings"]?[buildingSelect], style: TextStyle(fontSize: 14)),
-                            items: dropdownMenuItemList("buildings"),
-                            onChanged: (value) {
-                              setState(() {
-                                buildingSelect = value.toString();
-                                if (value != "-1") query["buildings"]!.remove("-1");
-                                // getEmptyClassroom(building: value.toString())
-                                //     .then((value) => process(value));
-                              });
-                            },
-                          ),
-                        )
-                      ],
-                    ),
-                    // Row(
-                    //   children: [
-                    //     SizedBox(
-                    //       width: 60,
-                    //       child: Text("教    室:"),
-                    //     ),
-                    //     SizedBox(
-                    //       height: 40,
-                    //       child: Row(
-                    //         children: [
-                    //           DropdownButton(
-                    //             elevation: 0,
-                    //             hint: Text(classroomSelect, style: TextStyle(fontSize: 14)),
-                    //             items: dropdownMenuItemList("classrooms"),
-                    //             onChanged: (value) {
-                    //               setState(() {
-                    //                 classroomSelect = query["classrooms"]?[value];
-                    //               });
-                    //             },
-                    //           ),
-                    //         ],
-                    //       ),
-                    //     ),
-                    //   ],
-                    // ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        SizedBox(
-                          width: 60,
-                          child: Text("时    间"),
-                        ),
-                        SizedBox(
-                          height: 40,
-                          child: DropdownButton(
-                            icon: Icon(FlutterRemix.arrow_right_s_line),
-                            iconSize: 14,
-                            underline: Container(),
-                            alignment: Alignment.centerRight,
-                            elevation: 0,
-                            hint: Text(query["whichWeeks"]?[whichWeekSelect], style: TextStyle(fontSize: 14)),
-                            items: dropdownMenuItemList("whichWeeks"),
-                            onChanged: (value) {
-                              print(value);
-                              setState(() {
-                                whichWeekSelect = value.toString();
-                              });
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        SizedBox(
-                          width: 60,
-                          child: Text("星    期"),
-                        ),
-                        SizedBox(
-                          height: 40,
-                          child: DropdownButton(
-                            icon: Icon(FlutterRemix.arrow_right_s_line),
-                            iconSize: 14,
-                            underline: Container(),
-                            alignment: Alignment.centerRight,
-                            elevation: 0,
-                            hint: Text(query["weeks"]?[weekSelect], style: TextStyle(fontSize: 14)),
-                            items: dropdownMenuItemList("weeks"),
-                            onChanged: (value) {
-                              print(value);
-                              setState(() {
-                                weekSelect = value.toString();
-                              });
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 8,
-                    ),
-                    SizedBox(
-                      width: double.infinity,
-                      height: 50,
-                      child: Container(
-                        margin: EdgeInsets.fromLTRB(0, 8, 0, 0),
-                        child: TextButton(
-                            autofocus: true,
-                            style: ButtonStyle(
-                              //设置水波纹颜色
-                              overlayColor: MaterialStateProperty.all(Colors.yellow),
-                              backgroundColor: MaterialStateProperty.resolveWith((states) {
-                                return readColor();
-                              }),
-                              shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
-                            ),
-                            child: Text(
-                              "即刻查询",
-                              style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 14),
-                            ),
-                            onPressed: () {
-                              _getEmptyClassroom();
-                            }),
-                      ),
-                    )
-                  ],
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "时    间",
+                  style: TextStyle(fontSize: 16),
                 ),
-              ),
+                SizedBox(
+                  height: 40,
+                  child: DropdownButton(
+                    enableFeedback: true,
+                    value: whichWeekSelect,
+                    // style: TextStyle(fontSize: 14, color: Colors.black.withOpacity(0.6)),
+                    selectedItemBuilder: (context) {
+                      return dropdownMenuItemList("whichWeeks", true);
+                    },
+                    icon: Icon(FlutterRemix.arrow_right_s_line),
+                    iconSize: 16,
+                    underline: Container(),
+                    alignment: Alignment.centerRight,
+                    elevation: 0,
+                    hint: Text(query["whichWeeks"]?[whichWeekSelect], style: TextStyle(fontSize: 14)),
+                    items: dropdownMenuItemList("whichWeeks"),
+                    onChanged: (value) {
+                      print(value);
+                      setState(() {
+                        whichWeekSelect = value.toString();
+                      });
+                    },
+                  ),
+                ),
+              ],
             ),
-            ClassroomList(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "星    期",
+                  style: TextStyle(fontSize: 16),
+                ),
+                SizedBox(
+                  height: 40,
+                  child: DropdownButton(
+                    value: weekSelect,
+                    enableFeedback: true,
+                    selectedItemBuilder: (context) {
+                      return dropdownMenuItemList("weeks", true);
+                    },
+                    icon: Icon(FlutterRemix.arrow_right_s_line),
+                    iconSize: 16,
+                    underline: Container(),
+                    alignment: Alignment.centerRight,
+                    elevation: 0,
+                    // hint: Text(query["weeks"]?[weekSelect], style: TextStyle(fontSize: 14)),
+                    items: dropdownMenuItemList("weeks"),
+                    onChanged: (value) {
+                      print(value);
+                      setState(() {
+                        weekSelect = value.toString();
+                      });
+                    },
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 8,
+            ),
+            SizedBox(
+              width: double.infinity,
+              height: 50,
+              child: Container(
+                margin: EdgeInsets.fromLTRB(0, 8, 0, 0),
+                child: TextButton(
+                    autofocus: true,
+                    style: ButtonStyle(
+                      //设置水波纹颜色
+                      overlayColor: MaterialStateProperty.all(Colors.yellow),
+                      backgroundColor: MaterialStateProperty.resolveWith((states) {
+                        return readColor();
+                      }),
+                      shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+                    ),
+                    child: Text(
+                      "即刻查询",
+                      style: TextStyle(fontWeight: FontWeight.w500, color: Colors.white, fontSize: 14),
+                    ),
+                    onPressed: () {
+                      _getEmptyClassroom();
+                    }),
+              ),
+            )
           ],
         ),
       ),
     );
+    // TODO: implement build
+    throw UnimplementedError();
   }
-}
-
-// class RoomList extends StatefulWidget {
-//   RoomListState createState() => RoomListState();
-// }
-//
-// class RoomListState extends State<RoomList> {
-//   @override
-//   Widget build(BuildContext context) {
-//     // TODO: implement build
-//       throw UnimplementedError();
-//   }
-// }
-
-List<DropdownMenuItem<Object>> weekList() {
-  List<DropdownMenuItem<Object>> list = [];
-  int i = 1;
-
-  while (i < 8) {
-    list.add(DropdownMenuItem(child: Text("周" + weekList4CN[i - 1]), value: i));
-  }
-  return list;
-}
-
-List<DropdownMenuItem<Object>> weeksList() {
-  List<DropdownMenuItem<Object>> list = [];
-  int i = 1;
-  while (i < 20) {
-    list.add(DropdownMenuItem(child: Text("第$i周"), value: i));
-  }
-  return list;
 }

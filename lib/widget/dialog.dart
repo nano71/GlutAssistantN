@@ -71,7 +71,7 @@ codeCheckDialog(BuildContext context, Function callback) async {
         builder: (context, setState) {
           return SimpleDialog(
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12.0),
+              borderRadius: BorderRadius.circular(16.0),
             ),
             title: Text('提示'),
             children: <Widget>[
@@ -160,7 +160,7 @@ scheduleDialogItem(title, time, teacher, position) {
     decoration: BoxDecoration(
       color: randomColors(),
       borderRadius: BorderRadius.all(
-        Radius.circular(8.0),
+        Radius.circular(12.0),
       ),
     ),
     height: 160,
@@ -231,7 +231,7 @@ scheduleDialog(BuildContext context, String week, String weekDay, String index) 
       });
       return SimpleDialog(
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12.0),
+          borderRadius: BorderRadius.circular(16.0),
         ),
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -274,7 +274,7 @@ careerDialog(context, index, type, year) {
       return NoRippleOverScroll(
           child: SimpleDialog(
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12.0),
+          borderRadius: BorderRadius.circular(16.0),
         ),
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -327,7 +327,7 @@ careerDialogItem(element) {
     decoration: BoxDecoration(
       color: randomColors(),
       borderRadius: BorderRadius.all(
-        Radius.circular(8.0),
+        Radius.circular(12.0),
       ),
     ),
     height: 150,

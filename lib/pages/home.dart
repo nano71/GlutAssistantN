@@ -255,7 +255,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
         controller: _scrollController,
         physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
         slivers: [
-          HomeTopBar(),
+          homeTopBar(context),
           SliverToBoxAdapter(
               child: Container(
             width: double.infinity,
@@ -416,17 +416,13 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
               ],
             ),
           )),
-          TodayCourseList(
-            key: Global.todayCourseListKey,
-          ),
+          TodayCourseList(),
           SliverToBoxAdapter(
               child: Container(
             padding: EdgeInsets.fromLTRB(16, 16, 16, 16),
             child: Align(alignment: Alignment.centerLeft, child: Text(tomorrowScheduleTitle, style: _tomorrowAndTodayTextStyle())),
           )),
-          TomorrowCourseList(
-            key: Global.tomorrowCourseListKey,
-          ),
+          TomorrowCourseList(),
           LoginCheck(),
         ],
       ),

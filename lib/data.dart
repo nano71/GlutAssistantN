@@ -46,7 +46,7 @@ double gpa = 0.0;
 double avg = 0.0;
 double weight = 0.0;
 Map schedule = {};
-Map<String, String> writeData = {
+final Map<String, String> writeData = {
   "time": "",
   "week": "1",
   "weekBk": "",
@@ -88,7 +88,7 @@ String todayScheduleTitle = "";
 String tomorrowScheduleTitle = "";
 List startTimeListBk = [];
 List endTimeListBk = [];
-List weekList4CN = ["一", "二", "三", "四", "五", "六", "日"];
+final List weekList4CN = const ["一", "二", "三", "四", "五", "六", "日"];
 
 List startTimeList = [
   [8, 40],
@@ -116,7 +116,7 @@ List endTimeList = [
   [20, 55],
   [21, 40]
 ];
-final List startTimeListRe = [
+final List startTimeListRestore = const [
   [8, 40],
   [9, 25],
   [10, 25],
@@ -129,7 +129,7 @@ final List startTimeListRe = [
   [20, 15],
   [21, 00]
 ];
-final List endTimeListRe = [
+final List endTimeListRestore = const [
   [9, 20],
   [10, 05],
   [11, 05],
@@ -142,7 +142,7 @@ final List endTimeListRe = [
   [20, 55],
   [21, 40]
 ];
-List colorList = [
+final List colorList = const [
   Colors.red,
   Colors.amber,
   Colors.blue,
@@ -158,7 +158,7 @@ List colorList = [
   Colors.cyan
 ];
 
-List colorList2 = [
+final List colorList2 = const [
   Colors.red,
   Colors.amber,
   Colors.blue,
