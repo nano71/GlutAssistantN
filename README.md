@@ -14,7 +14,7 @@
 
 #### 应用图标:
 
-<img src="https://github.com/nano71/GlutAssistantN/images/ic_launcher-playstore.png" width="72" /><img src="https://github.com/nano71/Images/blob/master/gan/ic_launcher-playstore.png" width="72" /><img src="https://github.com/nano71/Images/blob/master/gan/logo2-01-01-01-01-01-01-01-01.png" width="72" /><img src="https://github.com/nano71/Images/blob/master/gan/G1.png" width="72" /><img src="https://github.com/nano71/Images/blob/master/gan/G2.png" width="72" /><img src="https://github.com/nano71/Images/blob/master/gan/G3.png" width="72" />
+<img src="https://github.com/nano71/GlutAssistantN/blob/master/images/ic_launcher-playstore.png" width="72" /><img src="https://github.com/nano71/Images/blob/master/gan/ic_launcher-playstore.png" width="72" /><img src="https://github.com/nano71/Images/blob/master/gan/logo2-01-01-01-01-01-01-01-01.png" width="72" /><img src="https://github.com/nano71/Images/blob/master/gan/G1.png" width="72" /><img src="https://github.com/nano71/Images/blob/master/gan/G2.png" width="72" /><img src="https://github.com/nano71/Images/blob/master/gan/G3.png" width="72" />
 
 #### 应用截图: (特别感谢格格)
 
