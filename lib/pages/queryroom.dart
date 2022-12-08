@@ -96,10 +96,12 @@ class QueryConditionCardState extends State<QueryConditionCard> {
   void initWeek() {
     setState(() {
       for (int i = 0; i < 7; i++) {
-        String value = i.toString();
+        String value = (i + 1).toString();
         query["weeks"]![value] = "周" + weekList4CN[i];
       }
       weekSelect = writeData["weekDay"] ?? "";
+      print('weekSelect');
+      print(weekSelect);
       query["weeks"]!.remove("-1");
     });
     print(query["weeks"]);
@@ -178,7 +180,9 @@ class QueryConditionCardState extends State<QueryConditionCard> {
     if (buildingSelect != "-1") {
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "查询中...", 10));
-      getEmptyClassroom(week: weekSelect, whichWeek: whichWeekSelect, building: buildingSelect).then((value) => process(value));
+      getEmptyClassroom(
+              week: weekSelect, whichWeek: whichWeekSelect, building: buildingSelect)
+          .then((value) => process(value));
     } else {
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, "请选择教学楼", 4));
@@ -189,7 +193,10 @@ class QueryConditionCardState extends State<QueryConditionCard> {
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
       child: Container(
-        decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(12.0)), color: readColorBegin(), gradient: readGradient()),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(12.0)),
+            color: readColorBegin(),
+            gradient: readGradient()),
         padding: EdgeInsets.fromLTRB(16, 6, 16, 16),
         margin: EdgeInsets.fromLTRB(16, 16, 16, 16),
         child: Column(
@@ -217,7 +224,8 @@ class QueryConditionCardState extends State<QueryConditionCard> {
                     ),
                     items: dropdownMenuItemList("buildings"),
                     onTap: () {
-                      if (query["buildings"]!.length == 1) getEmptyClassroom().then((value) => process(value));
+                      if (query["buildings"]!.length == 1)
+                        getEmptyClassroom().then((value) => process(value));
                     },
                     onChanged: (value) {
                       setState(() {
@@ -252,7 +260,8 @@ class QueryConditionCardState extends State<QueryConditionCard> {
                     underline: Container(),
                     alignment: Alignment.centerRight,
                     elevation: 0,
-                    hint: Text(query["whichWeeks"]?[whichWeekSelect], style: TextStyle(fontSize: 14)),
+                    hint:
+                        Text(query["whichWeeks"]?[whichWeekSelect], style: TextStyle(fontSize: 14)),
                     items: dropdownMenuItemList("whichWeeks"),
                     onChanged: (value) {
                       print(value);
@@ -312,11 +321,13 @@ class QueryConditionCardState extends State<QueryConditionCard> {
                       backgroundColor: MaterialStateProperty.resolveWith((states) {
                         return readColor();
                       }),
-                      shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+                      shape: MaterialStateProperty.all(
+                          RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
                     ),
                     child: Text(
                       "即刻查询",
-                      style: TextStyle(fontWeight: FontWeight.w500, color: Colors.white, fontSize: 14),
+                      style:
+                          TextStyle(fontWeight: FontWeight.w500, color: Colors.white, fontSize: 14),
                     ),
                     onPressed: () {
                       _getEmptyClassroom();
