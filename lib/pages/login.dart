@@ -269,6 +269,7 @@ class LoginPageState extends State<LoginPage> {
                               onTap: () {
                                 _tap();
                               },
+                              keyboardType: TextInputType.number,
                               cursorColor: readColor(),
                               focusNode: checkCodeFocusNode,
                               controller: checkCodeController,

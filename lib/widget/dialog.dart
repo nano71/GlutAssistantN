@@ -91,6 +91,7 @@ codeCheckDialog(BuildContext context, Function callback) async {
                     Expanded(
                       child: TextField(
                         autofocus: true,
+                        keyboardType: TextInputType.number,
                         controller: textFieldController,
                         decoration: InputDecoration(
                           icon: Icon(
