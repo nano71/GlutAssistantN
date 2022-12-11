@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_remix/flutter_remix.dart';
 import 'package:glutassistantn/common/get.dart';
 import 'package:glutassistantn/common/io.dart';
+import 'package:glutassistantn/config.dart';
 import 'package:glutassistantn/data.dart';
 import 'package:glutassistantn/widget/bars.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -126,12 +127,16 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
                       ? Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            mineItem4(FlutterRemix.lightbulb_flash_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "有新版本可以更新!", Colors.red),
+                            mineItem4(FlutterRemix.lightbulb_flash_line,
+                                EdgeInsets.fromLTRB(16, 14, 0, 14), "有新版本可以更新!", Colors.red),
                             Container(
                               width: double.infinity,
                               margin: EdgeInsets.fromLTRB(0, 0, 0, 7),
                               child: Text(
-                                "版本号:" + packageInfo["version"] + "  >  " + (writeData["newVersion"] ?? ""),
+                                "版本号:" +
+                                    packageInfo["version"] +
+                                    "  >  " +
+                                    (writeData["newVersion"] ?? ""),
                                 style: TextStyle(color: Colors.black54),
                               ),
                             ),
@@ -147,18 +152,11 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
                                 style: TextStyle(color: Colors.black),
                               ),
                             ),
-                            InkWell(
-                              onTap: () {
-                                launch("https://www.coolapk.com/apk/289253");
-                              },
-                              child: mineItem(FlutterRemix.store_2_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "酷安", Colors.green),
-                            ),
-                            InkWell(
-                              onTap: () {
-                                launch(writeData["githubDownload"] ?? "");
-                              },
-                              child: mineItem(FlutterRemix.github_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "Github", Colors.blueGrey),
-                            ),
+                            customInkWell("https://nano71.com/gan/GlutAssistantN.apk",
+                                FlutterRemix.download_2_line, "直接下载", readColor()),
+                            coolapk(),
+                            customInkWell(writeData["githubDownload"] ?? "",
+                                FlutterRemix.github_line, "Github", Colors.blueGrey)
                           ],
                         )
                       : Container(),
@@ -166,7 +164,8 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
                       ? Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            mineItem4(FlutterRemix.lightbulb_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "当前版本变更", Colors.blue),
+                            mineItem4(FlutterRemix.lightbulb_line,
+                                EdgeInsets.fromLTRB(16, 14, 0, 14), "当前版本变更", Colors.blue),
                             Container(
                               width: double.infinity,
                               margin: EdgeInsets.fromLTRB(0, 0, 0, 7),
@@ -187,18 +186,9 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
                                 style: TextStyle(color: Colors.black),
                               ),
                             ),
-                            InkWell(
-                              onTap: () {
-                                launch("https://www.coolapk.com/apk/289253");
-                              },
-                              child: mineItem(FlutterRemix.store_2_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "酷安", Colors.green),
-                            ),
-                            InkWell(
-                              onTap: () {
-                                launch("https://github.com/nano71/GlutAssistantN");
-                              },
-                              child: mineItem(FlutterRemix.github_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "Github", Colors.blueGrey),
-                            ),
+                            coolapk(),
+                            customInkWell("https://github.com/nano71/GlutAssistantN",
+                                FlutterRemix.github_line, "Github", Colors.blueGrey),
                           ],
                         )
                       : Container(),
@@ -213,18 +203,12 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
                                 style: TextStyle(color: Colors.black),
                               ),
                             ),
-                            InkWell(
-                              onTap: () {
-                                launch("https://www.coolapk.com/apk/289253");
-                              },
-                              child: mineItem(FlutterRemix.store_2_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "酷安", Colors.green),
-                            ),
-                            InkWell(
-                              onTap: () {
-                                launch("https://github.com/nano71/GlutAssistantN/releases/latest");
-                              },
-                              child: mineItem(FlutterRemix.github_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "Github", Colors.blueGrey),
-                            ),
+                            customInkWell(
+                                "https://github.com/nano71/GlutAssistantN/releases/latest",
+                                FlutterRemix.github_line,
+                                "Github",
+                                Colors.blueGrey),
+                            coolapk(),
                           ],
                         )
                       : Container()
@@ -261,4 +245,19 @@ void checkNewVersion([bool skipShowSnackBar = true, BuildContext? context]) {
     if (!skipShowSnackBar) ScaffoldMessenger.of(context!).showSnackBar(jwSnackBar(1, message, 5));
   }
   print('checkNewVersion end');
+}
+
+InkWell coolapk() {
+  return customInkWell(
+      "https://www.coolapk.com/apk/289253", FlutterRemix.store_2_line, "酷安", Colors.green);
+}
+
+InkWell customInkWell(String url, IconData icon, String title, Color color) {
+  final EdgeInsets padding = EdgeInsets.fromLTRB(16, 14, 0, 14);
+  return InkWell(
+    onTap: () {
+      launch(url);
+    },
+    child: mineItem(icon, padding, title, color),
+  );
 }
