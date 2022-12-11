@@ -214,9 +214,11 @@ Future<String> getSchedule() async {
     }
     _next() async {
       print("获取课表变更(调课/停课/补课)");
-      String _id = document.querySelector(".button[value='个人课表']")!.attributes["onclick"] ??
-          "".substring(61).split("&year")[0];
-
+      String _id = document
+          .querySelector(".button[value='个人课表']")!
+          .attributes["onclick"]!
+          .substring(61)
+          .split("&year")[0];
       print(_id);
       Uri _url = Uri.http(Global.getScheduleNextUrl[0], Global.getScheduleNextUrl[1], {
         "id": _id,
