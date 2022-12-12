@@ -3,16 +3,20 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_remix/flutter_remix.dart';
 import 'package:glutassistantn/common/get.dart';
 import 'package:glutassistantn/common/init.dart';
 import 'package:glutassistantn/pages/queryexam.dart';
 import 'package:glutassistantn/pages/queryscore.dart';
+import 'package:glutassistantn/pages/update.dart';
 import 'package:glutassistantn/widget/bars.dart';
 import 'package:glutassistantn/widget/cards.dart';
+import 'package:glutassistantn/widget/dialog.dart';
 import 'package:glutassistantn/widget/icons.dart';
 import 'package:glutassistantn/widget/lists.dart';
 
 import '../common/io.dart';
+import '../common/style.dart';
 import '../config.dart';
 import '../data.dart';
 import 'init.dart';
@@ -50,7 +54,6 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-
     _animationControllerForHomeCards1 = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 150),
@@ -75,6 +78,14 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
     _animationForHomeCards3 = homeCardsColorTween.animate(_animationControllerForHomeCards3);
 
     _scrollController.addListener(_scrollControllerListener);
+  }
+
+  void checkImportantUpdate() {
+    print("checkImportantUpdate");
+    canCheckImportantUpdate = false;
+    if (writeData["newBody"]?.contains("重要更新") ?? false) {
+      importantUpdateDialog(context);
+    }
   }
 
   void _scrollControllerListener() {
@@ -232,6 +243,11 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     Future.delayed(Duration(seconds: 0), () {
+      if (canCheckImportantUpdate) {
+        Future.delayed(Duration(seconds: 1), () {
+          checkImportantUpdate();
+        });
+      }
       if (DateTime.now().minute == 59 && DateTime.now().hour == 23) {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, "明天再来!", 3));

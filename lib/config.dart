@@ -16,6 +16,8 @@ class Global {
   static double listLeftIconSize = 18;
   static Map cookie = {};
   static String jwUrl = "jw.glutnn.cn";
+  static String authorUrl = "nano71.com";
+  static String controlUrl = "/gan/control.json";
   static String updateApiUrl = "api.github.com";
   static Uri getCodeUrl = httpUri("/academic/getCaptcha.do");
   static Uri loginUrl = httpUri("/academic/j_acegi_security_check");
