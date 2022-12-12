@@ -46,7 +46,7 @@ class InitState extends State<Init> {
       packageInfo["version"] = info.version;
       // packageInfo["version"] = "1.3.220801";
     });
-
+    getPermissions();
     await readConfig();
     await readCookie();
     await readSchedule();
