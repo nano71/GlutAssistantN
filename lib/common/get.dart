@@ -556,6 +556,7 @@ Future getUpdate() async {
     print("getUpdate End");
     return ["频繁的请求!"];
   }
+  print(jsonDecode(response.body));
   List list = jsonDecode(response.body)["name"].split("_");
   list.add(jsonDecode(response.body)["body"]);
   list.add(jsonDecode(response.body)["assets"][0]["browser_download_url"].toString().trim());
@@ -566,7 +567,7 @@ Future getUpdate() async {
 
 Future getUpdateForEveryday() async {
   print("getUpdateForEveryday");
-  if ("${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}" != writeData["newTime"]) {
+  if (true || "${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}" != writeData["newTime"]) {
     Response response = await get(Global.getUpdateUrl);
     if (response.body.toString().contains('"message":"API rate limit exceeded for')) {
     } else {
@@ -577,7 +578,12 @@ Future getUpdateForEveryday() async {
       writeData["newTime"] = "${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}";
       writeConfig();
       checkNewVersion();
-      print("getUpdateForEveryday End");
+      if (hasNewVersion && canCheckImportantUpdate) {
+        Future.delayed(Duration(seconds: 1), () {
+          checkImportantUpdate();
+        });
+      }
+      return print("getUpdateForEveryday End");
     }
   }
   print("getUpdateForEveryday Skip");

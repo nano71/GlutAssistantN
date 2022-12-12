@@ -80,13 +80,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
     _scrollController.addListener(_scrollControllerListener);
   }
 
-  void checkImportantUpdate() {
-    print("checkImportantUpdate");
-    canCheckImportantUpdate = false;
-    if (writeData["newBody"]?.contains("重要更新") ?? false) {
-      importantUpdateDialog(context);
-    }
-  }
+
 
   void _scrollControllerListener() {
     if (_timeOutBool) {
@@ -242,12 +236,8 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    homeContext = context;
     Future.delayed(Duration(seconds: 0), () {
-      if (canCheckImportantUpdate) {
-        Future.delayed(Duration(seconds: 1), () {
-          checkImportantUpdate();
-        });
-      }
       if (DateTime.now().minute == 59 && DateTime.now().hour == 23) {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, "明天再来!", 3));

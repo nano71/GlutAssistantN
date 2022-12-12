@@ -42,7 +42,9 @@ class ReloadTodayListState {
   ReloadTodayListState();
 }
 
+late BuildContext homeContext;
 bool canCheckImportantUpdate = true;
+bool hasNewVersion = false;
 double gpa = 0.0;
 double avg = 0.0;
 double weight = 0.0;
@@ -69,7 +71,6 @@ final Map<String, String> writeData = {
   "githubDownload": ""
 };
 Map packageInfo = {};
-bool hasNewVersion = false;
 List todaySchedule = [];
 List tomorrowSchedule = [];
 List queryScore = [];
