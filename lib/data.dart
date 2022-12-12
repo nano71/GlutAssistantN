@@ -42,6 +42,7 @@ class ReloadTodayListState {
   ReloadTodayListState();
 }
 
+bool canCheckImportantUpdate = true;
 double gpa = 0.0;
 double avg = 0.0;
 double weight = 0.0;
@@ -183,25 +184,11 @@ String courseLongText2ShortName(String value) {
 }
 
 String levelToNumber(String value) {
-  return value
-      .replaceAll("优", "95")
-      .replaceAll("良", "85")
-      .replaceAll("中", "75")
-      .replaceAll("及格", "65")
-      .replaceAll("合格", "65")
-      .replaceAll("不及格", "40")
-      .replaceAll("不合格", "40");
+  return value.replaceAll("优", "95").replaceAll("良", "85").replaceAll("中", "75").replaceAll("及格", "65").replaceAll("合格", "65").replaceAll("不及格", "40").replaceAll("不合格", "40");
 }
 
 String weekDay2Number(String value) {
-  return value
-      .replaceAll("周一", "1")
-      .replaceAll("周二", "2")
-      .replaceAll("周三", "3")
-      .replaceAll("周四", "4")
-      .replaceAll("周五", "5")
-      .replaceAll("周六", "6")
-      .replaceAll("周日", "7");
+  return value.replaceAll("周一", "1").replaceAll("周二", "2").replaceAll("周三", "3").replaceAll("周四", "4").replaceAll("周五", "5").replaceAll("周六", "6").replaceAll("周日", "7");
 }
 
 int weekInt() {
