@@ -11,6 +11,7 @@ import 'package:glutassistantn/data.dart';
 import 'package:glutassistantn/widget/bars.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../widget/dialog.dart';
 import 'mine.dart';
 
 class UpdatePage extends StatefulWidget {
@@ -210,6 +211,15 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
         ],
       ),
     );
+  }
+}
+
+void checkImportantUpdate() {
+  print("checkImportantUpdate");
+  canCheckImportantUpdate = false;
+  if (writeData["newBody"]?.contains("重要更新") ?? false) {
+    eventBus.fire(SetPageIndex(index: Global.pageIndex));
+    importantUpdateDialog(homeContext);
   }
 }
 

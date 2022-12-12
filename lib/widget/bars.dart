@@ -157,6 +157,8 @@ class BottomNavBarState extends State<BottomNavBar> {
     });
   }
 
+
+
   @override
   void dispose() {
     super.dispose();
