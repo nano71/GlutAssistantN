@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_remix/flutter_remix.dart';
 import 'package:glutassistantn/config.dart';
-
+.dart';
 import '../data.dart';
 import 'bars.dart';
 
@@ -100,6 +100,8 @@ class TomorrowCourseList extends StatefulWidget {
 
 class TodayCourseListState extends State<TodayCourseList> {
   List _todaySchedule = todaySchedule;
+  bool isTimerInit = false;
+  int thresholdCount = 0;
   late StreamSubscription<ReloadTodayListState> eventBusListener;
 
   @override
@@ -113,7 +115,7 @@ class TodayCourseListState extends State<TodayCourseList> {
     // print(_todaySchedule[0]);
   }
 
-  reloadState() {
+  void reloadState() {
     setState(() {
       _todaySchedule = todaySchedule;
     });
@@ -125,26 +127,26 @@ class TodayCourseListState extends State<TodayCourseList> {
     super.dispose();
   }
 
-  bool timerStart = false;
-  int thresholdCount = 0;
+  //  刷新定时器
+  void refreshTimer(int index) {
+    void next() {
+      isTimerInit = false;
+      if (DateTime.now().second < 2) {
+        thresholdCount++;
+        if (isReleaseMode && writeData["threshold"] != "-1") if (thresholdCount > (int.parse(writeData["threshold"] ?? "") * 2)) exit(0);
+        print("$index : ${DateTime.now().second}");
+        setState(() {});
+      } else {
+        // print("timerRe End ${DateTime.now().second}");
+        refreshTimer(0);
+      }
+    }
 
-  refreshTimer(int index) {
-    // print("timerRe");
-    if (!timerStart && index == 0) {
-      timerStart = !timerStart;
+    if (!isTimerInit && index == 0) {
+      isTimerInit = true;
       Future.delayed(
         Duration(seconds: 1),
-        () {
-          timerStart = !timerStart;
-          if (DateTime.now().second < 2) {
-            thresholdCount++;
-            if (writeData["threshold"] != "-1") if (thresholdCount > (int.parse(writeData["threshold"] ?? "") * 2)) exit(0);
-            print("$index : ${DateTime.now().second}");
-          } else {
-            // print("timerRe End ${DateTime.now().second}");
-            refreshTimer(0);
-          }
-        },
+        () => next(),
       );
     }
   }
@@ -222,6 +224,18 @@ class TodayCourseListItemState extends State<TodayCourseListItem> {
     }
   }
 
+  List courseInfo() {
+    return todaySchedule[widget.index];
+  }
+
+  TextStyle smallTextStyle() {
+    return TextStyle(decoration: TextDecoration.none, fontSize: 12, color: _textColorsDown(widget.index));
+  }
+
+  TextStyle normTextStyle() {
+    return TextStyle(decoration: TextDecoration.none, color: _textColorsTop(widget.index));
+  }
+
   @override
   void dispose() {
     super.dispose();
@@ -250,17 +264,14 @@ class TodayCourseListItemState extends State<TodayCourseListItem> {
                 children: [
                   Row(
                     children: [
-                      Text(todaySchedule[widget.index][2] + " ", style: TextStyle(decoration: TextDecoration.none, color: _textColorsTop(widget.index))),
-                      Text(courseLongText2ShortName(todaySchedule[widget.index][0]),
-                          style: TextStyle(decoration: TextDecoration.none, color: _textColorsTop(widget.index))),
+                      Text((courseInfo()[2] + " ").replaceAll("未知 ", ""), style: normTextStyle()),
+                      Text(courseLongText2ShortName(courseInfo()[0]), style: normTextStyle()),
                     ],
                   ),
                   Row(
                     children: [
-                      Text('第${todaySchedule[widget.index][4]}节 | ',
-                          style: TextStyle(decoration: TextDecoration.none, fontSize: 12, color: _textColorsDown(widget.index))),
-                      Text(todaySchedule[widget.index][1],
-                          style: TextStyle(decoration: TextDecoration.none, fontSize: 12, color: _textColorsDown(widget.index))),
+                      Text('第${courseInfo()[4]}节 | ', style: smallTextStyle()),
+                      Text(courseInfo()[1], style: smallTextStyle()),
                     ],
                   ),
                 ],
