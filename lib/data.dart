@@ -45,6 +45,7 @@ class ReloadTodayListState {
 late BuildContext homeContext;
 bool canCheckImportantUpdate = true;
 bool hasNewVersion = false;
+final bool isReleaseMode = const bool.fromEnvironment("dart.vm.product");
 double gpa = 0.0;
 double avg = 0.0;
 double weight = 0.0;

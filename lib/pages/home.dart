@@ -3,20 +3,16 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_remix/flutter_remix.dart';
 import 'package:glutassistantn/common/get.dart';
 import 'package:glutassistantn/common/init.dart';
 import 'package:glutassistantn/pages/queryexam.dart';
 import 'package:glutassistantn/pages/queryscore.dart';
-import 'package:glutassistantn/pages/update.dart';
 import 'package:glutassistantn/widget/bars.dart';
 import 'package:glutassistantn/widget/cards.dart';
-import 'package:glutassistantn/widget/dialog.dart';
 import 'package:glutassistantn/widget/icons.dart';
 import 'package:glutassistantn/widget/lists.dart';
 
 import '../common/io.dart';
-import '../common/style.dart';
 import '../config.dart';
 import '../data.dart';
 import 'init.dart';

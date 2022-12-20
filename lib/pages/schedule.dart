@@ -290,7 +290,6 @@ List<Widget> _loopWeekDayColGrid(String week, String weekDay) {
     String studyArea = _schedule[i.toString()][2];
     String teacher = _schedule[i.toString()][1];
     bool courseNameNotNull() => courseName != "null";
-
     if (courseNameNotNull()) {
       bool courseNameIsPreviousCourseName() => courseName == courseLongText2ShortName(_schedule[(i - 1).toString()][0]);
       bool courseNameNotIsNextCourseName() => courseName != courseLongText2ShortName(_schedule[(i + 1).toString()][0]);
@@ -303,8 +302,7 @@ List<Widget> _loopWeekDayColGrid(String week, String weekDay) {
         double height = Global.schedulePageGridHeight * (i - s + 1);
         if (i == 11)
           list.add(Grid(week, weekDay, i, s, courseName, studyArea, teacher, randomColors(), height));
-        else if (studyAreaNotIsNextStudyArea() || courseNameNotIsNextCourseName())
-          list.add(Grid(week, weekDay, i, s, courseName, studyArea, teacher, randomColors(), height));
+        else if (studyAreaNotIsNextStudyArea() || courseNameNotIsNextCourseName()) list.add(Grid(week, weekDay, i, s, courseName, studyArea, teacher, randomColors(), height));
       } else
         s = i;
     } else

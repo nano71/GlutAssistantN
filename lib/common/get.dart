@@ -73,82 +73,115 @@ Future<String> getSchedule() async {
   if (html.contains(Global.scheduleErrorText)) {
     return "fail";
   } else {
-    var list = document.querySelectorAll(".infolist_common");
-    num listLength = document.querySelectorAll(".infolist_common").length - 23;
-    for (int i = 0; i < listLength; i++) {
-      for (var j = 0; j < list[i].querySelectorAll("table.none>tbody>tr").length; j++) {
-        //课节
-        String kj = list[i].querySelectorAll("table.none>tbody>tr")[j].querySelectorAll("td")[2].innerHtml.trim().replaceAll("第", "").replaceAll("节", "");
-        //周次
-        String zc = list[i].querySelectorAll("table.none>tbody>tr")[j].querySelectorAll("td")[0].innerHtml.trim().replaceAll("第", "").replaceAll("周", "");
+    List<Element> list = document.querySelectorAll(".infolist_common");
+    List<Element> infoList(int index) {
+      return list[index].querySelectorAll("a.infolist");
+    }
 
+    String course(int index) {
+      return innerHtmlTrim(infoList(index)[0]);
+    }
+
+    String teacher(int index) {
+      return infoList(index).length > 1 ? innerHtmlTrim(infoList(index)[1]) : "未知";
+    }
+
+    String innerHtmlTrimReplace(Element element) {
+      return innerHtmlTrim(element).replaceAll(RegExp(r'([第节周])'), "");
+    }
+
+    List<Element> tableRows(int index) {
+      return list[index].querySelectorAll("table.none>tbody>tr");
+    }
+
+    List<Element> tableCells(Element element) {
+      return element.querySelectorAll("td");
+    }
+
+    String? week(int i, int j) {
+      return _weekList[innerHtmlTrim(tableCells(tableRows(i)[j])[1])];
+    }
+
+    String remark(int i, int j) {
+      return tableRows(i)[j].text.trim().replaceAll(" ", ";");
+    }
+
+    int listLength = document.querySelectorAll(".infolist_common").length - 23;
+    for (int i = 0; i < listLength; i++) {
+      for (var j = 0; j < tableRows(i).length; j++) {
+        //课区间 interval
+        String lessonInterval = innerHtmlTrimReplace(tableCells(tableRows(i)[j])[2]);
+        //周次区间
+        String weekInterval = innerHtmlTrimReplace(tableCells(tableRows(i)[j])[0]);
         //课节
-        List kjList = kj.trim().split("-");
+        List<String> lessonList = lessonInterval.split("-");
         //周次 1-9周 = [1,9]
-        List<String> zcList = zc.trim().split("-");
-        String week = list[i].querySelectorAll("table.none>tbody>tr")[j].querySelectorAll("td")[1].innerHtml.replaceAll("第", "").replaceAll("周", "").trim();
-        String area = list[i].querySelectorAll("table.none>tbody>tr")[j].querySelectorAll("td")[3].innerHtml.trim();
+        List<String> weekList = [];
+        String weekCN = innerHtmlTrimReplace(tableCells(tableRows(i)[j])[1]);
+        print(121);
+        print(weekCN);
+        String courseVenue = teachLocation(innerHtmlTrim(tableCells(tableRows(i)[j])[3]));
+
+        List<String> initList(bool isEven) {
+          List<String> list = [];
+          for (int i = int.parse(weekList.first); i < int.parse(weekList.last); i++) {
+            if (isEven ? i.isEven : !i.isEven) if (list.indexOf(i.toString()) == -1) list.add(i.toString());
+          }
+          return list;
+        }
 
         //单周
-        if (zc.indexOf("单") != -1) {
-          zc = zc.replaceAll("单", "");
-          zcList = zc.trim().split("-");
-          print(int.parse(zcList.last));
-          List<String> _list = [];
-          for (int i = int.parse(zcList.first); i <= int.parse(zcList.last); i++) {
-            if (!i.isEven) if (_list.indexOf(i.toString()) == -1) _list.add(i.toString());
-          }
-          zcList = _list;
+        if (weekInterval.indexOf("单") != -1) {
+          weekInterval = weekInterval.replaceAll("单", "");
+          weekList = weekInterval.split("-");
+          weekList = initList(false);
           //双周
-        } else if (zc.indexOf("双") != -1) {
-          zc = zc.replaceAll("双", "");
-          zcList = zc.trim().split("-");
-          List<String> _list = [];
-          for (int i = int.parse(zcList.first); i < int.parse(zcList.last); i++) {
-            if (i.isEven) if (_list.indexOf(i.toString()) == -1) _list.add(i.toString());
-          }
-          zcList = _list;
+        } else if (weekInterval.indexOf("双") != -1) {
+          weekInterval = weekInterval.replaceAll("双", "");
+          weekList = weekInterval.split("-");
+          weekList = initList(true);
         }
-        if (kjList.length > 1 && week != "&nbsp;")
-          for (int k = int.parse(kjList[0]); k < int.parse(kjList[1]) + 1; k++) {
-            if (zcList.length > 2) {
-              print("zcList");
-              print(zcList);
-              zcList.forEach((element) {
-                _schedule[element.toString()]?[_weekList[list[i].querySelectorAll("table.none>tbody>tr")[j].querySelectorAll("td")[1].innerHtml.trim()]]?[k.toString()] = [
+
+        if (lessonList.length > 1 && weekCN != "&nbsp;")
+          for (int lesson = int.parse(lessonList[0]); lesson < int.parse(lessonList[1]) + 1; lesson++) {
+            if (weekList.length > 2) {
+              print("weekList");
+              print(weekList);
+              weekList.forEach((teachWeek) {
+                _schedule[teachWeek.toString()]?[week(i, j)]?[lesson.toString()] = [
                   //课程名
-                  list[i].querySelectorAll("a.infolist")[0].innerHtml.trim(),
+                  course(i),
                   //老师名字
-                  list[i].querySelectorAll("a.infolist").length > 1 ? list[i].querySelectorAll("a.infolist")[1].innerHtml.trim() : null,
+                  teacher(i),
                   //上课地点
-                  area != "&nbsp" ? area : null,
+                  courseVenue,
                   //备注
-                  list[i].querySelectorAll("table.none>tbody>tr")[j].text.trim().replaceAll(" ", ";")
+                  remark(i, j)
                 ];
               });
-            } else if (zcList.length > 1) {
-              for (var l = int.parse(zcList[0]); l < int.parse(zcList[1]) + 1; l++) {
-                _schedule[l.toString()]?[_weekList[list[i].querySelectorAll("table.none>tbody>tr")[j].querySelectorAll("td")[1].innerHtml.trim()]]?[k.toString()] = [
+            } else if (weekList.length == 2) {
+              for (int teachWeek = int.parse(weekList[0]); teachWeek < int.parse(weekList[1]) + 1; teachWeek++) {
+                _schedule[teachWeek.toString()]?[week(i, j)]?[lesson.toString()] = [
                   //课程名
-                  list[i].querySelectorAll("a.infolist")[0].innerHtml.trim(),
+                  course(i),
                   //老师名字
-                  list[i].querySelectorAll("a.infolist").length > 1 ? list[i].querySelectorAll("a.infolist")[1].innerHtml.trim() : null,
+                  teacher(i),
                   //上课地点
-                  area != "&nbsp" ? area : null,
+                  courseVenue,
                   //备注
-                  list[i].querySelectorAll("table.none>tbody>tr")[j].text.trim().replaceAll(" ", ";")
+                  remark(i, j)
                 ];
               }
             } else {
-              _schedule[zc]?[_weekList[list[i].querySelectorAll("table.none>tbody>tr")[j].querySelectorAll("td")[1].innerHtml.trim()]]?[k.toString()] = [
+              _schedule[weekInterval]?[week(i, j)]?[lesson.toString()] = [
                 //课程名
-                list[i].querySelectorAll("a.infolist")[0].innerHtml.trim(),
+                course(i),
                 //老师名字
-                list[i].querySelectorAll("a.infolist").length > 1 ? list[i].querySelectorAll("a.infolist")[1].innerHtml.trim() : null,
+                teacher(i),
                 //上课地点
-                area != "&nbsp" ? area : null,
+                courseVenue,
                 //备注
-                list[i].querySelectorAll("table.none>tbody>tr")[j].text.trim().replaceAll(" ", ";")
+                remark(i, j)
               ];
             }
           }
@@ -188,7 +221,7 @@ Future<String> getSchedule() async {
             String _delWeekDay = weekDay2Number(innerHtmlTrim(tds[9]));
             String _addWeekDay = weekDay2Number(innerHtmlTrim(tds[14]));
             //教室
-            String _addRoom = innerHtmlTrim(tds[16]);
+            String _addRoom = teachLocation(innerHtmlTrim(tds[16]));
             //老师
             String _addTeacher = innerHtmlTrim(tds[4]);
             //课
@@ -219,7 +252,7 @@ Future<String> getSchedule() async {
             List<String> _delTime = lessonParser(tds[3]);
             List<String> _addTime = lessonParser(tds[8]);
             //教室
-            String _addRoom = innerHtmlTrim(tds[9]);
+            String _addRoom = teachLocation(innerHtmlTrim(tds[9]));
             String remark = "第" + _addWeek.replaceAll("第", "").replaceAll("周", "") + "周;" + innerHtmlTrim(tds[7]) + ";" + innerHtmlTrim(tds[8]) + " - 调课/补课;$_addRoom";
             print(remark);
             if (_delWeek != "&nbsp;") {
