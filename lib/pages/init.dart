@@ -8,7 +8,7 @@ import 'package:glutassistantn/pages/mine.dart';
 import 'package:glutassistantn/pages/schedule.dart';
 import 'package:glutassistantn/widget/bars.dart';
 import 'package:package_info/package_info.dart';
-tion.dart';
+
 import '../common/service.dart';
 import '../data.dart';
 
@@ -59,7 +59,7 @@ class InitState extends State<Init> {
     Navigator.pushAndRemoveUntil(
       context,
       CustomRoute(View(), 2000),
-          (route) => false,
+      (route) => false,
     );
   }
 
