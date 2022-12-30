@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_remix/flutter_remix.dart';
 import 'package:glutassistantn/config.dart';
-rt';
+
 import '../data.dart';
 import 'bars.dart';
 
@@ -265,7 +265,7 @@ class TodayCourseListItemState extends State<TodayCourseListItem> {
                   Row(
                     children: [
                       Text((courseInfo()[2] + " ").replaceAll("未知 ", ""), style: normTextStyle()),
-                      Text(courseLongText2ShortName(courseInfo()[0]), style: normTextStyle()),
+                      Text(courseLongText2Short(courseInfo()[0]), style: normTextStyle()),
                     ],
                   ),
                   Row(
@@ -358,7 +358,7 @@ class TomorrowCourseListState extends State<TomorrowCourseList> {
                                   decoration: TextDecoration.none,
                                   fontSize: 14,
                                   color: (_tomorrowSchedule[index][4] == "1" && index == 0 ? Colors.orange[900] : Color(0xff333333)))),
-                          Text(courseLongText2ShortName(_tomorrowSchedule[index][0]),
+                          Text(courseLongText2Short(_tomorrowSchedule[index][0]),
                               style: TextStyle(
                                   decoration: TextDecoration.none,
                                   fontSize: 16,
@@ -569,7 +569,7 @@ class ExamListState extends State<ExamList> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            courseLongText2ShortName(examList[index][0]),
+                            courseLongText2Short(examList[index][0]),
                             style: TextStyle(fontSize: 16, color: _getColor2(index)),
                           ),
                           SizedBox(

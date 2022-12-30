@@ -286,13 +286,13 @@ List<Widget> _loopWeekDayColGrid(String week, String weekDay) {
   Map _schedule = schedule[week][weekDay];
   int s = 1;
   for (int i = 1; i < 12; i++) {
-    String courseName = courseLongText2ShortName(_schedule[i.toString()][0]);
+    String courseName = courseLongText2Short(_schedule[i.toString()][0]);
     String studyArea = _schedule[i.toString()][2];
     String teacher = _schedule[i.toString()][1];
     bool courseNameNotNull() => courseName != "null";
     if (courseNameNotNull()) {
-      bool courseNameIsPreviousCourseName() => courseName == courseLongText2ShortName(_schedule[(i - 1).toString()][0]);
-      bool courseNameNotIsNextCourseName() => courseName != courseLongText2ShortName(_schedule[(i + 1).toString()][0]);
+      bool courseNameIsPreviousCourseName() => courseName == courseLongText2Short(_schedule[(i - 1).toString()][0]);
+      bool courseNameNotIsNextCourseName() => courseName != courseLongText2Short(_schedule[(i + 1).toString()][0]);
       bool studyAreaNotIsNextStudyArea() => studyArea != _schedule[(i + 1).toString()][2];
       bool studyAreaIsPreviousStudyArea() => studyArea == _schedule[(i - 1).toString()][2];
 
