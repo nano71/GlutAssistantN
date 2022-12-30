@@ -50,6 +50,7 @@ double gpa = 0.0;
 double avg = 0.0;
 double weight = 0.0;
 Map schedule = {};
+
 final Map<String, String> writeData = {
   "time": "",
   "week": "1",
@@ -91,7 +92,7 @@ String todayScheduleTitle = "";
 String tomorrowScheduleTitle = "";
 List startTimeListBk = [];
 List endTimeListBk = [];
-final List weekList4CN = const ["一", "二", "三", "四", "五", "六", "日"];
+final List<String> weekList4CN = const ["一", "二", "三", "四", "五", "六", "日"];
 
 List startTimeList = [
   [8, 40],
@@ -181,7 +182,7 @@ int randomInt(int min, int max) {
   return min + Random().nextInt(max - min + 1);
 }
 
-String courseLongText2ShortName(String value) {
+String courseLongText2Short(String value) {
   return value.replaceAll("（", "(").replaceAll("）", ")").replaceAll("毛泽东思想和中国特色社会主义理论体系概论", "毛概");
 }
 
@@ -189,10 +190,29 @@ String levelToNumber(String value) {
   return value.replaceAll("优", "95").replaceAll("良", "85").replaceAll("中", "75").replaceAll("及格", "65").replaceAll("合格", "65").replaceAll("不及格", "40").replaceAll("不合格", "40");
 }
 
-String weekDay2Number(String value) {
-  return value.replaceAll("周一", "1").replaceAll("周二", "2").replaceAll("周三", "3").replaceAll("周四", "4").replaceAll("周五", "5").replaceAll("周六", "6").replaceAll("周日", "7");
+String weekCN2Number(String value) {
+  weekList4CN.forEach((word) {
+    value = value.replaceAll("周" + word, (weekList4CN.indexOf(word) + 1).toString());
+  });
+  return value;
 }
 
 int weekInt() {
   return int.parse(writeData["week"] ?? "");
+}
+
+Map emptySchedule() {
+  print("emptySchedule");
+  Map _schedule = {};
+  for (var i = 1; i < 21; i++) {
+    _schedule[i.toString()] = {};
+    for (var j = 1; j < 8; j++) {
+      _schedule[i.toString()]?[j.toString()] = {};
+      for (var k = 1; k < 12; k++) {
+        _schedule[i.toString()]?[j.toString()]?[k.toString()] = ["null", "null", "null"];
+      }
+    }
+  }
+  print("emptySchedule End");
+  return _schedule;
 }

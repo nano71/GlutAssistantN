@@ -9,7 +9,6 @@ import 'package:glutassistantn/pages/schedule.dart';
 import 'package:glutassistantn/widget/bars.dart';
 import 'package:package_info/package_info.dart';
 
-import '../common/service.dart';
 import '../data.dart';
 
 class CustomRoute extends PageRouteBuilder {
@@ -41,7 +40,7 @@ class InitState extends State<Init> {
   }
 
   void init() async {
-    initService();
+    // initService();
     PackageInfo.fromPlatform().then((PackageInfo info) {
       packageInfo["appName"] = info.appName;
       packageInfo["packageName"] = info.packageName;
