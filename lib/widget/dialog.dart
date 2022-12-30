@@ -266,7 +266,7 @@ scheduleDialogItem(title, time, teacher, position) {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              courseLongText2ShortName(title),
+              courseLongText2Short(title),
               style: TextStyle(fontSize: 18, color: Colors.white),
             ),
             SizedBox(
@@ -433,7 +433,7 @@ careerDialogItem(element) {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              courseLongText2ShortName(element[1]),
+              courseLongText2Short(element[1]),
               style: TextStyle(fontSize: 18, color: Colors.white),
             ),
             SizedBox(
