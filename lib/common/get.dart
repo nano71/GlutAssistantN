@@ -38,6 +38,9 @@ Future<void> getWeek() async {
   writeData["semester"] = q;
   writeData["year"] = n;
   writeData["week"] = week;
+  if (int.parse(writeData["year"]!) > int.parse(writeData["yearBk"]!)) {
+    writeData["yearBk"] = n;
+  }
   if (writeData["semesterBk"] == "" && writeData["yearBk"] == "") {
     writeData["semesterBk"] = q;
     writeData["yearBk"] = n;
@@ -58,7 +61,7 @@ Future<String> getSchedule() async {
   print(writeData["semesterBk"]);
   print(writeData["yearBk"]);
   Uri _url = Uri.http(
-      Global.getScheduleUrl[0], Global.getScheduleUrl[1], {"year": ((int.parse(writeData["yearBk"] ?? "")) - 1980).toString(), "term": writeData["semesterBk"] == "秋" ? "3" : "1"});
+      Global.getScheduleUrl[0], Global.getScheduleUrl[1], {"year": ((int.parse(writeData["year"] ?? "")) - 1980).toString(), "term": writeData["semester"] == "秋" ? "3" : "1"});
   Response response;
   try {
     response = await request("", _url);
@@ -206,8 +209,8 @@ Future<String> getSchedule() async {
       print("获取课表变更(调课/停课/补课)");
       Uri uri = Uri.http(Global.getScheduleNextUrl[0], Global.getScheduleNextUrl[1], {
         "id": id(),
-        "yearid": ((int.parse(writeData["yearBk"] ?? "")) - 1980).toString(),
-        "termid": writeData["semesterBk"] == "秋" ? "3" : "1",
+        "yearid": ((int.parse(writeData["year"] ?? "")) - 1980).toString(),
+        "termid": writeData["semester"] == "秋" ? "3" : "1",
         "timetableType": "STUDENT",
         "sectionType": "BASE"
       });
