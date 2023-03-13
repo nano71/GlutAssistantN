@@ -55,6 +55,9 @@ Future<void> getWeek() async {
 }
 
 Future<String> getSchedule() async {
+  String result = "success";
+  await checkLoginSituation().then((value) => result = value);
+  if (result == "fail") return result;
   print("getSchedule...");
   Map _schedule = schedule;
   Map<String, String> _weekList = {"星期一": "1", "星期二": "2", "星期三": "3", "星期四": "4", "星期五": "5", "星期六": "6", "星期日": "7"};
@@ -72,126 +75,92 @@ Future<String> getSchedule() async {
   }
   String html = getHtml(response);
   Document document = parse(html);
+  if (html == "") return Global.dataError;
+  List<Element> list = document.querySelectorAll(".infolist_common");
+  List<Element> infoList(int index) => list[index].querySelectorAll("a.infolist");
+  String course(int index) => innerHtmlTrim(infoList(index)[0]);
 
-  if (html.contains(Global.scheduleErrorText)) {
-    return "fail";
-  } else {
-    List<Element> list = document.querySelectorAll(".infolist_common");
-    List<Element> infoList(int index) {
-      return list[index].querySelectorAll("a.infolist");
-    }
+  String teacher(int index) => infoList(index).length > 1 ? innerHtmlTrim(infoList(index)[1]) : "未知";
 
-    String course(int index) {
-      return innerHtmlTrim(infoList(index)[0]);
-    }
+  String innerHtmlTrimReplace(Element element) => innerHtmlTrim(element).replaceAll(RegExp(r'([第节周])'), "");
 
-    String teacher(int index) {
-      return infoList(index).length > 1 ? innerHtmlTrim(infoList(index)[1]) : "未知";
-    }
+  List<Element> tableRows(int index) => list[index].querySelectorAll("table.none>tbody>tr");
 
-    String innerHtmlTrimReplace(Element element) {
-      return innerHtmlTrim(element).replaceAll(RegExp(r'([第节周])'), "");
-    }
+  List<Element> tableCells(Element element) => element.querySelectorAll("td");
 
-    List<Element> tableRows(int index) {
-      return list[index].querySelectorAll("table.none>tbody>tr");
-    }
+  String? week(int i, int j) => _weekList[innerHtmlTrim(tableCells(tableRows(i)[j])[1])];
 
-    List<Element> tableCells(Element element) {
-      return element.querySelectorAll("td");
-    }
+  String remark(int i, int j) => tableRows(i)[j].text.trim().replaceAll(" ", ";");
 
-    String? week(int i, int j) {
-      return _weekList[innerHtmlTrim(tableCells(tableRows(i)[j])[1])];
-    }
+  String id() => document.querySelector(".button[value='个人课表']")!.attributes["onclick"]!.substring(61).split("&year")[0];
 
-    String remark(int i, int j) {
-      return tableRows(i)[j].text.trim().replaceAll(" ", ";");
-    }
-
-    String id() {
-      return document.querySelector(".button[value='个人课表']")!.attributes["onclick"]!.substring(61).split("&year")[0];
-    }
-
-    int listLength = document.querySelectorAll(".infolist_common").length - 23;
-    if (listLength > 1) {
-      _schedule = emptySchedule();
-      print(_schedule);
-    }
-    for (int i = 0; i < listLength; i++) {
-      for (var j = 0; j < tableRows(i).length; j++) {
-        //课区间 interval
-        String lessonInterval = innerHtmlTrimReplace(tableCells(tableRows(i)[j])[2]);
-        //周次区间
-        String weekInterval = innerHtmlTrimReplace(tableCells(tableRows(i)[j])[0]);
-        //课节
-        List<String> lessonList = lessonInterval.split("-");
-        //周次 1-9周 = [1,9]
-        List<String> weekList = [];
-        String weekCN = innerHtmlTrimReplace(tableCells(tableRows(i)[j])[1]);
-        String courseVenue = teachLocation(innerHtmlTrim(tableCells(tableRows(i)[j])[3]));
-        bool specialWeek = true;
-        List<String> initList(bool isEven) {
-          List<String> list = [];
-          for (int i = int.parse(weekList.first); i <= int.parse(weekList.last); i++) {
-            if (isEven ? i.isEven : i.isOdd) {
-              list.add(i.toString());
-            }
+  int listLength = document.querySelectorAll(".infolist_common").length - 23;
+  if (listLength > 1) {
+    _schedule = emptySchedule();
+    print(_schedule);
+  }
+  for (int i = 0; i < listLength; i++) {
+    for (var j = 0; j < tableRows(i).length; j++) {
+      //课区间 interval
+      String lessonInterval = innerHtmlTrimReplace(tableCells(tableRows(i)[j])[2]);
+      //周次区间
+      String weekInterval = innerHtmlTrimReplace(tableCells(tableRows(i)[j])[0]);
+      //课节
+      List<String> lessonList = lessonInterval.split("-");
+      //周次 1-9周 = [1,9]
+      List<String> weekList = [];
+      String weekCN = innerHtmlTrimReplace(tableCells(tableRows(i)[j])[1]);
+      String courseVenue = teachLocation(innerHtmlTrim(tableCells(tableRows(i)[j])[3]));
+      bool specialWeek = true;
+      List<String> initList(bool isEven) {
+        List<String> list = [];
+        for (int i = int.parse(weekList.first); i <= int.parse(weekList.last); i++) {
+          if (isEven ? i.isEven : i.isOdd) {
+            list.add(i.toString());
           }
-          return list;
         }
+        return list;
+      }
 
-        //单周
-        if (weekInterval.indexOf("单") != -1) {
-          weekInterval = weekInterval.replaceAll("单", "");
-          weekList = weekInterval.split("-");
-          weekList = initList(false);
-          //双周
-        } else if (weekInterval.indexOf("双") != -1) {
-          weekInterval = weekInterval.replaceAll("双", "");
-          weekList = weekInterval.split("-");
-          weekList = initList(true);
-        } else if (weekInterval.indexOf(",") != -1) {
-          weekInterval = weekInterval.replaceAll(",", "-");
-          weekList = weekInterval.split("-");
-        } else {
-          specialWeek = false;
-          weekList = weekInterval.split("-");
-        }
-        if (lessonList.length > 1 && weekCN != "&nbsp;")
-          for (int lesson = int.parse(lessonList[0]); lesson <= int.parse(lessonList[1]); lesson++) {
-            if (weekList.length > 1 && specialWeek) {
-              weekList.forEach((teachWeek) {
+      //单周
+      if (weekInterval.indexOf("单") != -1) {
+        weekInterval = weekInterval.replaceAll("单", "");
+        weekList = weekInterval.split("-");
+        weekList = initList(false);
+        //双周
+      } else if (weekInterval.indexOf("双") != -1) {
+        weekInterval = weekInterval.replaceAll("双", "");
+        weekList = weekInterval.split("-");
+        weekList = initList(true);
+      } else if (weekInterval.indexOf(",") != -1) {
+        weekInterval = weekInterval.replaceAll(",", "-");
+        weekList = weekInterval.split("-");
+      } else {
+        specialWeek = false;
+        weekList = weekInterval.split("-");
+      }
+      if (lessonList.length > 1 && weekCN != "&nbsp;")
+        for (int lesson = int.parse(lessonList[0]); lesson <= int.parse(lessonList[1]); lesson++) {
+          if (weekList.length > 1 && specialWeek) {
+            weekList.forEach((teachWeek) {
+              print(teachWeek);
+              _schedule[teachWeek.toString()]?[week(i, j)]?[lesson.toString()] = [
+                //课程名
+                course(i),
+                //老师名字
+                teacher(i),
+                //上课地点
+                courseVenue,
+                //备注
+                remark(i, j)
+              ];
+            });
+          } else if (weekList.length == 2) {
+            for (int teachWeek = int.parse(weekList[0]); teachWeek <= int.parse(weekList[1]); teachWeek++) {
+              if (teachWeek == 13 && week(i, j) == "5") {
                 print(teachWeek);
-                _schedule[teachWeek.toString()]?[week(i, j)]?[lesson.toString()] = [
-                  //课程名
-                  course(i),
-                  //老师名字
-                  teacher(i),
-                  //上课地点
-                  courseVenue,
-                  //备注
-                  remark(i, j)
-                ];
-              });
-            } else if (weekList.length == 2) {
-              for (int teachWeek = int.parse(weekList[0]); teachWeek <= int.parse(weekList[1]); teachWeek++) {
-                if (teachWeek == 13 && week(i, j) == "5") {
-                  print(teachWeek);
-                }
-                _schedule[teachWeek.toString()]?[week(i, j)]?[lesson.toString()] = [
-                  //课程名
-                  course(i),
-                  //老师名字
-                  teacher(i),
-                  //上课地点
-                  courseVenue,
-                  //备注
-                  remark(i, j)
-                ];
               }
-            } else {
-              _schedule[weekInterval]?[week(i, j)]?[lesson.toString()] = [
+              _schedule[teachWeek.toString()]?[week(i, j)]?[lesson.toString()] = [
                 //课程名
                 course(i),
                 //老师名字
@@ -202,99 +171,111 @@ Future<String> getSchedule() async {
                 remark(i, j)
               ];
             }
+          } else {
+            _schedule[weekInterval]?[week(i, j)]?[lesson.toString()] = [
+              //课程名
+              course(i),
+              //老师名字
+              teacher(i),
+              //上课地点
+              courseVenue,
+              //备注
+              remark(i, j)
+            ];
           }
-      }
+        }
     }
-    _next() async {
-      print("获取课表变更(调课/停课/补课)");
-      Uri uri = Uri.http(Global.getScheduleNextUrl[0], Global.getScheduleNextUrl[1], {
-        "id": id(),
-        "yearid": ((int.parse(writeData["year"] ?? "")) - 1980).toString(),
-        "termid": writeData["semester"] == "秋" ? "3" : "1",
-        "timetableType": "STUDENT",
-        "sectionType": "BASE"
-      });
-      Response response2 = await request("get", uri);
-      document = parse(gbk.decode(response2.bodyBytes));
-      List<Element> tableList = document.querySelectorAll(".infolist_hr");
-      if (tableList.length >= 3) {
-        Element table = tableList[2];
-        List<Element> rowList = table.querySelectorAll(".infolist_hr_common");
-        String course = "";
-        String teacher = "";
-        rowList.forEach((row) {
-          List<Element> cellList = row.querySelectorAll("td");
-          int length = cellList.length;
-          final Map<String, bool> rowInfo = {"standard": length == 17, "extension": length == 10};
-          // print(rowInfo);
-          String remark(String teachWeek, String courseVenue, int i, int j) {
-            return "第" + teachWeek.replaceAll(RegExp(r'[第周]'), "") + "周;" + innerHtmlTrim(cellList[i]) + ";" + innerHtmlTrim(cellList[j]) + " - 调课/补课;$courseVenue";
-          }
-
-          if (rowInfo["standard"]!) {
-            final Map<String, dynamic> latest = {
-              "teachWeek": innerHtmlTrim(cellList[13]),
-              "lessonList": teachTimeParser(cellList[15]),
-              "week": weekCN2Number(innerHtmlTrim(cellList[14])),
-            };
-            final Map<String, dynamic> before = {
-              "teachWeek": innerHtmlTrim(cellList[8]),
-              "lessonList": teachTimeParser(cellList[10]),
-              "week": weekCN2Number(innerHtmlTrim(cellList[9])),
-            };
-
-            String courseVenue = teachLocation(innerHtmlTrim(cellList[16]));
-            teacher = innerHtmlTrim(cellList[4]);
-            course = innerHtmlTrim(cellList[2]);
-            String remark1 =
-                "第" + latest["teachWeek"].replaceAll(RegExp(r'[第周]'), "") + "周;" + innerHtmlTrim(cellList[14]) + ";" + innerHtmlTrim(cellList[15]) + " - 调课/补课;$courseVenue";
-            print(remark1);
-
-            if (before["teachWeek"] != "&nbsp;") {
-              for (int lesson = int.parse(before["lessonList"][0]); lesson <= int.parse(before["lessonList"][1]); lesson++) {
-                // print("删除$before, $lesson");
-                _schedule[before["teachWeek"]][before["week"]][lesson.toString()] = ["null", "null", "null", "null"];
-              }
-            }
-            if (latest["teachWeek"] != "&nbsp;") {
-              for (int lesson = int.parse(latest["lessonList"][0]); lesson <= int.parse(latest["lessonList"][1]); lesson++) {
-                // print("添加$latest, $lesson");
-                _schedule[latest["teachWeek"]][latest["week"]][lesson.toString()] = [course, teacher, courseVenue, remark(latest["teachWeek"], courseVenue, 14, 15)];
-              }
-            }
-          } else if (rowInfo["extension"]!) {
-            //周
-            String _delWeek = innerHtmlTrim(cellList[1]);
-            String _addWeek = innerHtmlTrim(cellList[6]);
-            //星期
-            String _delWeekDay = weekCN2Number(innerHtmlTrim(cellList[2]));
-            String _addWeekDay = weekCN2Number(innerHtmlTrim(cellList[7]));
-            //课节
-            List<String> _delTime = teachTimeParser(cellList[3]);
-            List<String> _addTime = teachTimeParser(cellList[8]);
-            //教室
-            String _addRoom = teachLocation(innerHtmlTrim(cellList[9]));
-            String remark1 = "第" + _addWeek.replaceAll("第", "").replaceAll("周", "") + "周;" + innerHtmlTrim(cellList[7]) + ";" + innerHtmlTrim(cellList[8]) + " - 调课/补课;$_addRoom";
-            print(remark1);
-            if (_delWeek != "&nbsp;") {
-              for (int i = int.parse(_delTime[0]); i <= int.parse(_delTime[1]); i++) {
-                _schedule[_delWeek][_delWeekDay][i.toString()] = ["null", "null", "null", "null"];
-              }
-            }
-            if (_addWeek != "&nbsp;") {
-              for (int i = int.parse(_addTime[0]); i <= int.parse(_addTime[1]); i++) {
-                _schedule[_addWeek][_addWeekDay][i.toString()] = [course, teacher, _addRoom, remark(_addWeek, _addRoom, 7, 8)];
-              }
-            }
-          }
-        });
-      }
-    }
-
-    print(writeData);
-    await _next();
-    await writeSchedule(jsonEncode(_schedule));
   }
+  _next() async {
+    print("获取课表变更(调课/停课/补课)");
+    Uri uri = Uri.http(Global.getScheduleNextUrl[0], Global.getScheduleNextUrl[1], {
+      "id": id(),
+      "yearid": ((int.parse(writeData["year"] ?? "")) - 1980).toString(),
+      "termid": writeData["semester"] == "秋" ? "3" : "1",
+      "timetableType": "STUDENT",
+      "sectionType": "BASE"
+    });
+    Response response2 = await request("get", uri);
+    document = parse(gbk.decode(response2.bodyBytes));
+    List<Element> tableList = document.querySelectorAll(".infolist_hr");
+    if (tableList.length >= 3) {
+      Element table = tableList[2];
+      List<Element> rowList = table.querySelectorAll(".infolist_hr_common");
+      String course = "";
+      String teacher = "";
+      rowList.forEach((row) {
+        List<Element> cellList = row.querySelectorAll("td");
+        int length = cellList.length;
+        final Map<String, bool> rowInfo = {"standard": length == 17, "extension": length == 10};
+        // print(rowInfo);
+        String remark(String teachWeek, String courseVenue, int i, int j) {
+          return "第" + teachWeek.replaceAll(RegExp(r'[第周]'), "") + "周;" + innerHtmlTrim(cellList[i]) + ";" + innerHtmlTrim(cellList[j]) + " - 调课/补课;$courseVenue";
+        }
+
+        if (rowInfo["standard"]!) {
+          final Map<String, dynamic> latest = {
+            "teachWeek": innerHtmlTrim(cellList[13]),
+            "lessonList": teachTimeParser(cellList[15]),
+            "week": weekCN2Number(innerHtmlTrim(cellList[14])),
+          };
+          final Map<String, dynamic> before = {
+            "teachWeek": innerHtmlTrim(cellList[8]),
+            "lessonList": teachTimeParser(cellList[10]),
+            "week": weekCN2Number(innerHtmlTrim(cellList[9])),
+          };
+
+          String courseVenue = teachLocation(innerHtmlTrim(cellList[16]));
+          teacher = innerHtmlTrim(cellList[4]);
+          course = innerHtmlTrim(cellList[2]);
+          String remark1 =
+              "第" + latest["teachWeek"].replaceAll(RegExp(r'[第周]'), "") + "周;" + innerHtmlTrim(cellList[14]) + ";" + innerHtmlTrim(cellList[15]) + " - 调课/补课;$courseVenue";
+          print(remark1);
+
+          if (before["teachWeek"] != "&nbsp;") {
+            for (int lesson = int.parse(before["lessonList"][0]); lesson <= int.parse(before["lessonList"][1]); lesson++) {
+              // print("删除$before, $lesson");
+              _schedule[before["teachWeek"]][before["week"]][lesson.toString()] = ["null", "null", "null", "null"];
+            }
+          }
+          if (latest["teachWeek"] != "&nbsp;") {
+            for (int lesson = int.parse(latest["lessonList"][0]); lesson <= int.parse(latest["lessonList"][1]); lesson++) {
+              // print("添加$latest, $lesson");
+              _schedule[latest["teachWeek"]][latest["week"]][lesson.toString()] = [course, teacher, courseVenue, remark(latest["teachWeek"], courseVenue, 14, 15)];
+            }
+          }
+        } else if (rowInfo["extension"]!) {
+          //周
+          String _delWeek = innerHtmlTrim(cellList[1]);
+          String _addWeek = innerHtmlTrim(cellList[6]);
+          //星期
+          String _delWeekDay = weekCN2Number(innerHtmlTrim(cellList[2]));
+          String _addWeekDay = weekCN2Number(innerHtmlTrim(cellList[7]));
+          //课节
+          List<String> _delTime = teachTimeParser(cellList[3]);
+          List<String> _addTime = teachTimeParser(cellList[8]);
+          //教室
+          String _addRoom = teachLocation(innerHtmlTrim(cellList[9]));
+          String remark1 = "第" + _addWeek.replaceAll("第", "").replaceAll("周", "") + "周;" + innerHtmlTrim(cellList[7]) + ";" + innerHtmlTrim(cellList[8]) + " - 调课/补课;$_addRoom";
+          print(remark1);
+          if (_delWeek != "&nbsp;") {
+            for (int i = int.parse(_delTime[0]); i <= int.parse(_delTime[1]); i++) {
+              _schedule[_delWeek][_delWeekDay][i.toString()] = ["null", "null", "null", "null"];
+            }
+          }
+          if (_addWeek != "&nbsp;") {
+            for (int i = int.parse(_addTime[0]); i <= int.parse(_addTime[1]); i++) {
+              _schedule[_addWeek][_addWeekDay][i.toString()] = [course, teacher, _addRoom, remark(_addWeek, _addRoom, 7, 8)];
+            }
+          }
+        }
+      });
+    }
+  }
+
+  print(writeData);
+  await _next();
+  await writeSchedule(jsonEncode(_schedule));
+
   print("getSchedule End");
   return "success";
 }
@@ -319,6 +300,9 @@ List getSemester() {
 }
 
 Future getScore() async {
+  String result = "success";
+  await checkLoginSituation().then((value) => result = value);
+  if (result == "fail") return result;
   print("getScore");
   String _year = "";
   String _term = "";
@@ -338,16 +322,10 @@ Future getScore() async {
     return socketError(e);
   }
   String html = response.body;
+  if (html == "") return Global.dataError;
   Document document = parse(html);
-
-  if (html == "") {
-    return "fail";
-  }
-  List<Element> dataList = document.querySelectorAll(".datalist > tbody >tr");
-  String parseData(int i, int number) {
-    return dataList[i].querySelectorAll("td")[number].text.trim();
-  }
-
+  List<Element> dataList = document.querySelectorAll(".datalist > tbody > tr");
+  String parseData(int i, int number) => dataList[i].querySelectorAll("td")[number].text.trim();
   List list = [];
   for (int i = 1; i < dataList.length; i++) {
     List _list = [];
@@ -364,6 +342,9 @@ Future getScore() async {
 }
 
 Future<String> getExam() async {
+  String result = "success";
+  await checkLoginSituation().then((value) => result = value);
+  if (result == "fail") return result;
   print("getExam");
   Response response;
   try {
@@ -374,45 +355,45 @@ Future<String> getExam() async {
     return socketError(e);
   }
   String html = getHtml(response);
-  if (html.contains(Global.examErrorText)) {
-    return "fail";
-  } else {
-    Document document = parse(html);
-    examList = [];
-    examListC = [];
-    examListA = 0;
-    examListB = 0;
-    document = parse(response.body);
-    examList = [];
-    var _row = document.querySelectorAll(".datalist> tbody > tr");
-    for (int i = 1; i < _row.length; i++) {
-      List<String> _list = [];
-      String time = _row[i].querySelectorAll("td")[2].text;
-      List timeList = time.split("-");
-      _list.add(_row[i].querySelectorAll("td")[1].text);
-      _list.add(time);
-      _list.add(_row[i].querySelectorAll("td")[3].text.replaceAll("空港校区", "").replaceAll("教", "").trim().substring(1).trim());
-      _list.add(_row[i].querySelectorAll("td")[4].text);
+  if (html == "") return Global.dataError;
+  Document document = parse(html);
+  examList = [];
+  examListC = [];
+  examListA = 0;
+  examListB = 0;
+  document = parse(response.body);
+  examList = [];
+  var _row = document.querySelectorAll(".datalist> tbody > tr");
+  for (int i = 1; i < _row.length; i++) {
+    List<String> _list = [];
+    String time = _row[i].querySelectorAll("td")[2].text;
+    List timeList = time.split("-");
+    _list.add(_row[i].querySelectorAll("td")[1].text);
+    _list.add(time);
+    _list.add(_row[i].querySelectorAll("td")[3].text.replaceAll("空港校区", "").replaceAll("教", "").trim().substring(1).trim());
+    _list.add(_row[i].querySelectorAll("td")[4].text);
 
-      DateTime startDate = DateTime.now();
-      DateTime endDate = DateTime(int.parse(timeList[0]), int.parse(timeList[1]), int.parse(timeList[2].toString().substring(0, 2)));
-      int days = endDate.difference(startDate).inDays;
-      if (days < 0) {
-        examListC.add(true);
-        examListA++;
-      } else {
-        examListB++;
-        examListC.add(false);
-      }
-
-      examList.add(_list);
+    DateTime startDate = DateTime.now();
+    DateTime endDate = DateTime(int.parse(timeList[0]), int.parse(timeList[1]), int.parse(timeList[2].toString().substring(0, 2)));
+    int days = endDate.difference(startDate).inDays;
+    if (days < 0) {
+      examListC.add(true);
+      examListA++;
+    } else {
+      examListB++;
+      examListC.add(false);
     }
-    print("getExam End");
-    return "success";
+
+    examList.add(_list);
   }
+  print("getExam End");
+  return "success";
 }
 
 Future getCareer() async {
+  String result = "success";
+  await checkLoginSituation().then((value) => result = value);
+  if (result == "fail") return result;
   print("getCareer");
   _next(List url) async {
     Response response;
@@ -487,24 +468,22 @@ Future getCareer() async {
     return socketError(e);
   }
   String html = getHtml(response);
-  if (html.contains(Global.careerErrorText)) {
-    return "fail";
-  } else {
-    Document document = parse(html);
-    String url = document.querySelectorAll("a")[3].parent!.innerHtml.trim();
-    String urlA = url.substring(url.indexOf('修读顺序：按照课组及学年学期的顺序，用二维表方式显示教学计划课组及课程"></a>') + '修读顺序：按照课组及学年学期的顺序，用二维表方式显示教学计划课组及课程"></a>'.length);
-    String urlB = urlA
-        .replaceAll('<a href="', "")
-        .replaceAll('" target="_blank"><img src="/academic/styles/images/Sort_Ascending.png" title="学期模式：按照学年学期的顺序，显示教学计划课程"></a>', "")
-        .replaceAll("amp;", "")
-        .replaceAll('/academic/manager/studyschedule/scheduleJump.jsp?link=studentScheduleShowByTerm.do&studentId=', "")
-        .trim();
-    List urlC = urlB.split('&classId=');
-    print(urlC);
-    await _next(urlC);
-    print("getCareer End");
-    return "success";
-  }
+  if (html == "") return Global.dataError;
+
+  Document document = parse(html);
+  String url = document.querySelectorAll("a")[3].parent!.innerHtml.trim();
+  String urlA = url.substring(url.indexOf('修读顺序：按照课组及学年学期的顺序，用二维表方式显示教学计划课组及课程"></a>') + '修读顺序：按照课组及学年学期的顺序，用二维表方式显示教学计划课组及课程"></a>'.length);
+  String urlB = urlA
+      .replaceAll('<a href="', "")
+      .replaceAll('" target="_blank"><img src="/academic/styles/images/Sort_Ascending.png" title="学期模式：按照学年学期的顺序，显示教学计划课程"></a>', "")
+      .replaceAll("amp;", "")
+      .replaceAll('/academic/manager/studyschedule/scheduleJump.jsp?link=studentScheduleShowByTerm.do&studentId=', "")
+      .trim();
+  List urlC = urlB.split('&classId=');
+  print(urlC);
+  await _next(urlC);
+  print("getCareer End");
+  return "success";
 }
 
 Future getEmptyClassroom({
@@ -513,6 +492,9 @@ Future getEmptyClassroom({
   String building = "-1",
   String classroom = "-1",
 }) async {
+  String result = "success";
+  await checkLoginSituation().then((value) => result = value);
+  if (result == "fail") return result;
   // Global.cookie = {};
   print('getEmptyClassroom');
   Map<String, String> postData = {
@@ -538,60 +520,57 @@ Future getEmptyClassroom({
     return socketError(e);
   }
   String html = getHtml(response);
-  if (html == "") {
-    return "fail";
-  } else {
-    Document document = parse(html);
-    if (weekMode) {
-      List<Element> classrooms = document.querySelectorAll("tr.infolist_common");
-      List<Map> result = [];
-      print("classrooms.length");
-      print(classrooms.length);
-      print('--');
-      classrooms.forEach((element) {
-        List<Element> tds = element.querySelectorAll("td");
-        List<Element> occupancyList = element.querySelectorAll("td tbody > tr:nth-child(2) > td");
-        List<bool> cache = [];
-        String text(i) {
-          return tds[i].innerHtml;
-        }
+  if (html == "") return Global.dataError;
+  Document document = parse(html);
+  if (weekMode) {
+    List<Element> classrooms = document.querySelectorAll("tr.infolist_common");
+    List<Map> result = [];
+    print("classrooms.length");
+    print(classrooms.length);
+    print('--');
+    classrooms.forEach((element) {
+      List<Element> tds = element.querySelectorAll("td");
+      List<Element> occupancyList = element.querySelectorAll("td tbody > tr:nth-child(2) > td");
+      List<bool> cache = [];
+      String text(i) {
+        return tds[i].innerHtml;
+      }
 
-        int j = 0;
-        if (occupancyList.length == 11) {
-          for (int i = 0; i < 11; i++) {
-            if (!occupancyList[i].innerHtml.contains("&nbsp;")) {
-              cache.add(true);
-            } else {
-              cache.add(false);
-              j++;
-            }
+      int j = 0;
+      if (occupancyList.length == 11) {
+        for (int i = 0; i < 11; i++) {
+          if (!occupancyList[i].innerHtml.contains("&nbsp;")) {
+            cache.add(true);
+          } else {
+            cache.add(false);
+            j++;
           }
-          result.add({"classroom": text(0), "seats": text(1), "examSeats": text(3), "type": text(5), "occupancyList": cache, "todayEmpty": j == 11});
         }
-      });
-      print(result[result.length - 1]);
-      print('getEmptyClassroom end');
-      return result;
-    }
-    List<Element> buildingOptions = document.querySelectorAll("#buildingid > option");
-    List<Element> classroomOptions = document.querySelectorAll("select[name='room'] > option");
-    Map<String?, String> buildings = {};
-    Map<String?, String> classrooms = {};
-    Map<String, Map> result = {"buildings": {}, "classrooms": {}};
-    buildingOptions.removeAt(0);
-    classroomOptions.removeAt(0);
-    buildings["-1"] = "请选择";
-    for (Element element in buildingOptions) {
-      buildings[element.attributes["value"]] = element.innerHtml;
-    }
-    for (Element element in classroomOptions) {
-      classrooms[element.attributes["value"]] = element.innerHtml;
-    }
-    result["buildings"] = buildings;
-    result["classrooms"] = classrooms;
+        result.add({"classroom": text(0), "seats": text(1), "examSeats": text(3), "type": text(5), "occupancyList": cache, "todayEmpty": j == 11});
+      }
+    });
+    print(result[result.length - 1]);
     print('getEmptyClassroom end');
     return result;
   }
+  List<Element> buildingOptions = document.querySelectorAll("#buildingid > option");
+  List<Element> classroomOptions = document.querySelectorAll("select[name='room'] > option");
+  Map<String?, String> buildings = {};
+  Map<String?, String> classrooms = {};
+  Map<String, Map> results = {"buildings": {}, "classrooms": {}};
+  buildingOptions.removeAt(0);
+  classroomOptions.removeAt(0);
+  buildings["-1"] = "请选择";
+  for (Element element in buildingOptions) {
+    buildings[element.attributes["value"]] = element.innerHtml;
+  }
+  for (Element element in classroomOptions) {
+    classrooms[element.attributes["value"]] = element.innerHtml;
+  }
+  results["buildings"] = buildings;
+  results["classrooms"] = classrooms;
+  print('getEmptyClassroom end');
+  return results;
 }
 
 Future getUpdate() async {
@@ -677,5 +656,23 @@ void getPermissions() async {
     exit(0);
   } else {
     print("应用已授权");
+  }
+}
+
+Future<String> checkLoginSituation() async {
+  print("checkLoginSituation");
+  Response response;
+  try {
+    response = await request("get", Global.checkLoginSituation);
+  } on TimeoutException catch (e) {
+    return timeOutError(e);
+  } on SocketException catch (e) {
+    return socketError(e);
+  }
+  String html = getHtml(response);
+  if (html.contains(Global.errorText)) {
+    return "fail";
+  } else {
+    return "success";
   }
 }
