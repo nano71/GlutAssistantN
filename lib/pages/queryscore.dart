@@ -70,7 +70,7 @@ class _QueryBodyState extends State<QueryBody> {
     super.dispose();
   }
 
-  _dataProcess(list) {
+  _dataProcess(List list) {
     queryScore = list;
     double sum = 0.0;
     //学分*成绩
@@ -78,7 +78,12 @@ class _QueryBodyState extends State<QueryBody> {
     double credit = 0.0;
     int mooc = 0;
     for (int i = 0; i < list.length; i++) {
-      int _score = int.parse(levelToNumber(list[i]![4]));
+      int _score;
+      try {
+        _score = int.parse(levelToNumber(list[i]![4]));
+      } catch (e) {
+        break;
+      }
       double _credit = double.parse(list[i]![5]);
       String _courseName = list[i]![2].toString();
       String _teacher = list[i]![3];
@@ -127,10 +132,10 @@ class _QueryBodyState extends State<QueryBody> {
     setState(() {});
   }
 
-  _query() async {
+  void _query() async {
     // Global.cookie = {};
 
-    _next(value) {
+    void _next(value) async {
       if (value is String) {
         if (value == "fail") {
           ScaffoldMessenger.of(context).removeCurrentSnackBar();
