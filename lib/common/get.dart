@@ -133,8 +133,22 @@ Future<String> getSchedule() async {
         weekList = weekInterval.split("-");
         weekList = initList(true);
       } else if (weekInterval.indexOf(",") != -1) {
-        weekInterval = weekInterval.replaceAll(",", "-");
-        weekList = weekInterval.split("-");
+        if (weekInterval.indexOf("-") != -1) {
+          List<String> cache = weekInterval.split(",");
+          for (int i = 0; i < cache.length; i++) {
+            if (cache[i].split("-").length == 1) {
+              weekList.add(cache[i]);
+              continue;
+            }
+            for (int j = int.parse(cache[i].split("-")[0]); j <= int.parse(cache[i].split("-")[1]); j++) {
+              weekList.add(j.toString());
+            }
+          }
+        } else {
+          weekInterval = weekInterval.replaceAll(",", "-");
+          weekList = weekInterval.split("-");
+        }
+        print(weekList);
       } else {
         specialWeek = false;
         weekList = weekInterval.split("-");
@@ -157,10 +171,21 @@ Future<String> getSchedule() async {
             });
           } else if (weekList.length == 2) {
             for (int teachWeek = int.parse(weekList[0]); teachWeek <= int.parse(weekList[1]); teachWeek++) {
-              if (teachWeek == 13 && week(i, j) == "5") {
-                print(teachWeek);
-              }
               _schedule[teachWeek.toString()]?[week(i, j)]?[lesson.toString()] = [
+                //课程名
+                course(i),
+                //老师名字
+                teacher(i),
+                //上课地点
+                courseVenue,
+                //备注
+                remark(i, j)
+              ];
+            }
+          } else if (weekList.length >= 3) {
+            for (String teachWeek in weekList) {
+              print(teachWeek);
+              _schedule[teachWeek]?[week(i, j)]?[lesson.toString()] = [
                 //课程名
                 course(i),
                 //老师名字
