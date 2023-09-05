@@ -8,3 +8,7 @@ ButtonStyle buttonStyle() {
     overlayColor: MaterialStateProperty.all<Color>(readColorEnd()),
   );
 }
+
+TextStyle tomorrowAndTodayTextStyle() {
+  return TextStyle(fontSize: 14, color: Colors.black, decoration: TextDecoration.none);
+}
