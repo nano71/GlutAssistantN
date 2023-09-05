@@ -13,6 +13,7 @@ import 'package:glutassistantn/widget/icons.dart';
 import 'package:glutassistantn/widget/lists.dart';
 
 import '../common/io.dart';
+import '../common/style.dart';
 import '../config.dart';
 import '../data.dart';
 import 'init.dart';
@@ -75,8 +76,6 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
     _scrollController.addListener(_scrollControllerListener);
   }
-
-
 
   void _scrollControllerListener() {
     if (_timeOutBool) {
@@ -224,10 +223,6 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
     _animationControllerForHomeCards1.dispose();
     _scrollController.dispose();
     super.dispose();
-  }
-
-  TextStyle _tomorrowAndTodayTextStyle() {
-    return TextStyle(fontSize: 14, color: Colors.black, decoration: TextDecoration.none);
   }
 
   @override
@@ -411,9 +406,10 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     ),
                   ],
                 ),
+                ExamsTipsBar(),
                 Align(
                   alignment: Alignment.centerLeft,
-                  child: Text(todayScheduleTitle, style: _tomorrowAndTodayTextStyle()),
+                  child: Text(todayScheduleTitle, style: tomorrowAndTodayTextStyle()),
                 ),
               ],
             ),
@@ -422,7 +418,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
           SliverToBoxAdapter(
               child: Container(
             padding: EdgeInsets.fromLTRB(16, 16, 16, 16),
-            child: Align(alignment: Alignment.centerLeft, child: Text(tomorrowScheduleTitle, style: _tomorrowAndTodayTextStyle())),
+            child: Align(alignment: Alignment.centerLeft, child: Text(tomorrowScheduleTitle, style: tomorrowAndTodayTextStyle())),
           )),
           TomorrowCourseList(),
           LoginCheck(),

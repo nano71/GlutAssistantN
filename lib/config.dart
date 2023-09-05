@@ -24,6 +24,7 @@ class Global {
   static Uri loginUrl = httpUri("/academic/j_acegi_security_check");
   static Uri loginUrl2 = httpUri("/academic/index_new.jsp");
   static Uri getWeekUrl = httpUri("/academic/listLeft.do");
+  static String getRecentExam = "/academic/student/exam/index.jsdo";
   static Uri getExamUrl = httpUri("/academic/manager/examstu/studentQueryAllExam.do");
   static Uri getNameUrl = httpUri("/academic/student/studentinfo/studentInfoModifyIndex.do", {"frombase": "0", "wantTag": "0"});
   static Uri getScoreUrl = httpUri("/academic/manager/score/studentOwnScore.do");
