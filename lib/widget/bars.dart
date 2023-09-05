@@ -5,9 +5,12 @@ import 'package:badges/badges.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_remix/flutter_remix.dart';
+import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:glutassistantn/config.dart';
 import 'package:glutassistantn/pages/setting.dart';
 
+import '../common/get.dart';
+import '../common/style.dart';
 import '../data.dart';
 import 'dialog.dart';
 import 'icons.dart';
@@ -157,8 +160,6 @@ class BottomNavBarState extends State<BottomNavBar> {
     });
   }
 
-
-
   @override
   void dispose() {
     super.dispose();
@@ -214,6 +215,83 @@ class BottomNavBarState extends State<BottomNavBar> {
               ),
             ),
             label: ''),
+      ],
+    );
+  }
+}
+
+class ExamsTipsBar extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => ExamsTipsBarState();
+}
+
+class ExamsTipsBarState extends State<ExamsTipsBar> {
+  @override
+  Widget build(BuildContext context) {
+    getRecentExam();
+    return Column(
+      children: [
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Text("近期考试", style: tomorrowAndTodayTextStyle()),
+        ),
+        Container(
+          margin: EdgeInsets.fromLTRB(0, 16, 0, 16),
+          height: 150,
+          child: new Swiper(
+            itemBuilder: (BuildContext context, int index) {
+              return Container(
+                padding: EdgeInsets.fromLTRB(16, 16, 16, 16),
+                decoration: BoxDecoration(
+                  color: readColorBegin(),
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(12.0),
+                  ),
+                ),
+                child: Stack(
+                  children: [
+                    Align(
+                      alignment: Alignment.bottomRight,
+                      child: Container(
+                        child: Text(
+                          "大",
+                          style: TextStyle(fontSize: 128, color: Color(0x66f1f1f1)),
+                        ),
+                      ),
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          courseLongText2Short("大学英语(二)"),
+                          style: TextStyle(fontSize: 20, color: readColor()),
+                        ),
+                        SizedBox(
+                          height: 8,
+                        ),
+                        Text(
+                          "教师: ",
+                          style: TextStyle(color: Colors.black54),
+                        ),
+                        Text(
+                          "地点: ",
+                          style: TextStyle(color: Colors.black54),
+                        ),
+                        Text(
+                          "时间: ",
+                          style: TextStyle(color: Colors.black54),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              );
+            },
+            itemCount: 1,
+            viewportFraction: 0.8,
+            scale: 0.9,
+          ),
+        ),
       ],
     );
   }
