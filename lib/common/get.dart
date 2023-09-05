@@ -16,6 +16,43 @@ import '../config.dart';
 import '../data.dart';
 import '../pages/update.dart';
 
+Future getRecentExam() async {
+  print("getRecentExam");
+  Response response;
+  try {
+    response = await request("get", Uri.http(Global.jwUrl, Global.getRecentExam));
+    Document document = parse(getHtml(response));
+    List<Element> items = document.querySelectorAll("tr.infolist_common");
+    if (items.length > 0) {
+      List<Map<String, String>> examList = [];
+      for (Element value in items) {
+        Map<String, String> cache = {"name": "", "time": "", "location": "", "type": ""};
+        int i = -1;
+        List<String> keys = ["name", "time", "location", "type"];
+        value.querySelectorAll("td").forEach((element) {
+          print(element.innerHtml);
+          element.innerHtml = element.innerHtml.replaceAll("&nbsp;", "").trim();
+          if (element.innerHtml == "") return;
+          if (i > -1) {
+            cache[keys[i]] = element.innerHtml;
+          }
+          i++;
+        });
+        examList.add(cache);
+      }
+      print(examList);
+    } else {
+      print("未登录教务");
+    }
+  } on TimeoutException catch (e) {
+    print("超时");
+    print(e);
+  } on SocketException catch (e) {
+    print("连接失败");
+    print(e);
+  }
+}
+
 Future<void> getWeek() async {
   print("getWeek");
   Response response;
