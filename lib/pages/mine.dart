@@ -11,7 +11,7 @@ import 'package:badges/badges.dart' as badges;
 
 import '../config.dart';
 import '../data.dart';
-import 'info.dart';
+import 'about.dart';
 import 'login.dart';
 
 class MinePage extends StatefulWidget {
@@ -34,7 +34,6 @@ class MinePageState extends State<MinePage> {
   Widget build(BuildContext context) {
     return Container(
       color: Colors.white,
-      margin: EdgeInsets.fromLTRB(0, 0, 0, 16),
       child: CustomScrollView(physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()), slivers: [
         publicTopBar(writeData["name"] != "" ? "Hi! " + (writeData["name"] ?? "") : "请先登录教务"),
         SliverToBoxAdapter(

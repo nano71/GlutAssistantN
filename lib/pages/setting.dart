@@ -271,7 +271,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                               eventBus.fire(SetPageIndex());
                               Navigator.pushAndRemoveUntil(
                                 context,
-                                CustomRoute(CustomView()),
+                                CustomRouter(CustomView()),
                                 (route) => false,
                               );
                             },

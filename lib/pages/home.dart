@@ -165,7 +165,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
               "需要验证",
               context,
               () async => await getSchedule().then((value) => {
-                    if (value == "success") {Navigator.pushAndRemoveUntil(context, CustomRoute(CustomView(refresh: true)), (route) => false)}
+                    if (value == "success") {Navigator.pushAndRemoveUntil(context, CustomRouter(CustomView(refresh: true)), (route) => false)}
                   }),
               hideSnackBarSeconds: 10,
             ));
@@ -247,7 +247,6 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
     // print("HomePage create");
     return Container(
       color: Colors.white,
-      margin: EdgeInsets.fromLTRB(0, 0, 0, 16),
       child: CustomScrollView(
         controller: _scrollController,
         physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
