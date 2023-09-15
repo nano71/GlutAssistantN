@@ -1,11 +1,13 @@
 buildscript {
-    ext.kotlin_version = '1.7.20'
+    ext.kotlin_version = '1.8.20'
+    ext.gradle_version = '8.1.0'
+
     repositories {
         maven { url 'https://repo.huaweicloud.com/repository/maven/' }
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.3.0'
+        classpath "com.android.tools.build:gradle:$gradle_version"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
@@ -19,7 +21,11 @@ allprojects {
 rootProject.buildDir = '../build'
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
+    afterEvaluate {
+        android.namespace = "com.nano71.glutassistantn"
+    }
     project.evaluationDependsOn(':app')
+
 }
 
 tasks.register("clean", Delete) {

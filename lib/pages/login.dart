@@ -130,7 +130,7 @@ class LoginPageState extends State<LoginPage> {
         eventBus.fire(SetPageIndex());
         Navigator.pushAndRemoveUntil(
           context,
-          CustomRoute(CustomView(refresh: true)),
+          CustomRouter(CustomView(refresh: true)),
           (route) => false,
         );
       } else if (value == "fail") {

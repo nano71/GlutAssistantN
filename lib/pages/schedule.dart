@@ -198,7 +198,6 @@ class SchedulePageState extends State<SchedulePage> with AutomaticKeepAliveClien
     super.build(context);
     return Container(
       color: Colors.white,
-      margin: EdgeInsets.fromLTRB(0, 0, 0, 16),
       child: Column(
         children: [
           ScheduleTopBar(key: barKey),
