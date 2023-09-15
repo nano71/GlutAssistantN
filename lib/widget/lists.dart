@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_remix/flutter_remix.dart';
-import 'package:glutassistantn/config.dart';
+import '/config.dart';
 
 import '../data.dart';
 import 'bars.dart';

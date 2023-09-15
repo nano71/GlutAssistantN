@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:glutassistantn/pages/init.dart';
+import '/pages/init.dart';
 
 import 'config.dart';
 

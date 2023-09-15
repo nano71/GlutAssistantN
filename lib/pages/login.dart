@@ -3,12 +3,12 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_remix/flutter_remix.dart';
-import 'package:glutassistantn/common/cookie.dart';
-import 'package:glutassistantn/common/get.dart';
-import 'package:glutassistantn/common/init.dart';
-import 'package:glutassistantn/common/io.dart';
-import 'package:glutassistantn/common/login.dart';
-import 'package:glutassistantn/widget/bars.dart';
+import '/common/cookie.dart';
+import '/common/get.dart';
+import '/common/init.dart';
+import '/common/io.dart';
+import '/common/login.dart';
+import '/widget/bars.dart';
 import 'package:http/http.dart';
 
 import '../config.dart';
@@ -130,7 +130,7 @@ class LoginPageState extends State<LoginPage> {
         eventBus.fire(SetPageIndex());
         Navigator.pushAndRemoveUntil(
           context,
-          CustomRoute(View(refresh: true)),
+          CustomRoute(CustomView(refresh: true)),
           (route) => false,
         );
       } else if (value == "fail") {

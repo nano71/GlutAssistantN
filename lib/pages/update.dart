@@ -4,11 +4,11 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_remix/flutter_remix.dart';
-import 'package:glutassistantn/common/get.dart';
-import 'package:glutassistantn/common/io.dart';
-import 'package:glutassistantn/config.dart';
-import 'package:glutassistantn/data.dart';
-import 'package:glutassistantn/widget/bars.dart';
+import '/common/get.dart';
+import '/common/io.dart';
+import '/config.dart';
+import '/data.dart';
+import '/widget/bars.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../widget/dialog.dart';

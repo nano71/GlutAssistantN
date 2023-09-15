@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:glutassistantn/common/cookie.dart';
+import '/common/cookie.dart';
 import 'package:http/http.dart';
 
 import '../config.dart';

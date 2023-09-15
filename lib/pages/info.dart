@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_remix/flutter_remix.dart';
-import 'package:glutassistantn/custom/expansiontile.dart' as CustomExpansionTile;
-import 'package:glutassistantn/widget/bars.dart';
+import '/custom/expansiontile.dart' as CustomExpansionTile;
+import '/widget/bars.dart';
 
 class InfoPage extends StatefulWidget {
   final String title;
