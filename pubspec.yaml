@@ -18,7 +18,7 @@ publish_to: "https://pub.flutter-io.cn" # Remove this line if you wish to publis
 version: 1.5.230606+46
 
 environment:
-  sdk: ">=2.12.0 <3.0.0"
+  sdk: ">=2.12.0 <4.0.0"
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -27,22 +27,22 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
-  http: ^0.13.4
+  http: ^1.1.0
   html: ^0.15.0
-  gbk2utf8: ^1.0.1
+  flutter_gbk2utf8 : ^1.0.0
   path_provider: ^2.0.6
   event_bus: ^2.0.0
   url_launcher: ^6.0.12
   package_info: ^2.0.2
-  badges: ^2.0.2
+  badges: ^3.1.2
   flutter_remix: ^0.0.3
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.2
-  flutter_local_notifications: ^13.0.0
-  workmanager: ^0.5.1
+  flutter_local_notifications: ^15.1.1
   shared_preferences: ^2.0.15
-  flutter_swiper: ^1.1.6
+  flutter_swiper_view: ^1.1.8
+  home_widget: ^0.3.0
 
 dev_dependencies:
   flutter_test:

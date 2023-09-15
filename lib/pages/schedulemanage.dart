@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_remix/flutter_remix.dart';
-import 'package:glutassistantn/widget/bars.dart';
+import '/widget/bars.dart';
 
 import '../config.dart';
 

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_remix/flutter_remix.dart';
-import 'package:glutassistantn/common/cookie.dart';
-import 'package:glutassistantn/common/login.dart';
-import 'package:glutassistantn/common/noripple.dart';
-import 'package:glutassistantn/common/style.dart';
-import 'package:glutassistantn/data.dart';
+import '/common/cookie.dart';
+import '/common/login.dart';
+import '/common/noripple.dart';
+import '/common/style.dart';
+import '/data.dart';
 import 'package:http/http.dart';
 
 import '../config.dart';

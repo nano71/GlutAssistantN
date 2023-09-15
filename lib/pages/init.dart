@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:glutassistantn/common/get.dart';
-import 'package:glutassistantn/common/init.dart';
-import 'package:glutassistantn/common/io.dart';
-import 'package:glutassistantn/config.dart';
-import 'package:glutassistantn/pages/home.dart';
-import 'package:glutassistantn/pages/mine.dart';
-import 'package:glutassistantn/pages/schedule.dart';
-import 'package:glutassistantn/widget/bars.dart';
+import '/common/get.dart';
+import '/common/init.dart';
+import '/common/io.dart';
+import '/config.dart';
+import '/pages/home.dart';
+import '/pages/mine.dart';
+import '/pages/schedule.dart';
+import '/widget/bars.dart';
 import 'package:package_info/package_info.dart';
 
 import '../data.dart';
@@ -57,7 +57,7 @@ class InitState extends State<Init> {
     getUpdateForEveryday();
     Navigator.pushAndRemoveUntil(
       context,
-      CustomRoute(View(), 2000),
+      CustomRoute(CustomView(), 2000),
       (route) => false,
     );
   }
@@ -68,10 +68,10 @@ class InitState extends State<Init> {
   }
 }
 
-class View extends StatelessWidget {
+class CustomView extends StatelessWidget {
   final bool refresh;
 
-  View({Key? key, this.refresh = false}) : super(key: key);
+  CustomView({Key? key, this.refresh = false}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

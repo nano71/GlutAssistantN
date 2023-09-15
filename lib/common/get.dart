@@ -4,10 +4,10 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:gbk2utf8/gbk2utf8.dart';
-import 'package:glutassistantn/common/cookie.dart';
-import 'package:glutassistantn/common/io.dart';
-import 'package:glutassistantn/common/parser.dart';
+import 'package:flutter_gbk2utf8/flutter_gbk2utf8.dart';
+import '/common/cookie.dart';
+import '/common/io.dart';
+import '/common/parser.dart';
 import 'package:html/dom.dart';
 import 'package:html/parser.dart';
 import 'package:http/http.dart';
@@ -75,7 +75,10 @@ Future<void> getWeek() async {
   writeData["semester"] = q;
   writeData["year"] = n;
   writeData["week"] = week;
-  if (int.parse(writeData["year"]!) > int.parse(writeData["yearBk"]!)) {
+  print(writeData["yearBk"]);
+  if (writeData["yearBk"] == "") {
+    writeData["yearBk"] = "0";
+  } else if (int.parse(writeData["year"]!) > int.parse(writeData["yearBk"]!)) {
     writeData["yearBk"] = n;
   }
   if (writeData["semesterBk"] == "" && writeData["yearBk"] == "") {
