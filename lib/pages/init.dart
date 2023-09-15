@@ -11,10 +11,10 @@ import 'package:package_info/package_info.dart';
 
 import '../data.dart';
 
-class CustomRoute extends PageRouteBuilder {
+class CustomRouter extends PageRouteBuilder {
   final Widget widget;
 
-  CustomRoute(this.widget, [int milliseconds = 300])
+  CustomRouter(this.widget, [int milliseconds = 300])
       : super(
             transitionDuration: Duration(milliseconds: milliseconds),
             pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
@@ -57,7 +57,7 @@ class InitState extends State<Init> {
     getUpdateForEveryday();
     Navigator.pushAndRemoveUntil(
       context,
-      CustomRoute(CustomView(), 2000),
+      CustomRouter(CustomView(), 2000),
       (route) => false,
     );
   }

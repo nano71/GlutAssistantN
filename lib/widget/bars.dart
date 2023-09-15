@@ -2,7 +2,6 @@
 import 'dart:async';
 
 import 'package:badges/badges.dart' as badges;
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_remix/flutter_remix.dart';
 import 'package:flutter_swiper_view/flutter_swiper_view.dart';
@@ -169,51 +168,72 @@ class BottomNavBarState extends State<BottomNavBar> {
   @override
   Widget build(BuildContext context) {
     // print("BottomNavBar create");
-    return CupertinoTabBar(
-      border: Border(
-        top: BorderSide(
-          color: Colors.white,
-        ),
-      ),
-      backgroundColor: Colors.white,
-      activeColor: readColor(),
-      inactiveColor: Colors.black87,
-      currentIndex: Global.pageIndex,
-      onTap: (int index) {
+    return NavigationBar(
+      // border: Border(
+      //   top: BorderSide(
+      //     color: Colors.white,
+      //   ),
+      // ),
+      animationDuration: Duration(seconds: 1),
+      backgroundColor: Colors.grey.shade50,
+      indicatorColor: readColorEnd(),
+      shadowColor: Colors.transparent,
+      surfaceTintColor: Colors.black87,
+      selectedIndex: Global.pageIndex,
+      onDestinationSelected: (int index) {
         if (Global.pageIndex != index) {
           Global.pageControl.jumpToPage(index);
-          // Global.pageControl.animateToPage(index, duration: Duration(milliseconds: 500), curve: Curves.linear);
           Global.pageIndex = index;
         }
         setState(() {});
       },
-      items: [
-        BottomNavigationBarItem(
-            tooltip: '',
-            icon: Icon(
-              FlutterRemix.home_3_line,
+      destinations: [
+        NavigationDestination(
+          icon: Icon(
+            FlutterRemix.home_3_line,
+          ),
+          selectedIcon: Icon(
+            FlutterRemix.home_3_fill,
+            color: readColor(),
+          ),
+          label: "一览",
+        ),
+        NavigationDestination(
+          icon: Icon(
+            FlutterRemix.calendar_todo_line,
+          ),
+          selectedIcon: Icon(
+            FlutterRemix.calendar_todo_fill,
+            color: readColor(),
+          ),
+          label: "课表",
+        ),
+        NavigationDestination(
+          selectedIcon: badges.Badge(
+            // animationType: BadgeAnimationType.scale,
+            showBadge: hasNewVersion,
+            badgeContent: Text(
+              "1",
+              style: TextStyle(color: Colors.white),
             ),
-            label: ''),
-        BottomNavigationBarItem(
-            tooltip: '',
-            icon: Icon(
-              FlutterRemix.calendar_todo_line,
+            child: Icon(
+              FlutterRemix.emotion_happy_fill,
+              color: readColor(),
             ),
-            label: ''),
-        BottomNavigationBarItem(
-            tooltip: '',
-            icon: badges.Badge(
-              // animationType: BadgeAnimationType.scale,
-              showBadge: hasNewVersion,
-              badgeContent: Text(
-                "1",
-                style: TextStyle(color: Colors.white),
-              ),
-              child: Icon(
-                FlutterRemix.emotion_happy_line,
-              ),
+          ),
+          icon: badges.Badge(
+            // animationType: BadgeAnimationType.scale,
+            showBadge: hasNewVersion,
+            badgeContent: Text(
+              "1",
+              style: TextStyle(color: Colors.white),
             ),
-            label: ''),
+            child: Icon(
+              FlutterRemix.emotion_happy_line,
+            ),
+          ),
+          label: "我的",
+        ),
       ],
     );
   }
@@ -381,9 +401,7 @@ SnackBar jwSnackBarAction(bool result, String text, BuildContext context, Functi
             },
             child: Text(
               text,
-              style: TextStyle(
-                color: Colors.blue
-              ),
+              style: TextStyle(color: Colors.blue),
             ),
           )
         ],

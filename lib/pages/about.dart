@@ -109,7 +109,7 @@ class _InfoPageState extends State<InfoPage> {
                         Container(
                           padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
                           child: Text(
-                            "可以在`酷安APP`搜索桂工助手N,在应用详情下方评论,或者在Github搜索GlutAssistantN,也可以点击下面的文本联系我:",
+                            "鼓励在Github上给这个项目提issue,你也可以点击下面的QQ/WX号联系我😋!!",
                             style: TextStyle(color: Colors.grey),
                           ),
                         ),
