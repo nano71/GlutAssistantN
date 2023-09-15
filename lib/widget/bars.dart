@@ -1,14 +1,14 @@
 // 引入 eventBus 包文件
 import 'dart:async';
 
-import 'package:badges/badges.dart';
+import 'package:badges/badges.dart' as badges;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_remix/flutter_remix.dart';
-import 'package:flutter_swiper/flutter_swiper.dart';
-import 'package:glutassistantn/config.dart';
-import 'package:glutassistantn/pages/setting.dart';
+import 'package:flutter_swiper_view/flutter_swiper_view.dart';
 
+import '/config.dart';
+import '/pages/setting.dart';
 import '../common/get.dart';
 import '../common/style.dart';
 import '../data.dart';
@@ -202,9 +202,8 @@ class BottomNavBarState extends State<BottomNavBar> {
             label: ''),
         BottomNavigationBarItem(
             tooltip: '',
-            icon: Badge(
+            icon: badges.Badge(
               // animationType: BadgeAnimationType.scale,
-              toAnimate: false,
               showBadge: hasNewVersion,
               badgeContent: Text(
                 "1",
@@ -357,27 +356,37 @@ SnackBar jwSnackBarAction(bool result, String text, BuildContext context, Functi
           FlutterRemix.error_warning_line,
           color: Colors.red,
         );
+  final screenWidth = MediaQuery.of(context).size.width;
   return SnackBar(
-    elevation: 0,
-    margin: EdgeInsets.fromLTRB(100, 0, 100, 50),
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(50.0),
-    ),
-    duration: Duration(seconds: hideSnackBarSeconds),
-    content: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[resultIcon],
-    ),
-    behavior: SnackBarBehavior.floating,
-    action: SnackBarAction(
-      label: text,
-      onPressed: () {
-        if (isDialogCallback) {
-          codeCheckDialog(context, callback);
-        } else {
-          callback();
-        }
-      },
-    ),
-  );
+      elevation: 0,
+      margin: EdgeInsets.fromLTRB(100, 0, 100, 50),
+      padding: EdgeInsets.fromLTRB(12, 12, 16, 12),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(50.0),
+      ),
+      duration: Duration(seconds: hideSnackBarSeconds),
+      content: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          resultIcon,
+          InkWell(
+            highlightColor: Colors.transparent, // 透明色
+            splashColor: Colors.transparent, // 透明色
+            onTap: () {
+              if (isDialogCallback) {
+                codeCheckDialog(context, callback);
+              } else {
+                callback();
+              }
+            },
+            child: Text(
+              text,
+              style: TextStyle(
+                color: Colors.blue
+              ),
+            ),
+          )
+        ],
+      ),
+      behavior: SnackBarBehavior.floating);
 }

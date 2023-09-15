@@ -1,12 +1,13 @@
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_remix/flutter_remix.dart';
-import 'package:glutassistantn/pages/career.dart';
-import 'package:glutassistantn/pages/queryroom.dart';
-import 'package:glutassistantn/pages/setting.dart';
-import 'package:glutassistantn/pages/update.dart';
-import 'package:glutassistantn/widget/bars.dart';
-import 'package:glutassistantn/widget/icons.dart';
+import '/pages/career.dart';
+import '/pages/queryroom.dart';
+import '/pages/setting.dart';
+import '/pages/update.dart';
+import '/widget/bars.dart';
+import '/widget/icons.dart';
+import 'package:badges/badges.dart' as badges;
 
 import '../config.dart';
 import '../data.dart';
@@ -155,8 +156,7 @@ Widget mineItem5(IconData icon, EdgeInsets padding, String title, Color color) {
           Icon(icon, color: color),
           Container(
               padding: padding,
-              child: Badge(
-                toAnimate: false,
+              child: badges.Badge(
                 badgeContent: Text(''),
                 child: Text(
                   title,

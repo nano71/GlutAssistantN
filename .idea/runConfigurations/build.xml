@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="build" type="ShConfigurationType">
-    <option name="SCRIPT_TEXT" value="flutter build apk --flavor build --obfuscate --split-debug-info=symbols --target-platform android-arm64 --split-per-abi --no-sound-null-safety " />
+    <option name="SCRIPT_TEXT" value="flutter build apk --flavor build --obfuscate --split-debug-info=symbols --target-platform android-arm64 --split-per-abi" />
     <option name="INDEPENDENT_SCRIPT_PATH" value="true" />
     <option name="SCRIPT_PATH" value="$PROJECT_DIR$/build.sh" />
     <option name="SCRIPT_OPTIONS" value="" />

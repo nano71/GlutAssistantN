@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:glutassistantn/common/get.dart';
-import 'package:glutassistantn/common/init.dart';
-import 'package:glutassistantn/config.dart';
+import '/common/get.dart';
+import '/common/init.dart';
+import '/config.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../data.dart';

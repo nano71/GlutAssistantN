@@ -3,10 +3,10 @@ import 'dart:core';
 
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
-import 'package:glutassistantn/common/io.dart';
-import 'package:glutassistantn/data.dart';
-import 'package:glutassistantn/widget/bars.dart';
-import 'package:glutassistantn/widget/dialog.dart';
+import '/common/io.dart';
+import '/data.dart';
+import '/widget/bars.dart';
+import '/widget/dialog.dart';
 
 import '../config.dart';
 

@@ -1,4 +1,4 @@
-import 'package:glutassistantn/config.dart';
+import '/config.dart';
 
 import 'io.dart';
 

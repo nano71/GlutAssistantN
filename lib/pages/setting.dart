@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_remix/flutter_remix.dart';
-import 'package:glutassistantn/common/init.dart';
-import 'package:glutassistantn/common/io.dart';
-import 'package:glutassistantn/common/style.dart';
-import 'package:glutassistantn/custom/expansiontile.dart' as CustomExpansionTile;
-import 'package:glutassistantn/pages/schedulemanage.dart';
-import 'package:glutassistantn/pages/timemanage.dart';
-import 'package:glutassistantn/widget/bars.dart';
+import '/common/init.dart';
+import '/common/io.dart';
+import '/common/style.dart';
+import '/custom/expansiontile.dart' as CustomExpansionTile;
+import '/pages/schedulemanage.dart';
+import '/pages/timemanage.dart';
+import '/widget/bars.dart';
 
 import '../config.dart';
 import '../data.dart';
@@ -271,7 +271,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                               eventBus.fire(SetPageIndex());
                               Navigator.pushAndRemoveUntil(
                                 context,
-                                CustomRoute(View()),
+                                CustomRoute(CustomView()),
                                 (route) => false,
                               );
                             },

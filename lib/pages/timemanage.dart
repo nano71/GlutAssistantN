@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_remix/flutter_remix.dart';
-import 'package:glutassistantn/common/io.dart';
-import 'package:glutassistantn/widget/bars.dart';
+import '/common/io.dart';
+import '/widget/bars.dart';
 
 import '../config.dart';
 import '../data.dart';
@@ -54,7 +54,7 @@ class _TimeManagePageState extends State<TimeManagePage> {
     eventBus.fire(SetPageIndex());
     Navigator.pushAndRemoveUntil(
       context,
-      CustomRoute(View()),
+      CustomRoute(CustomView()),
       (route) => false,
     );
   }
@@ -81,7 +81,7 @@ class _TimeManagePageState extends State<TimeManagePage> {
     eventBus.fire(SetPageIndex());
     Navigator.pushAndRemoveUntil(
       context,
-      CustomRoute(View()),
+      CustomRoute(CustomView()),
       (route) => false,
     );
   }

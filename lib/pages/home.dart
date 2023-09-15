@@ -3,14 +3,14 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:glutassistantn/common/get.dart';
-import 'package:glutassistantn/common/init.dart';
-import 'package:glutassistantn/pages/queryexam.dart';
-import 'package:glutassistantn/pages/queryscore.dart';
-import 'package:glutassistantn/widget/bars.dart';
-import 'package:glutassistantn/widget/cards.dart';
-import 'package:glutassistantn/widget/icons.dart';
-import 'package:glutassistantn/widget/lists.dart';
+import '/common/get.dart';
+import '/common/init.dart';
+import '/pages/queryexam.dart';
+import '/pages/queryscore.dart';
+import '/widget/bars.dart';
+import '/widget/cards.dart';
+import '/widget/icons.dart';
+import '/widget/lists.dart';
 
 import '../common/io.dart';
 import '../common/style.dart';
@@ -165,7 +165,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
               "需要验证",
               context,
               () async => await getSchedule().then((value) => {
-                    if (value == "success") {Navigator.pushAndRemoveUntil(context, CustomRoute(View(refresh: true)), (route) => false)}
+                    if (value == "success") {Navigator.pushAndRemoveUntil(context, CustomRoute(CustomView(refresh: true)), (route) => false)}
                   }),
               hideSnackBarSeconds: 10,
             ));
@@ -406,7 +406,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     ),
                   ],
                 ),
-                ExamsTipsBar(),
+                // ExamsTipsBar(),
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(todayScheduleTitle, style: tomorrowAndTodayTextStyle()),

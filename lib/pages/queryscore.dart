@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_remix/flutter_remix.dart';
-import 'package:glutassistantn/common/get.dart';
-import 'package:glutassistantn/pages/setting.dart';
-import 'package:glutassistantn/widget/bars.dart';
-import 'package:glutassistantn/widget/lists.dart';
+import '/common/get.dart';
+import '/pages/setting.dart';
+import '/widget/bars.dart';
+import '/widget/lists.dart';
 
 import '../config.dart';
 import '../data.dart';
