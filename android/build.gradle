@@ -1,9 +1,14 @@
 buildscript {
-    ext.kotlin_version = '1.8.20'
-    ext.gradle_version = '8.1.0'
+    ext.kotlin_version = '1.8.22'
+    ext.gradle_version = '8.1.1'
 
     repositories {
-        maven { url 'https://repo.huaweicloud.com/repository/maven/' }
+        maven { url "https://repo.huaweicloud.com/repository/maven/" }
+        maven { url "https://mirrors.cloud.tencent.com/gradle/" }
+        maven { url "https://repo.maven.apache.org/maven2/" }
+        maven { url "https://repo1.maven.org/maven2/" }
+        maven { url 'https://maven.aliyun.com/repository/google' }
+        maven { url 'https://maven.aliyun.com/repository/jcenter' }
     }
 
     dependencies {
@@ -14,16 +19,21 @@ buildscript {
 
 allprojects {
     repositories {
-        maven { url 'https://repo.huaweicloud.com/repository/maven/' }
+        maven { url "https://repo.huaweicloud.com/repository/maven/" }
+        maven { url "https://mirrors.cloud.tencent.com/gradle/" }
+        maven { url 'https://maven.aliyun.com/repository/google' }
+        maven { url 'https://maven.aliyun.com/repository/jcenter' }
+        maven { url "https://repo.maven.apache.org/maven2/" }
+        maven { url "https://repo1.maven.org/maven2/" }
     }
 }
 
 rootProject.buildDir = '../build'
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
-    afterEvaluate {
-        android.namespace = "com.nano71.glutassistantn"
-    }
+//    afterEvaluate {
+//        android.namespace = "com.nano71.glutassistantn"
+//    }
     project.evaluationDependsOn(':app')
 
 }
