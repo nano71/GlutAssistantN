@@ -8,6 +8,7 @@ import '/pages/mine.dart';
 import '/pages/schedule.dart';
 import '/widget/bars.dart';
 import 'package:package_info/package_info.dart';
+import 'package:home_widget/home_widget.dart';
 
 import '../data.dart';
 
@@ -55,6 +56,8 @@ class InitState extends State<Init> {
     await initTomorrowSchedule();
     getWeek();
     getUpdateForEveryday();
+    HomeWidget.saveWidgetData<String>("title", Global.appTitle);
+    HomeWidget.saveWidgetData<String>("message", Global.errorText);
     Navigator.pushAndRemoveUntil(
       context,
       CustomRouter(CustomView(), 2000),

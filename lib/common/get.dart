@@ -5,13 +5,13 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_gbk2utf8/flutter_gbk2utf8.dart';
-import '/common/cookie.dart';
-import '/common/io.dart';
-import '/common/parser.dart';
 import 'package:html/dom.dart';
 import 'package:html/parser.dart';
 import 'package:http/http.dart';
 
+import '/common/cookie.dart';
+import '/common/io.dart';
+import '/common/parser.dart';
 import '../config.dart';
 import '../data.dart';
 import '../pages/update.dart';
@@ -460,14 +460,16 @@ Future getCareer() async {
   await checkLoginSituation().then((value) => result = value);
   if (result == "fail") return result;
   print("getCareer");
-  _next(List url) async {
+  Future<void> _next(List url) async {
     Response response;
     try {
       response = await request("get", Uri.http(Global.jwUrl, "/academic/manager/studyschedule/studentScheduleShowByTerm.do", {"z": "z", "studentId": url[0], "classId": url[1]}));
     } on TimeoutException catch (e) {
-      return timeOutError(e);
+      timeOutError(e);
+      return;
     } on SocketException catch (e) {
-      return socketError(e);
+      socketError(e);
+      return;
     }
 
     Document document = parse(response.bodyBytes);
@@ -638,37 +640,50 @@ Future getEmptyClassroom({
   return results;
 }
 
-Future getUpdate() async {
+Future<dynamic> getUpdate() async {
   print("getUpdate");
   Response response;
   try {
     response = await get(Global.getUpdateUrl);
   } on TimeoutException catch (e) {
     print("getUpdate Error: " + e.toString());
-    return ["请求超时"];
+    return "请求超时";
   } on SocketException catch (e) {
     print("getUpdate Error: " + e.toString());
-    return [Global.socketError];
+    return Global.socketError;
   }
   if (response.body.toString().contains('"message":"API rate limit exceeded for')) {
     print("getUpdate End");
-    return ["频繁的请求!"];
+    return "频繁的请求!";
   }
   print(jsonDecode(response.body));
-  List list = jsonDecode(response.body)["name"].split("_");
-  list.add(jsonDecode(response.body)["body"]);
-  list.add(jsonDecode(response.body)["assets"][0]["browser_download_url"].toString().trim());
-  print(list);
+  Map<String, String> result = {
+    "newVersion": jsonDecode(response.body)["name"].split("_")[1],
+    "newBody": jsonDecode(response.body)["body"],
+    "githubDownload": jsonDecode(response.body)["assets"][0]["browser_download_url"].toString().trim()
+  };
+  print(result);
   print("getUpdate End");
-  return list;
+  return result;
 }
 
 Future getUpdateForEveryday() async {
   print("getUpdateForEveryday");
   if (true || "${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}" != writeData["newTime"]) {
-    Response response = await get(Global.getUpdateUrl);
-    if (response.body.toString().contains('"message":"API rate limit exceeded for')) {
-    } else {
+    Response response;
+    try {
+      response = await get(Global.getUpdateUrl);
+    } on TimeoutException catch (e) {
+      print("getUpdate Error: " + e.toString());
+      return "请求超时";
+    } on SocketException catch (e) {
+      print("getUpdate Error: " + e.toString());
+      return Global.socketError;
+    } on ClientException catch (e){
+      return;
+    }
+    print(response);
+    if (!response.body.toString().contains('"message":"API rate limit exceeded for')) {
       List list = jsonDecode(response.body)["name"].split("_");
       list.add(jsonDecode(response.body)["body"]);
       writeData["newVersion"] = list[1];

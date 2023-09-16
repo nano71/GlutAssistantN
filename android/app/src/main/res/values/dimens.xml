@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="appwidgetSize">110dp</dimen>
+    <dimen name="radius">28dp</dimen>
+</resources>
