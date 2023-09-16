@@ -45,21 +45,21 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
   @override
   void initState() {
     super.initState();
-    getUpdate().then((value) => _next(value));
+    getUpdate().then((dynamic result) => _next(result));
   }
 
-  _next(List value) {
-    print(value);
+  _next(dynamic result) {
+    print(result);
     updating = true;
-    if (value.length <= 1) {
+    if (result is String) {
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
-      ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, value[0], 5));
+      ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, result, 5));
       networkError = true;
     }
     setState(() {
-      writeData["newVersion"] = value[1];
-      writeData["newBody"] = value[3];
-      writeData["githubDownload"] = value[4];
+      writeData["newVersion"] = result["newVersion"];
+      writeData["newBody"] = result["newBody"];
+      writeData["githubDownload"] = result["githubDownload"];
     });
     writeConfig();
     checkNewVersion(false, context);

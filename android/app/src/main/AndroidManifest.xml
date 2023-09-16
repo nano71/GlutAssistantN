@@ -1,5 +1,4 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools" package="com.nano71.glutassistantn" tools:ignore="MissingVersion">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.VIBRATE"/>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
@@ -13,7 +12,7 @@
                 android:theme="@style/LaunchTheme"
                 android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
                 android:hardwareAccelerated="true"
-                android:windowSoftInputMode="adjustResize" tools:targetApi="honeycomb">
+                android:windowSoftInputMode="adjustResize" >
             <!-- Specifies an Android theme to apply to this Activity as soon as
                  the Android process has started. This theme is visible to the user
                  while the Flutter UI initializes. After that, this theme continues
@@ -33,6 +32,19 @@
                 android:name="flutterEmbedding"
                 android:value="2"/>
 
+        <receiver android:name=".HomeWidgetExampleProvider" android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider"
+                       android:resource="@xml/list_widget" />
+        </receiver>
+        <receiver android:name=".HomeWidgetExampleProviderLarge" android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider"
+                       android:resource="@xml/list_widget_large" />
+        </receiver>
     </application>
-
 </manifest>
