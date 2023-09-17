@@ -216,3 +216,7 @@ Map emptySchedule() {
   print("emptySchedule End");
   return _schedule;
 }
+
+bool isLogin(){
+  return writeData["username"] != "";
+}

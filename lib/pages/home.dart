@@ -3,15 +3,15 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+
 import '/common/get.dart';
 import '/common/init.dart';
-import '/pages/queryexam.dart';
-import '/pages/queryscore.dart';
+import '/pages/queryExam.dart';
+import '/pages/queryScore.dart';
 import '/widget/bars.dart';
 import '/widget/cards.dart';
 import '/widget/icons.dart';
 import '/widget/lists.dart';
-
 import '../common/io.dart';
 import '../common/style.dart';
 import '../config.dart';
@@ -42,11 +42,11 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   late Animation _animationForHomeCards2;
   late Animation _animationForHomeCards3;
   ColorTween homeCardsColorTween = ColorTween(begin: readColorBegin(), end: readColorEnd());
-  int _goTopInitCount = 0;
-  bool _bk = true;
-  Timer _time = Timer(Duration(), () {});
-  Timer _time2 = Timer(Duration(), () {});
-  bool firstBuild = true;
+  int _updateButtonClickCount = 0;
+  bool _clickCooldown = false;
+  Timer _updateIntervalTimer = Timer(Duration(), () {});
+  Timer _rotationAnimationTimer = Timer(Duration(), () {});
+  bool _firstBuild = true;
 
   @override
   void initState() {
@@ -104,16 +104,16 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   void _goTop() {
     print('_goTop');
-    _time.cancel();
-    _time2.cancel();
-    if (_goTopInitCount < 8) {
+    _updateIntervalTimer.cancel();
+    _rotationAnimationTimer.cancel();
+    if (_updateButtonClickCount < 8) {
       int _endCount = 10000;
       print("刷新${DateTime.now()}");
-      _goTopInitCount++;
-      if (_goTopInitCount == 7) {
+      _updateButtonClickCount++;
+      if (_updateButtonClickCount == 7) {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, "你太快了!"));
-      } else if (_goTopInitCount == 1) {
+      } else if (_updateButtonClickCount == 1) {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "准备更新...", 10));
       }
@@ -122,7 +122,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
         duration: Duration(milliseconds: 300),
         curve: Curves.linear,
       );
-      _next() async {
+      afterSuccess() async {
         await readSchedule();
         Map _schedule = schedule;
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
@@ -151,47 +151,52 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
         ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(1, "数据已更新!", 1));
       }
 
-      _scheduleParser(String response) {
-        if (response == "fail") {
-          if (writeData["username"] == "") {
-            // codeCheckDialog(context),
-            ScaffoldMessenger.of(context).removeCurrentSnackBar();
-            ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, "请先登录!"));
-            _time2.cancel();
+      _scheduleParser(dynamic result) {
+        if (result is bool) {
+          if (result) {
+            afterSuccess();
           } else {
-            ScaffoldMessenger.of(context).removeCurrentSnackBar();
-            ScaffoldMessenger.of(context).showSnackBar(jwSnackBarAction(
-              false,
-              "需要验证",
-              context,
-              () async => await getSchedule().then((value) => {
-                    if (value == "success") {Navigator.pushAndRemoveUntil(context, CustomRouter(CustomView(refresh: true)), (route) => false)}
-                  }),
-              hideSnackBarSeconds: 10,
-            ));
-            _time2.cancel();
+            if (!isLogin()) {
+              // codeCheckDialog(context),
+              ScaffoldMessenger.of(context).removeCurrentSnackBar();
+              ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, Global.notLoginError));
+              _rotationAnimationTimer.cancel();
+            } else {
+              ScaffoldMessenger.of(context).removeCurrentSnackBar();
+              ScaffoldMessenger.of(context).showSnackBar(jwSnackBarAction(
+                false,
+                "需要验证",
+                context,
+                () async {
+                  // Future<dynamic> getSchedule()
+                  if (await getSchedule() == true) {
+                    Navigator.pushAndRemoveUntil(context, CustomRouter(CustomView(refresh: true)), (route) => false);
+                  }
+                },
+                hideSnackBarSeconds: 10,
+              ));
+              _rotationAnimationTimer.cancel();
+            }
           }
-        } else if (response == "success")
-          _next();
-        else {
+        } else {
           ScaffoldMessenger.of(context).removeCurrentSnackBar();
-          ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, response, 4));
-          _time2.cancel();
+          ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, result, 4));
+          _rotationAnimationTimer.cancel();
         }
       }
 
-      _time = Timer(Duration(seconds: 1), () async {
+      _updateIntervalTimer = Timer(Duration(seconds: 1), () async {
         print("更新开始");
         getWeek();
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "连接教务...", 10));
-        await getSchedule().then((response) => _scheduleParser(response));
+        _scheduleParser(await getSchedule());
         _timeOutBool = true;
-        _goTopInitCount = 0;
+        _updateButtonClickCount = 0;
       });
       int _count = 0;
       Duration period = Duration(milliseconds: 10);
-      _time2 = Timer.periodic(period, (timer) {
+      _rotationAnimationTimer = Timer.periodic(period, (timer) {
         _count++;
         offset_ += 0.15;
         iconKey.currentState!.onPressed(offset_);
@@ -200,19 +205,20 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
         }
       });
     } else {
-      if (_bk) {
-        _bk = false;
-        ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, "你慢一点!"));
-        _time.cancel();
-        _time = Timer(Duration(seconds: 5), () {
-          Future.delayed(Duration(seconds: 5), () {
-            _timeOutBool = true;
-            _bk = true;
-            _goTopInitCount = 0;
-          });
-        });
+      if (_clickCooldown) {
+        return;
       }
+      _clickCooldown = true;
+      ScaffoldMessenger.of(context).removeCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, "你慢一点!"));
+      _updateIntervalTimer.cancel();
+      _updateIntervalTimer = Timer(Duration(seconds: 5), () {
+        Future.delayed(Duration(seconds: 5), () {
+          _timeOutBool = true;
+          _clickCooldown = false;
+          _updateButtonClickCount = 0;
+        });
+      });
     }
   }
 
@@ -237,10 +243,10 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
         });
       }
     });
-    if (widget.refresh && firstBuild) {
+    if (widget.refresh && _firstBuild) {
       Future.delayed(Duration(seconds: 0), () {
         _goTop();
-        firstBuild = false;
+        _firstBuild = false;
       });
     }
     double width = MediaQuery.of(context).size.width;
@@ -432,7 +438,7 @@ class LoginCheck extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (writeData["username"] != "") {
+    if (isLogin()) {
       return SliverToBoxAdapter(child: Center());
     }
     return SliverToBoxAdapter(

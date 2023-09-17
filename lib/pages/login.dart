@@ -3,14 +3,14 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_remix/flutter_remix.dart';
+import 'package:http/http.dart';
+
 import '/common/cookie.dart';
 import '/common/get.dart';
 import '/common/init.dart';
 import '/common/io.dart';
 import '/common/login.dart';
 import '/widget/bars.dart';
-import 'package:http/http.dart';
-
 import '../config.dart';
 import '../data.dart';
 import 'init.dart';
@@ -151,8 +151,7 @@ class LoginPageState extends State<LoginPage> {
       }
     }
 
-    await login(studentIdController.text.toString(), passwordController.text.toString(), checkCodeController.text.toString())
-        .then((String value) => _next(value));
+    await login(studentIdController.text.toString(), passwordController.text.toString(), checkCodeController.text.toString()).then((String value) => _next(value));
   }
 
   void _tap() {
@@ -285,7 +284,11 @@ class LoginPageState extends State<LoginPage> {
                           ),
                           InkWell(
                             child: _codeImgSrc.length > 1
-                                ? Image.memory(_codeImgSrc, height: 25)
+                                ? Image.memory(
+                                    _codeImgSrc,
+                                    height: 25,
+                                    width: 80,
+                                  )
                                 : Container(
                                     height: 25,
                                   ),

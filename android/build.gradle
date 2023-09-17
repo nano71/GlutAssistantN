@@ -17,6 +17,10 @@ buildscript {
     }
 }
 
+ext {
+    ndkVersion = '25.2.9519653'
+}
+
 allprojects {
     repositories {
         maven { url "https://repo.huaweicloud.com/repository/maven/" }

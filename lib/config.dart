@@ -13,6 +13,7 @@ class Global {
   static String timeOutError = "教务无响应!";
   static String socketError = "网络错误!";
   static String dataError = "教务未知错误!";
+  static String notLoginError = "请先登录!";
   static int timeOutSec = 12;
   static double listLeftIconSize = 18;
   static Map cookie = {};
@@ -35,13 +36,13 @@ class Global {
   static List<String> getScheduleUrl = [jwUrl, "/academic/student/currcourse/currcourse.jsdo"];
   static List<String> getScheduleNextUrl = [jwUrl, "/academic/manager/coursearrange/showTimetable.do"];
   static List<String> codeCheckUrl = [jwUrl, "/academic/checkCaptcha.do"];
-  static Uri checkLoginSituation = httpUri("/academic/showPersonalInfo.do");
+  static Uri checkLoginValidityUri = httpUri("/academic/showPersonalInfo.do");
   static double schedulePageTouchMovesMinValue = 70.0;
   static double schedulePageGridHeight = 60.0;
-  static String careerErrorText = "用户名不能为空！";
+  static String careerErrorText = "用户名不能为空";
   static String examErrorText = "<title>提示信息</title>";
   static String scheduleErrorText = "j_username";
-  static String errorText = "请重新登录";
+  static String reLoginErrorText = "请重新登录";
 }
 
 Uri httpUri(

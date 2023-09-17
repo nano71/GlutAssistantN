@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_remix/flutter_remix.dart';
+import 'package:http/http.dart';
+
 import '/common/cookie.dart';
 import '/common/login.dart';
 import '/common/noripple.dart';
 import '/common/style.dart';
 import '/data.dart';
-import 'package:http/http.dart';
-
 import '../config.dart';
 import '../pages/update.dart';
 import 'bars.dart';
@@ -16,7 +16,8 @@ class CodeCheckDialog {
   static String message = "不辜负每一次相遇";
   static Color messageColor = Colors.grey;
 }
-importantUpdateDialog(BuildContext context){
+
+importantUpdateDialog(BuildContext context) {
   showGeneralDialog(
       context: context,
       transitionBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
@@ -190,7 +191,11 @@ codeCheckDialog(BuildContext context, Function callback) async {
                       ),
                     ),
                     InkWell(
-                      child: Image.memory(response.bodyBytes, height: 25),
+                      child: Image.memory(
+                        response.bodyBytes,
+                        height: 25,
+                        width: 80,
+                      ),
                       onTap: () {
                         getCode(setState);
                       },
@@ -450,4 +455,3 @@ careerDialogItem(element) {
     ),
   );
 }
-

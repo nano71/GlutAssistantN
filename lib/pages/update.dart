@@ -12,7 +12,7 @@ import '/widget/bars.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../widget/dialog.dart';
-import 'mine.dart';
+import 'person.dart';
 
 class UpdatePage extends StatefulWidget {
   UpdatePage({Key? key}) : super(key: key);
