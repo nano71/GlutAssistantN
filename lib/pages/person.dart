@@ -2,7 +2,7 @@ import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_remix/flutter_remix.dart';
 import '/pages/career.dart';
-import '/pages/queryroom.dart';
+import '/pages/queryClassRoom.dart';
 import '/pages/setting.dart';
 import '/pages/update.dart';
 import '/widget/bars.dart';
@@ -35,7 +35,7 @@ class MinePageState extends State<MinePage> {
     return Container(
       color: Colors.white,
       child: CustomScrollView(physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()), slivers: [
-        publicTopBar(writeData["name"] != "" ? "Hi! " + (writeData["name"] ?? "") : "请先登录教务"),
+        publicTopBar(isLogin() ? "Hi! " + (writeData["name"] ?? "") : "请先登录教务"),
         SliverToBoxAdapter(
             child: Container(
           width: double.infinity,

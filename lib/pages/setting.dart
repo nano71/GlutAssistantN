@@ -4,14 +4,14 @@ import '/common/init.dart';
 import '/common/io.dart';
 import '/common/style.dart';
 import '/custom/expansiontile.dart' as CustomExpansionTile;
-import '/pages/schedulemanage.dart';
-import '/pages/timemanage.dart';
+import '/pages/scheduleManager.dart';
+import '/pages/timeManager.dart';
 import '/widget/bars.dart';
 
 import '../config.dart';
 import '../data.dart';
 import 'init.dart';
-import 'mine.dart';
+import 'person.dart';
 
 class SettingPage extends StatefulWidget {
   final String title;
