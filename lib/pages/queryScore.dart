@@ -166,11 +166,11 @@ class _QueryBodyState extends State<QueryBody> {
     }
 
     print(writeData["username"]);
-    if (writeData["username"] == "") {
+    if (!isLogin()) {
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(jwSnackBarAction(
         false,
-        "请先登录!",
+        Global.notLoginError,
         context,
             () {
           Navigator.push(
