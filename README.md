@@ -79,11 +79,11 @@
 ```
 
 #### 环境注意：
-Android SDK 26-33
-Gradle 8.0
-OpenJDK 17.0.8.1 2023-08-24
-Flutter 3.13.4
-Dart 3.1.2
+Android SDK 26-33  
+Gradle 8.0  
+OpenJDK 17.0.8.1 2023-08-24  
+Flutter 3.13.4  
+Dart 3.1.2  
 
 #### 编译项目:
 
