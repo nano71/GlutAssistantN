@@ -66,7 +66,7 @@ class _CareerPageBodyState extends State<CareerPageBody> {
     print(type);
     eventBusListener = eventBus.on<ReloadCareerPageState>().listen((event) {
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
-      ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "获取数据...", Global.timeOutSec * 2));
+      ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "获取数据...", AppConfig.timeOutSec * 2));
       getCareer().then((value) => process(value));
     });
     getCareer().then((value) => process(value));
@@ -82,7 +82,7 @@ class _CareerPageBodyState extends State<CareerPageBody> {
     if (value == "success") {
       login = false;
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
-      ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "处理数据...", Global.timeOutSec));
+      ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "处理数据...", AppConfig.timeOutSec));
       setState(() {});
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(1, "数据已更新!", 1));
@@ -114,7 +114,7 @@ class _CareerPageBodyState extends State<CareerPageBody> {
           eventBus.fire(ReloadCareerPageState());
           Navigator.pop(context);
         },
-        hideSnackBarSeconds: Global.timeOutSec,
+        hideSnackBarSeconds: AppConfig.timeOutSec,
       ));
     } else {
       print(value);
@@ -167,7 +167,7 @@ class _CareerPageBodyState extends State<CareerPageBody> {
     Future.delayed(Duration(seconds: 0), () {
       if (login) {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "获取数据...", Global.timeOutSec * 2));
+        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "获取数据...", AppConfig.timeOutSec * 2));
       }
     });
     return Container(
@@ -221,7 +221,7 @@ class _CareerPageBodyState extends State<CareerPageBody> {
                 //         crossAxisAlignment: CrossAxisAlignment.start,
                 //         children: [
                 //           Text(
-                //             writeData["name"],
+                //             AppData.writeData["name"],
                 //           ),
                 //           Text(
                 //             careerInfo[1],

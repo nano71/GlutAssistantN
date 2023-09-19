@@ -75,9 +75,9 @@ class QueryConditionCard extends StatefulWidget {
 
 class QueryConditionCardState extends State<QueryConditionCard> {
   Map<String, Map> query = {
-    "buildings": {"-1": "请选择"},
-    "whichWeeks": {"-1": "请选择"},
-    "weeks": {"-1": "请选择"}
+    "buildingCode": {"-1": "请选择"},
+    "weekOfSemester": {"-1": "请选择"},
+    "dayOfWeek": {"-1": "请选择"}
   };
   String buildingSelect = "-1";
   String classroomSelect = "-1";
@@ -97,24 +97,24 @@ class QueryConditionCardState extends State<QueryConditionCard> {
     setState(() {
       for (int i = 0; i < 7; i++) {
         String value = (i + 1).toString();
-        query["weeks"]![value] = "周" + weekList4CN[i];
+        query["dayOfWeek"]![value] = "周" + weekList4CN[i];
       }
-      weekSelect = writeData["weekDay"] ?? "";
+      weekSelect = AppData.persistentData["weekDay"] ?? "";
       print('weekSelect');
       print(weekSelect);
-      query["weeks"]!.remove("-1");
+      query["dayOfWeek"]!.remove("-1");
     });
-    print(query["weeks"]);
+    print(query["dayOfWeek"]);
   }
 
   void initWhichWeek() {
     setState(() {
       for (int i = 1; i < 20; i++) {
         String value = i.toString();
-        query["whichWeeks"]![value] = "第" + value + "周";
+        query["weekOfSemester"]![value] = "第" + value + "周";
       }
-      whichWeekSelect = writeData["week"] ?? "";
-      query["whichWeeks"]!.remove("-1");
+      whichWeekSelect = AppData.persistentData["week"] ?? "";
+      query["weekOfSemester"]!.remove("-1");
     });
   }
 
@@ -148,7 +148,7 @@ class QueryConditionCardState extends State<QueryConditionCard> {
         value.forEach((key, value) {
           query[key] = value;
         });
-        // query["buildings"]??"";.remove("-1");
+        // query["buildingCode"]??"";.remove("-1");
       });
     } else if (value is List<Map>) {
       // print("赋值");
@@ -168,7 +168,7 @@ class QueryConditionCardState extends State<QueryConditionCard> {
             getEmptyClassroom().then((value) => process(value));
             Navigator.pop(context);
           },
-          hideSnackBarSeconds: Global.timeOutSec,
+          hideSnackBarSeconds: AppConfig.timeOutSec,
         ));
       } else {
         print(value);
@@ -182,7 +182,7 @@ class QueryConditionCardState extends State<QueryConditionCard> {
     if (buildingSelect != "-1") {
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "查询中...", 10));
-      getEmptyClassroom(week: weekSelect, whichWeek: whichWeekSelect, building: buildingSelect).then((value) => process(value));
+      getEmptyClassroom(dayOfWeek: weekSelect, weekOfSemester: whichWeekSelect, building: buildingSelect).then((value) => process(value));
     } else {
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, "请选择教学楼", 4));
@@ -216,16 +216,16 @@ class QueryConditionCardState extends State<QueryConditionCard> {
                     alignment: Alignment.centerRight,
                     elevation: 0,
                     hint: Text(
-                      query["buildings"]?[buildingSelect],
+                      query["buildingCode"]?[buildingSelect],
                       style: TextStyle(fontSize: 14),
                     ),
-                    items: dropdownMenuItemList("buildings"),
+                    items: dropdownMenuItemList("buildingCode"),
                     onTap: () {
-                      if (query["buildings"]!.length == 1) getEmptyClassroom().then((value) => process(value));
+                      if (query["buildingCode"]!.length == 1) getEmptyClassroom().then((value) => process(value));
                     },
                     onChanged: (value) {
                       setState(() {
-                        if (value != "-1") query["buildings"]!.remove("-1");
+                        if (value != "-1") query["buildingCode"]!.remove("-1");
                         buildingSelect = value.toString();
                       });
                       // getEmptyClassroom(building: value.toString())
@@ -249,15 +249,15 @@ class QueryConditionCardState extends State<QueryConditionCard> {
                     value: whichWeekSelect,
                     // style: TextStyle(fontSize: 14, color: Colors.black.withOpacity(0.6)),
                     selectedItemBuilder: (context) {
-                      return dropdownMenuItemList("whichWeeks", true);
+                      return dropdownMenuItemList("weekOfSemester", true);
                     },
                     icon: Icon(FlutterRemix.arrow_right_s_line),
                     iconSize: 16,
                     underline: Container(),
                     alignment: Alignment.centerRight,
                     elevation: 0,
-                    hint: Text(query["whichWeeks"]?[whichWeekSelect], style: TextStyle(fontSize: 14)),
-                    items: dropdownMenuItemList("whichWeeks"),
+                    hint: Text(query["weekOfSemester"]?[whichWeekSelect], style: TextStyle(fontSize: 14)),
+                    items: dropdownMenuItemList("weekOfSemester"),
                     onChanged: (value) {
                       print(value);
                       setState(() {
@@ -281,15 +281,15 @@ class QueryConditionCardState extends State<QueryConditionCard> {
                     value: weekSelect,
                     enableFeedback: true,
                     selectedItemBuilder: (context) {
-                      return dropdownMenuItemList("weeks", true);
+                      return dropdownMenuItemList("dayOfWeek", true);
                     },
                     icon: Icon(FlutterRemix.arrow_right_s_line),
                     iconSize: 16,
                     underline: Container(),
                     alignment: Alignment.centerRight,
                     elevation: 0,
-                    // hint: Text(query["weeks"]?[weekSelect], style: TextStyle(fontSize: 14)),
-                    items: dropdownMenuItemList("weeks"),
+                    // hint: Text(query["dayOfWeek"]?[weekSelect], style: TextStyle(fontSize: 14)),
+                    items: dropdownMenuItemList("dayOfWeek"),
                     onChanged: (value) {
                       print(value);
                       setState(() {

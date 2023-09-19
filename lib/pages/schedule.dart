@@ -18,14 +18,14 @@ class RowHeader extends StatefulWidget {
 }
 
 class RowHeaderState extends State<RowHeader> {
-  String _week = writeData["week"] ?? "";
+  String _week = AppData.persistentData["week"] ?? "";
 
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       //  decoration: ,
-      children: _loopRowHeader(writeData["week"] == _week),
+      children: _loopRowHeader(AppData.persistentData["week"] == _week),
     );
   }
 
@@ -62,7 +62,7 @@ List<Widget> _loopRowHeader(bool currentWeek) {
 Widget _leftGrid(String title) {
   return Container(
     width: 20,
-    height: Global.schedulePageGridHeight,
+    height: AppConfig.schedulePageGridHeight,
     alignment: Alignment.center,
     decoration: BoxDecoration(
       color: Colors.white,
@@ -118,20 +118,20 @@ class SchedulePageState extends State<SchedulePage> with AutomaticKeepAliveClien
     super.initState();
     Duration duration = Duration(milliseconds: 500);
     Timer(duration, () {
-      if (writeData["prompt"] == null) {
-        writeData["prompt"] = "5";
+      if (AppData.persistentData["prompt"] == null) {
+        AppData.persistentData["prompt"] = "5";
       }
-      int _number = int.parse(writeData["prompt"] ?? "");
+      int _number = int.parse(AppData.persistentData["prompt"] ?? "");
       if (_number > 0) {
         _showPrompt();
         _number--;
-        writeData["prompt"] = _number.toString();
+        AppData.persistentData["prompt"] = _number.toString();
         writeConfig();
       }
     });
     eventBusListener = eventBus.on<ReloadSchedulePageState>().listen((event) {
       setState(() {});
-      if (writeData["week"] != _currentScheduleWeek.toString()) {
+      if (AppData.persistentData["week"] != _currentScheduleWeek.toString()) {
         _currentScheduleWeek = weekInt();
         weekKey.currentState!.onPressed(weekInt());
         barKey.currentState!.onPressed(weekInt());
@@ -156,7 +156,7 @@ class SchedulePageState extends State<SchedulePage> with AutomaticKeepAliveClien
   }
 
   void _touchListen(double eX, double eY) {
-    double minValue = Global.schedulePageTouchMovesMinValue;
+    double minValue = AppConfig.schedulePageTouchMovesMinValue;
     double sX = _startPositionX;
     double sY = _startPositionY;
     if (eY - sY < minValue || eY + sY < minValue) {
@@ -244,7 +244,7 @@ class SchedulePageColumn extends StatefulWidget {
 }
 
 class SchedulePageColumnState extends State<SchedulePageColumn> {
-  String _findWeek = writeData["week"] ?? "";
+  String _findWeek = AppData.persistentData["week"] ?? "";
 
   @override
   Widget build(BuildContext context) {
@@ -282,7 +282,7 @@ Widget _col(String week, String weekDay) {
 
 List<Widget> _loopWeekDayColGrid(String week, String weekDay) {
   List<Widget> list = [];
-  Map _schedule = schedule[week][weekDay];
+  Map _schedule = AppData.schedule[week][weekDay];
   int s = 1;
   for (int i = 1; i < 12; i++) {
     String courseName = courseLongText2Short(_schedule[i.toString()][0]);
@@ -298,7 +298,7 @@ List<Widget> _loopWeekDayColGrid(String week, String weekDay) {
       if (i == 1)
         s = i;
       else if (studyAreaIsPreviousStudyArea() && courseNameIsPreviousCourseName()) {
-        double height = Global.schedulePageGridHeight * (i - s + 1);
+        double height = AppConfig.schedulePageGridHeight * (i - s + 1);
         if (i == 11)
           list.add(Grid(week, weekDay, i, s, courseName, studyArea, teacher, randomColors(), height));
         else if (studyAreaNotIsNextStudyArea() || courseNameNotIsNextCourseName()) list.add(Grid(week, weekDay, i, s, courseName, studyArea, teacher, randomColors(), height));

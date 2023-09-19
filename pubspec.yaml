@@ -33,7 +33,6 @@ dependencies:
   path_provider: ^2.0.6
   event_bus: ^2.0.0
   url_launcher: ^6.0.12
-  package_info: ^2.0.2
   badges: ^3.1.2
   flutter_remix: ^0.0.3
   flutter:
@@ -43,6 +42,8 @@ dependencies:
   shared_preferences: ^2.0.15
   flutter_swiper_view: ^1.1.8
   home_widget: ^0.3.0
+  workmanager: ^0.5.1
+  package_info_plus: ^4.1.0
 
 dev_dependencies:
   flutter_test:

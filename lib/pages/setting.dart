@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_remix/flutter_remix.dart';
+import 'package:glutassistantn/main.dart';
 import '/common/init.dart';
 import '/common/io.dart';
 import '/common/style.dart';
@@ -36,8 +37,8 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
     // TODO: implement initState
     super.initState();
 
-    _textFieldController1.text = writeData["year"] ?? "";
-    _textFieldController2.text = writeData["semester"] ?? "";
+    _textFieldController1.text = AppData.persistentData["year"] ?? "";
+    _textFieldController2.text = AppData.persistentData["semester"] ?? "";
   }
 
   @override
@@ -85,7 +86,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                           ],
                         ),
                         Text(
-                          writeData["yearBk"] ?? "",
+                          AppData.persistentData["yearBk"] ?? "",
                           style: TextStyle(
                             color: readColor(),
                           ),
@@ -94,7 +95,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                         //   iconEnabledColor: readColor(),
                         //   elevation: 0,
                         //   hint: Text(
-                        //     writeData["yearBk"],
+                        //     AppData.writeData["yearBk"],
                         //     style: TextStyle(
                         //       color: readColor(),
                         //     ),
@@ -103,7 +104,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                         //   underline: Container(height: 0),
                         //   onChanged: (value) {
                         //     setState(() {
-                        //       writeData["yearBk"] = value;
+                        //       AppData.writeData["yearBk"] = value;
                         //     });
                         //   },
                         // )
@@ -129,7 +130,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                             )
                           ],
                         ),
-                        Text(writeData["semester"] ?? "",
+                        Text(AppData.persistentData["semester"] ?? "",
                             style: TextStyle(
                               color: readColor(),
                             )),
@@ -137,7 +138,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                         //   iconEnabledColor: readColor(),
                         //   isDense: true,
                         //   elevation: 0,
-                        //   hint: Text(writeData["semester"],
+                        //   hint: Text(AppData.writeData["semester"],
                         //       style: TextStyle(
                         //         color: readColor(),
                         //       )),
@@ -148,8 +149,8 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                         //   ],
                         //   onChanged: (value) {
                         //     setState(() {
-                        //       writeData["semester"] = value;
-                        //       writeData["semesterBk"] = value;
+                        //       AppData.writeData["semester"] = value;
+                        //       AppData.writeData["semesterBk"] = value;
                         //     });
                         //   },
                         // ),
@@ -175,7 +176,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                             )
                           ],
                         ),
-                        Text(writeData["week"] ?? "",
+                        Text(AppData.persistentData["week"] ?? "",
                             style: TextStyle(
                               color: readColor(),
                             )),
@@ -183,7 +184,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                         //   iconEnabledColor: readColor(),
                         //   isDense: true,
                         //   elevation: 0,
-                        //   hint: Text(writeData["week"],
+                        //   hint: Text(AppData.writeData["week"],
                         //       style: TextStyle(
                         //         color: readColor(),
                         //       )),
@@ -222,7 +223,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                         ),
                         Builder(builder: (BuildContext context) {
                           return DropdownButton(
-                            value: writeData["color"] ?? null,
+                            value: AppData.persistentData["color"] ?? null,
                             icon: Icon(
                               FlutterRemix.arrow_down_s_line,
                               size: 18,
@@ -265,7 +266,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                             underline: Container(),
                             onChanged: (value) {
                               setState(() {
-                                writeData["color"] = value.toString();
+                                AppData.persistentData["color"] = value.toString();
                               });
                               writeConfig();
                               eventBus.fire(SetPageIndex());
@@ -308,14 +309,14 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                             iconEnabledColor: readColor(),
                             elevation: 0,
                             hint: Text(
-                              (writeData["threshold"] ?? "5") + "分钟",
+                              (AppData.persistentData["threshold"] ?? "5") + "分钟",
                               style: TextStyle(color: readColor(), fontSize: 14),
                             ),
                             items: thresholdItemList(),
                             underline: Container(height: 0),
                             onChanged: (value) {
                               setState(() {
-                                writeData["threshold"] = value.toString();
+                                AppData.persistentData["threshold"] = value.toString();
                               });
                               writeConfig();
                             },
@@ -398,12 +399,12 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
 
   void clear() async {
     await clearAll();
-    writeData["username"] = "";
-    writeData["name"] = "";
-    writeData["password"] = "";
+    AppData.persistentData["username"] = "";
+    AppData.persistentData["name"] = "";
+    AppData.persistentData["password"] = "";
     await initSchedule();
-    todaySchedule = [];
-    tomorrowSchedule = [];
+    AppData.todaySchedule = [];
+    AppData.tomorrowSchedule = [];
     eventBus.fire(ReloadTodayListState());
     eventBus.fire(ReloadTomorrowListState());
     // await Global.todayCourseListKey.currentState!.reloadState();
@@ -456,10 +457,10 @@ List<DropdownMenuItem<Object>>? yearList(int type) {
       DropdownMenuItem(child: Text("全部"), value: "全部"),
     );
   } else {
-    list.add(DropdownMenuItem(child: Text((int.parse(writeData["year"] ?? "") + 1).toString()), value: (int.parse(writeData["year"] ?? "") + 1).toString()));
+    list.add(DropdownMenuItem(child: Text((int.parse(AppData.persistentData["year"] ?? "") + 1).toString()), value: (int.parse(AppData.persistentData["year"] ?? "") + 1).toString()));
   }
 
-  for (int i = int.parse(writeData["year"] ?? ""); i > (int.parse(writeData["year"] ?? "") - 5); i--) {
+  for (int i = int.parse(AppData.persistentData["year"] ?? ""); i > (int.parse(AppData.persistentData["year"] ?? "") - 5); i--) {
     list.add(DropdownMenuItem(child: Text(i.toString()), value: i.toString()));
   }
   return list;

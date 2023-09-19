@@ -39,9 +39,9 @@ class QueryBody extends StatefulWidget {
 }
 
 class _QueryBodyState extends State<QueryBody> {
-  double _gpa = gpa;
-  double _avg = avg;
-  double _weight = weight;
+  double _gpa = 0.0;
+  double _avg = 0.0;
+  double _weight = 0.0;
 
   // ignore: cancel_subscriptions
   late StreamSubscription<ReloadScoreListState> eventBusListener;
@@ -52,7 +52,7 @@ class _QueryBodyState extends State<QueryBody> {
     super.initState();
     eventBusListener = eventBus.on<ReloadScoreListState>().listen((event) async {
       _next(List list) {
-        if (list.length == 0) {
+        if (list.isEmpty) {
           ScaffoldMessenger.of(context).removeCurrentSnackBar();
           ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(1, "没有结果!", 5));
         } else {
@@ -124,9 +124,6 @@ class _QueryBodyState extends State<QueryBody> {
     } else if (_weight >= 60) {
       _gpa = 1.0;
     } else {}
-    weight = _weight;
-    gpa = _gpa;
-    avg = _avg;
     ScaffoldMessenger.of(context).removeCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(1, "数据已更新!", 1));
     setState(() {});
@@ -156,7 +153,7 @@ class _QueryBodyState extends State<QueryBody> {
           ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, value, 4));
         }
       } else if (value is List) {
-        if (value.length == 0) {
+        if (value.isEmpty) {
           ScaffoldMessenger.of(context).removeCurrentSnackBar();
           ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(1, "没有结果!", 5));
         } else {
@@ -165,14 +162,14 @@ class _QueryBodyState extends State<QueryBody> {
       }
     }
 
-    print(writeData["username"]);
+    print(AppData.persistentData["username"]);
     if (!isLogin()) {
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(jwSnackBarAction(
         false,
-        Global.notLoginError,
+        AppConfig.notLoginError,
         context,
-            () {
+        () {
           Navigator.push(
               context,
               MaterialPageRoute(
@@ -240,7 +237,7 @@ class _QueryBodyState extends State<QueryBody> {
                             hint: SizedBox(
                               width: 40,
                               child: Text(
-                                writeData["queryYear"] ?? "",
+                                AppData.persistentData["queryYear"] ?? "",
                                 style: TextStyle(
                                   color: Colors.white,
                                 ),
@@ -250,7 +247,7 @@ class _QueryBodyState extends State<QueryBody> {
                             underline: Container(height: 0),
                             onChanged: (value) {
                               setState(() {
-                                writeData["queryYear"] = value.toString();
+                                AppData.persistentData["queryYear"] = value.toString();
                               });
                             },
                           ),
@@ -266,7 +263,7 @@ class _QueryBodyState extends State<QueryBody> {
                             hint: SizedBox(
                               width: 40,
                               child: Text(
-                                writeData["querySemester"] ?? "",
+                                AppData.persistentData["querySemester"] ?? "",
                                 style: TextStyle(
                                   color: Colors.white,
                                 ),
@@ -278,9 +275,9 @@ class _QueryBodyState extends State<QueryBody> {
                               DropdownMenuItem(child: Text("春"), value: "春"),
                               DropdownMenuItem(child: Text("秋"), value: "秋"),
                             ],
-                            onChanged: (value) {
+                            onChanged: (String? value) {
                               setState(() {
-                                writeData["querySemester"] = value.toString();
+                                if (value != null) AppData.persistentData["querySemester"] = value;
                               });
                             },
                           ),

@@ -43,8 +43,8 @@ class LoginPageState extends State<LoginPage> {
   @override
   initState() {
     super.initState();
-    studentIdController.text = writeData["username"] ?? "";
-    passwordController.text = writeData["password"] ?? "";
+    studentIdController.text = AppData.persistentData["username"] ?? "";
+    passwordController.text = AppData.persistentData["password"] ?? "";
     _getCode();
   }
 
@@ -75,7 +75,7 @@ class LoginPageState extends State<LoginPage> {
   void _getCode() async {
     try {
       print("getCode...");
-      var response = await get(Global.getCodeUrl).timeout(Duration(milliseconds: 6000));
+      var response = await get(AppConfig.getCodeUrl).timeout(Duration(milliseconds: 6000));
       parseRawCookies(response.headers['set-cookie']);
       setState(() {
         _codeImgSrc = response.bodyBytes;
@@ -112,15 +112,15 @@ class LoginPageState extends State<LoginPage> {
     String _password = passwordController.text.toString();
     Future<void> _next(String value) async {
       if (value == "success") {
-        Global.login = true;
+        AppConfig.login = true;
         logged = true;
         setState(() {
           messageColor = Colors.blue;
           message = "登录成功";
           buttonTitle = "马上就好,处理数据中...";
         });
-        writeData["username"] = _studentId;
-        writeData["password"] = _password;
+        AppData.persistentData["username"] = _studentId;
+        AppData.persistentData["password"] = _password;
         await getName();
         await getSchedule();
         await writeConfig();
@@ -141,7 +141,7 @@ class LoginPageState extends State<LoginPage> {
         });
         _getCode();
       } else {
-        if (Global.login) {
+        if (AppConfig.login) {
           setState(() {
             messageColor = Colors.yellow;
             message = "登录成功,但程序发生了错误";
