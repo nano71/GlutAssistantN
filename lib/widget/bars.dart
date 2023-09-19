@@ -83,7 +83,7 @@ class ScheduleTopBar extends StatefulWidget {
 }
 
 class ScheduleTopBarState extends State<ScheduleTopBar> {
-  String _week = writeData["week"] ?? "";
+  String _week = AppData.persistentData["week"] ?? "";
 
   void back() {
     ScaffoldMessenger.of(context).removeCurrentSnackBar();
@@ -153,16 +153,16 @@ class BottomNavBarState extends State<BottomNavBar> {
     super.initState();
     eventBusListener = eventBus.on<SetPageIndex>().listen((event) {
       setState(() {
-        Global.pageControl.jumpToPage(event.index);
-        Global.pageIndex = event.index;
+        AppConfig.pageControl.jumpToPage(event.index);
+        AppConfig.pageIndex = event.index;
       });
     });
   }
 
   @override
   void dispose() {
-    super.dispose();
     eventBusListener.cancel();
+    super.dispose();
   }
 
   @override
@@ -179,11 +179,11 @@ class BottomNavBarState extends State<BottomNavBar> {
       indicatorColor: readColorEnd(),
       shadowColor: Colors.transparent,
       surfaceTintColor: Colors.black87,
-      selectedIndex: Global.pageIndex,
+      selectedIndex: AppConfig.pageIndex,
       onDestinationSelected: (int index) {
-        if (Global.pageIndex != index) {
-          Global.pageControl.jumpToPage(index);
-          Global.pageIndex = index;
+        if (AppConfig.pageIndex != index) {
+          AppConfig.pageControl.jumpToPage(index);
+          AppConfig.pageIndex = index;
         }
         setState(() {});
       },
@@ -211,7 +211,7 @@ class BottomNavBarState extends State<BottomNavBar> {
         NavigationDestination(
           selectedIcon: badges.Badge(
             // animationType: BadgeAnimationType.scale,
-            showBadge: hasNewVersion,
+            showBadge: AppData.hasNewVersion,
             badgeContent: Text(
               "1",
               style: TextStyle(color: Colors.white),
@@ -223,7 +223,7 @@ class BottomNavBarState extends State<BottomNavBar> {
           ),
           icon: badges.Badge(
             // animationType: BadgeAnimationType.scale,
-            showBadge: hasNewVersion,
+            showBadge: AppData.hasNewVersion,
             badgeContent: Text(
               "1",
               style: TextStyle(color: Colors.white),

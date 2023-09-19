@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_remix/flutter_remix.dart';
+import '../type/packageInfo.dart';
 import '/common/get.dart';
 import '/common/io.dart';
 import '/config.dart';
@@ -57,9 +58,9 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
       networkError = true;
     }
     setState(() {
-      writeData["newVersion"] = result["newVersion"];
-      writeData["newBody"] = result["newBody"];
-      writeData["githubDownload"] = result["githubDownload"];
+      AppData.persistentData["newVersion"] = result["newVersion"];
+      AppData.persistentData["newBody"] = result["newBody"];
+      AppData.persistentData["githubDownload"] = result["githubDownload"];
     });
     writeConfig();
     checkNewVersion(false, context);
@@ -68,7 +69,7 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
   @override
   Widget build(BuildContext context) {
     Future.delayed(Duration(seconds: 0), () {
-      if (!hasNewVersion && !updating) {
+      if (!AppData.hasNewVersion && !updating) {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "获取更新...", 24));
       }
@@ -113,18 +114,18 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
                     height: 16,
                   ),
                   Text(
-                    packageInfo["appName"],
+                    PackageInfo.appName,
                     style: TextStyle(fontSize: 20),
                   ),
                   Text(
-                    packageInfo["version"],
+                    PackageInfo.version,
                     style: TextStyle(fontSize: 14, color: Colors.grey),
                   ),
                   Container(
                     width: double.infinity,
                     margin: EdgeInsets.fromLTRB(0, 64, 0, 16),
                   ),
-                  hasNewVersion
+                  AppData.hasNewVersion
                       ? Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -133,12 +134,12 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
                               width: double.infinity,
                               margin: EdgeInsets.fromLTRB(0, 0, 0, 7),
                               child: Text(
-                                "版本号:" + packageInfo["version"] + "  >  " + (writeData["newVersion"] ?? ""),
+                                "版本号:" + PackageInfo.version + "  >  " + (AppData.persistentData["newVersion"] ?? ""),
                                 style: TextStyle(color: Colors.black54),
                               ),
                             ),
                             Text(
-                              writeData["newBody"] ?? "",
+                              AppData.persistentData["newBody"] ?? "",
                               style: TextStyle(color: Colors.grey),
                             ),
                             Container(
@@ -152,11 +153,11 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
                             customInkWell("https://nano71.com/gan/GlutAssistantN.apk", FlutterRemix.download_2_line, "直接下载", readColor()),
                             // coolapk(),
                             customInkWell("", FlutterRemix.earth_line, "学校官网", Colors.blueAccent),
-                            customInkWell(writeData["githubDownload"] ?? "", FlutterRemix.github_line, "Github", Colors.blueGrey)
+                            customInkWell(AppData.persistentData["githubDownload"] ?? "", FlutterRemix.github_line, "Github", Colors.blueGrey)
                           ],
                         )
                       : Container(),
-                  (!networkError && !hasNewVersion)
+                  (!networkError && !AppData.hasNewVersion)
                       ? Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -165,12 +166,12 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
                               width: double.infinity,
                               margin: EdgeInsets.fromLTRB(0, 0, 0, 7),
                               child: Text(
-                                "版本号:" + packageInfo["version"],
+                                "版本号:" + PackageInfo.version,
                                 style: TextStyle(color: Colors.black54),
                               ),
                             ),
                             Text(
-                              writeData["newBody"] ?? "",
+                              AppData.persistentData["newBody"] ?? "",
                               style: TextStyle(color: Colors.grey),
                             ),
                             Container(
@@ -187,7 +188,7 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
                           ],
                         )
                       : Container(),
-                  (networkError && !hasNewVersion)
+                  (networkError && !AppData.hasNewVersion)
                       ? Column(
                           children: [
                             Container(
@@ -216,31 +217,31 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
 
 void checkImportantUpdate() {
   print("checkImportantUpdate");
-  canCheckImportantUpdate = false;
-  if (writeData["newBody"]?.contains("重要更新") ?? false) {
-    eventBus.fire(SetPageIndex(index: Global.pageIndex));
-    importantUpdateDialog(homeContext);
+  AppData.canCheckImportantUpdate = false;
+  if (AppData.persistentData["newBody"]?.contains("重要更新") ?? false) {
+    eventBus.fire(SetPageIndex(index: AppConfig.pageIndex));
+    importantUpdateDialog(AppData.homeContext);
   }
 }
 
 void checkNewVersion([bool skipShowSnackBar = true, BuildContext? context]) {
   print('checkNewVersion');
-  if ((writeData["newVersion"] ?? "").isNotEmpty) {
-    print('writeData["newVersion"]:');
-    print(writeData["newVersion"] ?? "空");
-    print(writeData);
+  if ((AppData.persistentData["newVersion"] ?? "").isNotEmpty) {
+    print('AppData.writeData["newVersion"]:');
+    print(AppData.persistentData["newVersion"] ?? "空");
+    print(AppData.persistentData);
     if (!skipShowSnackBar) ScaffoldMessenger.of(context!).removeCurrentSnackBar();
     late String message;
-    int currentVersion = int.parse(packageInfo["version"].replaceAll(".", ""));
-    int compareVersion = int.parse(writeData["newVersion"]!.replaceAll(".", ""));
+    int currentVersion = int.parse(PackageInfo.version.replaceAll(".", ""));
+    int compareVersion = int.parse(AppData.persistentData["newVersion"]!.replaceAll(".", ""));
     if (currentVersion < compareVersion) {
-      hasNewVersion = true;
+      AppData.hasNewVersion = true;
       message = "发现新版本!";
     } else if (currentVersion == compareVersion) {
-      hasNewVersion = false;
+      AppData.hasNewVersion = false;
       message = "暂无更新!";
     } else {
-      hasNewVersion = false;
+      AppData.hasNewVersion = false;
       message = "测试版本!";
     }
     if (!skipShowSnackBar) ScaffoldMessenger.of(context!).showSnackBar(jwSnackBar(1, message, 5));

@@ -69,7 +69,7 @@ importantUpdateDialog(BuildContext context) {
                 child: Column(
                   children: [
                     Text(
-                      writeData["newBody"]!.trim(),
+                      AppData.persistentData["newBody"]!.trim(),
                       style: TextStyle(color: Color(0xFF666666)),
                     ),
                     SizedBox(height: 16),
@@ -105,10 +105,10 @@ importantUpdateDialog(BuildContext context) {
 
 codeCheckDialog(BuildContext context, Function callback) async {
   TextEditingController textFieldController = TextEditingController();
-  var response = await get(Global.getCodeUrl).timeout(Duration(seconds: 3));
+  var response = await get(AppConfig.getCodeUrl).timeout(Duration(seconds: 3));
   bool clicked = false;
   getCode(Function fn) async {
-    response = await get(Global.getCodeUrl).timeout(Duration(seconds: 3));
+    response = await get(AppConfig.getCodeUrl).timeout(Duration(seconds: 3));
     parseRawCookies(response.headers['set-cookie']);
     fn(() {});
   }
@@ -128,7 +128,7 @@ codeCheckDialog(BuildContext context, Function callback) async {
     Future<void> _next(String value) async {
       print(value);
       if (value == "success") {
-        await login(writeData["username"] ?? "", writeData["password"] ?? "", textFieldController.text).then((String value) => _next2(value));
+        await login(AppData.persistentData["username"] ?? "", AppData.persistentData["password"] ?? "", textFieldController.text).then((String value) => _next2(value));
       } else if (value == "fail") {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, "验证码错误!"));
@@ -311,7 +311,7 @@ scheduleDialog(BuildContext context, String week, String weekDay, String index) 
   showDialog(
     context: context,
     builder: (BuildContext context) {
-      List _schedule = schedule[week][weekDay][index];
+      List<String> _schedule = AppData.schedule[week][weekDay][index];
       List<String> _temp = _schedule[3].split(";").toSet().toList();
       String _time = "";
       _temp.removeLast();

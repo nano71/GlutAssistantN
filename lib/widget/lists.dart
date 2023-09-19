@@ -3,31 +3,46 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_remix/flutter_remix.dart';
-import '/config.dart';
 
+import '/config.dart';
 import '../data.dart';
 import 'bars.dart';
 
-List _getStartTime(index) {
-  var startH = startTimeList[index - 1][0];
-  var endH = endTimeList[index - 1][0];
-  var startM = startTimeList[index - 1][1];
-  var endM = endTimeList[index - 1][1];
-  var y = DateTime.now().year;
-  var m = DateTime.now().month;
-  var d = DateTime.now().day;
-  var h = DateTime.now().hour;
-  var mm = DateTime.now().minute;
-  var difference = DateTime(y, m, d, startH, startM).difference(DateTime(y, m, d, h, mm));
-  var difference2 = DateTime(y, m, d, endH, endM).difference(DateTime(y, m, d, h, mm));
+/// ```dart
+/// 差多少天, 差多少小时, 差多少分, 是否已发生
+/// ```
+/// 获取第几节课还有多久上课的函数
+/// 时间间隔
+List timeUntilNextClass(dynamic index) {
+  if (index is String) index = int.parse(index);
+  var startHour = startTimeList[index - 1][0];
+  var endHour = endTimeList[index - 1][0];
+  var startMinute = startTimeList[index - 1][1];
+  var endMinute = endTimeList[index - 1][1];
+  var year = DateTime.now().year;
+  var month = DateTime.now().month;
+  var day = DateTime.now().day;
+  var hour = DateTime.now().hour;
+  var minute = DateTime.now().minute;
+  var startTimeDifference = DateTime(year, month, day, startHour, startMinute).difference(DateTime(year, month, day, hour, minute));
+  var endTimeDifference = DateTime(year, month, day, endHour, endMinute).difference(DateTime(year, month, day, hour, minute));
   bool studying = false;
-  List returnList = [difference.inDays, difference.inHours, difference.inMinutes < 0 ? difference.inMinutes % 60 - 60 : difference.inMinutes % 60];
+  List returnList = [
+    startTimeDifference.inDays,
+    startTimeDifference.inHours,
+    startTimeDifference.inMinutes < 0 ? startTimeDifference.inMinutes % 60 - 60 : startTimeDifference.inMinutes % 60
+  ];
   for (int i = 0; i < returnList.length; i++) {
     studying = returnList[i] < 0;
     if (returnList[0] == returnList[1] && returnList[0] == returnList[2]) studying = true;
   }
   if (studying) {
-    return [difference2.inDays, difference2.inHours, difference2.inMinutes < 0 ? difference2.inMinutes % 60 - 60 : difference2.inMinutes % 60, "after"];
+    return [
+      endTimeDifference.inDays,
+      endTimeDifference.inHours,
+      endTimeDifference.inMinutes < 0 ? endTimeDifference.inMinutes % 60 - 60 : endTimeDifference.inMinutes % 60,
+      "after"
+    ];
   } else {
     returnList.add("before");
     return returnList;
@@ -36,7 +51,7 @@ List _getStartTime(index) {
 
 String _timeText(int index) {
   if (index == -1) return "-1";
-  List value = _getStartTime(int.parse(todaySchedule[index][4]));
+  List value = timeUntilNextClass(AppData.todaySchedule[index][4]);
   if (value[0] >= 1) {
     return "";
   } else if (value[1] >= 4) {
@@ -61,7 +76,7 @@ String _timeText(int index) {
 
 // List<String> _timeText2(int index) {
 //   if (index == -1) return ["0", "0"];
-//   List value = _getStartTime(int.parse(todaySchedule[index][4]));
+//   List value = _getStartTime(todaySchedule[index][4]));
 //   if (value[0] >= 1) {
 //     return ["0", "0"];
 //   } else if (value[1] >= 4) {
@@ -99,7 +114,7 @@ class TomorrowCourseList extends StatefulWidget {
 }
 
 class TodayCourseListState extends State<TodayCourseList> {
-  List _todaySchedule = todaySchedule;
+  List _todaySchedule = AppData.todaySchedule;
   bool isTimerInit = false;
   int thresholdCount = 0;
   late StreamSubscription<ReloadTodayListState> eventBusListener;
@@ -117,7 +132,7 @@ class TodayCourseListState extends State<TodayCourseList> {
 
   void reloadState() {
     setState(() {
-      _todaySchedule = todaySchedule;
+      _todaySchedule = AppData.todaySchedule;
     });
   }
 
@@ -133,7 +148,7 @@ class TodayCourseListState extends State<TodayCourseList> {
       isTimerInit = false;
       if (DateTime.now().second < 2) {
         thresholdCount++;
-        if (isReleaseMode && writeData["threshold"] != "-1") if (thresholdCount > (int.parse(writeData["threshold"] ?? "") * 2)) exit(0);
+        if (AppData.isReleaseMode && AppData.persistentData["threshold"] != "-1") if (thresholdCount > (int.parse(AppData.persistentData["threshold"] ?? "") * 2)) exit(0);
         print("$index : ${DateTime.now().second}");
         setState(() {});
       } else {
@@ -173,7 +188,7 @@ class TodayCourseListItem extends StatefulWidget {
 
 class TodayCourseListItemState extends State<TodayCourseListItem> {
   IconData _icon(int index) {
-    String result = _getStartTime(int.parse(todaySchedule[index][4]))[3];
+    String result = timeUntilNextClass(AppData.todaySchedule[index][4])[3];
     if (result == "before") {
       return FlutterRemix.timer_2_line;
     } else {
@@ -186,7 +201,7 @@ class TodayCourseListItemState extends State<TodayCourseListItem> {
   }
 
   Color _timeColors(int index) {
-    String result = _getStartTime(int.parse(todaySchedule[index][4]))[3];
+    String result = timeUntilNextClass(AppData.todaySchedule[index][4])[3];
     if (result == "before") {
       return readColor();
     } else {
@@ -199,7 +214,7 @@ class TodayCourseListItemState extends State<TodayCourseListItem> {
   }
 
   Color _textColorsTop(int index) {
-    String result = _getStartTime(int.parse(todaySchedule[index][4]))[3];
+    String result = timeUntilNextClass(AppData.todaySchedule[index][4])[3];
     if (result == "before") {
       return Color(0xff333333);
     } else {
@@ -212,7 +227,7 @@ class TodayCourseListItemState extends State<TodayCourseListItem> {
   }
 
   Color _textColorsDown(int index) {
-    String result = _getStartTime(int.parse(todaySchedule[index][4]))[3];
+    String result = timeUntilNextClass(AppData.todaySchedule[index][4])[3];
     if (result == "before") {
       return Color(0xff999999);
     } else {
@@ -225,7 +240,7 @@ class TodayCourseListItemState extends State<TodayCourseListItem> {
   }
 
   List courseInfo() {
-    return todaySchedule[widget.index];
+    return AppData.todaySchedule[widget.index];
   }
 
   TextStyle smallTextStyle() {
@@ -234,11 +249,6 @@ class TodayCourseListItemState extends State<TodayCourseListItem> {
 
   TextStyle normTextStyle() {
     return TextStyle(decoration: TextDecoration.none, color: _textColorsTop(widget.index));
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 
   @override
@@ -255,7 +265,7 @@ class TodayCourseListItemState extends State<TodayCourseListItem> {
                 child: Icon(
                   _icon(widget.index),
                   color: _timeColors(widget.index),
-                  size: Global.listLeftIconSize,
+                  size: AppConfig.listLeftIconSize,
                 ),
               ),
               Column(
@@ -297,7 +307,7 @@ class TodayCourseListItemState extends State<TodayCourseListItem> {
 }
 
 class TomorrowCourseListState extends State<TomorrowCourseList> {
-  List _tomorrowSchedule = tomorrowSchedule;
+  List _tomorrowSchedule = AppData.tomorrowSchedule;
   late StreamSubscription<ReloadTomorrowListState> eventBusListener;
 
   @override
@@ -312,7 +322,7 @@ class TomorrowCourseListState extends State<TomorrowCourseList> {
 
   reloadState() {
     setState(() {
-      _tomorrowSchedule = tomorrowSchedule;
+      _tomorrowSchedule = AppData.tomorrowSchedule;
     });
   }
 
@@ -344,7 +354,7 @@ class TomorrowCourseListState extends State<TomorrowCourseList> {
                       // FlutterRemix.time_line,
                       Icons.hourglass_top_outlined,
                       color: (_tomorrowSchedule[index][4] == "1" && index == 0 ? Colors.orange[900] : readColor()),
-                      size: Global.listLeftIconSize,
+                      size: AppConfig.listLeftIconSize,
                     ),
                   ),
                   Column(
@@ -408,7 +418,7 @@ class ScoreListState extends State<ScoreList> {
   @override
   Widget build(BuildContext context) {
     if (queryScore.length == 1) {
-      if (queryScore[0] == Global.socketError || queryScore[0] == Global.timeOutError || queryScore[0] == "登录过期") {
+      if (queryScore[0] == AppConfig.socketError || queryScore[0] == AppConfig.timeOutError || queryScore[0] == "登录过期") {
         return SliverList(
           delegate: SliverChildBuilderDelegate(
             (BuildContext context, int index) {
@@ -418,7 +428,7 @@ class ScoreListState extends State<ScoreList> {
         );
       }
     }
-    if (queryScore.length == 0) {
+    if (queryScore.isEmpty) {
       return SliverList(
         delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
           return Container(
@@ -528,7 +538,7 @@ class ExamListState extends State<ExamList> {
 
   @override
   Widget build(BuildContext context) {
-    if (examList.length == 0) {
+    if (examList.isEmpty) {
       return SliverList(
         delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
           return Container(
@@ -558,7 +568,7 @@ class ExamListState extends State<ExamList> {
                           Icon(
                             _getIcon(index),
                             color: _getColor(index),
-                            size: Global.listLeftIconSize,
+                            size: AppConfig.listLeftIconSize,
                           )
                         ],
                       ),

@@ -15,19 +15,23 @@ initSchedule() async {
       }
     }
   }
-  schedule = _schedule;
+  AppData.schedule = _schedule;
   print("initSchedule End");
-  await writeSchedule(jsonEncode(schedule));
+  await writeSchedule(jsonEncode(_schedule));
 }
 
 initTodaySchedule() async {
   print("initTodaySchedule");
-  final String _week = writeData["week"].toString();
-  Map _schedule = schedule;
-  List toDay = [];
+  final String _week = AppData.persistentData["week"].toString();
+  Map _schedule = Map.from(AppData.schedule);
+  Map weekOfSemester = _schedule[_week];
+  Map dayOfWeek = weekOfSemester[DateTime.now().weekday.toString()];
+
+  print(_schedule);
+  List<List> toDay = [];
   if (int.parse(_week) < 21)
-    await _schedule[_week][DateTime.now().weekday.toString()].forEach((key, value) {
-      if (value[1] != "null") {
+    dayOfWeek.forEach((key, value) {
+      if (value is List) if (value[1] != "null") {
         if (value.length < 5) {
           value.add(key);
         }
@@ -37,11 +41,11 @@ initTodaySchedule() async {
 
   if (toDay.isNotEmpty) {
     todayScheduleTitle = "今天的";
-    todaySchedule = toDay;
+    AppData.todaySchedule = toDay;
   } else {
     todayScheduleTitle = "今天没课";
   }
-  if (writeData["username"] == "") {
+  if (AppData.persistentData["username"] == "") {
     todayScheduleTitle = "";
   }
   print("initTodaySchedule End");
@@ -49,9 +53,9 @@ initTodaySchedule() async {
 
 initTomorrowSchedule() async {
   print("initTomorrowSchedule");
-  final String _week = writeData["week"].toString();
-  Map _schedule = schedule;
-  List tomorrow = [];
+  final String _week = AppData.persistentData["week"].toString();
+  Map _schedule = Map.from(AppData.schedule);
+  List<List> tomorrow = [];
   String _getWeekDay() {
     if (DateTime.now().weekday <= 6) {
       return (DateTime.now().weekday + 1).toString();
@@ -76,12 +80,12 @@ initTomorrowSchedule() async {
   }
   if (tomorrow.isNotEmpty) {
     tomorrowScheduleTitle = "明天的";
-    tomorrowSchedule = tomorrow;
+    AppData.tomorrowSchedule = tomorrow;
   } else {
     tomorrowScheduleTitle = "明天没课嗷";
     if (todayScheduleTitle == "今天没课") tomorrowScheduleTitle = "明天也没课🤣";
   }
-  if (writeData["username"] == "") {
+  if (AppData.persistentData["username"] == "") {
     tomorrowScheduleTitle = "";
   }
   print("initTomorrowSchedule End");

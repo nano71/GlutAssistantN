@@ -16,6 +16,7 @@ import '../common/io.dart';
 import '../common/style.dart';
 import '../config.dart';
 import '../data.dart';
+import '../widget/appwidget.dart';
 import 'init.dart';
 import 'login.dart';
 
@@ -124,18 +125,18 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
       );
       afterSuccess() async {
         await readSchedule();
-        Map _schedule = schedule;
+        Map _schedule = Map.from(AppData.schedule);
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "清除缓存...", 10));
-        schedule = {};
-        todaySchedule = [];
-        tomorrowSchedule = [];
+        AppData.schedule = {};
+        AppData.todaySchedule = [];
+        AppData.tomorrowSchedule = [];
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "初始化...", 10));
         await initSchedule();
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "获取课表...", 10));
-        schedule = _schedule;
+        AppData.schedule = _schedule;
         await writeSchedule(jsonEncode(_schedule));
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "处理数据...", 10));
@@ -151,15 +152,15 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
         ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(1, "数据已更新!", 1));
       }
 
-      _scheduleParser(dynamic result) {
+      _scheduleParser(dynamic result) async {
         if (result is bool) {
           if (result) {
-            afterSuccess();
+            await afterSuccess();
           } else {
             if (!isLogin()) {
               // codeCheckDialog(context),
               ScaffoldMessenger.of(context).removeCurrentSnackBar();
-              ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, Global.notLoginError));
+              ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, AppConfig.notLoginError));
               _rotationAnimationTimer.cancel();
             } else {
               ScaffoldMessenger.of(context).removeCurrentSnackBar();
@@ -190,7 +191,8 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
         getWeek();
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "连接教务...", 10));
-        _scheduleParser(await getSchedule());
+        await _scheduleParser(await getSchedule());
+        Appwidget.updateWidgetContent();
         _timeOutBool = true;
         _updateButtonClickCount = 0;
       });
@@ -233,7 +235,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    homeContext = context;
+    AppData.homeContext = context;
     Future.delayed(Duration(seconds: 0), () {
       if (DateTime.now().minute == 59 && DateTime.now().hour == 23) {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
@@ -284,7 +286,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       },
                       onTapUp: (d) {
                         Future.delayed(Duration(milliseconds: 100), () {
-                          if (writeData["username"] == "") {
+                          if (AppData.persistentData["username"] == "") {
                             Navigator.of(context).push(MaterialPageRoute(builder: (context) => LoginPage()));
                           } else {
                             _goTop();
@@ -327,7 +329,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       },
                       onTapUp: (d) {
                         Future.delayed(Duration(milliseconds: 100), () {
-                          if (writeData["username"] == "") {
+                          if (AppData.persistentData["username"] == "") {
                             Navigator.of(context).push(MaterialPageRoute(builder: (context) => LoginPage()));
                           } else {
                             Navigator.of(context).push(MaterialPageRoute(builder: (context) => QueryPage()));
@@ -371,7 +373,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       },
                       onTapUp: (d) {
                         Future.delayed(Duration(milliseconds: 100), () {
-                          if (writeData["username"] == "") {
+                          if (AppData.persistentData["username"] == "") {
                             Navigator.of(context).push(MaterialPageRoute(builder: (context) => LoginPage()));
                           } else {
                             Navigator.of(context).push(MaterialPageRoute(builder: (context) => QueryExamPage()));
@@ -426,15 +428,15 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
             child: Align(alignment: Alignment.centerLeft, child: Text(tomorrowScheduleTitle, style: tomorrowAndTodayTextStyle())),
           )),
           TomorrowCourseList(),
-          LoginCheck(),
+          NeedLogin(),
         ],
       ),
     );
   }
 }
 
-class LoginCheck extends StatelessWidget {
-  LoginCheck({Key? key}) : super(key: key);
+class NeedLogin extends StatelessWidget {
+  NeedLogin({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

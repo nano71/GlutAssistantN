@@ -42,39 +42,38 @@ class ReloadTodayListState {
   ReloadTodayListState();
 }
 
-late BuildContext homeContext;
-bool canCheckImportantUpdate = true;
-bool hasNewVersion = false;
-final bool isReleaseMode = const bool.fromEnvironment("dart.vm.product");
-double gpa = 0.0;
-double avg = 0.0;
-double weight = 0.0;
-Map schedule = {};
+class AppData {
+  static late BuildContext homeContext;
+  static bool canCheckImportantUpdate = true;
+  static bool hasNewVersion = false;
+  static final bool isReleaseMode = const bool.fromEnvironment("dart.vm.product");
+  static Map schedule = {};
+  static Map<String, String> persistentData = {
+    "time": "",
+    "week": "1",
+    "weekBk": "",
+    "weekDay": "",
+    "username": "",
+    "password": "",
+    "name": "",
+    "semester": "",
+    "semesterBk": "",
+    "year": "",
+    "yearBk": "",
+    "color": "blue",
+    "querySemester": "",
+    "queryYear": "",
+    "threshold": "5",
+    "newVersion": "",
+    "newBody": "",
+    "newTime": "",
+    "githubDownload": ""
+  };
+  static List<List> tomorrowSchedule = [];
+  static List<List> todaySchedule = [];
+}
 
-final Map<String, String> writeData = {
-  "time": "",
-  "week": "1",
-  "weekBk": "",
-  "weekDay": "",
-  "username": "",
-  "password": "",
-  "name": "",
-  "semester": "",
-  "semesterBk": "",
-  "year": "",
-  "yearBk": "",
-  "color": "blue",
-  "querySemester": "",
-  "queryYear": "",
-  "threshold": "5",
-  "newVersion": "",
-  "newBody": "",
-  "newTime": "",
-  "githubDownload": ""
-};
-Map packageInfo = {};
-List todaySchedule = [];
-List tomorrowSchedule = [];
+
 List queryScore = [];
 List careerList = [];
 List careerList2 = [];
@@ -198,7 +197,7 @@ String weekCN2Number(String value) {
 }
 
 int weekInt() {
-  return int.parse(writeData["week"] ?? "");
+  return int.parse(AppData.persistentData["week"] ?? "");
 }
 
 Map emptySchedule() {
@@ -217,6 +216,8 @@ Map emptySchedule() {
   return _schedule;
 }
 
-bool isLogin(){
-  return writeData["username"] != "";
+bool isLogin() {
+  return AppData.persistentData["username"] != "";
 }
+
+
