@@ -25,9 +25,9 @@ Future<void> writeCookie() async {
   if (!dirBool) {
     await file.create(recursive: true);
   }
-  print(Global.cookie);
+  print(AppConfig.cookie);
   try {
-    await file.writeAsString(jsonEncode(Global.cookie));
+    await file.writeAsString(jsonEncode(AppConfig.cookie));
     print("writeCookie End");
   } catch (e) {
     print(e);
@@ -43,8 +43,8 @@ Future<void> readCookie() async {
   }
   final result = await file.readAsString();
   if (result.isNotEmpty) {
-    Global.cookie = jsonDecode(result);
-    print(Global.cookie);
+    AppConfig.cookie = jsonDecode(result);
+    print(AppConfig.cookie);
     print("readCookie End");
   }
 }
@@ -86,16 +86,13 @@ Future<void> readSchedule() async {
   if (!dirBool) {
     await file.create(recursive: true);
   }
-  try {
-    final result = await file.readAsString();
-    if (result.isNotEmpty) {
-      schedule = jsonDecode(result);
-      print("readSchedule End");
-    } else {
-      await initSchedule();
-    }
-  } catch (e) {
-    print(e);
+
+  final result = await file.readAsString();
+  if (result.isNotEmpty) {
+    AppData.schedule = jsonDecode(result);
+    print("readSchedule End");
+  } else {
+    await initSchedule();
   }
 }
 
@@ -116,9 +113,9 @@ Future<File> endTimeLocalSupportFile() async {
 
 Future<void> writeConfig() async {
   print("writeConfig");
-  writeData["time"] = "${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}";
-  writeData["weekDay"] = DateTime.now().weekday.toString();
-  String str = jsonEncode(writeData);
+  AppData.persistentData["time"] = "${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}";
+  AppData.persistentData["weekDay"] = DateTime.now().weekday.toString();
+  String str = jsonEncode(AppData.persistentData);
   String startTimeStr = jsonEncode(startTimeList);
   String endTimeStr = jsonEncode(endTimeList);
   final file = await configLocalSupportFile();
@@ -161,14 +158,14 @@ Future<void> readConfig() async {
     if (result.isNotEmpty) {
       print("缓存文件存在");
       jsonDecode(result).forEach((key, value) {
-        writeData[key] = value.toString();
+        AppData.persistentData[key] = value.toString();
       });
-      List _timeList = writeData["time"].toString().split("-");
+      List _timeList = AppData.persistentData["time"].toString().split("-");
       int y = DateTime.now().year;
       int m = DateTime.now().month;
       int d = DateTime.now().day;
       int _currentWeek = weekInt() + getLocalWeek(DateTime(y, m, d), DateTime(int.parse(_timeList[0]), int.parse(_timeList[1]), int.parse(_timeList[2])));
-      writeData["week"] = _currentWeek.toString();
+      AppData.persistentData["week"] = _currentWeek.toString();
     }
     //存在
     if (startTimeResult.isNotEmpty) {

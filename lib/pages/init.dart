@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:glutassistantn/widget/homeWidget.dart';
-import 'package:package_info/package_info.dart';
-
+import 'package:glutassistantn/widget/appwidget.dart';
+import 'package:home_widget/home_widget.dart';
+import 'package:package_info_plus/package_info_plus.dart' as PackageInfoPlus;
+import '../type/packageInfo.dart' ;
 import '/common/get.dart';
 import '/common/init.dart';
 import '/common/io.dart';
@@ -40,15 +41,17 @@ class InitState extends State<Init> {
     init();
   }
 
+  Future<void> readPackageInfo() async {
+    PackageInfoPlus.PackageInfo packageInfo = await PackageInfoPlus.PackageInfo.fromPlatform();
+    PackageInfo.appName = packageInfo.appName;
+    PackageInfo.packageName = packageInfo.packageName;
+    PackageInfo.version = packageInfo.version;
+  }
+
   void init() async {
     // initService();
-    PackageInfo.fromPlatform().then((PackageInfo info) {
-      packageInfo["appName"] = info.appName;
-      packageInfo["packageName"] = info.packageName;
-      packageInfo["version"] = info.version;
-      // packageInfo["version"] = "1.3.220801";
-    });
     getPermissions();
+    readPackageInfo();
     await readConfig();
     await readCookie();
     await readSchedule();
@@ -56,9 +59,10 @@ class InitState extends State<Init> {
     await initTomorrowSchedule();
     getWeek();
     getUpdateForEveryday();
-    updateWidgetContent();
-    print("todaySchedule:");
-    print(todaySchedule);
+
+    Appwidget.updateWidgetContent();
+    HomeWidget.registerBackgroundCallback(backgroundCallback);
+
     Navigator.pushAndRemoveUntil(
       context,
       CustomRouter(CustomView(), 2000),
@@ -84,7 +88,7 @@ class CustomView extends StatelessWidget {
       backgroundColor: Colors.white,
       body: PageView(
         physics: NeverScrollableScrollPhysics(),
-        controller: Global.pageControl,
+        controller: AppConfig.pageControl,
         children: [HomePage(refresh: refresh), SchedulePage(), MinePage()],
       ),
       bottomNavigationBar: BottomNavBar(),

@@ -1,5 +1,3 @@
-// ignore_for_file: import_of_legacy_library_into_null_safe
-
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -20,7 +18,7 @@ Future getRecentExam() async {
   print("getRecentExam");
   Response response;
   try {
-    response = await request("get", Uri.http(Global.jwUrl, Global.getRecentExam));
+    response = await request("get", Uri.http(AppConfig.jwUrl, AppConfig.getRecentExam));
     Document document = parse(getHtml(response));
     List<Element> items = document.querySelectorAll("tr.infolist_common");
     if (items.length > 0) {
@@ -57,7 +55,7 @@ Future<void> getWeek() async {
   print("getWeek");
   Response response;
   try {
-    response = await request("get", Global.getWeekUrl);
+    response = await request("get", AppConfig.getWeekUrl);
   } on TimeoutException catch (e) {
     print("超时");
     print(e);
@@ -67,28 +65,30 @@ Future<void> getWeek() async {
     print(e);
     return readConfig();
   }
+  Map<String, String> persistentData = Map.from(AppData.persistentData);
   Document document = parse(getHtml(response));
   String weekHtml = document.querySelector("#date p span")!.text.trim();
   String week = weekHtml.substring(weekHtml.indexOf("第") + 1, weekHtml.indexOf("周")).trim();
   String n = weekHtml.substring(0, 4).trim();
   String q = weekHtml.substring(4, 5);
-  writeData["semester"] = q;
-  writeData["year"] = n;
-  writeData["week"] = week;
-  print(writeData["yearBk"]);
-  if (writeData["yearBk"] == "") {
-    writeData["yearBk"] = "0";
-  } else if (int.parse(writeData["year"]!) > int.parse(writeData["yearBk"]!)) {
-    writeData["yearBk"] = n;
+  persistentData["semester"] = q;
+  persistentData["year"] = n;
+  persistentData["week"] = week;
+  print(persistentData["yearBk"]);
+  if (persistentData["yearBk"] == "") {
+    persistentData["yearBk"] = "0";
+  } else if (int.parse(persistentData["year"]!) > int.parse(persistentData["yearBk"]!)) {
+    persistentData["yearBk"] = n;
   }
-  if (writeData["semesterBk"] == "" && writeData["yearBk"] == "") {
-    writeData["semesterBk"] = q;
-    writeData["yearBk"] = n;
+  if (persistentData["semesterBk"] == "" && persistentData["yearBk"] == "") {
+    persistentData["semesterBk"] = q;
+    persistentData["yearBk"] = n;
   }
-  if (writeData["querySemester"] == "" && writeData["queryYear"] == "") {
-    writeData["querySemester"] = q;
-    writeData["queryYear"] = n;
+  if (persistentData["querySemester"] == "" && persistentData["queryYear"] == "") {
+    persistentData["querySemester"] = q;
+    persistentData["queryYear"] = n;
   }
+  AppData.persistentData = persistentData;
   print("getWeek Save");
   await writeConfig();
   print("getWeek End");
@@ -97,12 +97,12 @@ Future<void> getWeek() async {
 Future<dynamic> getSchedule() async {
   if (!await checkLoginValidity()) return false;
   print("getSchedule");
-  Map _schedule = schedule;
-  Map<String, String> _weekList = {"星期一": "1", "星期二": "2", "星期三": "3", "星期四": "4", "星期五": "5", "星期六": "6", "星期日": "7"};
-  print(writeData["semesterBk"]);
-  print(writeData["yearBk"]);
+  Map _schedule = Map.from(AppData.schedule);
+  Map<String, String> _dayNumberMapping = {"星期一": "1", "星期二": "2", "星期三": "3", "星期四": "4", "星期五": "5", "星期六": "6", "星期日": "7"};
+  print(AppData.persistentData["semesterBk"]);
+  print(AppData.persistentData["yearBk"]);
   Uri uri = Uri.http(
-      Global.getScheduleUrl[0], Global.getScheduleUrl[1], {"year": ((int.parse(writeData["year"] ?? "")) - 1980).toString(), "term": writeData["semester"] == "秋" ? "3" : "1"});
+      AppConfig.getScheduleUrl[0], AppConfig.getScheduleUrl[1], {"year": ((int.parse(AppData.persistentData["year"] ?? "")) - 1980).toString(), "term": AppData.persistentData["semester"] == "秋" ? "3" : "1"});
   Response response;
   try {
     response = await request("", uri);
@@ -112,7 +112,7 @@ Future<dynamic> getSchedule() async {
     return socketError(e);
   }
   String html = getHtml(response);
-  if (html == "") return Global.dataError;
+  if (html == "") return AppConfig.dataError;
   Document document = parse(html);
   List<Element> list = document.querySelectorAll(".infolist_common");
   List<Element> infoList(int index) => list[index].querySelectorAll("a.infolist");
@@ -126,7 +126,7 @@ Future<dynamic> getSchedule() async {
 
   List<Element> tableCells(Element element) => element.querySelectorAll("td");
 
-  String? week(int i, int j) => _weekList[innerHtmlTrim(tableCells(tableRows(i)[j])[1])];
+  String? week(int i, int j) => _dayNumberMapping[innerHtmlTrim(tableCells(tableRows(i)[j])[1])];
 
   String remark(int i, int j) => tableRows(i)[j].text.trim().replaceAll(" ", ";");
 
@@ -246,9 +246,9 @@ Future<dynamic> getSchedule() async {
         }
     }
   }
-  print(writeData);
+  print(AppData.persistentData);
   String id = document.querySelector(".button[value='个人课表']")!.attributes["onclick"]!.substring(61).split("&year")[0];
-  Map scheduleChanges = await getScheduleChanges("id", _schedule);
+  Map scheduleChanges = await getScheduleChanges(id, _schedule);
   await writeSchedule(jsonEncode(scheduleChanges));
 
   print("getSchedule End");
@@ -258,10 +258,10 @@ Future<dynamic> getSchedule() async {
 Future<Map> getScheduleChanges(String id, Map schedule) async {
   print('getScheduleChanges');
   print("获取课表变更(调课/停课/补课)");
-  Uri uri = Uri.http(Global.getScheduleNextUrl[0], Global.getScheduleNextUrl[1], {
+  Uri uri = Uri.http(AppConfig.getScheduleNextUrl[0], AppConfig.getScheduleNextUrl[1], {
     "id": id,
-    "yearid": ((int.parse(writeData["year"] ?? "")) - 1980).toString(),
-    "termid": writeData["semester"] == "秋" ? "3" : "1",
+    "yearid": ((int.parse(AppData.persistentData["year"] ?? "")) - 1980).toString(),
+    "termid": AppData.persistentData["semester"] == "秋" ? "3" : "1",
     "timetableType": "STUDENT",
     "sectionType": "BASE"
   });
@@ -355,8 +355,8 @@ Future<Map> getScheduleChanges(String id, Map schedule) async {
 
 Future<void> getName() async {
   print('getName');
-  Response response = await request("get", Global.getNameUrl);
-  writeData["name"] = parse(response.body).querySelector('[name="realname"]')!.parentNode!.text ?? "";
+  Response response = await request("get", AppConfig.getNameUrl);
+  AppData.persistentData["name"] = parse(response.body).querySelector('[name="realname"]')!.parentNode!.text ?? "";
   print('getName End');
 }
 
@@ -378,23 +378,23 @@ Future getScore() async {
   print("getScore");
   String _year = "";
   String _term = "";
-  if (writeData["queryYear"] != "全部") {
-    _year = (int.parse(writeData["queryYear"] ?? "") - 1980).toString();
+  if (AppData.persistentData["queryYear"] != "全部") {
+    _year = (int.parse(AppData.persistentData["queryYear"] ?? "") - 1980).toString();
   }
-  if (writeData["querySemester"] != "全部") {
-    _term = (writeData["querySemester"] == "秋" ? 3 : 1).toString();
+  if (AppData.persistentData["querySemester"] != "全部") {
+    _term = (AppData.persistentData["querySemester"] == "秋" ? 3 : 1).toString();
   }
   Map<String, String> postData = {"year": _year, "term": _term, "prop": "", "groupName": "", "para": "0", "sortColumn": "", "Submit": "查询"};
   Response response;
   try {
-    response = await request("post", Global.getScoreUrl, body: postData);
+    response = await request("post", AppConfig.getScoreUrl, body: postData);
   } on TimeoutException catch (e) {
     return timeOutError(e);
   } on SocketException catch (e) {
     return socketError(e);
   }
   String html = response.body;
-  if (html == "") return Global.dataError;
+  if (html == "") return AppConfig.dataError;
   Document document = parse(html);
   List<Element> dataList = document.querySelectorAll(".datalist > tbody > tr");
   String parseData(int i, int number) => dataList[i].querySelectorAll("td")[number].text.trim();
@@ -418,14 +418,14 @@ Future<dynamic> getExam() async {
   print("getExam");
   Response response;
   try {
-    response = await request("post", Global.getExamUrl);
+    response = await request("post", AppConfig.getExamUrl);
   } on TimeoutException catch (e) {
     return timeOutError(e);
   } on SocketException catch (e) {
     return socketError(e);
   }
   String html = getHtml(response);
-  if (html == "") return Global.dataError;
+  if (html == "") return AppConfig.dataError;
   Document document = parse(html);
   examList = [];
   examListC = [];
@@ -466,7 +466,7 @@ Future getCareer() async {
   Future<void> _next(List url) async {
     Response response;
     try {
-      response = await request("get", Uri.http(Global.jwUrl, "/academic/manager/studyschedule/studentScheduleShowByTerm.do", {"z": "z", "studentId": url[0], "classId": url[1]}));
+      response = await request("get", Uri.http(AppConfig.jwUrl, "/academic/manager/studyschedule/studentScheduleShowByTerm.do", {"z": "z", "studentId": url[0], "classId": url[1]}));
     } on TimeoutException catch (e) {
       timeOutError(e);
       return;
@@ -531,14 +531,14 @@ Future getCareer() async {
 
   Response response;
   try {
-    response = await request("get", Global.getCareerUrl);
+    response = await request("get", AppConfig.getCareerUrl);
   } on TimeoutException catch (e) {
     return timeOutError(e);
   } on SocketException catch (e) {
     return socketError(e);
   }
   String html = getHtml(response);
-  if (html == "") return Global.dataError;
+  if (html == "") return AppConfig.dataError;
 
   Document document = parse(html);
   String url = document.querySelectorAll("a")[3].parent!.innerHtml.trim();
@@ -557,8 +557,8 @@ Future getCareer() async {
 }
 
 Future getEmptyClassroom({
-  String week = "1",
-  String whichWeek = "-1",
+  String dayOfWeek = "1",
+  String weekOfSemester = "-1",
   String building = "-1",
   String classroom = "-1",
 }) async {
@@ -569,18 +569,18 @@ Future getEmptyClassroom({
     "aid": "1",
     "buildingid": building, //1教:10
     "room": classroom, //教室
-    "whichweek": whichWeek, //第几周
-    "week": week, //星期
-    "Submit": "%C8%B7+%B6%A8"
+    "whichweek": weekOfSemester, //第几周
+    "week": dayOfWeek, //星期
+    "Submit": "确 定"
   };
   print(postData);
   Response response;
-  bool weekMode = whichWeek != "-1" && week != "-1";
+  bool weekMode = weekOfSemester != "-1" && dayOfWeek != "-1";
   try {
     if (weekMode) {
-      response = await request("post", Global.getEmptyClassroomUrl2, body: postData);
+      response = await request("post", AppConfig.getEmptyClassroomUrl2, body: postData);
     } else {
-      response = await request("post", Global.getEmptyClassroomUrl, body: postData);
+      response = await request("post", AppConfig.getEmptyClassroomUrl, body: postData);
     }
   } on TimeoutException catch (e) {
     return timeOutError(e);
@@ -588,7 +588,7 @@ Future getEmptyClassroom({
     return socketError(e);
   }
   String html = getHtml(response);
-  if (html == "") return Global.dataError;
+  if (html == "") return AppConfig.dataError;
   Document document = parse(html);
   if (weekMode) {
     List<Element> classrooms = document.querySelectorAll("tr.infolist_common");
@@ -623,19 +623,19 @@ Future getEmptyClassroom({
   }
   List<Element> buildingOptions = document.querySelectorAll("#buildingid > option");
   List<Element> classroomOptions = document.querySelectorAll("select[name='room'] > option");
-  Map<String?, String> buildings = {};
+  Map<String?, String> buildingCode = {};
   Map<String?, String> classrooms = {};
-  Map<String, Map> results = {"buildings": {}, "classrooms": {}};
+  Map<String, Map> results = {"buildingCode": {}, "classrooms": {}};
   buildingOptions.removeAt(0);
   classroomOptions.removeAt(0);
-  buildings["-1"] = "请选择";
+  buildingCode["-1"] = "请选择";
   for (Element element in buildingOptions) {
-    buildings[element.attributes["value"]] = element.innerHtml;
+    buildingCode[element.attributes["value"]] = element.innerHtml;
   }
   for (Element element in classroomOptions) {
     classrooms[element.attributes["value"]] = element.innerHtml;
   }
-  results["buildings"] = buildings;
+  results["buildingCode"] = buildingCode;
   results["classrooms"] = classrooms;
   print('getEmptyClassroom end');
   return results;
@@ -645,13 +645,13 @@ Future<dynamic> getUpdate() async {
   print("getUpdate");
   Response response;
   try {
-    response = await get(Global.getUpdateUrl);
+    response = await get(AppConfig.getUpdateUrl);
   } on TimeoutException catch (e) {
     print("getUpdate Error: " + e.toString());
     return "请求超时";
   } on SocketException catch (e) {
     print("getUpdate Error: " + e.toString());
-    return Global.socketError;
+    return AppConfig.socketError;
   }
   if (response.body.toString().contains('"message":"API rate limit exceeded for')) {
     print("getUpdate End");
@@ -670,16 +670,16 @@ Future<dynamic> getUpdate() async {
 
 Future getUpdateForEveryday() async {
   print("getUpdateForEveryday");
-  if (true || "${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}" != writeData["newTime"]) {
+  if (true || "${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}" != AppData.persistentData["newTime"]) {
     Response response;
     try {
-      response = await get(Global.getUpdateUrl);
+      response = await get(AppConfig.getUpdateUrl);
     } on TimeoutException catch (e) {
       print("getUpdate Error: " + e.toString());
       return "请求超时";
     } on SocketException catch (e) {
       print("getUpdate Error: " + e.toString());
-      return Global.socketError;
+      return AppConfig.socketError;
     } on ClientException catch (e) {
       return;
     }
@@ -688,12 +688,12 @@ Future getUpdateForEveryday() async {
     if (!response.body.toString().contains('"message":"API rate limit exceeded for')) {
       List list = jsonDecode(response.body)["name"].split("_");
       list.add(jsonDecode(response.body)["body"]);
-      writeData["newVersion"] = list[1];
-      writeData["newBody"] = list[3];
-      writeData["newTime"] = "${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}";
+      AppData.persistentData["newVersion"] = list[1];
+      AppData.persistentData["newBody"] = list[3];
+      AppData.persistentData["newTime"] = "${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}";
       writeConfig();
       checkNewVersion();
-      if (hasNewVersion && canCheckImportantUpdate) {
+      if (AppData.hasNewVersion && AppData.canCheckImportantUpdate) {
         Future.delayed(Duration(seconds: 1), () {
           checkImportantUpdate();
         });
@@ -707,9 +707,9 @@ Future getUpdateForEveryday() async {
 Future<Response> request(String method, Uri uri, {Map<String, String>? body, Encoding? encoding}) async {
   Map<String, String>? headers = {"cookie": mapCookieToString()};
   if (method == "post") {
-    return await post(uri, body: body, headers: headers, encoding: encoding).timeout(Duration(seconds: Global.timeOutSec));
+    return await post(uri, body: body, headers: headers, encoding: encoding).timeout(Duration(seconds: AppConfig.timeOutSec));
   } else {
-    return await get(uri, headers: headers).timeout(Duration(seconds: Global.timeOutSec));
+    return await get(uri, headers: headers).timeout(Duration(seconds: AppConfig.timeOutSec));
   }
 }
 
@@ -720,19 +720,19 @@ String getHtml(Response response) {
 String timeOutError(e) {
   print("超时");
   print(e);
-  return Global.timeOutError;
+  return AppConfig.timeOutError;
 }
 
 String socketError(e) {
   print("连接失败");
   print(e);
-  return Global.socketError;
+  return AppConfig.socketError;
 }
 
 void getPermissions() async {
   print("getPermissions");
   Response response;
-  response = await request("get", Uri.http(Global.authorUrl, Global.controlUrl));
+  response = await request("get", Uri.http(AppConfig.authorUrl, AppConfig.controlUrl));
   Map result = jsonDecode(response.body);
   if (!result["permissions"]["all"]) {
     exit(0);
@@ -745,10 +745,10 @@ Future<bool> checkLoginValidity() async {
   print("checkLoginSituation");
   Response response;
   try {
-    response = await request("get", Global.checkLoginValidityUri);
+    response = await request("get", AppConfig.checkLoginValidityUri);
   } catch (e) {
     return false;
   }
   String html = getHtml(response);
-  return !html.contains(Global.reLoginErrorText);
+  return !html.contains(AppConfig.reLoginErrorText);
 }

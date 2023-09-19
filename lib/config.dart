@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
 import 'data.dart';
+import 'type/packageInfo.dart';
 
-class Global {
+class AppConfig {
   static String appTitle = "桂工助手N";
   static bool login = false;
   static int pageIndex = 0;
@@ -49,19 +50,19 @@ Uri httpUri(
   path, [
   Map<String, dynamic>? queryParameters,
 ]) {
-  return Uri.http(Global.jwUrl, path, queryParameters);
+  return Uri.http(AppConfig.jwUrl, path, queryParameters);
 }
 
 LinearGradient readGradient() {
-  if (writeData["color"] == "red") {
+  if (AppData.persistentData["color"] == "red") {
     return setCardTemplate([Color(0xFFfbab66), Color(0xFFf7418c)]);
-  } else if (writeData["color"] == "pink") {
+  } else if (AppData.persistentData["color"] == "pink") {
     return setCardTemplate([Color(0xffeca299), Color(0xfffc6caa)]);
-  } else if (writeData["color"] == "blue") {
+  } else if (AppData.persistentData["color"] == "blue") {
     return setCardTemplate([Color(0xff66cefb), Color(0xff4175f7)]);
-  } else if (writeData["color"] == "yellow") {
+  } else if (AppData.persistentData["color"] == "yellow") {
     return setCardTemplate([Color(0xfffbef66), Color(0xfff7a841)]);
-  } else if (writeData["color"] == "cyan") {
+  } else if (AppData.persistentData["color"] == "cyan") {
     return setCardTemplate([Color(0xff66fbce), Color(0xff16bbb4)]);
   } else {
     return setCardTemplate([Color(0xff66cefb), Color(0xff4175f7)]);
@@ -69,15 +70,15 @@ LinearGradient readGradient() {
 }
 
 readColor() {
-  if (writeData["color"] == "blue") {
+  if (AppData.persistentData["color"] == "blue") {
     return Colors.blue;
-  } else if (writeData["color"] == "pink") {
+  } else if (AppData.persistentData["color"] == "pink") {
     return Colors.pinkAccent[100];
-  } else if (writeData["color"] == "red") {
+  } else if (AppData.persistentData["color"] == "red") {
     return Colors.redAccent;
-  } else if (writeData["color"] == "yellow") {
+  } else if (AppData.persistentData["color"] == "yellow") {
     return Colors.yellow[600];
-  } else if (writeData["color"] == "cyan") {
+  } else if (AppData.persistentData["color"] == "cyan") {
     return Colors.cyan[400];
   } else {
     return Colors.blue;
@@ -85,15 +86,15 @@ readColor() {
 }
 
 LinearGradient readCardGradient() {
-  if (writeData["color"] == "red") {
+  if (AppData.persistentData["color"] == "red") {
     return setCardTemplate([Color(0xFFfbab66), Color(0xFFf7418c)]);
-  } else if (writeData["color"] == "pink") {
+  } else if (AppData.persistentData["color"] == "pink") {
     return setCardTemplate([Color(0xffeca299), Color(0xfffc6caa)]);
-  } else if (writeData["color"] == "blue") {
+  } else if (AppData.persistentData["color"] == "blue") {
     return setCardTemplate([Color(0xff66cefb), Color(0xff4175f7)]);
-  } else if (writeData["color"] == "yellow") {
+  } else if (AppData.persistentData["color"] == "yellow") {
     return setCardTemplate([Color(0xfffbef66), Color(0xfff7a841)]);
-  } else if (writeData["color"] == "cyan") {
+  } else if (AppData.persistentData["color"] == "cyan") {
     return setCardTemplate([Color(0xff66fbce), Color(0xff16bbb4)]);
   } else {
     return setCardTemplate([Color(0xff66cefb), Color(0xff4175f7)]);
@@ -101,13 +102,13 @@ LinearGradient readCardGradient() {
 }
 
 Color readColorBegin() {
-  if (writeData["color"] == "red" || writeData["color"] == "pink") {
+  if (AppData.persistentData["color"] == "red" || AppData.persistentData["color"] == "pink") {
     return Color.fromARGB(42, 255, 229, 253);
-  } else if (writeData["color"] == "blue") {
+  } else if (AppData.persistentData["color"] == "blue") {
     return Color.fromARGB(42, 199, 229, 253);
-  } else if (writeData["color"] == "yellow") {
+  } else if (AppData.persistentData["color"] == "yellow") {
     return Color.fromARGB(42, 253, 249, 199);
-  } else if (writeData["color"] == "cyan") {
+  } else if (AppData.persistentData["color"] == "cyan") {
     return Color.fromARGB(42, 199, 251, 253);
   } else {
     return Color.fromARGB(42, 199, 229, 253);
@@ -115,15 +116,15 @@ Color readColorBegin() {
 }
 
 Color readColorEnd() {
-  if (writeData["color"] == "red") {
+  if (AppData.persistentData["color"] == "red") {
     return Color.fromARGB(110, 253, 199, 199);
-  } else if (writeData["color"] == "pink") {
+  } else if (AppData.persistentData["color"] == "pink") {
     return Color.fromARGB(110, 253, 199, 228);
-  } else if (writeData["color"] == "blue") {
+  } else if (AppData.persistentData["color"] == "blue") {
     return Color.fromARGB(110, 199, 229, 253);
-  } else if (writeData["color"] == "yellow") {
+  } else if (AppData.persistentData["color"] == "yellow") {
     return Color.fromARGB(110, 253, 246, 199);
-  } else if (writeData["color"] == "cyan") {
+  } else if (AppData.persistentData["color"] == "cyan") {
     return Color.fromARGB(110, 199, 251, 253);
   } else {
     return Color.fromARGB(110, 199, 229, 253);

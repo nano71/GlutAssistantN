@@ -30,7 +30,7 @@ if (keystorePropertiesFile.exists()) {
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
-
+apply plugin: 'kotlinx-serialization'
 android {
     ndkVersion ndkVersion
 
@@ -57,9 +57,10 @@ android {
     }
 
     defaultConfig {
+        multiDexEnabled true
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "com.nano71.glutassistantn"
-        minSdkVersion 16
+        minSdkVersion 19
         //noinspection OldTargetApi
         targetSdkVersion 31
         versionCode flutterVersionCode.toInteger()
@@ -97,4 +98,6 @@ flutter {
 dependencies {
     implementation 'com.google.android.material:material:1.8.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0"
+    implementation 'androidx.multidex:multidex:2.0.1'
 }

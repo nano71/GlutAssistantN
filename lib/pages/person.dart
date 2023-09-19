@@ -35,7 +35,7 @@ class MinePageState extends State<MinePage> {
     return Container(
       color: Colors.white,
       child: CustomScrollView(physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()), slivers: [
-        publicTopBar(isLogin() ? "Hi! " + (writeData["name"] ?? "") : "请先登录教务"),
+        publicTopBar(isLogin() ? "Hi! " + (AppData.persistentData["name"] ?? "") : "请先登录教务"),
         SliverToBoxAdapter(
             child: Container(
           width: double.infinity,
@@ -55,13 +55,13 @@ class MinePageState extends State<MinePage> {
                 child: mineItem(
                   FlutterRemix.user_5_line,
                   EdgeInsets.fromLTRB(16, 14, 0, 14),
-                  (writeData["name"] != "" ? "更换账号" : "登录教务"),
+                  (AppData.persistentData["name"] != "" ? "更换账号" : "登录教务"),
                   readColor(),
                 ),
               ),
               InkWell(
                 onTap: () {
-                  if (writeData["username"] == "") {
+                  if (AppData.persistentData["username"] == "") {
                     // Navigator.push(context, SlideTopRoute(page: LoginPage()));
                     Navigator.of(context).push(MaterialPageRoute(builder: (context) => LoginPage()));
                   } else {
@@ -72,7 +72,7 @@ class MinePageState extends State<MinePage> {
               ),
               InkWell(
                 onTap: () {
-                  if (writeData["username"] == "") {
+                  if (AppData.persistentData["username"] == "") {
                     // Navigator.push(context, SlideTopRoute(page: LoginPage()));
                     Navigator.of(context).push(MaterialPageRoute(builder: (context) => LoginPage()));
                   } else {
@@ -88,7 +88,7 @@ class MinePageState extends State<MinePage> {
 
                   Navigator.of(context).push(MaterialPageRoute(builder: (context) => UpdatePage()));
                 },
-                child: hasNewVersion
+                child: AppData.hasNewVersion
                     ? mineItem5(FlutterRemix.download_cloud_2_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "版本更新", readColor())
                     : mineItem(FlutterRemix.download_cloud_2_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "版本更新", readColor()),
               ),
