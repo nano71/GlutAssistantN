@@ -155,7 +155,7 @@ class HomeWidgetExampleProvider : HomeWidgetProvider() {
 //            context,
 //            Uri.parse("homeWidgetExample://refresh")
 //        )
-        remoteViews.setOnClickFillInIntent(R.id.refresh_icon, pendingIntent)
+        remoteViews.setOnClickPendingIntent(R.id.refresh_icon, pendingIntent)
     }
 
     @RequiresApi(Build.VERSION_CODES.S)
