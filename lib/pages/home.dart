@@ -17,7 +17,7 @@ import '../common/style.dart';
 import '../config.dart';
 import '../data.dart';
 import '../widget/appwidget.dart';
-import 'init.dart';
+import 'mainBody.dart';
 import 'login.dart';
 
 class HomePage extends StatefulWidget {
@@ -150,6 +150,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
         print("刷新结束${DateTime.now()}");
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(1, "数据已更新!", 1));
+        Appwidget.updateWidgetContent();
       }
 
       _scheduleParser(dynamic result) async {
@@ -192,7 +193,6 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "连接教务...", 10));
         await _scheduleParser(await getSchedule());
-        Appwidget.updateWidgetContent();
         _timeOutBool = true;
         _updateButtonClickCount = 0;
       });

@@ -48,6 +48,7 @@ class AppData {
   static bool hasNewVersion = false;
   static final bool isReleaseMode = const bool.fromEnvironment("dart.vm.product");
   static Map schedule = {};
+  static bool isInitialized = false;
   static Map<String, String> persistentData = {
     "time": "",
     "week": "1",
@@ -72,7 +73,6 @@ class AppData {
   static List<List> tomorrowSchedule = [];
   static List<List> todaySchedule = [];
 }
-
 
 List queryScore = [];
 List careerList = [];
@@ -219,5 +219,3 @@ Map emptySchedule() {
 bool isLogin() {
   return AppData.persistentData["username"] != "";
 }
-
-

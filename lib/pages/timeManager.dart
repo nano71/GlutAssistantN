@@ -5,7 +5,7 @@ import '/widget/bars.dart';
 
 import '../config.dart';
 import '../data.dart';
-import 'init.dart';
+import 'mainBody.dart';
 
 bool _isError = false;
 
