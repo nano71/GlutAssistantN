@@ -22,12 +22,18 @@ initSchedule() async {
 
 initTodaySchedule() async {
   print("initTodaySchedule");
+  DateTime now = DateTime.now();
+
+  int year = now.year;
+  int month = now.month;
+  int day = now.day;
+
+  print('当前日期：$year 年 $month 月 $day 日');
   final String _week = AppData.persistentData["week"].toString();
   Map _schedule = Map.from(AppData.schedule);
   Map weekOfSemester = _schedule[_week];
   Map dayOfWeek = weekOfSemester[DateTime.now().weekday.toString()];
 
-  print(_schedule);
   List<List> toDay = [];
   if (int.parse(_week) < 21)
     dayOfWeek.forEach((key, value) {
@@ -78,12 +84,12 @@ initTomorrowSchedule() async {
         }
       });
   }
+  AppData.tomorrowSchedule = tomorrow;
   if (tomorrow.isNotEmpty) {
     tomorrowScheduleTitle = "明天的";
-    AppData.tomorrowSchedule = tomorrow;
   } else {
     tomorrowScheduleTitle = "明天没课嗷";
-    if (todayScheduleTitle == "今天没课") tomorrowScheduleTitle = "明天也没课🤣";
+    if (AppData.todaySchedule.isEmpty) tomorrowScheduleTitle = "明天也没课🤣";
   }
   if (AppData.persistentData["username"] == "") {
     tomorrowScheduleTitle = "";

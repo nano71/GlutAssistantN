@@ -11,7 +11,7 @@ import '/widget/bars.dart';
 
 import '../config.dart';
 import '../data.dart';
-import 'init.dart';
+import 'mainBody.dart';
 import 'person.dart';
 
 class SettingPage extends StatefulWidget {
@@ -413,7 +413,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(
-        builder: (context) => Init(),
+        builder: (context) => MainBody(),
       ),
       (route) => false,
     );

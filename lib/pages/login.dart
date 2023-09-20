@@ -13,7 +13,7 @@ import '/common/login.dart';
 import '/widget/bars.dart';
 import '../config.dart';
 import '../data.dart';
-import 'init.dart';
+import 'mainBody.dart';
 
 class LoginPage extends StatefulWidget {
   final String title;

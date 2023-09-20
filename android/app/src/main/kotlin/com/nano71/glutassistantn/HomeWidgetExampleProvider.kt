@@ -1,26 +1,26 @@
 package com.nano71.glutassistantn
 
-import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Build
 import android.util.Log
 import android.util.SizeF
+import android.view.View
+import android.view.animation.Animation
+import android.view.animation.RotateAnimation
 import android.widget.RemoteViews
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import es.antonborri.home_widget.HomeWidgetBackgroundIntent
 import es.antonborri.home_widget.HomeWidgetLaunchIntent
 import es.antonborri.home_widget.HomeWidgetProvider
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
-import java.text.DateFormat
-import java.text.DateFormat.getDateInstance
-import java.text.SimpleDateFormat
 import java.time.Instant
-import java.util.Date
+import java.time.LocalDateTime
+import kotlin.math.ceil
 
 @Serializable
 data class CustomData(val value: List<List<String>>)
@@ -28,57 +28,180 @@ data class CustomData(val value: List<List<String>>)
 private const val TAG = "appwidget"
 
 class HomeWidgetExampleProvider : HomeWidgetProvider() {
+    private var toastCount: Int = 0
+    private val rowList: List<Int> = listOf(
+        R.id.row_1,
+        R.id.row_2,
+        R.id.row_3
+    )
+    private val labelIdList: List<Int> = listOf(
+        R.id.label_1,
+        R.id.label_2,
+        R.id.label_3
+    )
+    private val courseNameList: List<Int> = listOf(
+        R.id.course_name_1,
+        R.id.course_name_2,
+        R.id.course_name_3
+    )
+    private val addressList: List<Int> = listOf(
+        R.id.address_1,
+        R.id.address_2,
+        R.id.address_3
+    )
+
+    private fun customParser(data: List<List<String>>): List<List<String>> {
+        println("HomeWidgetExampleProvider.customParser")
+        val mergedDataMap = mutableMapOf<Pair<String, String>, MutableList<String>>()
+        for (item in data) {
+            val key = Pair(item[0], item[1])
+            if (!mergedDataMap.containsKey(key)) {
+                mergedDataMap[key] = mutableListOf()
+            }
+            mergedDataMap[key]!!.add(item[2])
+        }
+        val mergedDataList = mutableListOf<List<String>>()
+        for ((key, values) in mergedDataMap) {
+            val startIndex = values.first()
+            val endIndex = values.last()
+            val mergedItem = mutableListOf(key.first, key.second, "$startIndex–$endIndex")
+            mergedDataList.add(mergedItem)
+        }
+        return mergedDataList
+    }
+
+    private fun emoji(lessonCount: Int): String {
+        return when (lessonCount) {
+            0 -> "😋"
+            1, 2 -> "🤪"
+            3, 4 -> "🙄"
+            5, 6 -> "😑"
+            else -> "😑"
+        }
+    }
+
+
+    @RequiresApi(Build.VERSION_CODES.S)
+    private fun setData(remoteViews: RemoteViews, originalData: List<List<String>>, isSmall: Boolean, isToday: Boolean) {
+        println("HomeWidgetExampleProvider.setData")
+//        remoteViews.setViewVisibility(R.id.refresh_icon, View.VISIBLE)
+        val data :List<List<String>> = customParser(originalData)
+        val lessonCount: Int = data.size
+        val todayText: String = if (isToday) "还" else ""
+
+        if (isSmall) {
+            remoteViews.setTextViewText(R.id.widget_message, todayText + "有${lessonCount}节~")
+        } else {
+            remoteViews.setTextViewText(R.id.widget_message, emoji(lessonCount) + todayText + "有${lessonCount}节课~")
+        }
+        if (lessonCount == 1 || lessonCount == 2) {
+            val lastClass: String = data.last()[2]
+            val currentDateTime = LocalDateTime.now()
+            val currentHour: Int = currentDateTime.hour
+            if (currentHour > 19 && (lastClass.contains("10") || lastClass.contains("11"))) {
+                setRowData(remoteViews, lessonCount, "然后", "玩,然后早些休息~", "Dormitory")
+            } else {
+                setRowData(remoteViews, lessonCount, "然后", "玩~", "Anywhere")
+            }
+        }
+
+        for ((index, strings) in data.withIndex()) {
+            if (index > 2)
+                break
+            setRowData(remoteViews, index, strings[2] + "节", strings[0], strings[1])
+        }
+    }
+
+    private fun hideElements(remoteViews: RemoteViews) {
+        println("HomeWidgetExampleProvider.hideElements")
+        for (row in rowList) {
+            remoteViews.setViewVisibility(row, View.GONE)
+        }
+    }
+
+
+    private fun setRowData(remoteViews: RemoteViews, index: Int, label: String, courseName: String, address: String) {
+        println("HomeWidgetExampleProvider.setRowData")
+        remoteViews.setTextViewText(
+            labelIdList[index],
+            label
+        )
+        remoteViews.setTextViewText(
+            courseNameList[index],
+            courseName
+        )
+        remoteViews.setTextViewText(
+            addressList[index],
+            address
+        )
+        remoteViews.setViewVisibility(rowList[index], View.VISIBLE)
+    }
+
+    private fun nullValueTemplate(remoteViews: RemoteViews) {
+//        remoteViews.setViewVisibility(R.id.refresh_icon, View.VISIBLE)
+        setRowData(remoteViews, 0, "首先", "写作业", "Library")
+        setRowData(remoteViews, 1, "然后", "开心的玩", "Anywhere")
+        setRowData(remoteViews, 2, "最后", "回宿舍睡大觉", "Dormitory")
+    }
+
+    private fun bindOnClickEvent(context: Context, remoteViews: RemoteViews) {
+        println("HomeWidgetExampleProvider.bindOnClickEvent")
+        val pendingIntent = HomeWidgetLaunchIntent.getActivity(
+            context,
+            MainActivity::class.java,
+        )
+        remoteViews.setOnClickPendingIntent(R.id.widget_container, pendingIntent)
+//        val backgroundIntent = HomeWidgetBackgroundIntent.getBroadcast(
+//            context,
+//            Uri.parse("homeWidgetExample://refresh")
+//        )
+        remoteViews.setOnClickFillInIntent(R.id.refresh_icon, pendingIntent)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.S)
+    private fun updateContent(context: Context, widgetData: SharedPreferences, remoteViews: RemoteViews, isSmall: Boolean) {
+        hideElements(remoteViews)
+        bindOnClickEvent(context, remoteViews)
+
+        val originalTodaySchedule: String = widgetData.getString("todaySchedule", null) ?: "{'value':[]}"
+        val todaySchedule: List<List<String>> = Json.decodeFromString<CustomData>(originalTodaySchedule).value
+        if (todaySchedule.isNotEmpty()) {
+            Log.d(TAG, "updateContent: todaySchedule:")
+            setData(remoteViews, todaySchedule, isSmall, true)
+        } else {
+            val originalTomorrowSchedule: String = widgetData.getString("tomorrowSchedule", null) ?: "{'value':[]}"
+            val tomorrowSchedule: List<List<String>> = Json.decodeFromString<CustomData>(originalTomorrowSchedule).value
+            if (tomorrowSchedule.isNotEmpty()) {
+                Log.d(TAG, "updateContent: tomorrowSchedule")
+                setData(remoteViews, tomorrowSchedule, isSmall, false)
+            } else {
+                nullValueTemplate(remoteViews)
+            }
+        }
+
+        val message: String = widgetData.getString("message", null) ?: ""
+        if (message.isNotEmpty()) {
+            remoteViews.setTextViewText(R.id.widget_message, message)
+        }
+        remoteViews.setTextViewText(R.id.widget_title, widgetData.getString("title", null))
+        remoteViews.setViewVisibility(R.id.loading_text, View.GONE)
+        remoteViews.setViewVisibility(R.id.widget_container, View.VISIBLE)
+        remoteViews.setViewVisibility(R.id.refresh_icon, View.VISIBLE)
+    }
+
 
     @RequiresApi(Build.VERSION_CODES.S)
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray, widgetData: SharedPreferences) {
         Log.d(TAG, "HomeWidgetExampleProvider.onUpdate")
         appWidgetIds.forEach { widgetId ->
-            fun updateContent(remoteViews: RemoteViews) {
-                val pendingIntent = HomeWidgetLaunchIntent.getActivity(
-                    context,
-                    MainActivity::class.java
-                )
-                remoteViews.setOnClickPendingIntent(
-                    R.id.widget_container, pendingIntent
-                )
-
-                val backgroundIntent = HomeWidgetBackgroundIntent.getBroadcast(
-                    context,
-                    Uri.parse("homeWidgetExample://refresh")
-                )
-
-                remoteViews.setOnClickPendingIntent(R.id.widget_title, backgroundIntent)
-
-                val originalTodaySchedule: String? = widgetData.getString("todaySchedule", null)
-                if (originalTodaySchedule != null) {
-                    val todaySchedule: List<List<String>> = Json.decodeFromString<CustomData>(originalTodaySchedule).value
-                    Log.d(TAG, "updateContent: todaySchedule:")
-
-                }
-
-                val originalTomorrowSchedule: String? = widgetData.getString("tomorrowSchedule", null)
-                if (originalTomorrowSchedule != null) {
-                    val tomorrowSchedule: List<List<String>> = Json.decodeFromString<CustomData>(originalTomorrowSchedule).value
-                    Log.d(TAG, "updateContent: tomorrowSchedule")
-                }
-
-                remoteViews.setTextViewText(R.id.widget_title, widgetData.getString("title", null))
-                val timeDate: Long = Instant.now().epochSecond
-                Log.d(TAG, "updateContent: $timeDate")
-                remoteViews.setTextViewText(
-                    R.id.widget_message,
-                    "$timeDate"
-                )
-            }
-
-
+            print("widgetId:")
+            println(widgetId)
             val smallViews = RemoteViews(context.packageName, R.layout.widget_small).apply {
-                updateContent(this)
+                updateContent(context, widgetData, this, true)
             }
             val mediumViews = RemoteViews(context.packageName, R.layout.widget_medium).apply {
-                updateContent(this)
+                updateContent(context, widgetData, this, false)
             }
-
             appWidgetManager.updateAppWidget(
                 widgetId, RemoteViews(
                     mapOf(
@@ -87,6 +210,7 @@ class HomeWidgetExampleProvider : HomeWidgetProvider() {
                     )
                 )
             )
+            toastCount = 0
         }
     }
 }
