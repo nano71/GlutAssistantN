@@ -4,7 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:glutassistantn/widget/appwidget.dart';
 import 'package:workmanager/workmanager.dart';
 
-import '/pages/init.dart';
+import '/pages/mainBody.dart';
+import 'common/service.dart';
 import 'config.dart';
 
 void main() {
@@ -26,6 +27,7 @@ class App extends StatelessWidget {
           useMaterial3: false,
         ),
         title: AppConfig.appTitle,
-        home: Init());
+        home: MainBody());
   }
 }
+

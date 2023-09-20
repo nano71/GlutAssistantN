@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:glutassistantn/widget/appwidget.dart';
 import 'package:home_widget/home_widget.dart';
 import 'package:package_info_plus/package_info_plus.dart' as PackageInfoPlus;
-import '../type/packageInfo.dart' ;
+
 import '/common/get.dart';
 import '/common/init.dart';
 import '/common/io.dart';
@@ -12,6 +12,7 @@ import '/pages/person.dart';
 import '/pages/schedule.dart';
 import '/widget/bars.dart';
 import '../data.dart';
+import '../type/packageInfo.dart';
 
 class CustomRouter extends PageRouteBuilder {
   final Widget widget;
@@ -27,18 +28,18 @@ class CustomRouter extends PageRouteBuilder {
             });
 }
 
-class Init extends StatefulWidget {
-  Init({Key? key}) : super(key: key);
+class MainBody extends StatefulWidget {
+  MainBody({Key? key}) : super(key: key);
 
   @override
-  InitState createState() => InitState();
+  MainBodyState createState() => MainBodyState();
 }
 
-class InitState extends State<Init> {
+class MainBodyState extends State<MainBody> {
   @override
   void initState() {
     super.initState();
-    init();
+    initialize();
   }
 
   Future<void> readPackageInfo() async {
@@ -48,7 +49,7 @@ class InitState extends State<Init> {
     PackageInfo.version = packageInfo.version;
   }
 
-  void init() async {
+  void initialize() async {
     // initService();
     getPermissions();
     readPackageInfo();
@@ -59,9 +60,11 @@ class InitState extends State<Init> {
     await initTomorrowSchedule();
     getWeek();
     getUpdateForEveryday();
+    AppData.isInitialized = true;
 
     Appwidget.updateWidgetContent();
     HomeWidget.registerBackgroundCallback(backgroundCallback);
+
 
     Navigator.pushAndRemoveUntil(
       context,

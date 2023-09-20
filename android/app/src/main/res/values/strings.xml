@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="title">今天的课表</string>
-    <string name="message">还有 3 节</string>
-    <string name="appwidgetDescription">一个当天课表微件 (支持尺寸调节)</string>
+    <string name="message">还有3节~</string>
+    <string name="appwidgetDescription">一个简洁的课表微件 (支持尺寸调节)</string>
     <string name="appwidgetDescriptionSmall">一个小的当天课表微件</string>
     <string name="appwidgetDescriptionLarge">一个大的当天课表微件</string>
     <string name="course_name_1">高等数学(A)</string>
     <string name="address_1">A205J</string>
     <string name="label_1">1–4节</string>
     <string name="address_2">2408</string>
-    <string name="course_name_2">大学生安全教育(八)大学生安全教育(八)</string>
+    <string name="course_name_2">大学生安全教育(八)</string>
     <string name="label_2">5–6节</string>
-    <string name="address_3">A409J</string>
-    <string name="course_name_3">马克思主义基本原理(二)马克思主义基本原理(二)</string>
-    <string name="label_3">9–10节</string>
+    <string name="address_3">Anywhere</string>
+    <string name="course_name_3">玩~</string>
+    <string name="label_3">然后</string>
 </resources>

@@ -1,85 +1,138 @@
 import 'dart:convert';
 
-import 'package:glutassistantn/widget/lists.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:glutassistantn/common/io.dart';
 import 'package:home_widget/home_widget.dart';
-import 'package:workmanager/workmanager.dart';
 
+import '../common/init.dart';
 import '../config.dart';
 import '../data.dart';
+import 'lists.dart';
 
 @pragma("vm:entry-point")
 void backgroundCallback(Uri? data) async {
   print(data?.host);
-  Appwidget.updateWidgetContent();
+  if (data?.host == "refresh") {
+    await readConfig();
+    await readSchedule();
+    await initTodaySchedule();
+    await initTomorrowSchedule();
+
+    Appwidget.updateWidgetContent(true);
+  }
 }
 
-/// Used for Background Updates using Workmanager Plugin
-@pragma("vm:entry-point")
-void callbackDispatcher() {
-  Workmanager().executeTask((taskName, inputData) {
-    final now = DateTime.now();
-    return Future.wait<bool?>([
-      Appwidget.commitUpdateWidgetTask()
-    ]).then((value) {
-      return !value.contains(false);
-    });
-  });
+List<List> _customParser(List<List> originalData, [bool isTodaySchedule = true]) {
+  List<List> processedData = [];
+
+  for (int i = 0; i < originalData.length; i++) {
+    List item = originalData[i];
+    if (!isTodaySchedule) {
+      item.removeAt(1);
+      item.removeAt(2);
+      processedData.add(item);
+      continue;
+    }
+    List status = timeUntilNextClass(item.last);
+    if (status.last == "after") {
+      if (i < originalData.length - 1 && i % 2 == 0) {
+        List nextItem = originalData[i + 1];
+        List lastStatus = timeUntilNextClass(nextItem.last);
+        if (nextItem[0] == item[0] && nextItem[1] == item[1] && nextItem[2] == item[2] && (lastStatus.last == "before" || lastStatus[2] > 0)) {
+          item.removeAt(1);
+          item.removeAt(2);
+          processedData.add(item);
+          nextItem.removeAt(1);
+          nextItem.removeAt(2);
+          processedData.add(nextItem);
+          i++;
+          continue;
+        }
+      }
+      if (status.last != "before" && status[2] > 0) {
+        item.removeAt(1);
+        item.removeAt(2);
+        processedData.add(item);
+      }
+    } else {
+      item.removeAt(1);
+      item.removeAt(2);
+      processedData.add(item);
+    }
+  }
+  print("preSendData:");
+  print(processedData);
+  return processedData;
 }
 
 class Appwidget {
-  static late List<List> originalData;
+  static late String nullSymbol = '{"value":[]}';
 
-  static void updateWidgetContent() {
+  static void updateWidgetContent([bool isBackgroundRefresh = false]) {
     print('Appwidget.updateWidgetContent');
     if (!isLogin()) {
-      HomeWidget.saveWidgetData<String>("title", AppConfig.appTitle);
-      HomeWidget.saveWidgetData<String>("message", AppConfig.notLoginError);
+      print('Appwidget.updateWidgetContent.!isLogin');
+      commitUpdateWidgetTask(title: AppConfig.appTitle, message: AppConfig.notLoginError);
       return;
+    }
+    if (isBackgroundRefresh) {
+      print('Appwidget.updateWidgetContent.isBackgroundRefresh');
+      HomeWidget.saveWidgetData<String>("backgroundRefresh", "1");
+    } else {
+      HomeWidget.saveWidgetData<String>("backgroundRefresh", "0");
     }
     List<List> deepCopy(List object) {
       return object.map((item) => List.from(item)).toList();
     }
+
     String title = "今天的课表";
-    originalData = deepCopy(AppData.todaySchedule);
+    List<List> originalData = _customParser(deepCopy(AppData.todaySchedule));
 
     if (originalData.isEmpty) {
       title = "明天的课表";
-      originalData = deepCopy(AppData.tomorrowSchedule);
+      originalData = _customParser(deepCopy(AppData.tomorrowSchedule), false);
       if (originalData.isEmpty) {
-        title = "这两天没课~";
+        print('Appwidget.updateWidgetContent.originalData.isEmpty');
+        removeSchedules();
+        commitUpdateWidgetTask(title: AppConfig.appTitle, message: "真没课啦~");
         return;
       }
-      updateTomorrowSchedule();
+      updateTomorrowSchedule(originalData);
     } else {
-      updateTodaySchedule();
+      updateTodaySchedule(originalData);
     }
-    HomeWidget.saveWidgetData<String>("title", title);
-    commitUpdateWidgetTask();
+    commitUpdateWidgetTask(title: title);
   }
-  static commitUpdateWidgetTask(){
+
+  static commitUpdateWidgetTask({String title = "", String message = ""}) {
+    print('Appwidget.commitUpdateWidgetTask');
+    HomeWidget.saveWidgetData<String>("title", title);
+    HomeWidget.saveWidgetData<String>("message", message);
     HomeWidget.updateWidget(
       qualifiedAndroidName: 'com.nano71.glutassistantn.HomeWidgetExampleProvider',
     );
   }
-  static void updateTodaySchedule() {
+
+  static void updateTodaySchedule(List<List> originalData) {
+    print('Appwidget.updateTodaySchedule');
     updateTemplateOfList("todaySchedule", originalData);
   }
 
-  static void updateTomorrowSchedule() {
+  static void updateTomorrowSchedule(List<List> originalData) {
+    print('Appwidget.updateTomorrowSchedule');
+    print(originalData);
     updateTemplateOfList("tomorrowSchedule", originalData);
   }
 
   static void updateTemplateOfList(String id, List<List> list) {
-    HomeWidget.saveWidgetData<String>(
-        id,
-        '{"value":' +
-            jsonEncode(list.map((List list) {
-              print(list);
-              list.removeAt(3);
-              list.removeAt(1);
-              list.add(timeUntilNextClass(list.last).last);
-              return list;
-            }).toList()) +
-            "}");
+    removeSchedules();
+
+    HomeWidget.saveWidgetData<String>(id, '{"value":' + jsonEncode(list) + "}");
+  }
+
+  static void removeSchedules() {
+    HomeWidget.saveWidgetData<String>("todaySchedule", nullSymbol);
+    HomeWidget.saveWidgetData<String>("tomorrowSchedule", nullSymbol);
+    HomeWidget.saveWidgetData<String>("message", "");
   }
 }
