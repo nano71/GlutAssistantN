@@ -41,7 +41,7 @@ dependencies:
   flutter_local_notifications: ^15.1.1
   shared_preferences: ^2.0.15
   flutter_swiper_view: ^1.1.8
-  home_widget: ^0.3.0
+  home_widget: ^0.4.0-alpha.0
   workmanager: ^0.5.1
   package_info_plus: ^4.1.0
 

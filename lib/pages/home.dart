@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:home_widget/home_widget.dart';
 
 import '/common/get.dart';
 import '/common/init.dart';
@@ -17,8 +18,8 @@ import '../common/style.dart';
 import '../config.dart';
 import '../data.dart';
 import '../widget/appwidget.dart';
-import 'mainBody.dart';
 import 'login.dart';
+import 'mainBody.dart';
 
 class HomePage extends StatefulWidget {
   final bool refresh;
@@ -36,12 +37,12 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   GlobalKey<RefreshIconWidgetDynamicState> iconKey = GlobalKey();
   bool _timeOutBool = true;
   double offset_ = 0.0;
-  late AnimationController _animationControllerForHomeCards1;
-  late AnimationController _animationControllerForHomeCards2;
-  late AnimationController _animationControllerForHomeCards3;
-  late Animation _animationForHomeCards1;
-  late Animation _animationForHomeCards2;
-  late Animation _animationForHomeCards3;
+  late AnimationController _animationControllerForLeftCard;
+  late AnimationController _animationControllerForCenterCard;
+  late AnimationController _animationControllerForRightCard;
+  late Animation _animationForLeftCard;
+  late Animation _animationForCenterCard;
+  late Animation _animationForRightCard;
   ColorTween homeCardsColorTween = ColorTween(begin: readColorBegin(), end: readColorEnd());
   int _updateButtonClickCount = 0;
   bool _clickCooldown = false;
@@ -52,28 +53,28 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    _animationControllerForHomeCards1 = AnimationController(
+    _animationControllerForLeftCard = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 150),
     )..addListener(() {
         setState(() {});
       });
-    _animationControllerForHomeCards2 = AnimationController(
+    _animationControllerForCenterCard = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 150),
     )..addListener(() {
         setState(() {});
       });
-    _animationControllerForHomeCards3 = AnimationController(
+    _animationControllerForRightCard = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 150),
     )..addListener(() {
         setState(() {});
       });
 
-    _animationForHomeCards1 = homeCardsColorTween.animate(_animationControllerForHomeCards1);
-    _animationForHomeCards2 = homeCardsColorTween.animate(_animationControllerForHomeCards2);
-    _animationForHomeCards3 = homeCardsColorTween.animate(_animationControllerForHomeCards3);
+    _animationForLeftCard = homeCardsColorTween.animate(_animationControllerForLeftCard);
+    _animationForCenterCard = homeCardsColorTween.animate(_animationControllerForCenterCard);
+    _animationForRightCard = homeCardsColorTween.animate(_animationControllerForRightCard);
 
     _scrollController.addListener(_scrollControllerListener);
   }
@@ -92,7 +93,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
               () {
                 if (_timeOutBool) {
                   offset_ = _offsetAbs;
-                  _goTop();
+                  _refresh();
                 }
                 _timeOutBool = false;
               },
@@ -103,8 +104,24 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
     }
   }
 
-  void _goTop() {
-    print('_goTop');
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _checkForWidgetLaunch();
+    HomeWidget.widgetClicked.listen(_launchedFromWidget);
+  }
+
+  void _checkForWidgetLaunch() {
+    HomeWidget.initiallyLaunchedFromHomeWidget().then(_launchedFromWidget);
+  }
+
+  void _launchedFromWidget(Uri? uri) {
+    print(uri?.host);
+    if (uri?.host == "refresh") _refresh();
+  }
+
+  void _refresh() {
+    print('HomePageState._refresh');
     _updateIntervalTimer.cancel();
     _rotationAnimationTimer.cancel();
     if (_updateButtonClickCount < 8) {
@@ -226,9 +243,9 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-    _animationControllerForHomeCards3.dispose();
-    _animationControllerForHomeCards2.dispose();
-    _animationControllerForHomeCards1.dispose();
+    _animationControllerForRightCard.dispose();
+    _animationControllerForCenterCard.dispose();
+    _animationControllerForLeftCard.dispose();
     _scrollController.dispose();
     super.dispose();
   }
@@ -247,7 +264,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
     });
     if (widget.refresh && _firstBuild) {
       Future.delayed(Duration(seconds: 0), () {
-        _goTop();
+        _refresh();
         _firstBuild = false;
       });
     }
@@ -282,26 +299,26 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   children: [
                     GestureDetector(
                       onTapCancel: () {
-                        _animationControllerForHomeCards1.reverse();
+                        _animationControllerForLeftCard.reverse();
                       },
                       onTapUp: (d) {
                         Future.delayed(Duration(milliseconds: 100), () {
                           if (AppData.persistentData["username"] == "") {
                             Navigator.of(context).push(MaterialPageRoute(builder: (context) => LoginPage()));
                           } else {
-                            _goTop();
+                            _refresh();
                           }
-                          _animationControllerForHomeCards1.reverse();
+                          _animationControllerForLeftCard.reverse();
                         });
                       },
                       onTapDown: (d) {
-                        _animationControllerForHomeCards1.forward();
+                        _animationControllerForLeftCard.forward();
                       },
                       child: Container(
                         margin: EdgeInsets.fromLTRB(0, 8, 4, 16),
                         height: 100,
                         width: width / 3 - 48 / 3,
-                        decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(12.0)), color: _animationForHomeCards1.value),
+                        decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(12.0)), color: _animationForLeftCard.value),
                         child: Stack(
                           children: [
                             Align(
@@ -325,7 +342,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     ),
                     GestureDetector(
                       onTapCancel: () {
-                        _animationControllerForHomeCards2.reverse();
+                        _animationControllerForCenterCard.reverse();
                       },
                       onTapUp: (d) {
                         Future.delayed(Duration(milliseconds: 100), () {
@@ -334,17 +351,17 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                           } else {
                             Navigator.of(context).push(MaterialPageRoute(builder: (context) => QueryPage()));
                           }
-                          _animationControllerForHomeCards2.reverse();
+                          _animationControllerForCenterCard.reverse();
                         });
                       },
                       onTapDown: (d) {
-                        _animationControllerForHomeCards2.forward();
+                        _animationControllerForCenterCard.forward();
                       },
                       child: Container(
                         margin: EdgeInsets.fromLTRB(4, 8, 4, 16),
                         height: 100,
                         width: width / 3 - 48 / 3,
-                        decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(12.0)), color: _animationForHomeCards2.value),
+                        decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(12.0)), color: _animationForCenterCard.value),
                         child: Stack(
                           children: [
                             Align(
@@ -369,7 +386,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     ),
                     GestureDetector(
                       onTapCancel: () {
-                        _animationControllerForHomeCards3.reverse();
+                        _animationControllerForRightCard.reverse();
                       },
                       onTapUp: (d) {
                         Future.delayed(Duration(milliseconds: 100), () {
@@ -378,17 +395,17 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                           } else {
                             Navigator.of(context).push(MaterialPageRoute(builder: (context) => QueryExamPage()));
                           }
-                          _animationControllerForHomeCards3.reverse();
+                          _animationControllerForRightCard.reverse();
                         });
                       },
                       onTapDown: (d) {
-                        _animationControllerForHomeCards3.forward();
+                        _animationControllerForRightCard.forward();
                       },
                       child: Container(
                         margin: EdgeInsets.fromLTRB(4, 8, 0, 16),
                         height: 100,
                         width: width / 3 - 48 / 3,
-                        decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(12.0)), color: _animationForHomeCards3.value),
+                        decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(12.0)), color: _animationForRightCard.value),
                         child: Stack(
                           children: [
                             Align(
