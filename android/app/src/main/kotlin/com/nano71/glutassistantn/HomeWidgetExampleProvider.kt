@@ -8,19 +8,13 @@ import android.os.Build
 import android.util.Log
 import android.util.SizeF
 import android.view.View
-import android.view.animation.Animation
-import android.view.animation.RotateAnimation
 import android.widget.RemoteViews
-import android.widget.Toast
 import androidx.annotation.RequiresApi
-import es.antonborri.home_widget.HomeWidgetBackgroundIntent
 import es.antonborri.home_widget.HomeWidgetLaunchIntent
 import es.antonborri.home_widget.HomeWidgetProvider
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
-import java.time.Instant
 import java.time.LocalDateTime
-import kotlin.math.ceil
 
 @Serializable
 data class CustomData(val value: List<List<String>>)
@@ -29,6 +23,7 @@ private const val TAG = "appwidget"
 
 class HomeWidgetExampleProvider : HomeWidgetProvider() {
     private var toastCount: Int = 0
+    private var isInitialized: Boolean = false
     private val rowList: List<Int> = listOf(
         R.id.row_1,
         R.id.row_2,
@@ -85,7 +80,7 @@ class HomeWidgetExampleProvider : HomeWidgetProvider() {
     private fun setData(remoteViews: RemoteViews, originalData: List<List<String>>, isSmall: Boolean, isToday: Boolean) {
         println("HomeWidgetExampleProvider.setData")
 //        remoteViews.setViewVisibility(R.id.refresh_icon, View.VISIBLE)
-        val data :List<List<String>> = customParser(originalData)
+        val data: List<List<String>> = customParser(originalData)
         val lessonCount: Int = data.size
         val todayText: String = if (isToday) "还" else ""
 
@@ -149,19 +144,24 @@ class HomeWidgetExampleProvider : HomeWidgetProvider() {
         val pendingIntent = HomeWidgetLaunchIntent.getActivity(
             context,
             MainActivity::class.java,
+            Uri.parse("homeWidgetExample://open")
+
         )
+        val pendingIntentWithData = HomeWidgetLaunchIntent.getActivity(
+            context,
+            MainActivity::class.java,
+            Uri.parse("homeWidgetExample://refresh")
+        )
+
         remoteViews.setOnClickPendingIntent(R.id.widget_container, pendingIntent)
-//        val backgroundIntent = HomeWidgetBackgroundIntent.getBroadcast(
-//            context,
-//            Uri.parse("homeWidgetExample://refresh")
-//        )
-        remoteViews.setOnClickPendingIntent(R.id.refresh_icon, pendingIntent)
+        remoteViews.setOnClickPendingIntent(R.id.refresh_icon, pendingIntentWithData)
     }
 
     @RequiresApi(Build.VERSION_CODES.S)
     private fun updateContent(context: Context, widgetData: SharedPreferences, remoteViews: RemoteViews, isSmall: Boolean) {
         hideElements(remoteViews)
-        bindOnClickEvent(context, remoteViews)
+        if (!isInitialized)
+            bindOnClickEvent(context, remoteViews)
 
         val originalTodaySchedule: String = widgetData.getString("todaySchedule", null) ?: "{'value':[]}"
         val todaySchedule: List<List<String>> = Json.decodeFromString<CustomData>(originalTodaySchedule).value
@@ -211,6 +211,8 @@ class HomeWidgetExampleProvider : HomeWidgetProvider() {
                 )
             )
             toastCount = 0
+            isInitialized = true
+
         }
     }
 }
