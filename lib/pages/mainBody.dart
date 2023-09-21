@@ -63,8 +63,7 @@ class MainBodyState extends State<MainBody> {
     AppData.isInitialized = true;
 
     Appwidget.updateWidgetContent();
-    HomeWidget.registerBackgroundCallback(backgroundCallback);
-
+    // HomeWidget.registerBackgroundCallback(backgroundCallback);
 
     Navigator.pushAndRemoveUntil(
       context,

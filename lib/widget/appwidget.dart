@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:glutassistantn/common/io.dart';
 import 'package:home_widget/home_widget.dart';
 
@@ -11,6 +10,7 @@ import 'lists.dart';
 
 @pragma("vm:entry-point")
 void backgroundCallback(Uri? data) async {
+  print('backgroundCallback');
   print(data?.host);
   if (data?.host == "refresh") {
     await readConfig();
@@ -66,6 +66,7 @@ List<List> _customParser(List<List> originalData, [bool isTodaySchedule = true])
 }
 
 class Appwidget {
+
   static late String nullSymbol = '{"value":[]}';
 
   static void updateWidgetContent([bool isBackgroundRefresh = false]) {
