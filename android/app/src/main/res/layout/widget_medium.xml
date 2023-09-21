@@ -154,9 +154,9 @@
     <ImageView
             android:id="@+id/refresh_icon"
             android:src="@drawable/refresh_line"
-            android:layout_height="24dp"
             android:tint="?android:textColorPrimary"
-            android:layout_width="24dp"
+            android:layout_height="22dp"
+            android:layout_width="22dp"
             android:layout_marginEnd="16dp"
             android:layout_marginTop="16dp"
             tools:ignore="UseAppTint"
