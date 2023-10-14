@@ -311,7 +311,7 @@ scheduleDialog(BuildContext context, String week, String weekDay, String index) 
   showDialog(
     context: context,
     builder: (BuildContext context) {
-      List<String> _schedule = AppData.schedule[week][weekDay][index];
+      List _schedule = AppData.schedule[week][weekDay][index];
       List<String> _temp = _schedule[3].split(";").toSet().toList();
       String _time = "";
       _temp.removeLast();
