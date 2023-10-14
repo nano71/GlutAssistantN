@@ -47,9 +47,9 @@ class _QueryExamBodyState extends State<QueryExamBody> {
   void initState() {
     super.initState();
     eventBusListener = eventBus.on<ReloadExamListState>().listen((event) {
-      getExam().then((value) => _process(value));
+      getExam().then(process);
     });
-    getExam().then((value) => _process(value));
+    getExam().then(process);
   }
 
   @override
@@ -58,29 +58,31 @@ class _QueryExamBodyState extends State<QueryExamBody> {
     super.dispose();
   }
 
-  void _process(String value) {
-    if (value == "success") {
-      login = false;
-      ScaffoldMessenger.of(context).removeCurrentSnackBar();
-      ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "处理数据...", 10));
-      setState(() {});
-      ScaffoldMessenger.of(context).removeCurrentSnackBar();
-      ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(1, "数据已更新!", 1));
-    } else if (value == "fail") {
-      ScaffoldMessenger.of(context).removeCurrentSnackBar();
-      ScaffoldMessenger.of(context).showSnackBar(jwSnackBarAction(
-        false,
-        "需要验证",
-        context,
-        () {
-          ScaffoldMessenger.of(context).removeCurrentSnackBar();
-          //  ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(1, "验证完成,请再次点击查询")),
-          eventBus.fire(ReloadExamListState());
-          Navigator.pop(context);
-        },
-        hideSnackBarSeconds: 10,
-      ));
-    } else {
+  void process(value) {
+    if (value is bool) {
+      if (value) {
+        login = false;
+        ScaffoldMessenger.of(context).removeCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "处理数据...", 10));
+        setState(() {});
+        ScaffoldMessenger.of(context).removeCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(1, "数据已更新!", 1));
+      } else {
+        ScaffoldMessenger.of(context).removeCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(jwSnackBarAction(
+          false,
+          "需要验证",
+          context,
+          () {
+            ScaffoldMessenger.of(context).removeCurrentSnackBar();
+            //  ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(1, "验证完成,请再次点击查询")),
+            eventBus.fire(ReloadExamListState());
+            Navigator.pop(context);
+          },
+          hideSnackBarSeconds: 10,
+        ));
+      }
+    } else if (value is String) {
       print(value);
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, value, 4));

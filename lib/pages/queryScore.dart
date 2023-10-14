@@ -2,11 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_remix/flutter_remix.dart';
+
 import '/common/get.dart';
 import '/pages/setting.dart';
 import '/widget/bars.dart';
 import '/widget/lists.dart';
-
 import '../config.dart';
 import '../data.dart';
 import 'login.dart';
@@ -39,10 +39,6 @@ class QueryBody extends StatefulWidget {
 }
 
 class _QueryBodyState extends State<QueryBody> {
-  double _gpa = 0.0;
-  double _avg = 0.0;
-  double _weight = 0.0;
-
   // ignore: cancel_subscriptions
   late StreamSubscription<ReloadScoreListState> eventBusListener;
 
@@ -50,18 +46,36 @@ class _QueryBodyState extends State<QueryBody> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    eventBusListener = eventBus.on<ReloadScoreListState>().listen((event) async {
-      _next(List list) {
-        if (list.isEmpty) {
-          ScaffoldMessenger.of(context).removeCurrentSnackBar();
-          ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(1, "没有结果!", 5));
-        } else {
-          _dataProcess(list);
-        }
-      }
-
-      await getScore().then((value) => _next(value));
+    eventBusListener = eventBus.on<ReloadScoreListState>().listen((ReloadScoreListState event) async {
+      await getScore().then(preprocess);
     });
+  }
+
+  void preprocess(value) {
+    if (value is String) {
+      ScaffoldMessenger.of(context).removeCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, value, 4));
+    } else if (value is bool) {
+      ScaffoldMessenger.of(context).removeCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(jwSnackBarAction(
+        false,
+        "需要验证",
+        context,
+        () {
+          ScaffoldMessenger.of(context).removeCurrentSnackBar();
+          eventBus.fire(ReloadScoreListState());
+          Navigator.pop(context);
+        },
+        hideSnackBarSeconds: 10,
+      ));
+    } else if (value is List) {
+      if (value.isEmpty) {
+        ScaffoldMessenger.of(context).removeCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(1, "没有结果!", 5));
+      } else {
+        process(value);
+      }
+    }
   }
 
   @override
@@ -70,11 +84,15 @@ class _QueryBodyState extends State<QueryBody> {
     super.dispose();
   }
 
-  _dataProcess(List list) {
+  process(List list) {
     queryScore = list;
-    double sum = 0.0;
+    double _gpa = 0.0;
+    double _avg = 0.0;
+    double _weight = 0.0;
+    double scoreSum = 0.0;
     //学分*成绩
-    double a = 0.0;
+    double weightScoreSum = 0.0;
+    double gpaSum = 0.0;
     double credit = 0.0;
     int mooc = 0;
     for (int i = 0; i < list.length; i++) {
@@ -85,6 +103,7 @@ class _QueryBodyState extends State<QueryBody> {
         break;
       }
       double _credit = double.parse(list[i]![5]);
+      double _gpa = double.parse(list[i]![6]);
       String _courseName = list[i]![2].toString();
       String _teacher = list[i]![3];
       if (_courseName.contains("慕") && _teacher == "") {
@@ -92,38 +111,23 @@ class _QueryBodyState extends State<QueryBody> {
       } else {
         if (list[i].length > 5) {
           print(list[i]);
-          a += _score * _credit;
+          weightScoreSum += _score * _credit;
           credit += _credit;
+          gpaSum += _gpa * _credit;
         }
         if (list[i].length > 4) {
-          sum += _score;
+          scoreSum += _score;
         }
       }
     }
-    print(sum);
-    _avg = double.parse((sum / (list.length - mooc)).toStringAsFixed(1));
-    _weight = double.parse((a / credit).toStringAsFixed(1));
+    print(scoreSum);
+    _avg = double.parse((scoreSum / (list.length - mooc)).toStringAsFixed(1));
+    _weight = double.parse((weightScoreSum / credit).toStringAsFixed(1));
+    _gpa = double.parse((gpaSum / credit).toStringAsFixed(1));
     if (_avg.isNaN) _avg = 0.0;
     if (_weight.isNaN) _weight = 0.0;
-    if (_weight >= 90) {
-      _gpa = 4.0;
-    } else if (_weight >= 85) {
-      _gpa = 3.7;
-    } else if (_weight >= 82) {
-      _gpa = 3.3;
-    } else if (_weight >= 78) {
-      _gpa = 3.0;
-    } else if (_weight >= 75) {
-      _gpa = 2.7;
-    } else if (_weight >= 72) {
-      _gpa = 2.3;
-    } else if (_weight >= 68) {
-      _gpa = 2.0;
-    } else if (_weight >= 64) {
-      _gpa = 1.5;
-    } else if (_weight >= 60) {
-      _gpa = 1.0;
-    } else {}
+    if (_gpa.isNaN) _gpa = 0.0;
+    scores = [_gpa, _avg, _weight];
     ScaffoldMessenger.of(context).removeCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(1, "数据已更新!", 1));
     setState(() {});
@@ -131,37 +135,6 @@ class _QueryBodyState extends State<QueryBody> {
 
   void _query() async {
     // Global.cookie = {};
-
-    void _next(value) async {
-      if (value is String) {
-        if (value == "fail") {
-          ScaffoldMessenger.of(context).removeCurrentSnackBar();
-          ScaffoldMessenger.of(context).showSnackBar(jwSnackBarAction(
-            false,
-            "需要验证",
-            context,
-            () {
-              ScaffoldMessenger.of(context).removeCurrentSnackBar();
-              //  ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(1, "验证完成,请再次点击查询")),
-              eventBus.fire(ReloadScoreListState());
-              Navigator.pop(context);
-            },
-            hideSnackBarSeconds: 10,
-          ));
-        } else {
-          ScaffoldMessenger.of(context).removeCurrentSnackBar();
-          ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, value, 4));
-        }
-      } else if (value is List) {
-        if (value.isEmpty) {
-          ScaffoldMessenger.of(context).removeCurrentSnackBar();
-          ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(1, "没有结果!", 5));
-        } else {
-          _dataProcess(value);
-        }
-      }
-    }
-
     print(AppData.persistentData["username"]);
     if (!isLogin()) {
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
@@ -182,7 +155,7 @@ class _QueryBodyState extends State<QueryBody> {
     } else {
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "查询中...", 10));
-      await getScore().then((value) => _next(value));
+      await getScore().then(preprocess);
     }
   }
 
@@ -308,7 +281,7 @@ class _QueryBodyState extends State<QueryBody> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "GPA绩点: $_gpa",
+                        "GPA绩点: ${scores[0]}",
                         style: TextStyle(color: Colors.white),
                       ),
                       Text(
@@ -316,7 +289,7 @@ class _QueryBodyState extends State<QueryBody> {
                         style: TextStyle(color: readColor()),
                       ),
                       Text(
-                        "算术平均分: $_avg",
+                        "算术平均分: ${scores[1]}",
                         style: TextStyle(color: Colors.white),
                       ),
                       Text(
@@ -324,7 +297,7 @@ class _QueryBodyState extends State<QueryBody> {
                         style: TextStyle(color: readColor()),
                       ),
                       Text(
-                        "加权平均分: $_weight",
+                        "加权平均分: ${scores[2]}",
                         style: TextStyle(color: Colors.white),
                       )
                     ],

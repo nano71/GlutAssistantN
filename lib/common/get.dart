@@ -101,8 +101,8 @@ Future<dynamic> getSchedule() async {
   Map<String, String> _dayNumberMapping = {"星期一": "1", "星期二": "2", "星期三": "3", "星期四": "4", "星期五": "5", "星期六": "6", "星期日": "7"};
   print(AppData.persistentData["semesterBk"]);
   print(AppData.persistentData["yearBk"]);
-  Uri uri = Uri.http(
-      AppConfig.getScheduleUrl[0], AppConfig.getScheduleUrl[1], {"year": ((int.parse(AppData.persistentData["year"] ?? "")) - 1980).toString(), "term": AppData.persistentData["semester"] == "秋" ? "3" : "1"});
+  Uri uri = Uri.http(AppConfig.getScheduleUrl[0], AppConfig.getScheduleUrl[1],
+      {"year": ((int.parse(AppData.persistentData["year"] ?? "")) - 1980).toString(), "term": AppData.persistentData["semester"] == "秋" ? "3" : "1"});
   Response response;
   try {
     response = await request("", uri);
@@ -398,19 +398,16 @@ Future getScore() async {
   Document document = parse(html);
   List<Element> dataList = document.querySelectorAll(".datalist > tbody > tr");
   String parseData(int i, int number) => dataList[i].querySelectorAll("td")[number].text.trim();
-  List list = [];
+  List scoreRows = [];
   for (int i = 1; i < dataList.length; i++) {
-    List _list = [];
-    _list.add(parseData(i, 0));
-    _list.add(parseData(i, 1));
-    _list.add(parseData(i, 3));
-    _list.add(parseData(i, 4));
-    _list.add(parseData(i, 5));
-    _list.add(parseData(i, 6));
-    list.add(_list);
+    List elementColumns = [];
+    for (int j in [0, 1, 3, 4, 5, 7, 6]) {
+      elementColumns.add(parseData(i, j));
+    }
+    scoreRows.add(elementColumns);
   }
   print("getScore End");
-  return list;
+  return scoreRows;
 }
 
 Future<dynamic> getExam() async {
@@ -457,27 +454,28 @@ Future<dynamic> getExam() async {
     examList.add(_list);
   }
   print("getExam End");
-  return "success";
+  return true;
 }
 
 Future getCareer() async {
   if (!await checkLoginValidity()) return false;
   print("getCareer");
-  Future<void> _next(List url) async {
+  Future _next(List url) async {
     Response response;
     try {
-      response = await request("get", Uri.http(AppConfig.jwUrl, "/academic/manager/studyschedule/studentScheduleShowByTerm.do", {"z": "z", "studentId": url[0], "classId": url[1]}));
+      response =
+          await request("get", Uri.http(AppConfig.jwUrl, "/academic/manager/studyschedule/studentScheduleShowByTerm.do", {"z": "z", "studentId": url[0], "classId": url[1]}));
     } on TimeoutException catch (e) {
-      timeOutError(e);
-      return;
+      return timeOutError(e);
     } on SocketException catch (e) {
-      socketError(e);
-      return;
+      return socketError(e);
     }
 
     Document document = parse(response.bodyBytes);
+    List<List<String>> list = [];
     careerCount = [0, 0, 0, 0];
-    document.querySelectorAll("img.no_output").forEach((element) {
+
+    document.querySelectorAll("img.no_output").forEach((Element element) {
       if (element.parent!.innerHtml.contains("/academic/styles/images/course_failed.png") ||
           element.parent!.innerHtml.contains("/academic/styles/images/course_failed_reelect.png")) {
         //重修&&不及格
@@ -492,8 +490,7 @@ Future getCareer() async {
         careerCount[2]++;
       }
     });
-    List<List<String>> list = [];
-    document.querySelectorAll("table.datalist tbody tr").forEach((element) {
+    document.querySelectorAll("table.datalist tbody tr").forEach((Element element) {
       var td = element.querySelectorAll("td");
       if (td.length > 1) {
         List<String> _list = [];
@@ -515,8 +512,10 @@ Future getCareer() async {
     careerInfo = list[0];
     list.removeAt(0);
     careerList = list;
+
     int start = 1;
     List newList = [];
+
     for (int i = 0; i < list.length; i++) {
       if (i != 0 && list[i].length == 2) {
         newList.add(list.sublist(start, i));
@@ -527,6 +526,7 @@ Future getCareer() async {
       }
     }
     careerList2 = newList;
+    return true;
   }
 
   Response response;
@@ -551,9 +551,11 @@ Future getCareer() async {
       .trim();
   List urlC = urlB.split('&classId=');
   print(urlC);
-  await _next(urlC);
+  if (await _next(urlC) is String) {
+    return false;
+  }
   print("getCareer End");
-  return "success";
+  return true;
 }
 
 Future getEmptyClassroom({
