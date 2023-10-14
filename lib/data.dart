@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'dart:math';
 
 import 'package:event_bus/event_bus.dart';
@@ -75,6 +76,7 @@ class AppData {
 }
 
 List queryScore = [];
+List<double> scores = [0.0, 0.0, 0.0];
 List careerList = [];
 List careerList2 = [];
 List<String> careerInfo = ["", "", "", "", "", "", "", "", "", ""];

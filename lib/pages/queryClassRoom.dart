@@ -90,7 +90,7 @@ class QueryConditionCardState extends State<QueryConditionCard> {
     super.initState();
     initWhichWeek();
     initWeek();
-    getEmptyClassroom().then((value) => process(value));
+    getEmptyClassroom().then(process);
   }
 
   void initWeek() {
@@ -142,22 +142,19 @@ class QueryConditionCardState extends State<QueryConditionCard> {
 
   void process(value) {
     print('process');
-    // print(value is List<Map>);
     if (value is Map<String, Map>) {
       setState(() {
         value.forEach((key, value) {
           query[key] = value;
         });
-        // query["buildingCode"]??"";.remove("-1");
       });
     } else if (value is List<Map>) {
-      // print("赋值");
       setState(() {
         classroomList = value;
       });
       eventBus.fire(ReloadClassroomListState());
-    } else if (value is String) {
-      if (value == "fail") {
+    } else if (value is bool) {
+      if (!value) {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(jwSnackBarAction(
           false,
@@ -165,16 +162,16 @@ class QueryConditionCardState extends State<QueryConditionCard> {
           context,
           () {
             ScaffoldMessenger.of(context).removeCurrentSnackBar();
-            getEmptyClassroom().then((value) => process(value));
+            getEmptyClassroom().then(process);
             Navigator.pop(context);
           },
           hideSnackBarSeconds: AppConfig.timeOutSec,
         ));
-      } else {
-        print(value);
-        ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, value, 4));
       }
+    } else if (value is String) {
+      print(value);
+      ScaffoldMessenger.of(context).removeCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, value, 4));
     }
   }
 
@@ -182,7 +179,7 @@ class QueryConditionCardState extends State<QueryConditionCard> {
     if (buildingSelect != "-1") {
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "查询中...", 10));
-      getEmptyClassroom(dayOfWeek: weekSelect, weekOfSemester: whichWeekSelect, building: buildingSelect).then((value) => process(value));
+      getEmptyClassroom(dayOfWeek: weekSelect, weekOfSemester: whichWeekSelect, building: buildingSelect).then(process);
     } else {
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, "请选择教学楼", 4));
@@ -221,7 +218,7 @@ class QueryConditionCardState extends State<QueryConditionCard> {
                     ),
                     items: dropdownMenuItemList("buildingCode"),
                     onTap: () {
-                      if (query["buildingCode"]!.length == 1) getEmptyClassroom().then((value) => process(value));
+                      if (query["buildingCode"]!.length == 1) getEmptyClassroom().then(process);
                     },
                     onChanged: (value) {
                       setState(() {
@@ -229,7 +226,7 @@ class QueryConditionCardState extends State<QueryConditionCard> {
                         buildingSelect = value.toString();
                       });
                       // getEmptyClassroom(building: value.toString())
-                      //     .then((value) => process(value));
+                      //     .then(process);
                     },
                   ),
                 )

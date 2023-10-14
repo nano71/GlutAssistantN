@@ -67,9 +67,9 @@ class _CareerPageBodyState extends State<CareerPageBody> {
     eventBusListener = eventBus.on<ReloadCareerPageState>().listen((event) {
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "获取数据...", AppConfig.timeOutSec * 2));
-      getCareer().then((value) => process(value));
+      getCareer().then(process);
     });
-    getCareer().then((value) => process(value));
+    getCareer().then(process);
   }
 
   @override
@@ -78,48 +78,50 @@ class _CareerPageBodyState extends State<CareerPageBody> {
     super.dispose();
   }
 
-  process(String value) {
-    if (value == "success") {
-      login = false;
-      ScaffoldMessenger.of(context).removeCurrentSnackBar();
-      ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "处理数据...", AppConfig.timeOutSec));
-      setState(() {});
-      ScaffoldMessenger.of(context).removeCurrentSnackBar();
-      ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(1, "数据已更新!", 1));
-      examAllNumber = 0;
-      careerNumber = 0;
-      careerJobNumber = 0;
-      careerList.forEach((element) {
-        if (element.contains("考试")) {
-          examAllNumber++;
-        }
-        if (element.length > 3) {
-          careerNumber++;
-          if (element[5].contains("专业")) {
-            careerJobNumber++;
-          }
-        }
-      });
-      // Navigator.of(context).pop();
-
-      _weekProgressAnimation();
-    } else if (value == "fail") {
-      ScaffoldMessenger.of(context).removeCurrentSnackBar();
-      ScaffoldMessenger.of(context).showSnackBar(jwSnackBarAction(
-        false,
-        "需要验证",
-        context,
-        () {
-          ScaffoldMessenger.of(context).removeCurrentSnackBar();
-          eventBus.fire(ReloadCareerPageState());
-          Navigator.pop(context);
-        },
-        hideSnackBarSeconds: AppConfig.timeOutSec,
-      ));
-    } else {
+  process(value) {
+    if (value is String) {
       print(value);
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, value, 4));
+    } else {
+      if (value) {
+        login = false;
+        ScaffoldMessenger.of(context).removeCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "处理数据...", AppConfig.timeOutSec));
+        setState(() {});
+        ScaffoldMessenger.of(context).removeCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(1, "数据已更新!", 1));
+        examAllNumber = 0;
+        careerNumber = 0;
+        careerJobNumber = 0;
+        careerList.forEach((element) {
+          if (element.contains("考试")) {
+            examAllNumber++;
+          }
+          if (element.length > 3) {
+            careerNumber++;
+            if (element[5].contains("专业")) {
+              careerJobNumber++;
+            }
+          }
+        });
+        // Navigator.of(context).pop();
+
+        _weekProgressAnimation();
+      } else {
+        ScaffoldMessenger.of(context).removeCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(jwSnackBarAction(
+          false,
+          "需要验证",
+          context,
+          () {
+            ScaffoldMessenger.of(context).removeCurrentSnackBar();
+            eventBus.fire(ReloadCareerPageState());
+            Navigator.pop(context);
+          },
+          hideSnackBarSeconds: AppConfig.timeOutSec,
+        ));
+      }
     }
   }
 
