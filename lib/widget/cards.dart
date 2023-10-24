@@ -16,7 +16,6 @@ class HomeCard extends StatefulWidget {
 class HomeCardState extends State<HomeCard> with AutomaticKeepAliveClientMixin {
   GlobalKey<CircularProgressDynamicState> indicatorKey = GlobalKey();
   GlobalKey<TextProgressDynamicState> textKey = GlobalKey();
-  final int _week = weekInt();
 
   @override
   void initState() {
@@ -39,6 +38,8 @@ class HomeCardState extends State<HomeCard> with AutomaticKeepAliveClientMixin {
   }
 
   double _weekProgressDouble() {
+    int _week = weekInt();
+
     if (_week > 20) {
       return 1.00;
     }
@@ -46,6 +47,8 @@ class HomeCardState extends State<HomeCard> with AutomaticKeepAliveClientMixin {
   }
 
   String _weekText() {
+    int _week = weekInt();
+
     if (_week > 20) {
       return "学期已经结束咯";
     } else if (_week == 20) {
@@ -98,7 +101,7 @@ class HomeCardState extends State<HomeCard> with AutomaticKeepAliveClientMixin {
           child: Container(
             margin: EdgeInsets.fromLTRB(0, 24, 90, 0),
             child: Text(
-              "第$_week周",
+              "第${weekInt()}周",
               style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w900),
             ),
           ),
@@ -114,8 +117,7 @@ class HomeCardState extends State<HomeCard> with AutomaticKeepAliveClientMixin {
             child: Container(
                 width: 60,
                 margin: EdgeInsets.fromLTRB(12, 0, 0, 0),
-                child:
-                    Center(child: Text(DateTime.now().weekday.toString(), style: TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 14)))))
+                child: Center(child: Text(DateTime.now().weekday.toString(), style: TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 14)))))
       ]),
     );
   }
