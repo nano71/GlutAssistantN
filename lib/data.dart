@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
+import 'package:glutassistantn/common/io.dart';
 
 EventBus eventBus = EventBus();
 
@@ -199,6 +200,8 @@ String weekCN2Number(String value) {
 }
 
 int weekInt() {
+  // AppData.persistentData["week"] = "7";
+  // writeConfig();
   return int.parse(AppData.persistentData["week"] ?? "");
 }
 
