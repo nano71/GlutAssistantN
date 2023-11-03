@@ -251,6 +251,29 @@ class TodayCourseListItemState extends State<TodayCourseListItem> {
     return TextStyle(decoration: TextDecoration.none, color: _textColorsTop(widget.index));
   }
 
+  String timePreprocessor(String time) {
+    List<String> parts = time.split(':');
+    if (parts.length == 2) {
+      String hour = parts[0];
+      String minute = parts[1];
+
+      int hourInt = int.parse(hour);
+      int minuteInt = int.parse(minute);
+
+      String formattedHour = hourInt < 10 ? "0$hourInt" : hour;
+      String formattedMinute = minuteInt < 10 ? "0$minuteInt" : minute;
+
+      String result = "$formattedHour:$formattedMinute";
+      return result;
+    } else {
+      return time;
+    }
+  }
+
+  bool isShowLessonTimeInList() {
+    return AppData.persistentData["showLessonTimeInList"] == "1";
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -280,7 +303,17 @@ class TodayCourseListItemState extends State<TodayCourseListItem> {
                   ),
                   Row(
                     children: [
-                      Text('第${courseInfo()[4]}节 | ', style: smallTextStyle()),
+                      Text('第${courseInfo()[4]}节', style: smallTextStyle()),
+                      Baseline(baseline: 12, baselineType: TextBaseline.ideographic, child: Text(" | ", style: smallTextStyle())),
+                      isShowLessonTimeInList()
+                          ? Baseline(
+                              baseline: 13,
+                              baselineType: TextBaseline.ideographic,
+                              child: Text(
+                                  ('${timePreprocessor(startTimeList[int.parse(courseInfo()[4]) - 1].join(":"))} - ${timePreprocessor(endTimeList[int.parse(courseInfo()[4]) - 1].join(":"))}'),
+                                  style: smallTextStyle()))
+                          : Container(),
+                      isShowLessonTimeInList() ? Baseline(baseline: 12, baselineType: TextBaseline.ideographic, child: Text(" | ", style: smallTextStyle())) : Container(),
                       Text(courseInfo()[1], style: smallTextStyle()),
                     ],
                   ),
