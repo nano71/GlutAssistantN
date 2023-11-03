@@ -33,11 +33,11 @@ class _TimeManagePageState extends State<TimeManagePage> {
     startTimeListBk = [];
     endTimeList = [];
     endTimeListBk = [];
-    for (List value in startTimeListRestore) {
+    for (List<int> value in startTimeListRestore) {
       startTimeList.add(value);
       startTimeListBk.add(value);
     }
-    for (List value in endTimeListRestore) {
+    for (List<int> value in endTimeListRestore) {
       endTimeList.add(value);
       endTimeListBk.add(value);
     }

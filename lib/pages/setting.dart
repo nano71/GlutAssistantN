@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_remix/flutter_remix.dart';
-import 'package:glutassistantn/main.dart';
+
 import '/common/init.dart';
 import '/common/io.dart';
 import '/common/style.dart';
 import '/custom/expansiontile.dart' as CustomExpansionTile;
-import '/pages/scheduleManager.dart';
 import '/pages/timeManager.dart';
 import '/widget/bars.dart';
-
 import '../config.dart';
 import '../data.dart';
 import 'mainBody.dart';
@@ -292,7 +290,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                             Container(
                               padding: EdgeInsets.fromLTRB(16, 14, 0, 14),
                               child: Text(
-                                "APP生命",
+                                "程序生命",
                                 style: TextStyle(fontSize: 16, color: Colors.black),
                               ),
                             )
@@ -324,11 +322,62 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                         })
                       ],
                     ),
-                    InkWell(
-                      onTap: () {
-                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => ScheduleManagePage()));
-                      },
-                      child: mineItem(FlutterRemix.edit_box_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "课程管理", readColor()),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Icon(
+                              FlutterRemix.apps_2_line,
+                              color: readColor(),
+                            ),
+                            Container(
+                              padding: EdgeInsets.fromLTRB(16, 14, 0, 14),
+                              child: Text(
+                                "小节时间",
+                                style: TextStyle(fontSize: 16, color: Colors.black),
+                              ),
+                            )
+                          ],
+                        ),
+                        Builder(builder: (BuildContext context) {
+                          return DropdownButton(
+                            icon: Icon(
+                              FlutterRemix.arrow_down_s_line,
+                              size: 18,
+                            ),
+                            enableFeedback: true,
+                            // style: TextStyle(color: readColor()),
+                            iconEnabledColor: readColor(),
+                            elevation: 0,
+                            hint: Text(
+                              (AppData.persistentData["showLessonTimeInList"] ?? "0") == "1" ? "显示" : "隐藏",
+                              style: TextStyle(color: readColor(), fontSize: 14),
+                            ),
+                            items: [
+                              DropdownMenuItem(
+                                  child: Text(
+                                    "显示",
+                                    style: TextStyle(fontSize: 14),
+                                  ),
+                                  value: "1"),
+                              DropdownMenuItem(
+                                  child: Text(
+                                    "隐藏",
+                                    style: TextStyle(fontSize: 14),
+                                  ),
+                                  value: "0")
+                            ],
+                            underline: Container(height: 0),
+                            onChanged: (value) {
+                              setState(() {
+                                AppData.persistentData["showLessonTimeInList"] = value.toString();
+                              });
+                              writeConfig();
+                            },
+                          );
+                        })
+                      ],
                     ),
                     InkWell(
                       onTap: () {
@@ -336,6 +385,12 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                       },
                       child: mineItem(FlutterRemix.timer_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "课节时间", readColor()),
                     ),
+                    // InkWell(
+                    //   onTap: () {
+                    //     Navigator.of(context).push(MaterialPageRoute(builder: (context) => ScheduleManagePage()));
+                    //   },
+                    //   child: mineItem(FlutterRemix.edit_box_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "课程管理", readColor()),
+                    // ),
                     CustomExpansionTile.ExpansionTile(
                       onExpansionChanged: (e) {
                         setState(() {
@@ -347,8 +402,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                       tilePadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                       title: Row(
                         children: [
-                          Icon(_isExpanded ? FlutterRemix.alarm_warning_line : FlutterRemix.delete_bin_2_line,
-                              color: _isExpanded ? Colors.redAccent : readColor()),
+                          Icon(_isExpanded ? FlutterRemix.alarm_warning_line : FlutterRemix.delete_bin_2_line, color: _isExpanded ? Colors.redAccent : readColor()),
                           Container(
                             padding: EdgeInsets.fromLTRB(16, 14, 0, 14),
                             child: Text(
@@ -457,7 +511,8 @@ List<DropdownMenuItem<Object>>? yearList(int type) {
       DropdownMenuItem(child: Text("全部"), value: "全部"),
     );
   } else {
-    list.add(DropdownMenuItem(child: Text((int.parse(AppData.persistentData["year"] ?? "") + 1).toString()), value: (int.parse(AppData.persistentData["year"] ?? "") + 1).toString()));
+    list.add(
+        DropdownMenuItem(child: Text((int.parse(AppData.persistentData["year"] ?? "") + 1).toString()), value: (int.parse(AppData.persistentData["year"] ?? "") + 1).toString()));
   }
 
   for (int i = int.parse(AppData.persistentData["year"] ?? ""); i > (int.parse(AppData.persistentData["year"] ?? "") - 5); i--) {
