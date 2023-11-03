@@ -1,9 +1,7 @@
-import 'dart:ffi';
 import 'dart:math';
 
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
-import 'package:glutassistantn/common/io.dart';
 
 EventBus eventBus = EventBus();
 
@@ -67,6 +65,7 @@ class AppData {
     "querySemester": "",
     "queryYear": "",
     "threshold": "5",
+    "showLessonTimeInList": "0",
     "newVersion": "",
     "newBody": "",
     "newTime": "",
@@ -92,11 +91,11 @@ int examListA = 0;
 int examListB = 0;
 String todayScheduleTitle = "";
 String tomorrowScheduleTitle = "";
-List startTimeListBk = [];
-List endTimeListBk = [];
+List<List<int>> startTimeListBk = [];
+List<List<int>> endTimeListBk = [];
 final List<String> weekList4CN = const ["一", "二", "三", "四", "五", "六", "日"];
 
-List startTimeList = [
+List<List<int>> startTimeList = [
   [8, 40],
   [9, 25],
   [10, 25],
@@ -109,7 +108,7 @@ List startTimeList = [
   [20, 15],
   [21, 00]
 ];
-List endTimeList = [
+List<List<int>> endTimeList = [
   [9, 20],
   [10, 05],
   [11, 05],
@@ -122,7 +121,7 @@ List endTimeList = [
   [20, 55],
   [21, 40]
 ];
-final List startTimeListRestore = const [
+final List<List<int>> startTimeListRestore = const [
   [8, 40],
   [9, 25],
   [10, 25],
@@ -135,7 +134,7 @@ final List startTimeListRestore = const [
   [20, 15],
   [21, 00]
 ];
-final List endTimeListRestore = const [
+final List<List<int>> endTimeListRestore = const [
   [9, 20],
   [10, 05],
   [11, 05],
