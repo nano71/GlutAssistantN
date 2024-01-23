@@ -328,7 +328,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                         Row(
                           children: [
                             Icon(
-                              FlutterRemix.apps_2_line,
+                              FlutterRemix.timer_2_line,
                               color: readColor(),
                             ),
                             Container(

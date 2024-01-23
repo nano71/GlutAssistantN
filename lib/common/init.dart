@@ -31,11 +31,10 @@ initTodaySchedule() async {
   print('当前日期：$year 年 $month 月 $day 日');
   final String _week = AppData.persistentData["week"].toString();
   Map _schedule = Map.from(AppData.schedule);
-  Map weekOfSemester = _schedule[_week];
-  Map dayOfWeek = weekOfSemester[DateTime.now().weekday.toString()];
-
   List<List> toDay = [];
-  if (int.parse(_week) < 21)
+  if (int.parse(_week) < 21) {
+    Map weekOfSemester = _schedule[_week];
+    Map dayOfWeek = weekOfSemester[DateTime.now().weekday.toString()];
     dayOfWeek.forEach((key, value) {
       if (value is List) if (value[1] != "null") {
         if (value.length < 5) {
@@ -44,6 +43,7 @@ initTodaySchedule() async {
         toDay.add(value);
       }
     });
+  }
 
   if (toDay.isNotEmpty) {
     todayScheduleTitle = "今天的";
