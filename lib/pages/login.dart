@@ -122,10 +122,10 @@ class LoginPageState extends State<LoginPage> {
         AppData.persistentData["username"] = _studentId;
         AppData.persistentData["password"] = _password;
         await getName();
-        await getSchedule();
-        await writeConfig();
-        await initTodaySchedule();
-        await initTomorrowSchedule();
+        getSchedule();
+        writeConfig();
+        initTodaySchedule();
+        initTomorrowSchedule();
         print("initSchedule End");
         eventBus.fire(SetPageIndex());
         Navigator.pushAndRemoveUntil(

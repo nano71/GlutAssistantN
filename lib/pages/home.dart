@@ -445,7 +445,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
             child: Align(alignment: Alignment.centerLeft, child: Text(tomorrowScheduleTitle, style: tomorrowAndTodayTextStyle())),
           )),
           TomorrowCourseList(),
-          NeedLogin(),
+          !isLogin() ? NeedLogin() : SliverToBoxAdapter(child: Center()),
         ],
       ),
     );
@@ -457,9 +457,6 @@ class NeedLogin extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (isLogin()) {
-      return SliverToBoxAdapter(child: Center());
-    }
     return SliverToBoxAdapter(
       child: Center(
         child: TextButton(
