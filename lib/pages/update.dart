@@ -4,14 +4,14 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_remix/flutter_remix.dart';
-import '../type/packageInfo.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 import '/common/get.dart';
 import '/common/io.dart';
 import '/config.dart';
 import '/data.dart';
 import '/widget/bars.dart';
-import 'package:url_launcher/url_launcher.dart';
-
+import '../type/packageInfo.dart';
 import '../widget/dialog.dart';
 import 'person.dart';
 
@@ -152,7 +152,7 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
                             ),
                             customInkWell("https://nano71.com/gan/GlutAssistantN.apk", FlutterRemix.download_2_line, "直接下载", readColor()),
                             // coolapk(),
-                            customInkWell("", FlutterRemix.earth_line, "学校官网", Colors.blueAccent),
+                            customInkWell("", FlutterRemix.earth_line, "学校官网（暂不可用）", Colors.blueAccent),
                             customInkWell(AppData.persistentData["githubDownload"] ?? "", FlutterRemix.github_line, "Github", Colors.blueGrey)
                           ],
                         )
