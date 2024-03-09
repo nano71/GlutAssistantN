@@ -36,40 +36,46 @@
 |   |-- main.dart 入口
 |   |-- config.dart 常量
 |   |-- data.dart 变量
+|   |-- test.dart
 |   |
 |   |-- common 函数
-|   |   |-- animation.dart
-|   |   |-- cookie.dart
-|   |   |-- get.dart
-|   |   |-- init.dart
-|   |   |-- io.dart
-|   |   |-- login.dart
-|   |   |-- noripple.dart
-|   |   |-- parser.dart
-|   |   `-- style.dart
+|   |   |-- animation.dart 动画
+|   |   |-- cookie.dart 
+|   |   |-- get.dart http请求
+|   |   |-- init.dart 初始化
+|   |   |-- io.dart 文件操作
+|   |   |-- login.dart 登录
+|   |   |-- noripple.dart 取消涟漪动画
+|   |   |-- notification.dart 通知
+|   |   |-- parser.dart html解析
+|   |   |-- service.dart 后台服务
+|   |   `-- style.dart 样式
+|   |
+|   |-- custom 自定义组件
 |   |
 |   |-- pages 页面
-|   |   |-- career.dart
-|   |   |-- home.dart
-|   |   |-- info.dart
-|   |   |-- init.dart
-|   |   |-- login.dart
-|   |   |-- mine.dart
-|   |   |-- queryscore.dart
-|   |   |-- queryexam.dart
-|   |   |-- queryroom.dart
-|   |   |-- schedule.dart
-|   |   |-- schedulemanage.dart
-|   |   |-- setting.dart
-|   |   |-- timemanage.dart
-|   |   `-- update.dart
+|   |   |-- about.dart 关于
+|   |   |-- career.dart 生涯
+|   |   |-- home.dart 主页
+|   |   |-- login.dart 登录
+|   |   |-- mainBody.dart 主体
+|   |   |-- person.dart 个人
+|   |   |-- queryClassRoom.dart 查询教室
+|   |   |-- queryScore.dart 查询成绩
+|   |   |-- queryExam.dart 查询考试
+|   |   |-- schedule.dart 课表
+|   |   |-- scheduleManager.dart 课表管理
+|   |   |-- setting.dart 设置
+|   |   |-- timeManager.dart 课时管理
+|   |   `-- update.dart 更新
 |   |
 |   `-- widget 组件
-|       |-- bars.dart
-|       |-- cards.dart
-|       |-- dialog.dart
-|       |-- icons.dart
-|       `-- lists.dart
+|       |-- appwidget.dart 桌面微件
+|       |-- bars.dart 条
+|       |-- cards.dart 卡片
+|       |-- dialog.dart 弹出消息
+|       |-- icons.dart 图标
+|       `-- lists.dart 列表
 |   
 |-- README.md
 |-- build.bat
@@ -79,7 +85,7 @@
 ```
 
 #### 环境注意：
-Android SDK 26-33  
+Android SDK 26-34  
 Gradle 8.0  
 OpenJDK 17.0.8.1 2023-08-24  
 Flutter 3.13.4  
@@ -94,10 +100,10 @@ flutter build apk --obfuscate --split-debug-info=xxx_Struggle --target-platform 
 或者
 
 ```
-//Windows使用
+// Windows使用
 ./bulid.bat  
 
-//Linux使用
+// Linux使用
 ./bulid.sh 
 ```
 
