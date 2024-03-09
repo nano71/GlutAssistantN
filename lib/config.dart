@@ -15,6 +15,7 @@ class AppConfig {
   static String socketError = "网络错误!";
   static String dataError = "教务未知错误!";
   static String notLoginError = "请先登录!";
+  static String retryError = "未知错误,请重试!";
   static int timeOutSec = 12;
   static double listLeftIconSize = 18;
   static Map cookie = {};
@@ -32,6 +33,7 @@ class AppConfig {
   static Uri getScoreUrl = httpUri("/academic/manager/score/studentOwnScore.do");
   static Uri getCareerUrl = httpUri("/academic/manager/studyschedule/studentSelfSchedule.jsdo");
   static Uri getUpdateUrl = Uri.http(updateApiUrl, "/repos/nano71/GlutAssistantN/releases/latest");
+  static Uri getUpdateUrl2 = Uri.http(authorUrl, "/gan/check");
   static Uri getEmptyClassroomUrl = httpUri("/academic/teacher/teachresource/roomschedulequery.jsdo");
   static Uri getEmptyClassroomUrl2 = httpUri("/academic/teacher/teachresource/roomschedule_week.jsdo");
   static List<String> getScheduleUrl = [jwUrl, "/academic/student/currcourse/currcourse.jsdo"];

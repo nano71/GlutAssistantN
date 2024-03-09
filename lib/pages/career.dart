@@ -6,6 +6,7 @@ import '/common/get.dart';
 import '/common/style.dart';
 import '/widget/bars.dart';
 import '/widget/dialog.dart';
+import '/custom/expansiontile.dart' as CustomExpansionTile;
 
 import '../config.dart';
 import '../data.dart';
@@ -476,7 +477,7 @@ class CareerListProcessState extends State<CareerListProcess> {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.fromLTRB(16, 0, 16, 0),
-      child: ExpansionTile(
+      child: CustomExpansionTile.ExpansionTile(
         onExpansionChanged: (e) {
           setState(() {
             _isExpanded = !_isExpanded;
