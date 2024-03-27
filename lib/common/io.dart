@@ -169,10 +169,16 @@ Future<void> readConfig() async {
     }
     //存在
     if (startTimeResult.isNotEmpty) {
-      startTimeList = jsonDecode(startTimeResult);
+      List<dynamic> parsedJson = jsonDecode(startTimeResult);
+      startTimeList = parsedJson.map((list) {
+        return List<int>.from(list);
+      }).toList();
     }
     if (endTimeResult.isNotEmpty) {
-      endTimeList = jsonDecode(endTimeResult);
+      List<dynamic> parsedJson = jsonDecode(endTimeResult);
+      endTimeList = parsedJson.map((list) {
+        return List<int>.from(list);
+      }).toList();
     }
     print("readConfig save");
     await writeConfig();
