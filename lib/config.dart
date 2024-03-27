@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'data.dart';
-import 'type/packageInfo.dart';
 
 class AppConfig {
   static String appTitle = "桂工助手N";
