@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:glutassistantn/widget/appwidget.dart';
-import 'package:home_widget/home_widget.dart';
 import 'package:package_info_plus/package_info_plus.dart' as PackageInfoPlus;
 
 import '/common/get.dart';

@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:glutassistantn/widget/appwidget.dart';
 import 'package:workmanager/workmanager.dart';
 
 import '/pages/mainBody.dart';
