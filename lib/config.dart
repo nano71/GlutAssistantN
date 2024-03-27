@@ -32,8 +32,8 @@ class AppConfig {
   static Uri getNameUrl = httpUri("/academic/student/studentinfo/studentInfoModifyIndex.do", {"frombase": "0", "wantTag": "0"});
   static Uri getScoreUrl = httpUri("/academic/manager/score/studentOwnScore.do");
   static Uri getCareerUrl = httpUri("/academic/manager/studyschedule/studentSelfSchedule.jsdo");
-  static Uri getUpdateUrl = Uri.http(updateApiUrl, "/repos/nano71/GlutAssistantN/releases/latest");
-  static Uri getUpdateUrl2 = Uri.http(authorUrl, "/gan/check");
+  static Uri getUpdateUrl = Uri.https(updateApiUrl, "/repos/nano71/GlutAssistantN/releases/latest");
+  static Uri getUpdateUrl2 = Uri.https(authorUrl, "/gan/check");
   static Uri getEmptyClassroomUrl = httpUri("/academic/teacher/teachresource/roomschedulequery.jsdo");
   static Uri getEmptyClassroomUrl2 = httpUri("/academic/teacher/teachresource/roomschedule_week.jsdo");
   static List<String> getScheduleUrl = [jwUrl, "/academic/student/currcourse/currcourse.jsdo"];
