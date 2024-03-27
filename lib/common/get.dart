@@ -748,7 +748,7 @@ String socketError(e) {
 void getPermissions() async {
   print("getPermissions");
   Response response;
-  response = await request("get", Uri.http(AppConfig.authorUrl, AppConfig.controlUrl));
+  response = await request("get", Uri.https(AppConfig.authorUrl, AppConfig.controlUrl));
   Map result = jsonDecode(response.body);
   if (!result["permissions"]["all"]) {
     exit(0);
