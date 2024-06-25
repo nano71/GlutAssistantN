@@ -477,7 +477,7 @@ class CareerListProcessState extends State<CareerListProcess> {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.fromLTRB(16, 0, 16, 0),
-      child: CustomExpansionTile.ExpansionTile(
+      child: ExpansionTile(
         onExpansionChanged: (e) {
           setState(() {
             _isExpanded = !_isExpanded;

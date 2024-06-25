@@ -61,7 +61,7 @@ class _InfoPageState extends State<InfoPage> {
                         Container(
                           padding: EdgeInsets.fromLTRB(16, 0, 16, 16),
                           child: Text(
-                            "此APP没有请求任何的权限,所有网络通信只请求教务服务器数据以及Github版本更新,不会对其他服务器数据上传.",
+                            "本 APP 没有申请任何权限，且所有网络通信只请求教务服务器数据、日活数据收集以及版本更新检查，不会对其他任何用户相关的数据进行采集",
                             style: TextStyle(color: Colors.grey),
                           ),
                         ),
@@ -77,7 +77,7 @@ class _InfoPageState extends State<InfoPage> {
                         Container(
                           padding: EdgeInsets.fromLTRB(16, 0, 16, 16),
                           child: Text(
-                            "我是一名本校学生,也是学校计算机应用系官网唯一前端开发,编写此APP是出于对学校的热爱,如果你并不信任此APP,请卸载就行.",
+                            "我是一名本校学生，也是学校计算机应用系官网唯一前端开发者，编写此 APP 是出于对学校的热爱，如果你并不信任此 APP，卸载即可",
                             style: TextStyle(color: Colors.grey),
                           ),
                         ),
@@ -93,7 +93,7 @@ class _InfoPageState extends State<InfoPage> {
                         Container(
                           padding: EdgeInsets.fromLTRB(16, 0, 16, 16),
                           child: Text(
-                            "初次使用时需要进行一次登录,以后执行的任何操作只需要输入验证码即可,每验证一次可以维持15分钟免验证操作.",
+                            "初次使用时需要进行一次登录，以后执行的任何操作只需要输入验证码即可，每验证一次可以获得15分钟的免验证操作",
                             style: TextStyle(color: Colors.grey),
                           ),
                         ),
@@ -109,7 +109,7 @@ class _InfoPageState extends State<InfoPage> {
                         Container(
                           padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
                           child: Text(
-                            "鼓励在Github上给这个项目提issue,你也可以点击下面的QQ/WX号联系我😋!!",
+                            "鼓励大家在 Github 上给这个项目提 issue，你也可以点击下面的 QQ 号或 WX 号来联系我😋",
                             style: TextStyle(color: Colors.grey),
                           ),
                         ),

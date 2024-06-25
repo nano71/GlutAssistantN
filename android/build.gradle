@@ -1,46 +1,41 @@
-buildscript {
-    ext.kotlin_version = '1.8.22'
-    ext.gradle_version = '8.1.1'
-
-    repositories {
-        maven { url "https://repo.huaweicloud.com/repository/maven/" }
-        maven { url "https://mirrors.cloud.tencent.com/gradle/" }
-        maven { url "https://repo.maven.apache.org/maven2/" }
-        maven { url "https://repo1.maven.org/maven2/" }
-        maven { url 'https://maven.aliyun.com/repository/google' }
-        maven { url 'https://maven.aliyun.com/repository/jcenter' }
-    }
-
-    dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlin_version"
-        classpath "com.android.tools.build:gradle:$gradle_version"
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-    }
-}
-
 ext {
     ndkVersion = '25.2.9519653'
 }
 
 allprojects {
     repositories {
-        maven { url "https://repo.huaweicloud.com/repository/maven/" }
-        maven { url "https://mirrors.cloud.tencent.com/gradle/" }
-        maven { url 'https://maven.aliyun.com/repository/google' }
-        maven { url 'https://maven.aliyun.com/repository/jcenter' }
-        maven { url "https://repo.maven.apache.org/maven2/" }
-        maven { url "https://repo1.maven.org/maven2/" }
+        maven {
+            url 'https://maven.aliyun.com/repository/google'
+        }
+        maven {
+            url 'https://maven.aliyun.com/repository/public'
+        }
+        maven {
+            url 'https://maven.aliyun.com/repository/jcenter'
+        }
+        maven {
+            url 'https://repo.huaweicloud.com/repository/maven/'
+        }
+        maven{
+            url 'https://mirrors.cloud.tencent.com/nexus/repository/maven-public/'
+        }
+        maven{
+            url 'https://mirrors.163.com/maven/repository/maven-public/'
+        }
+        maven {
+            url "https://kotlin.bintray.com/kotlinx"
+        }
+        gradlePluginPortal()
+        google()
+        mavenLocal()
+        mavenCentral()
     }
 }
 
 rootProject.buildDir = '../build'
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
-//    afterEvaluate {
-//        android.namespace = "com.nano71.glutassistantn"
-//    }
     project.evaluationDependsOn(':app')
-
 }
 
 tasks.register("clean", Delete) {
