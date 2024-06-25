@@ -43,7 +43,7 @@ dependencies:
   flutter_swiper_view: ^1.1.8
   home_widget: ^0.6.0
   workmanager: ^0.5.2
-  package_info_plus: ^4.1.0
+  package_info_plus: ^8.0.0
 
 dev_dependencies:
   flutter_test:
