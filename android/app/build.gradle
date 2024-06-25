@@ -1,14 +1,17 @@
+plugins {
+    id "com.android.application"
+    id "kotlin-android"
+    // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
+    id "dev.flutter.flutter-gradle-plugin"
+    id 'org.jetbrains.kotlin.plugin.serialization' version '2.0.0'
+}
+
 def localProperties = new Properties()
 def localPropertiesFile = rootProject.file('local.properties')
 if (localPropertiesFile.exists()) {
     localPropertiesFile.withReader('UTF-8') { reader ->
         localProperties.load(reader)
     }
-}
-
-def flutterRoot = localProperties.getProperty('flutter.sdk')
-if (flutterRoot == null) {
-    throw new FileNotFoundException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
 }
 
 def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
@@ -27,10 +30,6 @@ if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 }
 
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
-apply plugin: 'kotlinx-serialization'
 android {
     ndkVersion ndkVersion
 
@@ -50,6 +49,7 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
+        coreLibraryDesugaringEnabled true
     }
 
     sourceSets {
@@ -60,9 +60,9 @@ android {
         multiDexEnabled true
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "com.nano71.glutassistantn"
-        minSdkVersion 19
-        //noinspection OldTargetApi
-        targetSdkVersion 31
+        minSdkVersion flutter.minSdkVersion
+        //noinspection EditedTargetSdkVersion
+        targetSdkVersion 34
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         flavorDimensions "versionCode"
@@ -87,7 +87,7 @@ android {
     lint {
         checkDependencies true
     }
-    buildToolsVersion '33.0.1'
+    buildToolsVersion '34.0.0'
 }
 
 flutter {
@@ -95,8 +95,30 @@ flutter {
 }
 
 dependencies {
-    implementation 'com.google.android.material:material:1.8.0'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0"
-    implementation 'androidx.multidex:multidex:2.0.1'
+    implementation "com.google.android.material:material:1.10.0"
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.0.0'
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.0"
+    implementation "androidx.multidex:multidex:2.0.1"
+    implementation "androidx.window:window:1.3.0"
+
+    // For Java-friendly APIs to register and unregister callbacks
+    implementation "androidx.window:window-java:1.3.0"
+
+    // For RxJava2 integration
+    implementation "androidx.window:window-rxjava2:1.3.0"
+
+    // For RxJava3 integration
+    implementation "androidx.window:window-rxjava3:1.3.0"
+
+    // For testing
+    implementation "androidx.window:window-testing:1.3.0"
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.4'
+
+}
+configurations.all {
+    resolutionStrategy.eachDependency { details ->
+        if (details.requested.group == 'androidx.work') {
+            details.useVersion '2.8.1'
+        }
+    }
 }
