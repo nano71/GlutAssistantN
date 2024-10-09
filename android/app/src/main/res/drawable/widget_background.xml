@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <corners android:radius="@android:dimen/system_app_widget_background_radius"/>
-    <solid android:color="?android:attr/colorBackground"/>
+<shape xmlns:tools="http://schemas.android.com/tools"
+        xmlns:android="http://schemas.android.com/apk/res/android">
+    <corners
+            android:radius="@android:dimen/system_app_widget_background_radius"
+            tools:targetApi="s" />
+    <solid android:color="?android:attr/windowBackground" />
 </shape>

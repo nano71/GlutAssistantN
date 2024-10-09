@@ -175,7 +175,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
           if (result) {
             await afterSuccess();
           } else {
-            if (!isLogin()) {
+            if (!isLoggedIn()) {
               // codeCheckDialog(context),
               ScaffoldMessenger.of(context).removeCurrentSnackBar();
               ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, AppConfig.notLoginError));
@@ -445,7 +445,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
             child: Align(alignment: Alignment.centerLeft, child: Text(tomorrowScheduleTitle, style: tomorrowAndTodayTextStyle())),
           )),
           TomorrowCourseList(),
-          !isLogin() ? NeedLogin() : SliverToBoxAdapter(child: Center()),
+          !isLoggedIn() ? NeedLogin() : SliverToBoxAdapter(child: Center()),
         ],
       ),
     );

@@ -140,7 +140,7 @@ class _QueryBodyState extends State<QueryBody> {
   void _query() async {
     // Global.cookie = {};
     print(AppData.persistentData["username"]);
-    if (!isLogin()) {
+    if (!isLoggedIn()) {
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(jwSnackBarAction(
         false,

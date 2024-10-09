@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:glutassistantn/widget/appwidget.dart';
+import 'package:home_widget/home_widget.dart';
 import 'package:package_info_plus/package_info_plus.dart' as PackageInfoPlus;
+import 'package:workmanager/workmanager.dart';
 
 import '/common/get.dart';
 import '/common/init.dart';
@@ -48,6 +50,12 @@ class MainBodyState extends State<MainBody> {
     PackageInfo.version = packageInfo.version;
   }
 
+  void registerTask() {
+    Workmanager().cancelAll();
+    print('MainBodyState.registerOneOffTask');
+    Workmanager().registerPeriodicTask("task-identifier", "simpleTask");
+  }
+
   void initialize() async {
     // initService();
     getPermissions();
@@ -62,7 +70,10 @@ class MainBodyState extends State<MainBody> {
     AppData.isInitialized = true;
 
     Appwidget.updateWidgetContent();
-    // HomeWidget.registerBackgroundCallback(backgroundCallback);
+
+    registerTask();
+
+    HomeWidget.registerInteractivityCallback(backgroundCallback);
 
     Navigator.pushAndRemoveUntil(
       context,

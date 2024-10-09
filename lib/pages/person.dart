@@ -34,7 +34,7 @@ class MinePageState extends State<MinePage> {
     return Container(
       color: Colors.white,
       child: CustomScrollView(physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()), slivers: [
-        publicTopBar(isLogin() ? "Hi! " + (AppData.persistentData["name"] ?? "") : "请先登录教务"),
+        publicTopBar(isLoggedIn() ? "Hi! " + (AppData.persistentData["name"] ?? "") : "请先登录教务"),
         SliverToBoxAdapter(
             child: Container(
           width: double.infinity,

@@ -18,7 +18,7 @@ void backgroundCallback(Uri? data) async {
     await initTodaySchedule();
     await initTomorrowSchedule();
 
-    Appwidget.updateWidgetContent(true);
+    Appwidget.updateWidgetContent();
   }
 }
 
@@ -66,24 +66,18 @@ List<List> _customParser(List<List> originalData, [bool isTodaySchedule = true])
 }
 
 class Appwidget {
-
   static late String nullSymbol = '{"value":[]}';
 
-  static void updateWidgetContent([bool isBackgroundRefresh = false]) {
+  static void updateWidgetContent() {
     print('Appwidget.updateWidgetContent');
-    if (!isLogin()) {
-      print('Appwidget.updateWidgetContent.!isLogin');
-      commitUpdateWidgetTask(title: AppConfig.appTitle, message: AppConfig.notLoginError);
-      return;
-    }
-    if (isBackgroundRefresh) {
-      print('Appwidget.updateWidgetContent.isBackgroundRefresh');
-      HomeWidget.saveWidgetData<String>("backgroundRefresh", "1");
-    } else {
-      HomeWidget.saveWidgetData<String>("backgroundRefresh", "0");
-    }
-    List<List> deepCopy(List object) {
-      return object.map((item) => List.from(item)).toList();
+    // if (!isLoggedIn()) {
+    //   print('Appwidget.updateWidgetContent.!isLoggedIn');
+    //   commitUpdateWidgetTask(title: AppConfig.appTitle, message: AppConfig.notLoginError);
+    //   return;
+    // }
+
+    List<List> deepCopy(List list) {
+      return list.map((item) => List.from(item)).toList();
     }
 
     String title = "今天的课表";

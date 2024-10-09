@@ -14,4 +14,5 @@
     <string name="address_3">Anywhere</string>
     <string name="course_name_3">玩~</string>
     <string name="label_3">然后</string>
+    <string name="loadingText">加载中...</string>
 </resources>
