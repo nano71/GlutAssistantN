@@ -94,10 +94,10 @@ flutter:
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
 
-development——environment:
-  flutter: 3.22.2
-  dart: 3.4.3
+development—environment:
+  flutter: 3.24.3
+  dart: 3.5.3
   kotlin: 2.0.0
   gradle: 8.7.0
-  build_tools: 8.5.0
+  build_tools: 8.5.1
 

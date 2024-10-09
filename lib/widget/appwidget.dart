@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/services.dart';
 import 'package:glutassistantn/common/io.dart';
 import 'package:home_widget/home_widget.dart';
 
@@ -71,6 +72,17 @@ List<List> _customParser(List<List> originalData, [bool isTodaySchedule = true])
 
 class Appwidget {
   static late String nullSymbol = '{"value":[]}';
+  static const platform = MethodChannel("com.nano71.glutassistantn/widget_check");
+
+  static Future<bool> isWidgetAdded() async {
+    try {
+      final bool result = await platform.invokeMethod('isWidgetAdded');
+      return result;
+    } on PlatformException catch (e) {
+      print("Failed to check widget status: '${e.message}'.");
+      return false;
+    }
+  }
 
   static void updateWidgetContent() {
     print('Appwidget.updateWidgetContent');
