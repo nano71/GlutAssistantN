@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_remix/flutter_remix.dart';
+
 import '/custom/expansiontile.dart' as CustomExpansionTile;
 import '/widget/bars.dart';
 
@@ -44,7 +45,7 @@ class _InfoPageState extends State<InfoPage> {
             ),
             SliverToBoxAdapter(
                 child: Container(
-                  width: double.infinity,
+              width: double.infinity,
               padding: EdgeInsets.fromLTRB(16, 42, 16, 64),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -66,7 +67,7 @@ class _InfoPageState extends State<InfoPage> {
                           ),
                         ),
                       ]),
-                      CustomExpansionTile.ExpansionTile(
+                  CustomExpansionTile.ExpansionTile(
                       initiallyExpanded: true,
                       collapsedIconColor: Colors.black45,
                       iconColor: Colors.black45,
@@ -82,7 +83,7 @@ class _InfoPageState extends State<InfoPage> {
                           ),
                         ),
                       ]),
-                      CustomExpansionTile.ExpansionTile(
+                  CustomExpansionTile.ExpansionTile(
                       initiallyExpanded: true,
                       collapsedIconColor: Colors.black45,
                       iconColor: Colors.black45,
@@ -98,7 +99,23 @@ class _InfoPageState extends State<InfoPage> {
                           ),
                         ),
                       ]),
-                      CustomExpansionTile.ExpansionTile(
+                  // CustomExpansionTile.ExpansionTile(
+                  //     initiallyExpanded: true,
+                  //     collapsedIconColor: Colors.black45,
+                  //     iconColor: Colors.black45,
+                  //     textColor: Colors.black,
+                  //     tilePadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                  //     title: infoItem(Icons.check_circle_outline, EdgeInsets.fromLTRB(16, 14, 0, 14), "成绩"),
+                  //     children: [
+                  //       Container(
+                  //         padding: EdgeInsets.fromLTRB(16, 0, 16, 16),
+                  //         child: Text(
+                  //           "2019级及以后的平均学分绩点=∑(课程学分数×绩点数)/∑课程学分数, 注意: 参与计算的课程仅为选课属性必修课和集中性实践教学环节, 以及同一门课程选修多次的, 取最高成绩",
+                  //           style: TextStyle(color: Colors.grey),
+                  //         ),
+                  //       ),
+                  //     ]),
+                  CustomExpansionTile.ExpansionTile(
                       initiallyExpanded: true,
                       collapsedIconColor: Colors.black45,
                       iconColor: Colors.black45,

@@ -107,15 +107,12 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _checkForWidgetLaunch();
+    HomeWidget.initiallyLaunchedFromHomeWidget().then(_launchedFromWidget);
     HomeWidget.widgetClicked.listen(_launchedFromWidget);
   }
 
-  void _checkForWidgetLaunch() {
-    HomeWidget.initiallyLaunchedFromHomeWidget().then(_launchedFromWidget);
-  }
-
   void _launchedFromWidget(Uri? uri) {
+    print('HomePageState._launchedFromWidget');
     print(uri?.host);
     if (uri?.host == "refresh") _refresh();
   }

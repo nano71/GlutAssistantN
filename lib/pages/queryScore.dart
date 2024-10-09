@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_remix/flutter_remix.dart';
+import 'package:glutassistantn/widget/dialog.dart';
 
 import '/common/get.dart';
 import '/pages/setting.dart';
@@ -88,50 +89,54 @@ class _QueryBodyState extends State<QueryBody> {
     queryScore = list;
     // 绩点
     double gradePointAverage = 0.0;
-    double _avg = 0.0;
-    double _weight = 0.0;
-    double scoreSum = 0.0;
+    double average = 0.0;
+    double weight = 0.0;
+    double scoreSummary = 0.0;
     //学分*成绩
-    double weightScoreSum = 0.0;
-    double gpaSum = 0.0;
-    double credit = 0.0;
+    double weightScoreSummary = 0.0;
+    double gradePointAverageSummary = 0.0;
+    double creditSummary = 0.0;
     int excluded = 0;
+
     for (int i = 0; i < list.length; i++) {
-      int _score;
+      int score;
+
       try {
-        _score = int.parse(levelToNumber(list[i]![4]));
+        score = int.parse(levelToNumber(list[i]![4]));
       } catch (e) {
         break;
       }
-      // 学分
-      double _credit = double.parse(list[i]![5]);
-      // 绩点
-      double _gradePoint = double.parse(list[i]![6]);
 
-      String _courseName = list[i]![2].toString();
-      String _teacher = list[i]![3];
-      if ((_courseName.contains("慕课") && _teacher == "") || isExcludedCourse(_courseName)) {
+      // 学分
+      double credit = double.parse(list[i]![5]);
+      // 绩点
+      double gradePoint = double.parse(list[i]![6]);
+      String courseName = list[i]![2].toString();
+      String teacher = list[i]![3];
+
+      if ((courseName.contains("慕课") && teacher == "") || isExcludedCourse(courseName)) {
         excluded++;
       } else {
         if (list[i].length > 5) {
           print(list[i]);
-          weightScoreSum += _score * _credit;
-          credit += _credit;
-          gpaSum += _gradePoint * _credit;
+          weightScoreSummary += score * credit;
+          creditSummary += credit;
+          gradePointAverageSummary += gradePoint * credit;
         }
         if (list[i].length > 4) {
-          scoreSum += _score;
+          scoreSummary += score;
         }
       }
     }
-    print(scoreSum);
-    _avg = double.parse((scoreSum / (list.length - excluded)).toStringAsFixed(1));
-    _weight = double.parse((weightScoreSum / credit).toStringAsFixed(1));
-    gradePointAverage = double.parse((gpaSum / credit).toStringAsFixed(1));
-    if (_avg.isNaN) _avg = 0.0;
-    if (_weight.isNaN) _weight = 0.0;
+
+    print(scoreSummary);
+    average = double.parse((scoreSummary / (list.length - excluded)).toStringAsFixed(1));
+    weight = double.parse((weightScoreSummary / creditSummary).toStringAsFixed(1));
+    gradePointAverage = double.parse((gradePointAverageSummary / creditSummary).toStringAsFixed(1));
+    if (average.isNaN) average = 0.0;
+    if (weight.isNaN) weight = 0.0;
     if (gradePointAverage.isNaN) gradePointAverage = 0.0;
-    scores = [gradePointAverage, _avg, _weight];
+    scores = [gradePointAverage, average, weight];
     ScaffoldMessenger.of(context).removeCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(1, "数据已更新!", 1));
     setState(() {});
@@ -178,7 +183,7 @@ class _QueryBodyState extends State<QueryBody> {
       child: CustomScrollView(
         physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
         slivers: [
-          publicTopBar(
+          publicTopBarWithInfoIcon(
               "成绩查询",
               InkWell(
                 child: Icon(
@@ -190,6 +195,8 @@ class _QueryBodyState extends State<QueryBody> {
                   Navigator.of(context).pop();
                 },
               ),
+              () => infoDialog(context,
+                  "2019级及以后的平均学分绩点计算方式:\n\n绩点 = ∑(课程学分 × 绩点) / ∑课程学分\n\n1.参与计算的课程仅为选课属性必修课和集中性实践教学环节, 选修课和素质类课程不计算学分绩点\n\n2.采用五级记分制的课程和集中性实践性教学环节、毕业设计(论文)成绩折算成百分制后再进行计算, 不及格为40分"),
               readColor(),
               Colors.white,
               0),

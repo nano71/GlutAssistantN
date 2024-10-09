@@ -35,8 +35,8 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
     // TODO: implement initState
     super.initState();
 
-    _textFieldController1.text = AppData.persistentData["year"] ?? "";
-    _textFieldController2.text = AppData.persistentData["semester"] ?? "";
+    _textFieldController1.text = AppData.persistentData["year"]!;
+    _textFieldController2.text = AppData.persistentData["semester"]!;
   }
 
   @override
@@ -511,11 +511,10 @@ List<DropdownMenuItem<Object>>? yearList(int type) {
       DropdownMenuItem(child: Text("全部"), value: "全部"),
     );
   } else {
-    list.add(
-        DropdownMenuItem(child: Text((int.parse(AppData.persistentData["year"] ?? "") + 1).toString()), value: (int.parse(AppData.persistentData["year"] ?? "") + 1).toString()));
+    list.add(DropdownMenuItem(child: Text((int.parse(AppData.persistentData["year"]!) + 1).toString()), value: (int.parse(AppData.persistentData["year"]!) + 1).toString()));
   }
 
-  for (int i = int.parse(AppData.persistentData["year"] ?? ""); i > (int.parse(AppData.persistentData["year"] ?? "") - 5); i--) {
+  for (int i = int.parse(AppData.persistentData["year"]!); i > (int.parse(AppData.persistentData["year"]!) - 5); i--) {
     list.add(DropdownMenuItem(child: Text(i.toString()), value: i.toString()));
   }
   return list;

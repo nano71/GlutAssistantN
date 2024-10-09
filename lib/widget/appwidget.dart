@@ -13,13 +13,17 @@ void backgroundCallback(Uri? data) async {
   print('backgroundCallback');
   print(data?.host);
   if (data?.host == "refresh") {
-    await readConfig();
-    await readSchedule();
-    await initTodaySchedule();
-    await initTomorrowSchedule();
-
-    Appwidget.updateWidgetContent();
+    backstageRefresh();
   }
+}
+
+Future<void> backstageRefresh() async {
+  await readConfig();
+  await readSchedule();
+  await initTodaySchedule();
+  await initTomorrowSchedule();
+
+  Appwidget.updateWidgetContent();
 }
 
 List<List> _customParser(List<List> originalData, [bool isTodaySchedule = true]) {
@@ -104,7 +108,7 @@ class Appwidget {
     HomeWidget.saveWidgetData<String>("title", title);
     HomeWidget.saveWidgetData<String>("message", message);
     HomeWidget.updateWidget(
-      qualifiedAndroidName: 'com.nano71.glutassistantn.HomeWidgetExampleProvider',
+      qualifiedAndroidName: 'com.nano71.glutassistantn.HomeWidgetProvider',
     );
   }
 

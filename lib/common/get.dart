@@ -72,7 +72,7 @@ Future<void> getWeek() async {
   if (span != null) {
     weekHtml = span.text.trim();
   } else {
-    return;
+    return readConfig();
   }
 
   String week = weekHtml.substring(weekHtml.indexOf("第") + 1, weekHtml.indexOf("周")).trim();
@@ -106,10 +106,8 @@ Future<dynamic> getSchedule() async {
   print("getSchedule");
   Map _schedule = Map.from(AppData.schedule);
   Map<String, String> _dayNumberMapping = {"星期一": "1", "星期二": "2", "星期三": "3", "星期四": "4", "星期五": "5", "星期六": "6", "星期日": "7"};
-  print(AppData.persistentData["semesterBk"]);
-  print(AppData.persistentData["yearBk"]);
   Uri uri = Uri.http(AppConfig.getScheduleUrl[0], AppConfig.getScheduleUrl[1],
-      {"year": ((int.parse(AppData.persistentData["year"] ?? "")) - 1980).toString(), "term": AppData.persistentData["semester"] == "秋" ? "3" : "1"});
+      {"year": ((int.parse(AppData.persistentData["year"]!)) - 1980).toString(), "term": AppData.persistentData["semester"] == "秋" ? "3" : "1"});
   Response response;
   try {
     response = await request("", uri);
@@ -267,7 +265,7 @@ Future<Map> getScheduleChanges(String id, Map schedule) async {
   print("获取课表变更(调课/停课/补课)");
   Uri uri = Uri.http(AppConfig.getScheduleNextUrl[0], AppConfig.getScheduleNextUrl[1], {
     "id": id,
-    "yearid": ((int.parse(AppData.persistentData["year"] ?? "")) - 1980).toString(),
+    "yearid": ((int.parse(AppData.persistentData["year"]!)) - 1980).toString(),
     "termid": AppData.persistentData["semester"] == "秋" ? "3" : "1",
     "timetableType": "STUDENT",
     "sectionType": "BASE"

@@ -255,7 +255,7 @@ int randomInt(int min, int max) {
 }
 
 String courseLongText2Short(String value) {
-  return value.replaceAll("（", "(").replaceAll("）", ")").replaceAll("毛泽东思想和中国特色社会主义理论体系概论", "毛概");
+  return value.replaceAll("（", "(").replaceAll("）", ")").replaceAll("毛泽东思想和中国特色社会主义理论体系概论", "毛概").replaceAll("习近平新时代中国特色社会主义思想概论", "习近平思想概论");
 }
 
 String levelToNumber(String value) {
