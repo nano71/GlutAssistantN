@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:glutassistantn/common/get.dart';
+
 import '/common/cookie.dart';
 import 'package:http/http.dart';
 
@@ -35,7 +37,8 @@ Future<String> login(String username, String password, String code) async {
     var postData = {"j_username": username, "j_password": submitHexMd5(password), "j_captcha": code};
     var response = await post(AppConfig.loginUrl, body: postData, headers: {"cookie": mapCookieToString()}).timeout(Duration(seconds: 3));
     if (response.headers['location'] == "/academic/index_new.jsp") {
-      parseRawCookies(response.headers['set-cookie']);
+      await parseRawCookies(response.headers['set-cookie']);
+      await getWeek();
       return "success";
     } else {
       return "fail";

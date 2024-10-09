@@ -15,7 +15,7 @@ publish_to: "https://pub.flutter-io.cn" # Remove this line if you wish to publis
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.6.240625+63
+version: 1.6.241009+64
 
 environment:
   sdk: ">=2.14.0 <4.0.0"
@@ -27,23 +27,20 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  flutter:
+    sdk: flutter
   http: ^1.1.0
   html: ^0.15.0
-  flutter_gbk2utf8 : ^1.0.0
-  path_provider: ^2.0.6
-  event_bus: ^2.0.0
+  flutter_gbk2utf8: ^1.0.0
+  path_provider: ^2.1.4
+  event_bus: ^2.0.1
   url_launcher: ^6.0.12
   badges: ^3.1.2
   flutter_remix: ^0.0.3
-  flutter:
-    sdk: flutter
-  cupertino_icons: ^1.0.2
-  flutter_local_notifications: ^17.1.2
-  shared_preferences: ^2.0.15
   flutter_swiper_view: ^1.1.8
-  home_widget: ^0.6.0
+  home_widget: ^0.7.0
   workmanager: ^0.5.2
-  package_info_plus: ^8.0.0
+  package_info_plus: ^8.0.2
 
 dev_dependencies:
   flutter_test:
@@ -54,7 +51,7 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^4.0.0
+  flutter_lints: ^5.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

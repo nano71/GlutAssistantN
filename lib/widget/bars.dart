@@ -75,6 +75,50 @@ SliverAppBar publicTopBar(String title, [dynamic inkWell = const Text(""), color
   );
 }
 
+SliverAppBar publicTopBarWithInfoIcon(String title, [dynamic inkWell = const Text(""), Function()? onPressed, color = Colors.white, color2 = Colors.black, double e = 0.3]) {
+  return SliverAppBar(
+    pinned: true,
+    shadowColor: color,
+    collapsedHeight: 56.00,
+    primary: true,
+    backgroundColor: color,
+    stretch: true,
+    expandedHeight: 125.0,
+    elevation: e,
+    automaticallyImplyLeading: false,
+    flexibleSpace: FlexibleSpaceBar(
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              Text(
+                title,
+                style: TextStyle(
+                  color: color2
+                ),
+              ),
+              SizedBox(width: 8,),
+              SizedBox(
+                width: 12,
+                height: 12,
+                child: IconButton(
+                  padding: EdgeInsets.zero,
+                  iconSize: 12,
+                  icon: const Icon(FlutterRemix.information_line, color: Colors.white),
+                  onPressed: onPressed,
+                ),
+              )
+            ],
+          ),
+          inkWell,
+        ],
+      ),
+      titlePadding: EdgeInsets.fromLTRB(16, 0, 16, 12),
+    ),
+  );
+}
+
 class ScheduleTopBar extends StatefulWidget {
   ScheduleTopBar({Key? key}) : super(key: key);
 

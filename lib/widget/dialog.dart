@@ -36,7 +36,7 @@ importantUpdateDialog(BuildContext context) {
                 children: [
                   Text("版本更新"),
                   Text(
-                    "Version Update",
+                    "Version update",
                     style: TextStyle(color: Colors.grey, fontSize: 14),
                   )
                 ],
@@ -93,6 +93,91 @@ importantUpdateDialog(BuildContext context) {
                             onPressed: () {
                               Navigator.of(context).pop();
                               Navigator.of(context).push(MaterialPageRoute(builder: (context) => UpdatePage()));
+                            }),
+                      ),
+                    )
+                  ],
+                )),
+          ],
+        );
+      });
+}
+
+infoDialog(BuildContext context, String text) {
+  showGeneralDialog(
+      context: context,
+      transitionBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
+        return ScaleTransition(scale: animation, child: child);
+      },
+      pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
+        return SimpleDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16.0),
+          ),
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("有必要的说明"),
+                  Text(
+                    "Necessary clarifications",
+                    style: TextStyle(color: Colors.grey, fontSize: 14),
+                  )
+                ],
+              ),
+              InkWell(
+                child: Icon(FlutterRemix.close_line, size: 32),
+                onTap: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          ),
+          titlePadding: EdgeInsets.fromLTRB(16, 16, 16, 16),
+          titleTextStyle: TextStyle(
+            color: readColor(),
+            fontSize: 25,
+          ),
+          contentPadding: EdgeInsets.only(left: 0, right: 0, bottom: 0),
+          backgroundColor: Colors.white,
+          children: [
+            Container(
+                padding: EdgeInsets.fromLTRB(12, 12, 12, 12),
+                margin: EdgeInsets.fromLTRB(8, 0, 8, 8),
+                decoration: BoxDecoration(
+                  color: readColorEnd(),
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(12.0),
+                  ),
+                ),
+                child: Column(
+                  children: [
+                    Text(
+                      text.trim(),
+                      style: TextStyle(color: Color(0xFF666666)),
+                    ),
+                    SizedBox(height: 16),
+                    SizedBox(
+                      width: double.infinity,
+                      height: 44,
+                      child: Container(
+                        child: TextButton(
+                            autofocus: true,
+                            style: ButtonStyle(
+                              overlayColor: WidgetStateProperty.all(Colors.yellow),
+                              backgroundColor: WidgetStateProperty.resolveWith((states) {
+                                return readColor();
+                              }),
+                              shape: WidgetStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(28))),
+                            ),
+                            child: Text(
+                              "我知道了",
+                              style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 14),
+                            ),
+                            onPressed: () {
+                              Navigator.of(context).pop();
                             }),
                       ),
                     )
