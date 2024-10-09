@@ -291,7 +291,7 @@ Map emptySchedule() {
   return _schedule;
 }
 
-bool isLogin() {
+bool isLoggedIn() {
   return AppData.persistentData["username"] != "";
 }
 

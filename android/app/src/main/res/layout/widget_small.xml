@@ -38,7 +38,7 @@
                         android:layout_height="26dp"
                         android:background="@drawable/rounded_text_view_level_1"
                         android:gravity="center"
-                        android:textColor="?android:attr/textColorPrimaryInverse"
+                        android:textColor="?attr/colorOnPrimary"
                         android:textSize="12sp" />
 
                 <TextView
@@ -49,7 +49,7 @@
                         android:singleLine="true"
                         android:minWidth="100dp"
                         android:textSize="12sp"
-                        android:textColor="?android:textColorPrimary"
+                        android:textColor="?android:attr/textColorPrimary"
                         android:paddingStart="10dp" />
             </LinearLayout>
 
@@ -68,7 +68,7 @@
                         android:layout_height="26dp"
                         android:background="@drawable/rounded_text_view_level_2"
                         android:gravity="center"
-                        android:textColor="?android:attr/textColorPrimaryInverse"
+                        android:textColor="?attr/colorOnSecondary"
                         android:textSize="12sp" />
 
                 <TextView
@@ -79,7 +79,7 @@
                         android:singleLine="true"
                         android:minWidth="100dp"
                         android:textSize="12sp"
-                        android:textColor="?android:textColorPrimary"
+                        android:textColor="?android:attr/textColorPrimary"
                         android:paddingStart="10dp" />
 
             </LinearLayout>
@@ -99,7 +99,7 @@
                         android:layout_height="26dp"
                         android:background="@drawable/rounded_text_view_level_3"
                         android:gravity="center"
-                        android:textColor="?android:attr/textColorPrimary"
+                        android:textColor="?attr/colorOnTertiary"
                         android:textSize="12sp" />
 
                 <TextView
@@ -110,7 +110,7 @@
                         android:singleLine="true"
                         android:minWidth="100dp"
                         android:textSize="12sp"
-                        android:textColor="?android:textColorPrimary"
+                        android:textColor="?android:attr/textColorPrimary"
                         android:paddingStart="10dp" />
 
             </LinearLayout>
@@ -122,15 +122,15 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:textColor="?android:textColorPrimary"
+            android:textColor="?android:attr/textColorPrimary"
             android:textSize="20sp"
             android:gravity="center"
-            android:text="加载中..." />
+            android:text="@string/loadingText" />
 
     <ImageView
             android:id="@+id/refresh_icon"
             android:src="@drawable/refresh_line"
-            android:tint="?android:textColorPrimary"
+            android:tint="?android:attr/textColorPrimary"
             android:layout_height="22dp"
             android:layout_width="22dp"
             android:layout_marginEnd="16dp"
