@@ -36,10 +36,11 @@ class MainBody extends StatefulWidget {
   MainBodyState createState() => MainBodyState();
 }
 
-class MainBodyState extends State<MainBody> {
+class MainBodyState extends State<MainBody> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     initialize();
   }
 
@@ -48,12 +49,6 @@ class MainBodyState extends State<MainBody> {
     PackageInfo.appName = packageInfo.appName;
     PackageInfo.packageName = packageInfo.packageName;
     PackageInfo.version = packageInfo.version;
-  }
-
-  void registerTask() {
-    Workmanager().cancelAll();
-    print('MainBodyState.registerOneOffTask');
-    Workmanager().registerPeriodicTask("task-identifier", "simpleTask");
   }
 
   void initialize() async {
@@ -68,18 +63,51 @@ class MainBodyState extends State<MainBody> {
     getWeek();
     getUpdateForEveryday();
     AppData.isInitialized = true;
-
-    Appwidget.updateWidgetContent();
-
-    registerTask();
-
-    HomeWidget.registerInteractivityCallback(backgroundCallback);
+    Workmanager().cancelAll();
 
     Navigator.pushAndRemoveUntil(
       context,
       CustomRouter(CustomView(), 2000),
       (route) => false,
     );
+
+    bool isAdded = await Appwidget.isWidgetAdded();
+
+    if (isAdded) {
+      print("桌面微件已经添加");
+      Appwidget.updateWidgetContent();
+      Workmanager().registerPeriodicTask("task-identifier", "simpleTask");
+      HomeWidget.registerInteractivityCallback(backgroundCallback);
+    } else {
+      print("桌面微件尚未添加");
+    }
+  }
+
+  @override
+  void dispose() {
+    // 注销监听器
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+// 监听生命周期变化
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+
+    if (state == AppLifecycleState.resumed) {
+      // 应用切换回前台
+      print("应用切换回前台");
+    } else if (state == AppLifecycleState.paused) {
+      // 应用切换到后台
+      print("应用切换到后台");
+    } else if (state == AppLifecycleState.inactive) {
+      // 应用处于非活跃状态
+      print("应用处于非活跃状态");
+    } else if (state == AppLifecycleState.detached) {
+      // 应用已完全关闭
+      print("应用已完全关闭");
+    }
   }
 
   @override
