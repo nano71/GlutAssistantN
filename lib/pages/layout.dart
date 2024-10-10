@@ -53,7 +53,7 @@ class _DataPreloadPageState extends State<DataPreloadPage> {
     await readSchedule();
     await initTodaySchedule();
     await initTomorrowSchedule();
-    getWeek();
+    getWeek(isPreloading: true);
     getUpdateForEveryday();
     AppData.isInitialized = true;
 

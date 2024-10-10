@@ -19,6 +19,7 @@ void backgroundCallback(Uri? data) async {
 }
 
 Future<void> backstageRefresh() async {
+  print('backstageRefresh');
   await readConfig();
   await readSchedule();
   await initTodaySchedule();

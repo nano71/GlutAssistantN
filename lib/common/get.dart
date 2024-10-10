@@ -51,7 +51,7 @@ Future getRecentExam() async {
   }
 }
 
-Future<void> getWeek() async {
+Future<void> getWeek({isPreloading = false}) async {
   print("getWeek");
   Response response;
   try {
@@ -59,10 +59,12 @@ Future<void> getWeek() async {
   } on TimeoutException catch (e) {
     print("超时");
     print(e);
+    if (isPreloading) return;
     return readConfig();
   } on SocketException catch (e) {
     print("连接失败");
     print(e);
+    if (isPreloading) return;
     return readConfig();
   }
   Map<String, String> persistentData = Map.from(AppData.persistentData);
@@ -72,6 +74,8 @@ Future<void> getWeek() async {
   if (span != null) {
     weekHtml = span.text.trim();
   } else {
+    print("getWeek End else");
+    if (isPreloading) return;
     return readConfig();
   }
 
