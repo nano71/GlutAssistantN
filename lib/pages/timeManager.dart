@@ -5,7 +5,7 @@ import '/widget/bars.dart';
 
 import '../config.dart';
 import '../data.dart';
-import 'mainBody.dart';
+import 'layout.dart';
 
 bool _isError = false;
 
@@ -54,7 +54,7 @@ class _TimeManagePageState extends State<TimeManagePage> {
     eventBus.fire(SetPageIndex());
     Navigator.pushAndRemoveUntil(
       context,
-      CustomRouter(CustomView()),
+      AppRouter(Layout()),
       (route) => false,
     );
   }
@@ -81,7 +81,7 @@ class _TimeManagePageState extends State<TimeManagePage> {
     eventBus.fire(SetPageIndex());
     Navigator.pushAndRemoveUntil(
       context,
-      CustomRouter(CustomView()),
+      AppRouter(Layout()),
       (route) => false,
     );
   }

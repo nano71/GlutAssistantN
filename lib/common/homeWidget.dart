@@ -7,7 +7,7 @@ import 'package:home_widget/home_widget.dart';
 import '../common/init.dart';
 import '../config.dart';
 import '../data.dart';
-import 'lists.dart';
+import '../widget/lists.dart';
 
 @pragma("vm:entry-point")
 void backgroundCallback(Uri? data) async {
@@ -24,7 +24,7 @@ Future<void> backstageRefresh() async {
   await initTodaySchedule();
   await initTomorrowSchedule();
 
-  Appwidget.updateWidgetContent();
+  HomeWidgetUtils.updateWidgetContent();
 }
 
 List<List> _customParser(List<List> originalData, [bool isTodaySchedule = true]) {
@@ -70,7 +70,7 @@ List<List> _customParser(List<List> originalData, [bool isTodaySchedule = true])
   return processedData;
 }
 
-class Appwidget {
+class HomeWidgetUtils {
   static late String nullSymbol = '{"value":[]}';
   static const platform = MethodChannel("com.nano71.glutassistantn/widget_check");
 

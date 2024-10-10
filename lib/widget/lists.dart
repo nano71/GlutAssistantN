@@ -822,7 +822,6 @@ class ClassroomListItem extends StatelessWidget {
         ],
       ),
     );
-    throw UnimplementedError();
   }
 }
 

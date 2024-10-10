@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:home_widget/home_widget.dart';
 
+import '../common/homeWidget.dart';
 import '/common/get.dart';
 import '/common/init.dart';
 import '/pages/queryExam.dart';
@@ -17,9 +18,9 @@ import '../common/io.dart';
 import '../common/style.dart';
 import '../config.dart';
 import '../data.dart';
-import '../widget/appwidget.dart';
+
 import 'login.dart';
-import 'mainBody.dart';
+import 'layout.dart';
 
 class HomePage extends StatefulWidget {
   final bool refresh;
@@ -164,7 +165,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
         print("刷新结束${DateTime.now()}");
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(1, "数据已更新!", 1));
-        Appwidget.updateWidgetContent();
+        HomeWidgetUtils.updateWidgetContent();
       }
 
       _scheduleParser(dynamic result) async {
@@ -186,7 +187,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 () async {
                   // Future<dynamic> getSchedule()
                   if (await getSchedule() == true) {
-                    Navigator.pushAndRemoveUntil(context, CustomRouter(CustomView(refresh: true)), (route) => false);
+                    Navigator.pushAndRemoveUntil(context, AppRouter(Layout(refresh: true)), (route) => false);
                   }
                 },
                 hideSnackBarSeconds: 10,

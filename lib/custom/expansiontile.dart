@@ -555,7 +555,6 @@ class _ExpansionTileState extends State<ExpansionTile> with SingleTickerProvider
   late AnimationController _animationController;
   late Animation<double> _iconTurns;
   late Animation<double> _heightFactor;
-  late Animation<ShapeBorder?> _border;
   late Animation<Color?> _headerColor;
   late Animation<Color?> _iconColor;
   late Animation<Color?> _backgroundColor;
@@ -570,7 +569,6 @@ class _ExpansionTileState extends State<ExpansionTile> with SingleTickerProvider
     _animationController = AnimationController(duration: _kExpand, vsync: this);
     _heightFactor = _animationController.drive(_heightFactorTween);
     _iconTurns = _animationController.drive(_halfTween.chain(_easeInTween));
-    _border = _animationController.drive(_borderTween.chain(_easeOutTween));
     _headerColor = _animationController.drive(_headerColorTween.chain(_easeInTween));
     _iconColor = _animationController.drive(_iconColorTween.chain(_easeInTween));
     _backgroundColor = _animationController.drive(_backgroundColorTween.chain(_easeOutTween));

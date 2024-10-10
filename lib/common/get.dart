@@ -684,7 +684,7 @@ Future<dynamic> getUpdate({bool isRetry = false}) async {
 
 Future getUpdateForEveryday() async {
   print("getUpdateForEveryday");
-  if (true || "${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}" != AppData.persistentData["newTime"]) {
+  if ("${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}" != AppData.persistentData["newTime"]) {
     Response response;
     try {
       response = await get(AppConfig.getUpdateUrl);
@@ -694,8 +694,6 @@ Future getUpdateForEveryday() async {
     } on SocketException catch (e) {
       print("getUpdate Error: " + e.toString());
       return AppConfig.socketError;
-    } on ClientException catch (e) {
-      return;
     }
     print('statusCode');
     print(response.statusCode);

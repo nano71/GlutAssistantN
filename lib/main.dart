@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:workmanager/workmanager.dart';
 
-import '/pages/mainBody.dart';
+import '/pages/Layout.dart';
 import 'common/service.dart';
 import 'config.dart';
 
@@ -25,7 +25,7 @@ class App extends StatelessWidget {
           useMaterial3: false,
         ),
         title: AppConfig.appTitle,
-        home: MainBody());
+        home: DataPreloadPage());
   }
 }
 

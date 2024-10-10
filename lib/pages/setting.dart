@@ -9,7 +9,7 @@ import '/pages/timeManager.dart';
 import '/widget/bars.dart';
 import '../config.dart';
 import '../data.dart';
-import 'mainBody.dart';
+import 'layout.dart';
 import 'person.dart';
 
 class SettingPage extends StatefulWidget {
@@ -270,7 +270,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                               eventBus.fire(SetPageIndex());
                               Navigator.pushAndRemoveUntil(
                                 context,
-                                CustomRouter(CustomView()),
+                                AppRouter(Layout()),
                                 (route) => false,
                               );
                             },
@@ -467,7 +467,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(
-        builder: (context) => MainBody(),
+        builder: (context) => DataPreloadPage(),
       ),
       (route) => false,
     );

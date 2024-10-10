@@ -4,8 +4,8 @@ import '../config.dart';
 
 ButtonStyle buttonStyle() {
   return ButtonStyle(
-    backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
-    overlayColor: MaterialStateProperty.all<Color>(readColorEnd()),
+    backgroundColor: WidgetStateProperty.all<Color>(Colors.white),
+    overlayColor: WidgetStateProperty.all<Color>(readColorEnd()),
   );
 }
 
