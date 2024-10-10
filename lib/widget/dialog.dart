@@ -80,11 +80,11 @@ importantUpdateDialog(BuildContext context) {
                         child: TextButton(
                             autofocus: true,
                             style: ButtonStyle(
-                              overlayColor: MaterialStateProperty.all(Colors.yellow),
-                              backgroundColor: MaterialStateProperty.resolveWith((states) {
+                              overlayColor: WidgetStateProperty.all(Colors.yellow),
+                              backgroundColor: WidgetStateProperty.resolveWith((states) {
                                 return readColor();
                               }),
-                              shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(28))),
+                              shape: WidgetStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(28))),
                             ),
                             child: Text(
                               "即刻更新",

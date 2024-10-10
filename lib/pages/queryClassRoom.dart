@@ -69,7 +69,6 @@ class QueryConditionCard extends StatefulWidget {
   State<StatefulWidget> createState() {
     // TODO: implement createState
     return QueryConditionCardState();
-    throw UnimplementedError();
   }
 }
 
@@ -309,11 +308,11 @@ class QueryConditionCardState extends State<QueryConditionCard> {
                     autofocus: true,
                     style: ButtonStyle(
                       //设置水波纹颜色
-                      overlayColor: MaterialStateProperty.all(Colors.yellow),
-                      backgroundColor: MaterialStateProperty.resolveWith((states) {
+                      overlayColor: WidgetStateProperty.all(Colors.yellow),
+                      backgroundColor: WidgetStateProperty.resolveWith((states) {
                         return readColor();
                       }),
-                      shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+                      shape: WidgetStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
                     ),
                     child: Text(
                       "即刻查询",
@@ -328,7 +327,5 @@ class QueryConditionCardState extends State<QueryConditionCard> {
         ),
       ),
     );
-    // TODO: implement build
-    throw UnimplementedError();
   }
 }

@@ -13,7 +13,7 @@ import '/common/login.dart';
 import '/widget/bars.dart';
 import '../config.dart';
 import '../data.dart';
-import 'mainBody.dart';
+import 'layout.dart';
 
 class LoginPage extends StatefulWidget {
   final String title;
@@ -130,7 +130,7 @@ class LoginPageState extends State<LoginPage> {
         eventBus.fire(SetPageIndex());
         Navigator.pushAndRemoveUntil(
           context,
-          CustomRouter(CustomView(refresh: true)),
+          AppRouter(Layout(refresh: true)),
           (route) => false,
         );
       } else if (value == "fail") {
@@ -308,11 +308,11 @@ class LoginPageState extends State<LoginPage> {
                             autofocus: true,
                             style: ButtonStyle(
                               //设置水波纹颜色
-                              overlayColor: MaterialStateProperty.all(Colors.yellow),
-                              backgroundColor: MaterialStateProperty.resolveWith((states) {
+                              overlayColor: WidgetStateProperty.all(Colors.yellow),
+                              backgroundColor: WidgetStateProperty.resolveWith((states) {
                                 return readColor();
                               }),
-                              shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(28))),
+                              shape: WidgetStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(28))),
                             ),
                             child: Text(
                               buttonTitle,

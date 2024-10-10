@@ -420,7 +420,6 @@ SnackBar jwSnackBarAction(bool result, String text, BuildContext context, Functi
           FlutterRemix.error_warning_line,
           color: Colors.red,
         );
-  final screenWidth = MediaQuery.of(context).size.width;
   return SnackBar(
       elevation: 0,
       margin: EdgeInsets.fromLTRB(100, 0, 100, 50),

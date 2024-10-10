@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:glutassistantn/widget/appwidget.dart';
 import 'package:home_widget/home_widget.dart';
 import 'package:package_info_plus/package_info_plus.dart' as PackageInfoPlus;
 import 'package:workmanager/workmanager.dart';
@@ -12,13 +11,14 @@ import '/pages/home.dart';
 import '/pages/person.dart';
 import '/pages/schedule.dart';
 import '/widget/bars.dart';
+import '../common/homeWidget.dart';
 import '../data.dart';
 import '../type/packageInfo.dart';
 
-class CustomRouter extends PageRouteBuilder {
+class AppRouter extends PageRouteBuilder {
   final Widget widget;
 
-  CustomRouter(this.widget, [int milliseconds = 300])
+  AppRouter(this.widget, [int milliseconds = 300])
       : super(
             transitionDuration: Duration(milliseconds: milliseconds),
             pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
@@ -29,21 +29,14 @@ class CustomRouter extends PageRouteBuilder {
             });
 }
 
-class MainBody extends StatefulWidget {
-  MainBody({Key? key}) : super(key: key);
+class DataPreloadPage extends StatefulWidget {
+  DataPreloadPage({Key? key}) : super(key: key);
 
   @override
-  MainBodyState createState() => MainBodyState();
+  _DataPreloadPageState createState() => _DataPreloadPageState();
 }
 
-class MainBodyState extends State<MainBody> with WidgetsBindingObserver {
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addObserver(this);
-    initialize();
-  }
-
+class _DataPreloadPageState extends State<DataPreloadPage> {
   Future<void> readPackageInfo() async {
     PackageInfoPlus.PackageInfo packageInfo = await PackageInfoPlus.PackageInfo.fromPlatform();
     PackageInfo.appName = packageInfo.appName;
@@ -63,51 +56,18 @@ class MainBodyState extends State<MainBody> with WidgetsBindingObserver {
     getWeek();
     getUpdateForEveryday();
     AppData.isInitialized = true;
-    Workmanager().cancelAll();
 
     Navigator.pushAndRemoveUntil(
       context,
-      CustomRouter(CustomView(), 2000),
+      AppRouter(Layout(), 2000),
       (route) => false,
     );
-
-    bool isAdded = await Appwidget.isWidgetAdded();
-
-    if (isAdded) {
-      print("桌面微件已经添加");
-      Appwidget.updateWidgetContent();
-      Workmanager().registerPeriodicTask("task-identifier", "simpleTask");
-      HomeWidget.registerInteractivityCallback(backgroundCallback);
-    } else {
-      print("桌面微件尚未添加");
-    }
   }
 
   @override
-  void dispose() {
-    // 注销监听器
-    WidgetsBinding.instance.removeObserver(this);
-    super.dispose();
-  }
-
-// 监听生命周期变化
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    super.didChangeAppLifecycleState(state);
-
-    if (state == AppLifecycleState.resumed) {
-      // 应用切换回前台
-      print("应用切换回前台");
-    } else if (state == AppLifecycleState.paused) {
-      // 应用切换到后台
-      print("应用切换到后台");
-    } else if (state == AppLifecycleState.inactive) {
-      // 应用处于非活跃状态
-      print("应用处于非活跃状态");
-    } else if (state == AppLifecycleState.detached) {
-      // 应用已完全关闭
-      print("应用已完全关闭");
-    }
+  void initState() {
+    super.initState();
+    initialize();
   }
 
   @override
@@ -116,10 +76,66 @@ class MainBodyState extends State<MainBody> with WidgetsBindingObserver {
   }
 }
 
-class CustomView extends StatelessWidget {
+class Layout extends StatefulWidget {
   final bool refresh;
 
-  CustomView({Key? key, this.refresh = false}) : super(key: key);
+  Layout({Key? key, this.refresh = false}) : super(key: key);
+
+  @override
+  State<Layout> createState() => _LayoutState();
+}
+
+class _LayoutState extends State<Layout> {
+  late final AppLifecycleListener _listener;
+
+  @override
+  void initState() {
+    super.initState();
+    _listener = AppLifecycleListener(
+      onStateChange: didChangeAppLifecycleState,
+    );
+  }
+
+  Future<void> updateAppwidget() async {
+    Workmanager().cancelAll();
+    bool isAdded = await HomeWidgetUtils.isWidgetAdded();
+
+    if (isAdded) {
+      print("桌面微件已经添加");
+      HomeWidgetUtils.updateWidgetContent();
+      Workmanager().registerPeriodicTask("task-identifier", "simpleTask", initialDelay: Duration(minutes: 15));
+      HomeWidget.registerInteractivityCallback(backgroundCallback);
+    } else {
+      print("桌面微件尚未添加");
+    }
+  }
+
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    switch (state) {
+      case AppLifecycleState.resumed:
+        updateAppwidget();
+        break;
+      case AppLifecycleState.detached:
+        // TODO: Handle this case.
+        break;
+      case AppLifecycleState.inactive:
+        // TODO: Handle this case.
+        break;
+      case AppLifecycleState.hidden:
+        // TODO: Handle this case.
+        break;
+      case AppLifecycleState.paused:
+        // TODO: Handle this case.
+        break;
+    }
+  }
+
+  @override
+  void dispose() {
+    // 注销监听器
+    _listener.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -129,7 +145,7 @@ class CustomView extends StatelessWidget {
       body: PageView(
         physics: NeverScrollableScrollPhysics(),
         controller: AppConfig.pageControl,
-        children: [HomePage(refresh: refresh), SchedulePage(), MinePage()],
+        children: [HomePage(refresh: widget.refresh), SchedulePage(), MinePage()],
       ),
       bottomNavigationBar: BottomNavBar(),
     );
