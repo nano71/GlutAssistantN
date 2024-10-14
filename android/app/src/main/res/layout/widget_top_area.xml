@@ -1,0 +1,25 @@
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/widget_title"
+            android:textSize="14sp"
+            android:textColor="?android:attr/textColorPrimary" />
+
+    <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:autoSizeTextType="uniform"
+            android:id="@+id/widget_message"
+            android:maxLines="1"
+            android:autoSizeStepGranularity="1sp"
+            android:autoSizeMinTextSize="16sp"
+            android:autoSizePresetSizes="29.5sp"
+            android:autoSizeMaxTextSize="29.5sp"
+            android:textSize="29.5sp"
+            android:gravity="start|center"
+            android:layout_weight="1"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textStyle="bold" />
+</merge>

@@ -13,6 +13,7 @@ import '/common/parser.dart';
 import '../config.dart';
 import '../data.dart';
 import '../pages/update.dart';
+import 'day.dart';
 
 Future getRecentExam() async {
   print("getRecentExam");
@@ -369,12 +370,6 @@ Future<void> getName() async {
   print('getName End');
 }
 
-int getLocalWeek(DateTime nowDate, DateTime pastDate) {
-  int day = nowDate.difference(pastDate).inDays;
-  int week = day.abs() ~/ 7;
-  return week;
-}
-
 List getSemester() {
   int y = DateTime.now().year;
   return [
@@ -688,7 +683,7 @@ Future<dynamic> getUpdate({bool isRetry = false}) async {
 
 Future getUpdateForEveryday() async {
   print("getUpdateForEveryday");
-  if ("${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}" != AppData.persistentData["newTime"]) {
+  if (true || "${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}" != AppData.persistentData["newTime"]) {
     Response response;
     try {
       response = await get(AppConfig.getUpdateUrl);

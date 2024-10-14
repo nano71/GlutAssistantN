@@ -10,7 +10,7 @@
             android:layout_height="match_parent"
             android:id="@+id/widget_container"
             android:layout_gravity="top|start"
-            android:padding="16dp"
+            android:padding="12dp"
             android:orientation="vertical"
             android:visibility="gone">
 
