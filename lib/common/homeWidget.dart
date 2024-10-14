@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/services.dart';
+import 'package:glutassistantn/common/get.dart';
 import 'package:glutassistantn/common/io.dart';
 import 'package:home_widget/home_widget.dart';
 
@@ -20,6 +21,7 @@ void backgroundCallback(Uri? data) async {
 
 Future<void> backstageRefresh() async {
   print('backstageRefresh');
+
   await readConfig();
   await readSchedule();
   await initTodaySchedule();

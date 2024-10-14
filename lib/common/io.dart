@@ -1,12 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
 
-import '/common/get.dart';
-import '/common/init.dart';
-import '/config.dart';
 import 'package:path_provider/path_provider.dart';
 
+import '/common/init.dart';
+import '/config.dart';
 import '../data.dart';
+import 'day.dart';
 
 Future<File> scheduleLocalSupportFile() async {
   final dir = await getApplicationSupportDirectory();
@@ -160,11 +160,15 @@ Future<void> readConfig() async {
       jsonDecode(result).forEach((key, value) {
         AppData.persistentData[key] = value.toString();
       });
-      List _timeList = AppData.persistentData["time"].toString().split("-");
+      print("缓存数据时间: " + AppData.persistentData["time"].toString());
+
+      List<int> _timeList = AppData.persistentData["time"].toString().split("-").map((String element) {
+        return int.parse(element);
+      }).toList();
       int y = DateTime.now().year;
       int m = DateTime.now().month;
       int d = DateTime.now().day;
-      int _currentWeek = weekInt() + getLocalWeek(DateTime(y, m, d), DateTime(int.parse(_timeList[0]), int.parse(_timeList[1]), int.parse(_timeList[2])));
+      int _currentWeek = weekInt() + getWeekDifference(DateTime(y, m, d), DateTime(_timeList[0], _timeList[1], _timeList[2]));
       AppData.persistentData["week"] = _currentWeek.toString();
     }
     //存在
