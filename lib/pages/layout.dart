@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:glutassistantn/common/log.dart';
 import 'package:home_widget/home_widget.dart';
 import 'package:package_info_plus/package_info_plus.dart' as PackageInfoPlus;
 import 'package:workmanager/workmanager.dart';
@@ -56,7 +57,7 @@ class _DataPreloadPageState extends State<DataPreloadPage> {
     getWeek(isPreloading: true);
     getUpdateForEveryday();
     AppData.isInitialized = true;
-
+    updateAppwidget();
     Navigator.pushAndRemoveUntil(
       context,
       AppRouter(Layout(), 2000),
@@ -87,6 +88,7 @@ class Layout extends StatefulWidget {
 
 class _LayoutState extends State<Layout> {
   late final AppLifecycleListener _listener;
+  bool isResumed = true;
 
   @override
   void initState() {
@@ -96,35 +98,29 @@ class _LayoutState extends State<Layout> {
     );
   }
 
-  Future<void> updateAppwidget() async {
-    Workmanager().cancelAll();
-    bool isAdded = await HomeWidgetUtils.isWidgetAdded();
-
-    if (isAdded) {
-      print("桌面微件已经添加");
-      HomeWidgetUtils.updateWidgetContent();
-      Workmanager().registerPeriodicTask("task-identifier", "simpleTask", initialDelay: Duration(minutes: 15));
-      HomeWidget.registerInteractivityCallback(backgroundCallback);
-    } else {
-      print("桌面微件尚未添加");
-    }
-  }
-
   void didChangeAppLifecycleState(AppLifecycleState state) {
     switch (state) {
       case AppLifecycleState.resumed:
+        print("AppLifecycleState.resumed");
+        isResumed = true;
         updateAppwidget();
         break;
       case AppLifecycleState.detached:
+        print("AppLifecycleState.detached");
         // TODO: Handle this case.
         break;
       case AppLifecycleState.inactive:
-        // TODO: Handle this case.
-        break;
-      case AppLifecycleState.hidden:
+        if (!isResumed || sharing) return;
+        isResumed = false;
+        print("AppLifecycleState.inactive");
+        writeLog();
         // TODO: Handle this case.
         break;
       case AppLifecycleState.paused:
+        // TODO: Handle this case.
+        print("AppLifecycleState.paused");
+        break;
+      case AppLifecycleState.hidden:
         // TODO: Handle this case.
         break;
     }
@@ -149,5 +145,19 @@ class _LayoutState extends State<Layout> {
       ),
       bottomNavigationBar: BottomNavBar(),
     );
+  }
+}
+
+Future<void> updateAppwidget() async {
+  Workmanager().cancelAll();
+  bool isAdded = await HomeWidgetUtils.isWidgetAdded();
+
+  if (isAdded) {
+    print("桌面微件已经添加");
+    HomeWidgetUtils.updateWidgetContent();
+    Workmanager().registerPeriodicTask("task-identifier", "simpleTask", initialDelay: Duration(minutes: 15));
+    HomeWidget.registerInteractivityCallback(backgroundCallback);
+  } else {
+    print("桌面微件尚未添加");
   }
 }

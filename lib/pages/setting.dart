@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_remix/flutter_remix.dart';
+import 'package:glutassistantn/common/log.dart';
 
 import '/common/init.dart';
 import '/common/io.dart';
@@ -385,6 +386,18 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                       },
                       child: mineItem(FlutterRemix.timer_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "课节时间", readColor()),
                     ),
+                    InkWell(
+                      onTap: () async {
+                        ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "准备文件中...", 4));
+                        final result = await shareLogFile();
+                        ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                        if (!result) {
+                          ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, "操作取消"));
+                        }
+                      },
+                      child: mineItem(FlutterRemix.bug_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "导出日志", readColor()),
+                    ),
                     // InkWell(
                     //   onTap: () {
                     //     Navigator.of(context).push(MaterialPageRoute(builder: (context) => ScheduleManagePage()));
@@ -525,8 +538,6 @@ List<DropdownMenuItem<String>> thresholdItemList() {
   Map<String, String> cache = const {"5分钟": "5", "10分钟": "10", "20分钟": "20", "40分钟": "40", "不限": "-1"};
 
   cache.forEach((key, value) {
-    print(key);
-    print(value);
     list.add(DropdownMenuItem(
         child: Text(
           key,
