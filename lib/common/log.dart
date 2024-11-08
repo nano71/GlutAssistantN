@@ -63,8 +63,10 @@ Future<bool> shareLogFile() async {
   print('shareLogFile');
 
   await writeLog();
-  final file = XFile(await gzipJsonFile());
+  final logFilePath = await gzipJsonFile();
+  final file = XFile(logFilePath);
   final result = await Share.shareXFiles([file], subject: '导出日志', text: '一份 JSON 格式的日志文件');
+  File(logFilePath).delete();
   print('shareLogFile end');
   sharing = false;
   return result.status == ShareResultStatus.success;
@@ -84,11 +86,12 @@ Future<String> gzipJsonFile() async {
   final encoder = GZipCodec(level: 9, memLevel: 9);
   // 使用 archive 包压缩数据为 GZIP
   List<int> compressedData = encoder.encode(byteData);
-
+  final currentTime = DateTime.now().toIso8601String();
+  final path = '${directory!.path}/${currentTime}.log.json.gz';
   // 创建压缩后的文件（以 .gz 为后缀）
-  final compressedFile = File('${directory!.path}/log.json.gz');
+  final compressedFile = File(path);
 
   // 写入压缩后的数据到文件
   await compressedFile.writeAsBytes(compressedData);
-  return '${directory!.path}/log.json.gz';
+  return path;
 }
