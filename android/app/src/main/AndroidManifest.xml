@@ -15,7 +15,8 @@
                 android:theme="@style/Theme.Material3.DynamicColors.DayNight"
                 android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
                 android:hardwareAccelerated="true"
-                android:windowSoftInputMode="adjustResize">
+                android:windowSoftInputMode="adjustResize"
+                android:enableOnBackInvokedCallback="true">
 
             <meta-data
                     android:name="io.flutter.embedding.android.NormalTheme"
