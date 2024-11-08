@@ -390,11 +390,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                       onTap: () async {
                         ScaffoldMessenger.of(context).removeCurrentSnackBar();
                         ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "准备文件中...", 4));
-                        final result = await shareLogFile();
-                        ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                        if (!result) {
-                          ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, "操作取消"));
-                        }
+                        shareLogFile();
                       },
                       child: mineItem(FlutterRemix.bug_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "导出日志", readColor()),
                     ),
