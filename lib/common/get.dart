@@ -256,7 +256,7 @@ Future<dynamic> getSchedule() async {
         }
     }
   }
-  print(AppData.persistentData);
+  // print(AppData.persistentData);
   String id = document.querySelector(".button[value='个人课表']")!.attributes["onclick"]!.substring(61).split("&year")[0];
   Map scheduleChanges = await getScheduleChanges(id, _schedule);
   await writeSchedule(jsonEncode(scheduleChanges));

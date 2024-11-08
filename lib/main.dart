@@ -27,6 +27,7 @@ void main() async {
     });
   }, zoneSpecification: new ZoneSpecification(print: (Zone self, ZoneDelegate parent, Zone zone, String line) {
     parent.print(zone, line);
+    record(line);
   }));
 }
 

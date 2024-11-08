@@ -229,7 +229,7 @@ void checkNewVersion([bool skipShowSnackBar = true, BuildContext? context]) {
   if ((AppData.persistentData["newVersion"] ?? "").isNotEmpty) {
     print('AppData.writeData["newVersion"]:');
     print(AppData.persistentData["newVersion"] ?? "空");
-    print(AppData.persistentData);
+    // print(AppData.persistentData);
     if (!skipShowSnackBar) ScaffoldMessenger.of(context!).removeCurrentSnackBar();
     late String message;
     int currentVersion = int.parse(PackageInfo.version.replaceAll(".", ""));

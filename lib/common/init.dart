@@ -29,6 +29,7 @@ initTodaySchedule() async {
   int day = now.day;
 
   print('当前日期: $year 年 $month 月 $day 日');
+  print(now.toIso8601String());
   final String _week = AppData.persistentData["week"].toString();
   Map _schedule = Map.from(AppData.schedule);
   List<List> toDay = [];
