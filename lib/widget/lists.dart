@@ -149,7 +149,7 @@ class TodayCourseListState extends State<TodayCourseList> {
       if (DateTime.now().second < 2) {
         thresholdCount++;
         if (AppData.isReleaseMode && AppData.persistentData["threshold"] != "-1") if (thresholdCount > (int.parse(AppData.persistentData["threshold"] ?? "") * 2)) exit(0);
-        print("$index : ${DateTime.now().second}");
+        // print("$index : ${DateTime.now().second}");
         setState(() {});
       } else {
         // print("timerRe End ${DateTime.now().second}");

@@ -12,6 +12,7 @@ bool isWritingLog = false;
 Directory? directory;
 
 void record(String line) {
+  stdout.writeln("record");
   final currentTime = DateTime.now().toIso8601String();
   final logMessage = {"datetime": currentTime, "message": line};
   if (isWritingLog) {

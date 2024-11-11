@@ -202,7 +202,7 @@ Future<dynamic> getSchedule() async {
         for (int lesson = int.parse(lessonList[0]); lesson <= int.parse(lessonList[1]); lesson++) {
           if (weekList.length > 1 && specialWeek) {
             weekList.forEach((teachWeek) {
-              print(teachWeek);
+              // print(teachWeek);
               _schedule[teachWeek.toString()]?[week(i, j)]?[lesson.toString()] = [
                 //课程名
                 course(i),
@@ -229,7 +229,7 @@ Future<dynamic> getSchedule() async {
             }
           } else if (weekList.length >= 3) {
             for (String teachWeek in weekList) {
-              print(teachWeek);
+              // print(teachWeek);
               _schedule[teachWeek]?[week(i, j)]?[lesson.toString()] = [
                 //课程名
                 course(i),
