@@ -102,6 +102,7 @@ Future<File> configLocalSupportFile() async {
 }
 
 Future<File> startTimeLocalSupportFile() async {
+  print("startTimeLocalSupportFile");
   final dir = await getApplicationSupportDirectory();
   return File('${dir.path}/startTime.json');
 }
@@ -141,18 +142,28 @@ Future<void> writeConfig() async {
 Future<void> readConfig() async {
   print("readConfig");
   final file = await configLocalSupportFile();
+  print("readConfig 1");
+  print("readConfig 1.5 start");
   final startTimeFile = await startTimeLocalSupportFile();
+  print("readConfig 1.5 end");
   final endTimeFile = await endTimeLocalSupportFile();
+  print("readConfig 2");
+
   bool dirBool = await file.exists();
   bool endTimeDirBool = await endTimeFile.exists();
   bool startTimeDirBool = await startTimeFile.exists();
+  print("readConfig 3");
+
   if (!dirBool) await file.create(recursive: true);
   if (!endTimeDirBool) await endTimeFile.create(recursive: true);
   if (!startTimeDirBool) await startTimeFile.create(recursive: true);
+  print("readConfig 4");
+
   try {
     final result = await file.readAsString();
     final startTimeResult = await startTimeFile.readAsString();
     final endTimeResult = await endTimeFile.readAsString();
+    print("readConfig 5");
 
     //true = 不存在
     if (result.isNotEmpty) {

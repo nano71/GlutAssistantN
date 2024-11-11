@@ -1,7 +1,7 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/services.dart';
-import 'package:glutassistantn/common/get.dart';
 import 'package:glutassistantn/common/io.dart';
 import 'package:home_widget/home_widget.dart';
 
@@ -9,6 +9,7 @@ import '../common/init.dart';
 import '../config.dart';
 import '../data.dart';
 import '../widget/lists.dart';
+import 'log.dart';
 
 @pragma("vm:entry-point")
 void backgroundCallback(Uri? data) async {
@@ -20,14 +21,26 @@ void backgroundCallback(Uri? data) async {
 }
 
 Future<void> backstageRefresh() async {
-  print('backstageRefresh');
-
-  await readConfig();
-  await readSchedule();
-  await initTodaySchedule();
-  await initTomorrowSchedule();
-
-  HomeWidgetUtils.updateWidgetContent();
+  runZonedGuarded(
+    () async {
+      print('backstageRefresh');
+      await readConfig();
+      await readSchedule();
+      await initTodaySchedule();
+      await initTomorrowSchedule();
+      HomeWidgetUtils.updateWidgetContent();
+      writeLog();
+    },
+    (error, stackTrace) {
+      // 捕获到未处理的异常
+      print("Caught by runZonedGuarded: $error");
+      print("Stack trace: $stackTrace");
+    },
+    zoneSpecification: new ZoneSpecification(print: (Zone self, ZoneDelegate parent, Zone zone, String line) {
+      parent.print(zone, line);
+      record(line);
+    }),
+  );
 }
 
 List<List> _customParser(List<List> originalData, [bool isTodaySchedule = true]) {
