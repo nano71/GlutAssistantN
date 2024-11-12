@@ -15,7 +15,7 @@ publish_to: "https://pub.flutter-io.cn" # Remove this line if you wish to publis
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.6.241109+67
+version: 1.6.241112+69
 
 environment:
   sdk: ">=2.14.0 <4.0.0"
@@ -41,7 +41,7 @@ dependencies:
   home_widget: ^0.7.0
   workmanager: ^0.5.2
   package_info_plus: ^8.0.2
-  sentry_flutter: ^8.9.0
+  sentry_flutter: ^8.10.1
   share_plus: ^10.1.2
 dev_dependencies:
   flutter_test:
