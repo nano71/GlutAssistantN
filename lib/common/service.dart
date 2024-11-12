@@ -5,14 +5,13 @@ import 'homeWidget.dart';
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
     print("执行任务: $task");
-
     try {
       await backstageRefresh();
+      print("完成任务: $task");
+      return Future.value(true);
     } catch (error) {
-      print('callbackDispatcher: ' + error.toString());
-      throw Exception(error);
+      print("任务执行失败: $error");
+      return Future.value(false);
     }
-
-    return Future.value(true);
   });
 }

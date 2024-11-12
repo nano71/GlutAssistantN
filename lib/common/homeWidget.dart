@@ -21,7 +21,7 @@ void backgroundCallback(Uri? data) async {
 }
 
 Future<void> backstageRefresh() async {
-  runZonedGuarded(
+  await runZoned(
     () async {
       print('backstageRefresh');
       await readConfig();
@@ -29,12 +29,7 @@ Future<void> backstageRefresh() async {
       await initTodaySchedule();
       await initTomorrowSchedule();
       HomeWidgetUtils.updateWidgetContent();
-      writeLog();
-    },
-    (error, stackTrace) {
-      // 捕获到未处理的异常
-      print("Caught by runZonedGuarded: $error");
-      print("Stack trace: $stackTrace");
+      await writeLog();
     },
     zoneSpecification: new ZoneSpecification(print: (Zone self, ZoneDelegate parent, Zone zone, String line) {
       parent.print(zone, line);

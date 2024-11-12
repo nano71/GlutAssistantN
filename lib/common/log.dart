@@ -36,11 +36,15 @@ Future<void> writeLog() async {
   final file = File('${directory!.path}/log.json');
 
   if (await file.exists()) {
+    print("readAsString");
     final fileContent = await file.readAsString();
-    List<dynamic> jsonList = jsonDecode(fileContent);
+    List<dynamic> jsonList = [];
+    if (fileContent.length > 2) {
+      jsonList = jsonDecode(fileContent);
+    }
 
     jsonList.addAll(logList);
-
+    print("日志长度: ${jsonList.length}");
     if (jsonList.length > maxLogCount) {
       jsonList.removeRange(0, jsonList.length - maxLogCount);
     }
