@@ -1,5 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="run" type="FlutterRunConfigurationType" factoryName="Flutter">
+    <option name="additionalArgs" value="--dart-define SENTRY_DSN=https://4b08ea9d8ae09c61a837e55ad73a5c36@o4508261031739392.ingest.us.sentry.io/4508261121196032" />
     <option name="attachArgs" value="flavor=develop" />
     <option name="buildFlavor" value="develop" />
     <option name="filePath" value="$PROJECT_DIR$/lib/main.dart" />

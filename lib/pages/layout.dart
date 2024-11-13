@@ -150,13 +150,12 @@ class _LayoutState extends State<Layout> {
 
 Future<void> updateAppwidget() async {
   print('updateAppwidget');
-  await Workmanager().cancelAll();
+  await Workmanager().cancelByUniqueName("com.nano71.glutassistantn.updateHomeWidget");
   bool isAdded = await HomeWidgetUtils.isWidgetAdded();
 
   if (isAdded) {
     print("桌面微件已经添加");
-    HomeWidgetUtils.updateWidgetContent();
-    Workmanager().registerPeriodicTask("task-identifier", "simpleTask", initialDelay: Duration(minutes: 15));
+    Workmanager().registerPeriodicTask("com.nano71.glutassistantn.updateHomeWidget", "updateHomeWidget", initialDelay: Duration(seconds: 0));
     HomeWidget.registerInteractivityCallback(backgroundCallback);
   } else {
     print("桌面微件尚未添加");
