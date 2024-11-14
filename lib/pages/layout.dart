@@ -150,6 +150,7 @@ class _LayoutState extends State<Layout> {
 
 Future<void> updateAppwidget() async {
   print('updateAppwidget');
+  await Workmanager().cancelAll();
   await Workmanager().cancelByUniqueName("com.nano71.glutassistantn.updateHomeWidget");
   bool isAdded = await HomeWidgetUtils.isWidgetAdded();
 
