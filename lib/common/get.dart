@@ -6,6 +6,7 @@ import 'package:flutter_gbk2utf8/flutter_gbk2utf8.dart';
 import 'package:html/dom.dart';
 import 'package:html/parser.dart';
 import 'package:http/http.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 import '/common/cookie.dart';
 import '/common/io.dart';
@@ -139,9 +140,7 @@ Future<dynamic> getSchedule() async {
 
   String remark(int i, int j) => tableRows(i)[j].text.trim().replaceAll(" ", ";");
 
-  int listLength = document
-      .querySelectorAll(".infolist_common")
-      .length - 23;
+  int listLength = document.querySelectorAll(".infolist_common").length - 23;
   if (listLength > 1) {
     _schedule = emptySchedule();
   }
@@ -182,9 +181,7 @@ Future<dynamic> getSchedule() async {
         if (weekInterval.indexOf("-") != -1) {
           List<String> cache = weekInterval.split(",");
           for (int i = 0; i < cache.length; i++) {
-            if (cache[i]
-                .split("-")
-                .length == 1) {
+            if (cache[i].split("-").length == 1) {
               weekList.add(cache[i]);
               continue;
             }
@@ -347,8 +344,7 @@ Future<Map> getScheduleChanges(String id, Map schedule) async {
         List<String> _addTime = teachTimeParser(cellList[8]);
         //教室
         String _addRoom = teachLocation(innerHtmlTrim(cellList[9]));
-        String remark1 = "第" + _addWeek.replaceAll("第", "").replaceAll("周", "") + "周;" + innerHtmlTrim(cellList[7]) + ";" + innerHtmlTrim(cellList[8]) +
-            " - 调课/补课;$_addRoom";
+        String remark1 = "第" + _addWeek.replaceAll("第", "").replaceAll("周", "") + "周;" + innerHtmlTrim(cellList[7]) + ";" + innerHtmlTrim(cellList[8]) + " - 调课/补课;$_addRoom";
         print(remark1);
         if (_delWeek != "&nbsp;") {
           for (int i = int.parse(_delTime[0]); i <= int.parse(_delTime[1]); i++) {
@@ -375,9 +371,7 @@ Future<void> getName() async {
 }
 
 List getSemester() {
-  int y = DateTime
-      .now()
-      .year;
+  int y = DateTime.now().year;
   return [
     (y - 1980).toString(),
   ];
@@ -451,21 +445,24 @@ Future<dynamic> getExam() async {
     _list.add(_row[i].querySelectorAll("td")[3].text.replaceAll("空港校区", "").replaceAll("教", "").trim().substring(1).trim());
     _list.add(_row[i].querySelectorAll("td")[4].text);
 
-    if (timeList.length == 1) {
+    if (timeList.indexOf("未公布") != -1) {
       examListB++;
       examListC.add(false);
     } else {
-      DateTime startDate = DateTime.now();
-      DateTime endDate = DateTime(int.parse(timeList[0]), int.parse(timeList[1]), int.parse(timeList[2].substring(0, 2)));
-      int days = endDate
-          .difference(startDate)
-          .inDays;
-      if (days < 0) {
-        examListC.add(true);
-        examListA++;
-      } else {
-        examListB++;
-        examListC.add(false);
+      try {
+        DateTime startDate = DateTime.now();
+        DateTime endDate = DateTime(int.parse(timeList[0].substring(0, 4)), int.parse(timeList[1].substring(0, 2)), int.parse(timeList[2].substring(0, 2)));
+        int days = endDate.difference(startDate).inDays;
+        if (days < 0) {
+          examListC.add(true);
+          examListA++;
+        } else {
+          examListB++;
+          examListC.add(false);
+        }
+      } catch (error, stackTrace) {
+        Sentry.captureException(error, stackTrace: stackTrace, hint: Hint.withMap({"time": time}));
+        continue;
       }
     }
 
@@ -482,7 +479,7 @@ Future getCareer() async {
     Response response;
     try {
       response =
-      await request("get", Uri.http(AppConfig.jwUrl, "/academic/manager/studyschedule/studentScheduleShowByTerm.do", {"z": "z", "studentId": url[0], "classId": url[1]}));
+          await request("get", Uri.http(AppConfig.jwUrl, "/academic/manager/studyschedule/studentScheduleShowByTerm.do", {"z": "z", "studentId": url[0], "classId": url[1]}));
     } on TimeoutException catch (e) {
       return timeOutError(e);
     } on SocketException catch (e) {
@@ -560,8 +557,7 @@ Future getCareer() async {
 
   Document document = parse(html);
   String url = document.querySelectorAll("a")[3].parent!.innerHtml.trim();
-  String urlA = url.substring(url.indexOf('修读顺序：按照课组及学年学期的顺序，用二维表方式显示教学计划课组及课程"></a>') +
-      '修读顺序：按照课组及学年学期的顺序，用二维表方式显示教学计划课组及课程"></a>'.length);
+  String urlA = url.substring(url.indexOf('修读顺序：按照课组及学年学期的顺序，用二维表方式显示教学计划课组及课程"></a>') + '修读顺序：按照课组及学年学期的顺序，用二维表方式显示教学计划课组及课程"></a>'.length);
   String urlB = urlA
       .replaceAll('<a href="', "")
       .replaceAll('" target="_blank"><img src="/academic/styles/images/Sort_Ascending.png" title="学期模式：按照学年学期的顺序，显示教学计划课程"></a>', "")
@@ -697,13 +693,7 @@ Future<dynamic> getUpdate({bool isRetry = false}) async {
 
 Future getUpdateForEveryday() async {
   print("getUpdateForEveryday");
-  if (true || "${DateTime
-      .now()
-      .year}-${DateTime
-      .now()
-      .month}-${DateTime
-      .now()
-      .day}" != AppData.persistentData["newTime"]) {
+  if (true || "${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}" != AppData.persistentData["newTime"]) {
     Response response;
     try {
       response = await get(AppConfig.getUpdateUrl);
@@ -721,13 +711,7 @@ Future getUpdateForEveryday() async {
       list.add(jsonDecode(response.body)["body"]);
       AppData.persistentData["newVersion"] = list[1];
       AppData.persistentData["newBody"] = list[3];
-      AppData.persistentData["newTime"] = "${DateTime
-          .now()
-          .year}-${DateTime
-          .now()
-          .month}-${DateTime
-          .now()
-          .day}";
+      AppData.persistentData["newTime"] = "${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}";
       writeConfig();
       checkNewVersion();
       if (AppData.hasNewVersion && AppData.canCheckImportantUpdate) {
