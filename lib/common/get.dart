@@ -167,60 +167,86 @@ Future<dynamic> getSchedule() async {
         }
         return list;
       }
-
+      void step3ForSection(String section) {
+        List<String> range = section.split("-");
+        if (range.length == 2) {
+          for (int i = int.parse(range[0]); i <= int.parse(range[1]); i++) {
+            weekList.add(i.toString());
+          }
+        } else if (range.length == 1) {
+          weekList.add(range[0]);
+        }
+      }
       void step3() {
         List<String> cache = weekInterval.split(",");
-        for (int i = 0; i < cache.length; i++) {
-          if (cache[i].split("-").length == 1) {
-            weekList.add(cache[i]);
-            continue;
-          }
-          for (int j = int.parse(cache[i].split("-")[0]); j <= int.parse(cache[i].split("-")[1]); j++) {
-            weekList.add(j.toString());
-          }
+        for (String section in cache) {
+          step3ForSection(section);
         }
       }
 
-      void step4(bool isEven) {
+      void handleSingleOrDouble(String section, bool isEven) {
         String key = isEven ? "双" : "单";
-        if (weekInterval.indexOf(",") != -1) {
-          List<String> cache = weekInterval.split(",");
-          if (cache[0].indexOf(key) != -1) {
-            weekList = cache[0].replaceAll(key, "").split("-");
-            weekInterval = cache[1];
-          } else {
-            weekList = cache[1].replaceAll(key, "").split("-");
-            weekInterval = cache[0];
-          }
-          weekList = initList(isEven);
+        section = section.replaceAll(key, ""); // 去掉“单”或“双”关键字
+        List<String> range = section.split("-");
 
-          step3();
-          weekList.sort((a, b) => int.parse(a) - int.parse(b));
-        } else {
-          weekInterval = weekInterval.replaceAll(key, "");
-          weekList = weekInterval.split("-");
-          weekList = initList(isEven);
+        if (range.length == 2) {
+          for (int i = int.parse(range[0]); i <= int.parse(range[1]); i++) {
+            if (isEven ? i.isEven : i.isOdd) {
+              weekList.add(i.toString());
+            }
+          }
+        } else if (range.length == 1) {
+          if (int.parse(range[0]).isEven == isEven) {
+            weekList.add(range[0]);
+          }
         }
       }
+
+      void step4() {
+        List<String> cache = weekInterval.split(","); // 按逗号分隔区间
+        weekList = []; // 初始化周数列表
+
+        for (String section in cache) {
+          if (section.contains("单")) {
+            handleSingleOrDouble(section, false); // 处理“单”周
+          } else if (section.contains("双")) {
+            handleSingleOrDouble(section, true); // 处理“双”周
+          } else {
+            step3ForSection(section); // 处理普通区间
+          }
+        }
+      }
+      // weekInterval = "11-14,15-17单";
+      // weekInterval = "11";
+      // weekInterval = "11-14双,15-17单";
+      // weekInterval = "11,15-17双";
+      // switch (i) {
+      //   case 0:
+      //     weekInterval = "11-14,15-17单";
+      //     break;
+      //   case 1:
+      //     weekInterval = "11-14双,15-17单";
+      //     break;
+      //   case 2:
+      //     weekInterval = "11-14,16-17";
+      //     break;
+      //   case 3:
+      //     weekInterval = "11";
+      //     break;
+      // }
+
 
       //单周
-      if (weekInterval.indexOf("单") != -1) {
-        step4(false);
-        //双周
-      } else if (weekInterval.indexOf("双") != -1) {
-        step4(true);
-      } else if (weekInterval.indexOf(",") != -1) {
-        if (weekInterval.indexOf("-") != -1) {
-          step3();
-        } else {
-          weekInterval = weekInterval.replaceAll(",", "-");
-          weekList = weekInterval.split("-");
-        }
-        print(weekList);
+      if (weekInterval.contains("单") || weekInterval.contains("双")) {
+        step4(); // 混合“单/双”处理
+      } else if (weekInterval.contains(",")) {
+        step3(); // 普通区间处理
       } else {
         specialWeek = false;
         weekList = weekInterval.split("-");
       }
+
+
 
       if (lessonList.length > 1 && weekCN != "&nbsp;")
         for (int lesson = int.parse(lessonList[0]); lesson <= int.parse(lessonList[1]); lesson++) {
