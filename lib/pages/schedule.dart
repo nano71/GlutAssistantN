@@ -3,11 +3,11 @@ import 'dart:core';
 
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
+
 import '/common/io.dart';
 import '/data.dart';
 import '/widget/bars.dart';
 import '/widget/dialog.dart';
-
 import '../config.dart';
 
 class RowHeader extends StatefulWidget {
@@ -18,14 +18,32 @@ class RowHeader extends StatefulWidget {
 }
 
 class RowHeaderState extends State<RowHeader> {
-  String _week = AppData.persistentData["week"] ?? "";
+  String _week = AppData.persistentData["week"]!;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       //  decoration: ,
-      children: _loopRowHeader(AppData.persistentData["week"] == _week),
+      children: [
+        SizedBox(width: 20),
+        Expanded(
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: _loopRowHeader(AppData.persistentData["week"] == _week),
+              ),
+              (AppData.persistentData["showDayByWeekDay"] ?? "0") == "1"
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: _loopRowHeader2(DateTime.now(), int.parse(_week)),
+                    )
+                  : Container(),
+            ],
+          ),
+        )
+      ],
     );
   }
 
@@ -37,24 +55,61 @@ class RowHeaderState extends State<RowHeader> {
 List<Widget> _loopRowHeader(bool currentWeek) {
   List _weekDayList = ["一", "二", "三", "四", "五", "六", "日"];
   List<Widget> list = [];
-  for (int i = 0; i < 8; i++) {
-    if (i == 0) {
-      list.add(SizedBox(width: 20));
-    } else {
-      list.add(
-        Expanded(
-          child: Container(
-            height: 30,
-            child: Center(
-              child: Text(
-                "周${_weekDayList[i - 1]}",
-                style: TextStyle(color: currentWeek ? (i == DateTime.now().weekday ? readColor() : Colors.grey) : Colors.grey),
-              ),
+  for (int i = 0; i < 7; i++) {
+    list.add(
+      Expanded(
+        child: Container(
+          height: 30,
+          child: Center(
+            child: Text(
+              "周${_weekDayList[i]}",
+              style: TextStyle(color: currentWeek ? (i == DateTime.now().weekday ? readColor() : Colors.grey) : Colors.grey),
             ),
           ),
         ),
-      );
-    }
+      ),
+    );
+  }
+  return list;
+}
+
+List<int> fillWeekWithWeekOffset(DateTime today, int difference) {
+  // 获取今天是星期几，1是周一，7是周日
+  int currentDayOfWeek = today.weekday;
+
+  // 计算今天所在周的周一日期
+  DateTime startOfWeek = today.subtract(Duration(days: currentDayOfWeek - 1));
+
+  // 通过偏移量计算目标周的起始日期
+  DateTime targetWeekStart = startOfWeek.add(Duration(days: difference * 7));
+
+  // 生成目标周的日期天数，0:周一, 1:周二, ..., 6:周日
+  List<int> weekDays = List.generate(7, (index) {
+    return targetWeekStart.add(Duration(days: index)).day;
+  });
+
+  return weekDays;
+}
+
+List<Widget> _loopRowHeader2(DateTime current, int currentWeek) {
+  List<Widget> list = [];
+  int difference = currentWeek - int.parse(AppData.persistentData["week"]!);
+  List<int> weekDays = fillWeekWithWeekOffset(current, difference);
+  for (var value in weekDays) {
+    list.add(
+      Expanded(
+        child: Container(
+          // height: 30,
+          padding: EdgeInsets.fromLTRB(0, 0, 0, 5),
+          child: Center(
+            child: Text(
+              "$value",
+              style: TextStyle(color: Colors.grey),
+            ),
+          ),
+        ),
+      ),
+    );
   }
   return list;
 }
