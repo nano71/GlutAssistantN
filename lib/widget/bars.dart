@@ -94,11 +94,11 @@ SliverAppBar publicTopBarWithInfoIcon(String title, [dynamic inkWell = const Tex
             children: [
               Text(
                 title,
-                style: TextStyle(
-                  color: color2
-                ),
+                style: TextStyle(color: color2),
               ),
-              SizedBox(width: 8,),
+              SizedBox(
+                width: 8,
+              ),
               SizedBox(
                 width: 12,
                 height: 12,
@@ -127,7 +127,7 @@ class ScheduleTopBar extends StatefulWidget {
 }
 
 class ScheduleTopBarState extends State<ScheduleTopBar> {
-  String _week = AppData.persistentData["week"] ?? "";
+  String _week = AppData.persistentData["week"] ?? "1";
 
   void back() {
     ScaffoldMessenger.of(context).removeCurrentSnackBar();
@@ -138,6 +138,29 @@ class ScheduleTopBarState extends State<ScheduleTopBar> {
   String date() {
     DateTime d = DateTime.now();
     return "${d.year}-${d.month}-${d.day}";
+  }
+
+  List<String> months = [
+    'January', // 1月
+    'February', // 2月
+    'March', // 3月
+    'April', // 4月
+    'May', // 5月
+    'June', // 6月
+    'July', // 7月
+    'August', // 8月
+    'September', // 9月
+    'October', // 10月
+    'November', // 11月
+    'December' // 12月
+  ];
+
+  String month() {
+    if ((AppData.persistentData["showDayByWeekDay"] ?? "0") == "1") {
+      int difference = int.parse(_week) - int.parse(AppData.persistentData["week"]!);
+      return months[DateTime.now().add(Duration(days: difference * 7)).month - 1] + ", ";
+    }
+    return "";
   }
 
   @override
@@ -151,7 +174,7 @@ class ScheduleTopBarState extends State<ScheduleTopBar> {
         children: [
           InkWell(
             child: Text(
-              "Week $_week",
+              month() + "Week $_week",
               style: TextStyle(color: Colors.black),
             ),
             onTap: () {

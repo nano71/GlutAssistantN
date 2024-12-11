@@ -380,6 +380,63 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                         })
                       ],
                     ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Icon(
+                              FlutterRemix.calendar_2_line,
+                              color: readColor(),
+                            ),
+                            Container(
+                              padding: EdgeInsets.fromLTRB(16, 14, 0, 14),
+                              child: Text(
+                                "课表日期",
+                                style: TextStyle(fontSize: 16, color: Colors.black),
+                              ),
+                            )
+                          ],
+                        ),
+                        Builder(builder: (BuildContext context) {
+                          return DropdownButton(
+                            icon: Icon(
+                              FlutterRemix.arrow_down_s_line,
+                              size: 18,
+                            ),
+                            enableFeedback: true,
+                            // style: TextStyle(color: readColor()),
+                            iconEnabledColor: readColor(),
+                            elevation: 0,
+                            hint: Text(
+                              (AppData.persistentData["showDayByWeekDay"] ?? "0") == "1" ? "显示" : "隐藏",
+                              style: TextStyle(color: readColor(), fontSize: 14),
+                            ),
+                            items: [
+                              DropdownMenuItem(
+                                  child: Text(
+                                    "显示",
+                                    style: TextStyle(fontSize: 14),
+                                  ),
+                                  value: "1"),
+                              DropdownMenuItem(
+                                  child: Text(
+                                    "隐藏",
+                                    style: TextStyle(fontSize: 14),
+                                  ),
+                                  value: "0")
+                            ],
+                            underline: Container(height: 0),
+                            onChanged: (value) {
+                              setState(() {
+                                AppData.persistentData["showDayByWeekDay"] = value.toString();
+                              });
+                              writeConfig();
+                            },
+                          );
+                        })
+                      ],
+                    ),
                     InkWell(
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(builder: (context) => TimeManagePage()));
