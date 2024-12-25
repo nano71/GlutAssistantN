@@ -63,7 +63,7 @@ List<Widget> _loopRowHeader(bool currentWeek) {
           child: Center(
             child: Text(
               "周${_weekDayList[i]}",
-              style: TextStyle(color: currentWeek ? (i == DateTime.now().weekday ? readColor() : Colors.grey) : Colors.grey),
+              style: TextStyle(color: currentWeek ? (i + 1 == DateTime.now().weekday ? readColor() : Colors.grey) : Colors.grey),
             ),
           ),
         ),

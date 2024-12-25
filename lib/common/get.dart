@@ -167,6 +167,7 @@ Future<dynamic> getSchedule() async {
         }
         return list;
       }
+
       void step3ForSection(String section) {
         List<String> range = section.split("-");
         if (range.length == 2) {
@@ -177,6 +178,7 @@ Future<dynamic> getSchedule() async {
           weekList.add(range[0]);
         }
       }
+
       void step3() {
         List<String> cache = weekInterval.split(",");
         for (String section in cache) {
@@ -235,7 +237,6 @@ Future<dynamic> getSchedule() async {
       //     break;
       // }
 
-
       //单周
       if (weekInterval.contains("单") || weekInterval.contains("双")) {
         step4(); // 混合“单/双”处理
@@ -245,8 +246,6 @@ Future<dynamic> getSchedule() async {
         specialWeek = false;
         weekList = weekInterval.split("-");
       }
-
-
 
       if (lessonList.length > 1 && weekCN != "&nbsp;")
         for (int lesson = int.parse(lessonList[0]); lesson <= int.parse(lessonList[1]); lesson++) {
@@ -296,8 +295,9 @@ Future<dynamic> getSchedule() async {
     }
   }
   // print(AppData.persistentData);
-  String id = document.querySelector(".button[value='个人课表']")!.attributes["onclick"]!.substring(61).split("&year")[0];
-  Map scheduleChanges = await getScheduleChanges(id, _schedule);
+  String query = document.querySelector(".button[value='班级课表']")!.attributes["onclick"]!.split("?")[1];
+  final Map<String, dynamic> queryMap = Uri.splitQueryString(query);
+  Map scheduleChanges = await getScheduleChanges(queryMap['id'], _schedule);
   await writeSchedule(jsonEncode(scheduleChanges));
 
   print("getSchedule End");
@@ -307,22 +307,24 @@ Future<dynamic> getSchedule() async {
 Future<Map> getScheduleChanges(String id, Map schedule) async {
   print('getScheduleChanges');
   print("获取课表变更(调课/停课/补课)");
+  print('id: ' + id);
   Uri uri = Uri.http(AppConfig.getScheduleNextUrl[0], AppConfig.getScheduleNextUrl[1], {
     "id": id,
     "yearid": ((int.parse(AppData.persistentData["year"]!)) - 1980).toString(),
     "termid": AppData.persistentData["semester"] == "秋" ? "3" : "1",
-    "timetableType": "STUDENT",
-    "sectionType": "BASE"
+    "timetableType": "CLASSES",
+    "sectionType": "COMBINE"
   });
   Response response;
   try {
     response = await request("get", uri);
   } catch (e) {
+    print(e);
     return schedule;
   }
 
   Document document = parse(gbk.decode(response.bodyBytes));
-  if (document.querySelector("table.error") == null) {
+  if (document.querySelector("table.error") != null) {
     return schedule;
   }
   List<Element> tableList = document.querySelectorAll(".infolist_hr");
@@ -342,32 +344,28 @@ Future<Map> getScheduleChanges(String id, Map schedule) async {
 
       if (rowInfo["standard"]!) {
         final Map<String, dynamic> latest = {
-          "teachWeek": innerHtmlTrim(cellList[13]),
-          "lessonList": teachTimeParser(cellList[15]),
-          "week": weekCN2Number(innerHtmlTrim(cellList[14])),
+          "teachWeek": innerHtmlTrim(cellList[13]), // 教学周
+          "lessonList": teachTimeParser(cellList[15]), // 课节
+          "week": weekCN2Number(innerHtmlTrim(cellList[14])), // 周几
         };
         final Map<String, dynamic> before = {
-          "teachWeek": innerHtmlTrim(cellList[8]),
-          "lessonList": teachTimeParser(cellList[10]),
-          "week": weekCN2Number(innerHtmlTrim(cellList[9])),
+          "teachWeek": innerHtmlTrim(cellList[8]), // 教学周
+          "lessonList": teachTimeParser(cellList[10]), // 课节
+          "week": weekCN2Number(innerHtmlTrim(cellList[9])), // 周几
         };
-
         String courseVenue = teachLocation(innerHtmlTrim(cellList[16]));
         teacher = innerHtmlTrim(cellList[4]);
         course = innerHtmlTrim(cellList[2]);
-        String remark1 =
-            "第" + latest["teachWeek"].replaceAll(RegExp(r'[第周]'), "") + "周;" + innerHtmlTrim(cellList[14]) + ";" + innerHtmlTrim(cellList[15]) + " - 调课/补课;$courseVenue";
-        print(remark1);
 
         if (before["teachWeek"] != "&nbsp;") {
           for (int lesson = int.parse(before["lessonList"][0]); lesson <= int.parse(before["lessonList"][1]); lesson++) {
-            // print("删除$before, $lesson");
+            print("删除$before, $lesson");
             schedule[before["teachWeek"]][before["week"]][lesson.toString()] = ["null", "null", "null", "null"];
           }
         }
         if (latest["teachWeek"] != "&nbsp;") {
           for (int lesson = int.parse(latest["lessonList"][0]); lesson <= int.parse(latest["lessonList"][1]); lesson++) {
-            // print("添加$latest, $lesson");
+            print("添加$latest, $lesson");
             schedule[latest["teachWeek"]][latest["week"]][lesson.toString()] = [course, teacher, courseVenue, remark(latest["teachWeek"], courseVenue, 14, 15)];
           }
         }
@@ -383,8 +381,7 @@ Future<Map> getScheduleChanges(String id, Map schedule) async {
         List<String> _addTime = teachTimeParser(cellList[8]);
         //教室
         String _addRoom = teachLocation(innerHtmlTrim(cellList[9]));
-        String remark1 = "第" + _addWeek.replaceAll("第", "").replaceAll("周", "") + "周;" + innerHtmlTrim(cellList[7]) + ";" + innerHtmlTrim(cellList[8]) + " - 调课/补课;$_addRoom";
-        print(remark1);
+
         if (_delWeek != "&nbsp;") {
           for (int i = int.parse(_delTime[0]); i <= int.parse(_delTime[1]); i++) {
             schedule[_delWeek][_delWeekDay][i.toString()] = ["null", "null", "null", "null"];
