@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_remix/flutter_remix.dart';
 import 'package:glutassistantn/common/log.dart';
+import 'package:remixicon/remixicon.dart';
 
 import '/common/init.dart';
 import '/common/io.dart';
@@ -53,7 +53,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
             publicTopBar(
               "设置",
               InkWell(
-                child: Icon(FlutterRemix.close_line, size: 24),
+                child: Icon(Remix.close_line, size: 24),
                 onTap: () {
                   Navigator.of(context).pop();
                 },
@@ -72,7 +72,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                         Row(
                           children: [
                             Icon(
-                              FlutterRemix.calendar_line,
+                              Remix.calendar_line,
                               color: readColor(),
                             ),
                             Container(
@@ -115,7 +115,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                         Row(
                           children: [
                             Icon(
-                              FlutterRemix.mickey_line,
+                              Remix.mickey_line,
                               color: readColor(),
                             ),
                             Container(
@@ -161,7 +161,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                         Row(
                           children: [
                             Icon(
-                              FlutterRemix.game_line,
+                              Remix.game_line,
                               color: readColor(),
                             ),
                             Container(
@@ -208,7 +208,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                         Row(
                           children: [
                             Icon(
-                              FlutterRemix.palette_line,
+                              Remix.palette_line,
                               color: readColor(),
                             ),
                             Container(
@@ -224,7 +224,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                           return DropdownButton(
                             value: AppData.persistentData["color"] ?? null,
                             icon: Icon(
-                              FlutterRemix.arrow_down_s_line,
+                              Remix.arrow_down_s_line,
                               size: 18,
                             ),
                             enableFeedback: true,
@@ -285,7 +285,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                         Row(
                           children: [
                             Icon(
-                              FlutterRemix.apps_2_line,
+                              Remix.apps_2_line,
                               color: readColor(),
                             ),
                             Container(
@@ -300,7 +300,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                         Builder(builder: (BuildContext context) {
                           return DropdownButton(
                             icon: Icon(
-                              FlutterRemix.arrow_down_s_line,
+                              Remix.arrow_down_s_line,
                               size: 18,
                             ),
                             enableFeedback: true,
@@ -329,7 +329,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                         Row(
                           children: [
                             Icon(
-                              FlutterRemix.timer_2_line,
+                              Remix.timer_2_line,
                               color: readColor(),
                             ),
                             Container(
@@ -344,7 +344,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                         Builder(builder: (BuildContext context) {
                           return DropdownButton(
                             icon: Icon(
-                              FlutterRemix.arrow_down_s_line,
+                              Remix.arrow_down_s_line,
                               size: 18,
                             ),
                             enableFeedback: true,
@@ -386,7 +386,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                         Row(
                           children: [
                             Icon(
-                              FlutterRemix.calendar_2_line,
+                              Remix.calendar_2_line,
                               color: readColor(),
                             ),
                             Container(
@@ -401,7 +401,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                         Builder(builder: (BuildContext context) {
                           return DropdownButton(
                             icon: Icon(
-                              FlutterRemix.arrow_down_s_line,
+                              Remix.arrow_down_s_line,
                               size: 18,
                             ),
                             enableFeedback: true,
@@ -437,11 +437,68 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                         })
                       ],
                     ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Icon(
+                              Remix.exchange_2_line,
+                              color: readColor(),
+                            ),
+                            Container(
+                              padding: EdgeInsets.fromLTRB(16, 14, 0, 14),
+                              child: Text(
+                                "调课补课",
+                                style: TextStyle(fontSize: 16, color: Colors.black),
+                              ),
+                            )
+                          ],
+                        ),
+                        Builder(builder: (BuildContext context) {
+                          return DropdownButton(
+                            icon: Icon(
+                              Remix.arrow_down_s_line,
+                              size: 18,
+                            ),
+                            enableFeedback: true,
+                            // style: TextStyle(color: readColor()),
+                            iconEnabledColor: readColor(),
+                            elevation: 0,
+                            hint: Text(
+                              (AppData.persistentData["showScheduleChange"] ?? "0") == "1" ? "显示" : "隐藏",
+                              style: TextStyle(color: readColor(), fontSize: 14),
+                            ),
+                            items: [
+                              DropdownMenuItem(
+                                  child: Text(
+                                    "显示",
+                                    style: TextStyle(fontSize: 14),
+                                  ),
+                                  value: "1"),
+                              DropdownMenuItem(
+                                  child: Text(
+                                    "隐藏",
+                                    style: TextStyle(fontSize: 14),
+                                  ),
+                                  value: "0")
+                            ],
+                            underline: Container(height: 0),
+                            onChanged: (value) {
+                              setState(() {
+                                AppData.persistentData["showScheduleChange"] = value.toString();
+                              });
+                              writeConfig();
+                            },
+                          );
+                        })
+                      ],
+                    ),
                     InkWell(
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(builder: (context) => TimeManagePage()));
                       },
-                      child: mineItem(FlutterRemix.timer_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "课节时间", readColor()),
+                      child: mineItem(Remix.timer_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "课节时间", readColor()),
                     ),
                     InkWell(
                       onTap: () async {
@@ -449,13 +506,13 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                         ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "准备文件中...", 4));
                         shareLogFile();
                       },
-                      child: mineItem(FlutterRemix.bug_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "导出日志", readColor()),
+                      child: mineItem(Remix.bug_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "导出日志", readColor()),
                     ),
                     // InkWell(
                     //   onTap: () {
                     //     Navigator.of(context).push(MaterialPageRoute(builder: (context) => ScheduleManagePage()));
                     //   },
-                    //   child: mineItem(FlutterRemix.edit_box_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "课程管理", readColor()),
+                    //   child: mineItem(Remix.edit_box_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "课程管理", readColor()),
                     // ),
                     CustomExpansionTile.ExpansionTile(
                       onExpansionChanged: (e) {
@@ -468,7 +525,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                       tilePadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                       title: Row(
                         children: [
-                          Icon(_isExpanded ? FlutterRemix.alarm_warning_line : FlutterRemix.delete_bin_2_line, color: _isExpanded ? Colors.redAccent : readColor()),
+                          Icon(_isExpanded ? Remix.alarm_warning_line : Remix.delete_bin_2_line, color: _isExpanded ? Colors.redAccent : readColor()),
                           Container(
                             padding: EdgeInsets.fromLTRB(16, 14, 0, 14),
                             child: Text(

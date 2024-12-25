@@ -305,6 +305,9 @@ Future<dynamic> getSchedule() async {
 }
 
 Future<Map> getScheduleChanges(String id, Map schedule) async {
+  if ((AppData.persistentData["showScheduleChange"] ?? "0") == "0") {
+    return schedule;
+  }
   print('getScheduleChanges');
   print("获取课表变更(调课/停课/补课)");
   print('id: ' + id);

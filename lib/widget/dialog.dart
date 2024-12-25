@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_remix/flutter_remix.dart';
 import 'package:http/http.dart';
+import 'package:remixicon/remixicon.dart';
 
 import '/common/cookie.dart';
 import '/common/login.dart';
@@ -42,7 +42,7 @@ importantUpdateDialog(BuildContext context) {
                 ],
               ),
               InkWell(
-                child: Icon(FlutterRemix.close_line, size: 32),
+                child: Icon(Remix.close_line, size: 32),
                 onTap: () {
                   Navigator.of(context).pop();
                 },
@@ -128,7 +128,7 @@ infoDialog(BuildContext context, String text) {
                 ],
               ),
               InkWell(
-                child: Icon(FlutterRemix.close_line, size: 32),
+                child: Icon(Remix.close_line, size: 32),
                 onTap: () {
                   Navigator.of(context).pop();
                 },
@@ -267,7 +267,7 @@ codeCheckDialog(BuildContext context, Function callback) async {
                         controller: textFieldController,
                         decoration: InputDecoration(
                           icon: Icon(
-                            FlutterRemix.magic_line,
+                            Remix.magic_line,
                             color: readColor(),
                           ),
                           border: InputBorder.none,
@@ -424,7 +424,7 @@ scheduleDialog(BuildContext context, String week, String weekDay, String index) 
               ],
             ),
             InkWell(
-              child: Icon(FlutterRemix.close_line, size: 32),
+              child: Icon(Remix.close_line, size: 32),
               onTap: () {
                 Navigator.of(context).pop();
               },
@@ -467,7 +467,7 @@ careerDialog(context, index, type, year) {
               ],
             ),
             InkWell(
-              child: Icon(FlutterRemix.close_line, size: 32),
+              child: Icon(Remix.close_line, size: 32),
               onTap: () {
                 Navigator.of(context).pop();
               },

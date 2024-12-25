@@ -2,8 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_remix/flutter_remix.dart';
 import 'package:http/http.dart';
+import 'package:remixicon/remixicon.dart';
 
 import '/common/cookie.dart';
 import '/common/get.dart';
@@ -177,7 +177,7 @@ class LoginPageState extends State<LoginPage> {
             publicTopBar(
                 "桂工助手N",
                 InkWell(
-                  child: Icon(FlutterRemix.close_line, size: 24),
+                  child: Icon(Remix.close_line, size: 24),
                   onTap: () {
                     Navigator.of(context).pop();
                   },
@@ -221,7 +221,7 @@ class LoginPageState extends State<LoginPage> {
                         controller: studentIdController,
                         decoration: InputDecoration(
                           icon: Icon(
-                            FlutterRemix.user_3_line,
+                            Remix.user_3_line,
                             color: studentIdFocusNode.hasFocus ? readColor() : null,
                           ),
                           border: InputBorder.none,
@@ -249,7 +249,7 @@ class LoginPageState extends State<LoginPage> {
                         controller: passwordController,
                         decoration: InputDecoration(
                           icon: Icon(
-                            FlutterRemix.key_line,
+                            Remix.key_line,
                             color: passwordFocusNode.hasFocus ? readColor() : null,
                           ),
                           border: InputBorder.none,
@@ -274,7 +274,7 @@ class LoginPageState extends State<LoginPage> {
                               controller: checkCodeController,
                               decoration: InputDecoration(
                                 icon: Icon(
-                                  FlutterRemix.magic_line,
+                                  Remix.magic_line,
                                   color: checkCodeFocusNode.hasFocus ? readColor() : null,
                                 ),
                                 border: InputBorder.none,

@@ -3,8 +3,8 @@ import 'dart:async';
 
 import 'package:badges/badges.dart' as badges;
 import 'package:flutter/material.dart';
-import 'package:flutter_remix/flutter_remix.dart';
 import 'package:flutter_swiper_view/flutter_swiper_view.dart';
+import 'package:remixicon/remixicon.dart';
 
 import '/config.dart';
 import '/pages/setting.dart';
@@ -35,7 +35,7 @@ SliverAppBar homeTopBar(BuildContext context) {
               ),
             ),
             InkWell(
-              child: Icon(FlutterRemix.more_fill, size: 24),
+              child: Icon(Remix.more_fill, size: 24),
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(builder: (context) => SettingPage(title: "设置")));
               },
@@ -105,7 +105,7 @@ SliverAppBar publicTopBarWithInfoIcon(String title, [dynamic inkWell = const Tex
                 child: IconButton(
                   padding: EdgeInsets.zero,
                   iconSize: 12,
-                  icon: const Icon(FlutterRemix.information_line, color: Colors.white),
+                  icon: const Icon(Remix.information_line, color: Colors.white),
                   onPressed: onPressed,
                 ),
               )
@@ -257,20 +257,20 @@ class BottomNavBarState extends State<BottomNavBar> {
       destinations: [
         NavigationDestination(
           icon: Icon(
-            FlutterRemix.home_3_line,
+            Remix.home_3_line,
           ),
           selectedIcon: Icon(
-            FlutterRemix.home_3_fill,
+            Remix.home_3_fill,
             color: readColor(),
           ),
           label: "一览",
         ),
         NavigationDestination(
           icon: Icon(
-            FlutterRemix.calendar_todo_line,
+            Remix.calendar_todo_line,
           ),
           selectedIcon: Icon(
-            FlutterRemix.calendar_todo_fill,
+            Remix.calendar_todo_fill,
             color: readColor(),
           ),
           label: "课表",
@@ -284,7 +284,7 @@ class BottomNavBarState extends State<BottomNavBar> {
               style: TextStyle(color: Colors.white),
             ),
             child: Icon(
-              FlutterRemix.emotion_happy_fill,
+              Remix.emotion_happy_fill,
               color: readColor(),
             ),
           ),
@@ -296,7 +296,7 @@ class BottomNavBarState extends State<BottomNavBar> {
               style: TextStyle(color: Colors.white),
             ),
             child: Icon(
-              FlutterRemix.emotion_happy_line,
+              Remix.emotion_happy_line,
             ),
           ),
           label: "我的",
@@ -387,21 +387,21 @@ SnackBar jwSnackBar(int type, String text, [int hideSnackBarSeconds = 2, double 
   Widget setIcon() {
     if (type == 0)
       return Icon(
-        FlutterRemix.error_warning_line,
+        Remix.error_warning_line,
         color: Colors.red,
       );
     if (type == 1)
       return Icon(
-        FlutterRemix.checkbox_circle_line,
+        Remix.checkbox_circle_line,
         color: Colors.green,
       );
     if (type == 2)
       return Icon(
-        FlutterRemix.link,
+        Remix.link,
         color: Colors.blue,
       );
     return Icon(
-      FlutterRemix.star_smile_line,
+      Remix.star_smile_line,
       color: randomColors2(),
     );
   }
@@ -436,11 +436,11 @@ SnackBar jwSnackBar(int type, String text, [int hideSnackBarSeconds = 2, double 
 SnackBar jwSnackBarAction(bool result, String text, BuildContext context, Function callback, {int hideSnackBarSeconds = 2, bool isDialogCallback = true}) {
   Widget resultIcon = result
       ? Icon(
-          FlutterRemix.checkbox_circle_line,
+          Remix.checkbox_circle_line,
           color: Colors.green,
         )
       : Icon(
-          FlutterRemix.error_warning_line,
+          Remix.error_warning_line,
           color: Colors.red,
         );
   return SnackBar(

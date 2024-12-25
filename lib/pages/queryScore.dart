@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_remix/flutter_remix.dart';
 import 'package:glutassistantn/widget/dialog.dart';
+import 'package:remixicon/remixicon.dart';
 
 import '/common/get.dart';
 import '/pages/setting.dart';
@@ -187,7 +187,7 @@ class _QueryBodyState extends State<QueryBody> {
               "成绩查询",
               InkWell(
                 child: Icon(
-                  FlutterRemix.close_line,
+                  Remix.close_line,
                   size: 24,
                   color: Colors.white,
                 ),
@@ -214,7 +214,7 @@ class _QueryBodyState extends State<QueryBody> {
                         children: [
                           DropdownButton(
                             enableFeedback: true,
-                            icon: Icon(FlutterRemix.arrow_down_s_line),
+                            icon: Icon(Remix.arrow_down_s_line),
                             iconSize: 16,
                             iconEnabledColor: Colors.white,
                             elevation: 0,
@@ -240,7 +240,7 @@ class _QueryBodyState extends State<QueryBody> {
                           ),
                           DropdownButton(
                             enableFeedback: true,
-                            icon: Icon(FlutterRemix.arrow_down_s_line),
+                            icon: Icon(Remix.arrow_down_s_line),
                             iconSize: 16,
                             iconEnabledColor: Colors.white,
                             elevation: 0,

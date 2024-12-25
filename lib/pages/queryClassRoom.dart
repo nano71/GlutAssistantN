@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_remix/flutter_remix.dart';
+import 'package:remixicon/remixicon.dart';
 import '/common/get.dart';
 import '/data.dart';
 import '/widget/bars.dart';
@@ -40,7 +40,7 @@ class QueryRoomPageState extends State<QueryRoomPage> {
             publicTopBar(
               "教室查询",
               InkWell(
-                child: Icon(FlutterRemix.close_line, size: 24),
+                child: Icon(Remix.close_line, size: 24),
                 onTap: () {
                   Navigator.of(context).pop();
                 },
@@ -206,7 +206,7 @@ class QueryConditionCardState extends State<QueryConditionCard> {
                   height: 40,
                   child: DropdownButton(
                     enableFeedback: true,
-                    icon: Icon(FlutterRemix.arrow_right_s_line),
+                    icon: Icon(Remix.arrow_right_s_line),
                     iconSize: 16,
                     underline: Container(),
                     alignment: Alignment.centerRight,
@@ -247,7 +247,7 @@ class QueryConditionCardState extends State<QueryConditionCard> {
                     selectedItemBuilder: (context) {
                       return dropdownMenuItemList("weekOfSemester", true);
                     },
-                    icon: Icon(FlutterRemix.arrow_right_s_line),
+                    icon: Icon(Remix.arrow_right_s_line),
                     iconSize: 16,
                     underline: Container(),
                     alignment: Alignment.centerRight,
@@ -279,7 +279,7 @@ class QueryConditionCardState extends State<QueryConditionCard> {
                     selectedItemBuilder: (context) {
                       return dropdownMenuItemList("dayOfWeek", true);
                     },
-                    icon: Icon(FlutterRemix.arrow_right_s_line),
+                    icon: Icon(Remix.arrow_right_s_line),
                     iconSize: 16,
                     underline: Container(),
                     alignment: Alignment.centerRight,

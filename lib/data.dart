@@ -67,6 +67,7 @@ class AppData {
     "threshold": "5",
     "showLessonTimeInList": "0",
     "showDayByWeekDay": "0",
+    "showScheduleChange": "0",
     "newVersion": "",
     "newBody": "",
     "newTime": "",
