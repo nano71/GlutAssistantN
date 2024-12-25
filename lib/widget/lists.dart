@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_remix/flutter_remix.dart';
+import 'package:remixicon/remixicon.dart';
 
 import '/config.dart';
 import '../data.dart';
@@ -190,12 +190,12 @@ class TodayCourseListItemState extends State<TodayCourseListItem> {
   IconData _icon(int index) {
     String result = timeUntilNextClass(AppData.todaySchedule[index][4])[3];
     if (result == "before") {
-      return FlutterRemix.timer_2_line;
+      return Remix.timer_2_line;
     } else {
       if (_timeText(index).contains("下课")) {
-        return FlutterRemix.quill_pen_line;
+        return Remix.quill_pen_line;
       } else {
-        return FlutterRemix.check_line;
+        return Remix.check_line;
       }
     }
   }
@@ -384,7 +384,7 @@ class TomorrowCourseListState extends State<TomorrowCourseList> {
                   Container(
                     margin: EdgeInsets.fromLTRB(0, 0, 8, 0),
                     child: Icon(
-                      // FlutterRemix.time_line,
+                      // Remix.time_line,
                       Icons.hourglass_top_outlined,
                       color: (_tomorrowSchedule[index][4] == "1" && index == 0 ? Colors.orange[900] : readColor()),
                       size: AppConfig.listLeftIconSize,
@@ -564,9 +564,9 @@ class ExamListState extends State<ExamList> {
 
   _getIcon(int index) {
     if (examListC[index]) {
-      return FlutterRemix.check_line;
+      return Remix.check_line;
     }
-    return FlutterRemix.timer_line;
+    return Remix.timer_line;
   }
 
   @override
@@ -743,7 +743,7 @@ class ClassroomListItem extends StatelessWidget {
                       style: TextStyle(color: Colors.white, fontSize: 20),
                     ),
                     Icon(
-                      FlutterRemix.arrow_right_s_line,
+                      Remix.arrow_right_s_line,
                       color: Colors.white,
                       size: 18,
                     ),
@@ -797,7 +797,7 @@ class ClassroomListItem extends StatelessWidget {
                     ),
                     InkWell(
                       child: Icon(
-                        FlutterRemix.information_line,
+                        Remix.information_line,
                         color: Colors.white,
                         size: 18,
                       ),

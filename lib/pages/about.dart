@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_remix/flutter_remix.dart';
+import 'package:remixicon/remixicon.dart';
 
 import '/custom/expansiontile.dart' as CustomExpansionTile;
 import '/widget/bars.dart';
@@ -28,7 +28,7 @@ class _InfoPageState extends State<InfoPage> {
             publicTopBar(
               "说明",
               InkWell(
-                child: Icon(FlutterRemix.close_line, size: 24),
+                child: Icon(Remix.close_line, size: 24),
                 onTap: () {
                   Navigator.of(context).pop();
                 },

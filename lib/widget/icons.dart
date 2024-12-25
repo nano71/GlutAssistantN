@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_remix/flutter_remix.dart';
+import 'package:remixicon/remixicon.dart';
 
 import '../config.dart';
 import 'cards.dart';
@@ -32,20 +32,20 @@ class RefreshIconWidgetDynamicState extends State<RefreshIconWidgetDynamic> {
 }
 
 Icon chevronRight = Icon(
-  FlutterRemix.arrow_right_s_line,
+  Remix.arrow_right_s_line,
   color: Colors.black45,
   size: 18,
 );
 Icon chevronDown = Icon(
-  FlutterRemix.arrow_down_s_line,
+  Remix.arrow_down_s_line,
   color: Colors.black45,
 );
 Icon chevronUp = Icon(
-  FlutterRemix.arrow_up_s_line,
+  Remix.arrow_up_s_line,
   color: Colors.black45,
 );
 Icon goCurrent = Icon(
-  FlutterRemix.map_pin_line,
+  Remix.map_pin_line,
   color: Colors.black,
   size: 14,
 );

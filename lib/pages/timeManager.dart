@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_remix/flutter_remix.dart';
+import 'package:remixicon/remixicon.dart';
+
 import '/common/io.dart';
 import '/widget/bars.dart';
-
 import '../config.dart';
 import '../data.dart';
 import 'layout.dart';
@@ -99,7 +99,7 @@ class _TimeManagePageState extends State<TimeManagePage> {
             publicTopBar(
               "时间定义",
               InkWell(
-                child: Icon(FlutterRemix.close_line, size: 24),
+                child: Icon(Remix.close_line, size: 24),
                 onTap: () {
                   Navigator.of(context).pop();
                 },

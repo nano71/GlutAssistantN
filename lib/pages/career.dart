@@ -1,13 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_remix/flutter_remix.dart';
+import 'package:remixicon/remixicon.dart';
+
 import '/common/get.dart';
 import '/common/style.dart';
+import '/custom/expansiontile.dart' as CustomExpansionTile;
 import '/widget/bars.dart';
 import '/widget/dialog.dart';
-import '/custom/expansiontile.dart' as CustomExpansionTile;
-
 import '../config.dart';
 import '../data.dart';
 
@@ -182,7 +182,7 @@ class _CareerPageBodyState extends State<CareerPageBody> {
           publicTopBar(
             "我的大学生涯",
             InkWell(
-              child: Icon(FlutterRemix.close_line, size: 24),
+              child: Icon(Remix.close_line, size: 24),
               onTap: () {
                 if (type == 0) {
                   Navigator.of(context).pop();
@@ -207,7 +207,7 @@ class _CareerPageBodyState extends State<CareerPageBody> {
                 //       margin:  EdgeInsets.fromLTRB(16, 0, 0, 0),
                 //       padding:  EdgeInsets.fromLTRB(8, 8, 8, 8),
                 //       child: Icon(
-                //         FlutterRemix.checkbox_circle_line,
+                //         Remix.checkbox_circle_line,
                 //         size: 64,
                 //         color: Colors.white,
                 //       ),

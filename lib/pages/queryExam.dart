@@ -1,12 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_remix/flutter_remix.dart';
+import 'package:remixicon/remixicon.dart';
+
 import '/common/get.dart';
 import '/config.dart';
 import '/widget/bars.dart';
 import '/widget/lists.dart';
-
 import '../data.dart';
 import 'career.dart';
 
@@ -114,7 +114,7 @@ class _QueryExamBodyState extends State<QueryExamBody> {
               "我的考试",
               InkWell(
                 child: Icon(
-                  FlutterRemix.close_line,
+                  Remix.close_line,
                   size: 24,
                   color: Colors.white,
                 ),

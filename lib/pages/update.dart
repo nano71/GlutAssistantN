@@ -3,7 +3,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_remix/flutter_remix.dart';
+import 'package:remixicon/remixicon.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '/common/get.dart';
@@ -83,7 +83,7 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
           publicTopBar(
             "获取新版本",
             InkWell(
-              child: Icon(FlutterRemix.close_line, size: 24),
+              child: Icon(Remix.close_line, size: 24),
               onTap: () {
                 Navigator.of(context).pop();
               },
@@ -129,7 +129,7 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
                       ? Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            mineItem4(FlutterRemix.lightbulb_flash_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "有新版本可以更新!", Colors.red),
+                            mineItem4(Remix.lightbulb_flash_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "有新版本可以更新!", Colors.red),
                             Container(
                               width: double.infinity,
                               margin: EdgeInsets.fromLTRB(0, 0, 0, 7),
@@ -150,10 +150,10 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
                                 style: TextStyle(color: Colors.black),
                               ),
                             ),
-                            customInkWell("https://nano71.com/gan/GlutAssistantN.apk", FlutterRemix.download_2_line, "直接下载", readColor()),
+                            customInkWell("https://nano71.com/gan/GlutAssistantN.apk", Remix.download_2_line, "直接下载", readColor()),
                             // coolapk(),
-                            customInkWell("", FlutterRemix.earth_line, "学校官网（暂不可用）", Colors.blueAccent),
-                            customInkWell(AppData.persistentData["githubDownload"] ?? "", FlutterRemix.github_line, "Github", Colors.blueGrey)
+                            customInkWell("", Remix.earth_line, "学校官网（暂不可用）", Colors.blueAccent),
+                            customInkWell(AppData.persistentData["githubDownload"] ?? "", Remix.github_line, "Github", Colors.blueGrey)
                           ],
                         )
                       : Container(),
@@ -161,7 +161,7 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
                       ? Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            mineItem4(FlutterRemix.lightbulb_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "当前版本变更", Colors.blue),
+                            mineItem4(Remix.lightbulb_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "当前版本变更", Colors.blue),
                             Container(
                               width: double.infinity,
                               margin: EdgeInsets.fromLTRB(0, 0, 0, 7),
@@ -183,8 +183,8 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
                               ),
                             ),
                             // coolapk(),
-                            customInkWell("https://github.com/nano71/GlutAssistantN", FlutterRemix.github_line, "Github", Colors.blueGrey),
-                            customInkWell("https://nano71.com/gan", FlutterRemix.earth_line, "项目官网", Colors.blueAccent)
+                            customInkWell("https://github.com/nano71/GlutAssistantN", Remix.github_line, "Github", Colors.blueGrey),
+                            customInkWell("https://nano71.com/gan", Remix.earth_line, "项目官网", Colors.blueAccent)
                           ],
                         )
                       : Container(),
@@ -199,8 +199,8 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
                                 style: TextStyle(color: Colors.black),
                               ),
                             ),
-                            customInkWell("https://github.com/nano71/GlutAssistantN/releases/latest", FlutterRemix.github_line, "Github", Colors.blueGrey),
-                            customInkWell("https://nano71.com/gan", FlutterRemix.earth_line, "项目官网", Colors.blueAccent)
+                            customInkWell("https://github.com/nano71/GlutAssistantN/releases/latest", Remix.github_line, "Github", Colors.blueGrey),
+                            customInkWell("https://nano71.com/gan", Remix.earth_line, "项目官网", Colors.blueAccent)
                             // coolapk(),
                           ],
                         )
@@ -250,7 +250,7 @@ void checkNewVersion([bool skipShowSnackBar = true, BuildContext? context]) {
 }
 
 InkWell coolapk() {
-  return customInkWell("https://www.coolapk.com/apk/289253", FlutterRemix.store_2_line, "酷安", Colors.green);
+  return customInkWell("https://www.coolapk.com/apk/289253", Remix.store_2_line, "酷安", Colors.green);
 }
 
 InkWell customInkWell(String url, IconData icon, String title, Color color) {

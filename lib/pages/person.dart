@@ -1,13 +1,13 @@
+import 'package:badges/badges.dart' as badges;
 import 'package:flutter/material.dart';
-import 'package:flutter_remix/flutter_remix.dart';
+import 'package:remixicon/remixicon.dart';
+
 import '/pages/career.dart';
 import '/pages/queryClassRoom.dart';
 import '/pages/setting.dart';
 import '/pages/update.dart';
 import '/widget/bars.dart';
 import '/widget/icons.dart';
-import 'package:badges/badges.dart' as badges;
-
 import '../config.dart';
 import '../data.dart';
 import 'about.dart';
@@ -52,7 +52,7 @@ class MinePageState extends State<MinePage> {
                   );
                 },
                 child: mineItem(
-                  FlutterRemix.user_5_line,
+                  Remix.user_5_line,
                   EdgeInsets.fromLTRB(16, 14, 0, 14),
                   (AppData.persistentData["name"] != "" ? "更换账号" : "登录教务"),
                   readColor(),
@@ -67,7 +67,7 @@ class MinePageState extends State<MinePage> {
                     Navigator.of(context).push(MaterialPageRoute(builder: (context) => CareerPage()));
                   }
                 },
-                child: mineItem(FlutterRemix.timer_flash_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "课程生涯", readColor()),
+                child: mineItem(Remix.timer_flash_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "课程生涯", readColor()),
               ),
               InkWell(
                 onTap: () {
@@ -78,7 +78,7 @@ class MinePageState extends State<MinePage> {
                     Navigator.of(context).push(MaterialPageRoute(builder: (context) => QueryRoomPage()));
                   }
                 },
-                child: mineItem(FlutterRemix.building_4_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "教室查询", readColor()),
+                child: mineItem(Remix.building_4_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "教室查询", readColor()),
               ),
               topLine,
               InkWell(
@@ -88,20 +88,20 @@ class MinePageState extends State<MinePage> {
                   Navigator.of(context).push(MaterialPageRoute(builder: (context) => UpdatePage()));
                 },
                 child: AppData.hasNewVersion
-                    ? mineItem5(FlutterRemix.download_cloud_2_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "版本更新", readColor())
-                    : mineItem(FlutterRemix.download_cloud_2_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "版本更新", readColor()),
+                    ? mineItem5(Remix.download_cloud_2_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "版本更新", readColor())
+                    : mineItem(Remix.download_cloud_2_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "版本更新", readColor()),
               ),
               InkWell(
                 onTap: () {
                   Navigator.of(context).push(MaterialPageRoute(builder: (context) => InfoPage()));
                 },
-                child: mineItem(FlutterRemix.information_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "说明", readColor()),
+                child: mineItem(Remix.information_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "说明", readColor()),
               ),
               InkWell(
                 onTap: () {
                   Navigator.of(context).push(MaterialPageRoute(builder: (context) => SettingPage(title: "设置2")));
                 },
-                child: mineItem(FlutterRemix.settings_3_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "设置", readColor()),
+                child: mineItem(Remix.settings_3_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "设置", readColor()),
               ),
             ],
           ),
