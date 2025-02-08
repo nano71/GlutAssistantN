@@ -88,14 +88,10 @@ class _QueryBodyState extends State<QueryBody> {
   process(List list) {
     queryScore = list;
     // 绩点
-    double gradePointAverage = 0.0;
-    double average = 0.0;
-    double weight = 0.0;
+    double gradePointSummary = 0.0;
     double scoreSummary = 0.0;
-    //学分*成绩
-    double weightScoreSummary = 0.0;
-    double gradePointAverageSummary = 0.0;
     double creditSummary = 0.0;
+
     int excluded = 0;
 
     for (int i = 0; i < list.length; i++) {
@@ -113,15 +109,17 @@ class _QueryBodyState extends State<QueryBody> {
       double gradePoint = double.parse(list[i]![6]);
       String courseName = list[i]![2].toString();
       String teacher = list[i]![3];
+      String type = list[i]![7];
 
-      if ((courseName.contains("慕课") && teacher == "") || isExcludedCourse(courseName)) {
+      if ((courseName.contains("慕课") && teacher == "")) {
         excluded++;
       } else {
         if (list[i].length > 5) {
           print(list[i]);
-          weightScoreSummary += score * credit;
-          creditSummary += credit;
-          gradePointAverageSummary += gradePoint * credit;
+          if (isContainCourse(type)) {
+            gradePointSummary += gradePoint * credit;
+            creditSummary += credit;
+          }
         }
         if (list[i].length > 4) {
           scoreSummary += score;
@@ -130,13 +128,14 @@ class _QueryBodyState extends State<QueryBody> {
     }
 
     print(scoreSummary);
-    average = double.parse((scoreSummary / (list.length - excluded)).toStringAsFixed(1));
-    weight = double.parse((weightScoreSummary / creditSummary).toStringAsFixed(1));
-    gradePointAverage = double.parse((gradePointAverageSummary / creditSummary).toStringAsFixed(1));
-    if (average.isNaN) average = 0.0;
-    if (weight.isNaN) weight = 0.0;
-    if (gradePointAverage.isNaN) gradePointAverage = 0.0;
-    scores = [gradePointAverage, average, weight];
+
+    double scoreAverage = double.parse((scoreSummary / (list.length - excluded)).toStringAsFixed(2));
+    double gradePointAverage = double.parse((gradePointSummary / creditSummary).toStringAsFixed(2));
+
+    if (gradePointAverage.isNaN) gradePointSummary = 0.0;
+    if (scoreAverage.isNaN) scoreSummary = 0.0;
+
+    scores = [gradePointAverage, scoreAverage];
     ScaffoldMessenger.of(context).removeCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(1, "数据已更新!", 1));
     setState(() {});
@@ -289,7 +288,7 @@ class _QueryBodyState extends State<QueryBody> {
                     height: 8,
                   ),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Text(
                         "平均绩点: ${scores[0]}",
@@ -301,14 +300,6 @@ class _QueryBodyState extends State<QueryBody> {
                       ),
                       Text(
                         "算术平均分: ${scores[1]}",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      Text(
-                        "|",
-                        style: TextStyle(color: readColor()),
-                      ),
-                      Text(
-                        "加权平均分: ${scores[2]}",
                         style: TextStyle(color: Colors.white),
                       )
                     ],
