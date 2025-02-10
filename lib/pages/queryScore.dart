@@ -288,7 +288,7 @@ class _QueryBodyState extends State<QueryBody> {
                     height: 8,
                   ),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
                         "平均绩点: ${scores[0]}",
@@ -301,6 +301,14 @@ class _QueryBodyState extends State<QueryBody> {
                       Text(
                         "算术平均分: ${scores[1]}",
                         style: TextStyle(color: Colors.white),
+                      ),
+                      Text(
+                        "|",
+                        style: TextStyle(color: readColor()),
+                      ),
+                      Text(
+                        "加权平均分: ${scores[1]}",
+                        style: TextStyle(color: readColor()),
                       )
                     ],
                   )
