@@ -97,6 +97,10 @@ class _QueryBodyState extends State<QueryBody> {
     for (int i = 0; i < list.length; i++) {
       int score;
 
+      if (list[i]![9] == "免修") {
+        list[i]![4] = "及格";
+      }
+
       try {
         score = int.parse(levelToNumber(list[i]![4]));
       } catch (e) {
@@ -109,14 +113,15 @@ class _QueryBodyState extends State<QueryBody> {
       double gradePoint = double.parse(list[i]![6]);
       String courseName = list[i]![2].toString();
       String teacher = list[i]![3];
-      String type = list[i]![7];
+      String courseType = list[i]![7];
+      String courseNumber = list[i]![8];
 
       if ((courseName.contains("慕课") && teacher == "")) {
         excluded++;
       } else {
         if (list[i].length > 5) {
-          print(list[i]);
-          if (isContainCourse(type)) {
+          if (isContainCourse(courseNumber, courseType)) {
+            print(list[i]);
             gradePointSummary += gradePoint * credit;
             creditSummary += credit;
           }
@@ -195,7 +200,7 @@ class _QueryBodyState extends State<QueryBody> {
                 },
               ),
               () => infoDialog(context,
-                  "2019级及以后的平均学分绩点计算方式:\n\n绩点 = ∑(课程学分 × 绩点) / ∑课程学分\n\n1.参与计算的课程仅为选课属性必修课和集中性实践教学环节, 选修课和素质类课程不计算学分绩点\n\n2.采用五级记分制的课程和集中性实践性教学环节、毕业设计(论文)成绩折算成百分制后再进行计算, 不及格为40分"),
+                  "2019级及以后的平均学分绩点计算方式:\n\n绩点 = ∑(课程学分 × 绩点) / ∑课程学分\n\n1.参与计算的课程仅为选课属性必修课和集中性实践教学环节, 体育等素质类必修课不参与学分绩点计算\n\n2.采用五级记分制的课程和集中性实践性教学环节、毕业设计(论文)成绩折算成百分制后再进行计算, 不及格为40分"),
               readColor(),
               Colors.white,
               0),

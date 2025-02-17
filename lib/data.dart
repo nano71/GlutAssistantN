@@ -150,8 +150,76 @@ final List<List<int>> endTimeListRestore = const [
   [21, 40]
 ];
 
-
-final List<String> containCourseTypes = ["实践教学环节", "专业核心课", "专业基础课"];
+final List<String> containCourseTypes = ["实践教学环节", "专业核心课", "专业基础课", "公共必修课"];
+final List<String> excludedCourseNumbers = [
+  "B83A000111",
+  "B83A000112",
+  "B83A000113",
+  "B83A000114",
+  "B83A000115",
+  "B83A000211",
+  "B83A000212",
+  "B83A000213",
+  "B84A000111",
+  "B84A000112",
+  "B84A000113",
+  "B85A000111",
+  "B85A000112",
+  "B72A000411",
+  "B72A000412",
+  "B72A000413",
+  "B72A000414",
+  "B72A000415",
+  "B72A000416",
+  "B72A000417",
+  "B72A000418",
+  "B72A000611",
+  "B82A000111",
+  "B82A000112",
+  "B82A000113",
+  "B82A000114",
+  "B87A000210",
+  "B87A000211",
+  "B87A000212",
+  "B87A000213",
+  "B87A000214",
+  "B87A000215",
+  "B87A000216",
+  "B87A000217",
+  "B87A000218",
+  "B87A000219",
+  "G83A000111",
+  "G83A000112",
+  "G83A000113",
+  "G83A000114",
+  "G83A000115",
+  "G83A000211",
+  "G83A000212",
+  "G83A000213",
+  "G84A000111",
+  "G84A000112",
+  "B85A000111",
+  "B85A000112",
+  "G85A000111",
+  "G85A000112",
+  "G72A000311",
+  "G72A000312",
+  "G72A000313",
+  "G72A000314",
+  "G72A000315",
+  "G72A000316",
+  "G72A000321",
+  "G82A000111",
+  "G82A000112",
+  "G82A000113",
+  "G82A000114",
+  "G87A000211",
+  "G87A000212",
+  "G87A000213",
+  "G87A000214",
+  "G87A000215",
+  "G87A000216"
+];
 
 final List colorList = const [
   Colors.red,
@@ -230,6 +298,6 @@ bool isLoggedIn() {
   return AppData.persistentData["username"] != "";
 }
 
-bool isContainCourse(String courseType) {
-  return containCourseTypes.contains(courseType);
+bool isContainCourse(String courseNumber, String courseType) {
+  return containCourseTypes.contains(courseType) && !excludedCourseNumbers.contains(courseNumber);
 }

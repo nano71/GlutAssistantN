@@ -445,7 +445,7 @@ Future getScore() async {
   List scoreRows = [];
   for (int i = 1; i < dataList.length; i++) {
     List elementColumns = [];
-    for (int j in [0, 1, 3, 4, 5, 7, 6, 11]) {
+    for (int j in [0, 1, 3, 4, 5, 7, 6, 11, 2, 8]) {
       elementColumns.add(parseData(i, j));
     }
     scoreRows.add(elementColumns);
