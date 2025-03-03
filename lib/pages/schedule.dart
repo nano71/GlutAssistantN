@@ -18,7 +18,7 @@ class RowHeader extends StatefulWidget {
 }
 
 class RowHeaderState extends State<RowHeader> {
-  String _week = AppData.persistentData["week"]!;
+  String _week = weekInt(exclusionZero: true).toString();
 
   @override
   Widget build(BuildContext context) {
@@ -161,7 +161,7 @@ EventBus reState = EventBus();
 class SchedulePageState extends State<SchedulePage> with AutomaticKeepAliveClientMixin {
   late double _startPositionX;
   late double _startPositionY;
-  int _currentScheduleWeek = weekInt();
+  int _currentScheduleWeek = weekInt(exclusionZero: true);
   GlobalKey<SchedulePageColumnState> weekKey = GlobalKey();
   GlobalKey<ScheduleTopBarState> barKey = GlobalKey();
   GlobalKey<RowHeaderState> rowHeaderKey = GlobalKey();
@@ -187,10 +187,10 @@ class SchedulePageState extends State<SchedulePage> with AutomaticKeepAliveClien
     eventBusListener = eventBus.on<ReloadSchedulePageState>().listen((event) {
       setState(() {});
       if (AppData.persistentData["week"] != _currentScheduleWeek.toString()) {
-        _currentScheduleWeek = weekInt();
-        weekKey.currentState!.onPressed(weekInt());
-        barKey.currentState!.onPressed(weekInt());
-        rowHeaderKey.currentState!.onPressed(weekInt());
+        _currentScheduleWeek = weekInt(exclusionZero: true);
+        weekKey.currentState!.onPressed(weekInt(exclusionZero: true));
+        barKey.currentState!.onPressed(weekInt(exclusionZero: true));
+        rowHeaderKey.currentState!.onPressed(weekInt(exclusionZero: true));
       }
     });
   }
@@ -299,7 +299,7 @@ class SchedulePageColumn extends StatefulWidget {
 }
 
 class SchedulePageColumnState extends State<SchedulePageColumn> {
-  String _findWeek = AppData.persistentData["week"] ?? "";
+  String _findWeek = weekInt(exclusionZero: true).toString();
 
   @override
   Widget build(BuildContext context) {
