@@ -62,7 +62,7 @@ class HomeCardState extends State<HomeCard> with AutomaticKeepAliveClientMixin {
     } else if (_week >= 1) {
       return "开学不久,好好玩吧";
     } else {
-      return "学期已经结束咯";
+      return "新学期即将到来";
     }
   }
 

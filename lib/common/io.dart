@@ -158,7 +158,7 @@ Future<void> readConfig() async {
     final startTimeResult = await startTimeFile.readAsString();
     final endTimeResult = await endTimeFile.readAsString();
 
-    //true = 不存在
+    // 存在
     if (result.isNotEmpty) {
       print("缓存文件存在");
       jsonDecode(result).forEach((key, value) {
@@ -174,6 +174,8 @@ Future<void> readConfig() async {
       int d = DateTime.now().day;
       int _currentWeek = weekInt() + getWeekDifference(DateTime(y, m, d), DateTime(_timeList[0], _timeList[1], _timeList[2]));
       AppData.persistentData["week"] = _currentWeek.toString();
+      print("_currentWeek.toString()");
+      print(_currentWeek.toString());
     }
     //存在
     if (startTimeResult.isNotEmpty) {

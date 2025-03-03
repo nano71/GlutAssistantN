@@ -127,7 +127,7 @@ class ScheduleTopBar extends StatefulWidget {
 }
 
 class ScheduleTopBarState extends State<ScheduleTopBar> {
-  String _week = AppData.persistentData["week"] ?? "1";
+  String _week = weekInt(exclusionZero: true).toString();
 
   void back() {
     ScaffoldMessenger.of(context).removeCurrentSnackBar();

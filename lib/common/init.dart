@@ -6,7 +6,7 @@ import 'io.dart';
 initSchedule() async {
   print("initSchedule");
   Map _schedule = {};
-  for (var i = 1; i < 21; i++) {
+  for (var i = 0; i < 21; i++) {
     _schedule[i.toString()] = {};
     for (var j = 1; j < 8; j++) {
       _schedule[i.toString()]?[j.toString()] = {};
@@ -33,7 +33,7 @@ initTodaySchedule() async {
   final String _week = AppData.persistentData["week"].toString();
   Map _schedule = Map.from(AppData.schedule);
   List<List> toDay = [];
-  if (int.parse(_week) < 21) {
+  if (int.parse(_week) < 21 && _week != "0") {
     Map weekOfSemester = _schedule[_week];
     Map dayOfWeek = weekOfSemester[DateTime.now().weekday.toString()];
     dayOfWeek.forEach((key, value) {
@@ -72,7 +72,7 @@ initTomorrowSchedule() async {
   }
 
   if (DateTime.now().weekday <= 6) {
-    if (int.parse(_week) < 21)
+    if (int.parse(_week) < 21 && _week!="0")
       await _schedule[_week][_getWeekDay()].forEach((key, value) => {
             if (value[1] != "null") {value.add(key), tomorrow.add(value)}
           });

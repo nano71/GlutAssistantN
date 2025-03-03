@@ -79,8 +79,11 @@ Future<void> getWeek({isPreloading = false}) async {
     if (isPreloading) return;
     return readConfig();
   }
-
-  String week = weekHtml.substring(weekHtml.indexOf("第") + 1, weekHtml.indexOf("周")).trim();
+  String week;
+  if (weekHtml.contains("第"))
+    week = weekHtml.substring(weekHtml.indexOf("第") + 1, weekHtml.indexOf("周")).trim();
+  else
+    week = "0";
   String n = weekHtml.substring(0, 4).trim();
   String q = weekHtml.substring(4, 5);
   persistentData["semester"] = q;
@@ -123,6 +126,7 @@ Future<dynamic> getSchedule() async {
   }
   String html = getHtml(response);
   if (html == "") return AppConfig.dataError;
+  print('1742');
   Document document = parse(html);
   List<Element> list = document.querySelectorAll(".infolist_common");
   List<Element> infoList(int index) => list[index].querySelectorAll("a.infolist");

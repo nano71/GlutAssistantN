@@ -153,6 +153,8 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
         ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "获取课表...", 10));
         AppData.schedule = _schedule;
         await writeSchedule(jsonEncode(_schedule));
+        print('1824');
+        print(AppData.schedule);
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "处理数据...", 10));
         await initTodaySchedule();
