@@ -127,7 +127,7 @@ class ScheduleTopBar extends StatefulWidget {
 }
 
 class ScheduleTopBarState extends State<ScheduleTopBar> {
-  String _week = weekInt(exclusionZero: true).toString();
+  int _week = weekInt(exclusionZero: true);
 
   void back() {
     ScaffoldMessenger.of(context).removeCurrentSnackBar();
@@ -157,7 +157,7 @@ class ScheduleTopBarState extends State<ScheduleTopBar> {
 
   String month() {
     if ((AppData.persistentData["showDayByWeekDay"] ?? "0") == "1") {
-      int difference = int.parse(_week) - int.parse(AppData.persistentData["week"]!);
+      int difference = _week - AppData.week;
       return months[DateTime.now().add(Duration(days: difference * 7)).month - 1] + ", ";
     }
     return "";
@@ -201,7 +201,7 @@ class ScheduleTopBarState extends State<ScheduleTopBar> {
   }
 
   void onPressed(int week) {
-    setState(() => _week = week.toString());
+    setState(() => _week = week);
   }
 }
 

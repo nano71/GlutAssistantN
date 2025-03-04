@@ -50,6 +50,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   Timer _updateIntervalTimer = Timer(Duration(), () {});
   Timer _rotationAnimationTimer = Timer(Duration(), () {});
   bool _firstBuild = true;
+  late StreamSubscription<ReloadHomePageState> eventBusListener;
 
   @override
   void initState() {
@@ -78,6 +79,10 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
     _animationForRightCard = homeCardsColorTween.animate(_animationControllerForRightCard);
 
     _scrollController.addListener(_scrollControllerListener);
+
+    eventBusListener = eventBus.on<ReloadHomePageState>().listen((event) {
+      setState(() {});
+    });
   }
 
   void _scrollControllerListener() {
@@ -139,24 +144,19 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
         curve: Curves.linear,
       );
       afterSuccess() async {
+        print('HomePageState.afterSuccess');
         await readSchedule();
-        Map _schedule = Map.from(AppData.schedule);
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "清除缓存...", 10));
+        Map _schedule = Map.from(AppData.schedule);
         AppData.schedule = {};
         AppData.todaySchedule = [];
         AppData.tomorrowSchedule = [];
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "初始化...", 10));
+        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "处理数据...", 10));
         await initSchedule();
-        ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "获取课表...", 10));
         AppData.schedule = _schedule;
         await writeSchedule(jsonEncode(_schedule));
-        print('1824');
-        print(AppData.schedule);
-        ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "处理数据...", 10));
         await initTodaySchedule();
         await initTomorrowSchedule();
         eventBus.fire(ReloadSchedulePageState());
@@ -173,6 +173,8 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
       _scheduleParser(dynamic result) async {
         if (result is bool) {
           if (result) {
+            ScaffoldMessenger.of(context).removeCurrentSnackBar();
+            ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "获取课表...", 10));
             await afterSuccess();
           } else {
             if (!isLoggedIn()) {
@@ -247,6 +249,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
     _animationControllerForCenterCard.dispose();
     _animationControllerForLeftCard.dispose();
     _scrollController.dispose();
+    eventBusListener.cancel();
     super.dispose();
   }
 

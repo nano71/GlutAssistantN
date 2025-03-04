@@ -52,7 +52,7 @@ Future getRecentExam() async {
   }
 }
 
-Future<void> getWeek({isPreloading = false}) async {
+Future<void> getWeek() async {
   print("getWeek");
   Response response;
   try {
@@ -60,13 +60,11 @@ Future<void> getWeek({isPreloading = false}) async {
   } on TimeoutException catch (e) {
     print("超时");
     print(e);
-    if (isPreloading) return;
-    return readConfig();
+    return readWeek();
   } on SocketException catch (e) {
     print("连接失败");
     print(e);
-    if (isPreloading) return;
-    return readConfig();
+    return readWeek();
   }
   Map<String, String> persistentData = Map.from(AppData.persistentData);
   Document document = parse(getHtml(response));
@@ -76,8 +74,7 @@ Future<void> getWeek({isPreloading = false}) async {
     weekHtml = span.text.trim();
   } else {
     print("getWeek End else");
-    if (isPreloading) return;
-    return readConfig();
+    return readWeek();
   }
   String week;
   if (weekHtml.contains("第"))
@@ -89,6 +86,9 @@ Future<void> getWeek({isPreloading = false}) async {
   persistentData["semester"] = q;
   persistentData["year"] = n;
   persistentData["week"] = week;
+  persistentData["baseWeek"] = week;
+  persistentData["setBaseWeekTime"] = "${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}";
+
   print(persistentData["yearBk"]);
   if (persistentData["yearBk"] == "") {
     persistentData["yearBk"] = "0";
@@ -162,15 +162,15 @@ Future<dynamic> getSchedule() async {
       String courseVenue = teachLocation(innerHtmlTrim(tableCells(tableRows(i)[j])[3]));
       bool specialWeek = true;
 
-      List<String> initList(bool isEven) {
-        List<String> list = [];
-        for (int i = int.parse(weekList.first); i <= int.parse(weekList.last); i++) {
-          if (isEven ? i.isEven : i.isOdd) {
-            list.add(i.toString());
-          }
-        }
-        return list;
-      }
+      // List<String> initList(bool isEven) {
+      //   List<String> list = [];
+      //   for (int i = int.parse(weekList.first); i <= int.parse(weekList.last); i++) {
+      //     if (isEven ? i.isEven : i.isOdd) {
+      //       list.add(i.toString());
+      //     }
+      //   }
+      //   return list;
+      // }
 
       void step3ForSection(String section) {
         List<String> range = section.split("-");

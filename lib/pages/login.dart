@@ -7,7 +7,6 @@ import 'package:remixicon/remixicon.dart';
 
 import '/common/cookie.dart';
 import '/common/get.dart';
-import '/common/init.dart';
 import '/common/io.dart';
 import '/common/login.dart';
 import '/widget/bars.dart';
@@ -122,10 +121,7 @@ class LoginPageState extends State<LoginPage> {
         AppData.persistentData["username"] = _studentId;
         AppData.persistentData["password"] = _password;
         await getName();
-        getSchedule();
-        writeConfig();
-        initTodaySchedule();
-        initTomorrowSchedule();
+        await writeConfig();
         print("initSchedule End");
         eventBus.fire(SetPageIndex());
         Navigator.pushAndRemoveUntil(

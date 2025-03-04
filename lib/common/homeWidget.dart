@@ -2,10 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/services.dart';
-import 'package:glutassistantn/common/io.dart';
+import 'package:glutassistantn/pages/layout.dart';
 import 'package:home_widget/home_widget.dart';
 
-import '../common/init.dart';
 import '../config.dart';
 import '../data.dart';
 import '../widget/lists.dart';
@@ -24,10 +23,7 @@ Future<void> backstageRefresh() async {
   await runZoned(
     () async {
       print('backstageRefresh');
-      await readConfig();
-      await readSchedule();
-      await initTodaySchedule();
-      await initTomorrowSchedule();
+      await reinitialize();
       HomeWidgetUtils.updateWidgetContent();
       await writeLog();
     },

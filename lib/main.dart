@@ -9,6 +9,7 @@ import 'package:workmanager/workmanager.dart';
 import '/pages/Layout.dart';
 import 'common/service.dart';
 import 'config.dart';
+import 'data.dart';
 
 void main() async {
   void run() {
@@ -19,8 +20,7 @@ void main() async {
     runApp(App());
   }
 
-  const bool kReleaseMode = bool.fromEnvironment('dart.vm.product');
-  if (kReleaseMode)
+  if (AppData.isReleaseMode)
     runZoned(() {
       SentryFlutter.init((options) {
         options.tracesSampleRate = 1.0;
@@ -37,12 +37,30 @@ void main() async {
   }
 }
 
-class App extends StatelessWidget {
+class App extends StatefulWidget {
   App({Key? key}) : super(key: key);
+
+  static void refreshApp(BuildContext context) {
+    context.findAncestorStateOfType<_AppState>()?.restartApp();
+  }
+
+  @override
+  State<App> createState() => _AppState();
+}
+
+class _AppState extends State<App> {
+  Key appKey = UniqueKey();
+
+  void restartApp() {
+    setState(() {
+      appKey = UniqueKey(); // 重新生成 Key，触发整个应用重建
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+        key: appKey,
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           useMaterial3: false,

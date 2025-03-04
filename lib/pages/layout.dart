@@ -37,6 +37,19 @@ class DataPreloadPage extends StatefulWidget {
   _DataPreloadPageState createState() => _DataPreloadPageState();
 }
 
+Future<void> reinitialize({refreshState = false}) async {
+  await readConfig();
+  await readWeek();
+  await readSchedule();
+  await initTodaySchedule();
+  await initTomorrowSchedule();
+  if (!refreshState) return;
+  eventBus.fire(ReloadSchedulePageState());
+  eventBus.fire(ReloadHomePageState());
+  eventBus.fire(ReloadTodayListState());
+  eventBus.fire(ReloadTomorrowListState());
+}
+
 class _DataPreloadPageState extends State<DataPreloadPage> {
   Future<void> readPackageInfo() async {
     PackageInfoPlus.PackageInfo packageInfo = await PackageInfoPlus.PackageInfo.fromPlatform();
@@ -49,14 +62,9 @@ class _DataPreloadPageState extends State<DataPreloadPage> {
     // initService();
     getPermissions();
     readPackageInfo();
-    await readConfig();
+    await reinitialize();
     await readCookie();
-    await readSchedule();
-    await initTodaySchedule();
-    await initTomorrowSchedule();
-    getWeek(isPreloading: true);
     getUpdateForEveryday();
-    AppData.isInitialized = true;
     updateAppwidget();
     Navigator.pushAndRemoveUntil(
       context,
@@ -98,12 +106,13 @@ class _LayoutState extends State<Layout> {
     );
   }
 
-  void didChangeAppLifecycleState(AppLifecycleState state) {
+  Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
     switch (state) {
       case AppLifecycleState.resumed:
         print("AppLifecycleState.resumed");
         isResumed = true;
-        updateAppwidget();
+        await reinitialize(refreshState: true);
+        await updateAppwidget();
         break;
       case AppLifecycleState.detached:
         print("AppLifecycleState.detached");

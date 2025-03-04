@@ -98,7 +98,7 @@ class QueryConditionCardState extends State<QueryConditionCard> {
         String value = (i + 1).toString();
         query["dayOfWeek"]![value] = "周" + weekList4CN[i];
       }
-      weekSelect = AppData.persistentData["weekDay"] ?? "";
+      weekSelect = DateTime.now().weekday.toString();
       print('weekSelect');
       print(weekSelect);
       query["dayOfWeek"]!.remove("-1");
@@ -112,7 +112,7 @@ class QueryConditionCardState extends State<QueryConditionCard> {
         String value = i.toString();
         query["weekOfSemester"]![value] = "第" + value + "周";
       }
-      whichWeekSelect = AppData.persistentData["week"] ?? "";
+      whichWeekSelect = AppData.week.toString();
       query["weekOfSemester"]!.remove("-1");
     });
   }
