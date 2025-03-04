@@ -3,7 +3,7 @@ import 'dart:convert';
 import '../data.dart';
 import 'io.dart';
 
-initSchedule() async {
+initSchedule({withWriteFile = false}) async {
   print("initSchedule");
   Map _schedule = {};
   for (var i = 0; i < 21; i++) {
@@ -17,7 +17,7 @@ initSchedule() async {
   }
   AppData.schedule = _schedule;
   print("initSchedule End");
-  await writeSchedule(jsonEncode(_schedule));
+  if (withWriteFile) await writeSchedule(jsonEncode(_schedule));
 }
 
 initTodaySchedule() async {
@@ -30,11 +30,12 @@ initTodaySchedule() async {
 
   print('当前日期: $year 年 $month 月 $day 日');
   print(now.toIso8601String());
-  final String _week = AppData.persistentData["week"].toString();
+  final int _week = AppData.week;
   Map _schedule = Map.from(AppData.schedule);
+  print(_week);
   List<List> toDay = [];
-  if (int.parse(_week) < 21 && _week != "0") {
-    Map weekOfSemester = _schedule[_week];
+  if (_week < 21 && _week != 0) {
+    Map weekOfSemester = _schedule[_week.toString()];
     Map dayOfWeek = weekOfSemester[DateTime.now().weekday.toString()];
     dayOfWeek.forEach((key, value) {
       if (value is List) if (value[1] != "null") {
@@ -60,7 +61,7 @@ initTodaySchedule() async {
 
 initTomorrowSchedule() async {
   print("initTomorrowSchedule");
-  final String _week = AppData.persistentData["week"].toString();
+  final int _week = AppData.week;
   Map _schedule = Map.from(AppData.schedule);
   List<List> tomorrow = [];
   String _getWeekDay() {
@@ -72,13 +73,13 @@ initTomorrowSchedule() async {
   }
 
   if (DateTime.now().weekday <= 6) {
-    if (int.parse(_week) < 21 && _week!="0")
-      await _schedule[_week][_getWeekDay()].forEach((key, value) => {
+    if (_week < 21 && _week != 0)
+      await _schedule[_week.toString()][_getWeekDay()].forEach((key, value) => {
             if (value[1] != "null") {value.add(key), tomorrow.add(value)}
           });
   } else {
-    if (int.parse(_week) < 20)
-      await _schedule[(int.parse(_week) + 1).toString()][_getWeekDay()].forEach((key, value) {
+    if (_week < 20)
+      await _schedule[(_week + 1).toString()][_getWeekDay()].forEach((key, value) {
         if (value[1] != "null") {
           value.add(key);
           tomorrow.add(value);

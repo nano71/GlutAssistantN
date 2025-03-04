@@ -76,7 +76,7 @@ Future<void> clearAll() async {
   if (dirBool2) {
     await file2.delete();
   }
-  await initSchedule();
+  await initSchedule(withWriteFile: true);
 }
 
 Future<void> readSchedule() async {
@@ -114,8 +114,6 @@ Future<File> endTimeLocalSupportFile() async {
 
 Future<void> writeConfig() async {
   print("writeConfig");
-  AppData.persistentData["time"] = "${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}";
-  AppData.persistentData["weekDay"] = DateTime.now().weekday.toString();
   String str = jsonEncode(AppData.persistentData);
   String startTimeStr = jsonEncode(startTimeList);
   String endTimeStr = jsonEncode(endTimeList);
@@ -137,6 +135,23 @@ Future<void> writeConfig() async {
   } catch (e) {
     print(e);
   }
+}
+
+Future<void> readWeek() async {
+  print('readWeek');
+  String? setBaseWeekTime = AppData.persistentData["setBaseWeekTime"];
+  String? baseWeek = AppData.persistentData["baseWeek"];
+  if (setBaseWeekTime == null || baseWeek == null) return;
+  List<int> _timeList = setBaseWeekTime.split("-").map(int.parse).toList();
+  int y = DateTime.now().year;
+  int m = DateTime.now().month;
+  int d = DateTime.now().day;
+  int _currentWeek = weekInt(customWeek: int.parse(baseWeek)) + weekDifference(DateTime(y, m, d), DateTime(_timeList[0], _timeList[1], _timeList[2]));
+  if (_currentWeek < 0) {
+    AppData.week = 1;
+    return;
+  }
+  AppData.week = _currentWeek;
 }
 
 Future<void> readConfig() async {
@@ -164,18 +179,6 @@ Future<void> readConfig() async {
       jsonDecode(result).forEach((key, value) {
         AppData.persistentData[key] = value.toString();
       });
-      print("缓存数据时间: " + AppData.persistentData["time"].toString());
-
-      List<int> _timeList = AppData.persistentData["time"].toString().split("-").map((String element) {
-        return int.parse(element);
-      }).toList();
-      int y = DateTime.now().year;
-      int m = DateTime.now().month;
-      int d = DateTime.now().day;
-      int _currentWeek = weekInt() + getWeekDifference(DateTime(y, m, d), DateTime(_timeList[0], _timeList[1], _timeList[2]));
-      AppData.persistentData["week"] = _currentWeek.toString();
-      print("_currentWeek.toString()");
-      print(_currentWeek.toString());
     }
     //存在
     if (startTimeResult.isNotEmpty) {
@@ -190,8 +193,6 @@ Future<void> readConfig() async {
         return List<int>.from(list);
       }).toList();
     }
-    print("readConfig save");
-    await writeConfig();
     print("readConfig End");
   } catch (e) {
     print(e);

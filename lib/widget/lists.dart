@@ -122,23 +122,17 @@ class TodayCourseListState extends State<TodayCourseList> {
   @override
   void initState() {
     super.initState();
-
     eventBusListener = eventBus.on<ReloadTodayListState>().listen((event) {
-      reloadState();
-    });
-    // print(115);
-    // print(_todaySchedule[0]);
-  }
-
-  void reloadState() {
-    setState(() {
-      _todaySchedule = AppData.todaySchedule;
+      if (!mounted) return; // 避免组件销毁后调用
+      setState(() {
+        _todaySchedule = AppData.todaySchedule;
+      });
     });
   }
 
   @override
   void dispose() {
-    eventBusListener.cancel();
+    eventBusListener.cancel(); // 取消 eventBus 监听
     super.dispose();
   }
 
@@ -148,11 +142,13 @@ class TodayCourseListState extends State<TodayCourseList> {
       isTimerInit = false;
       if (DateTime.now().second < 2) {
         thresholdCount++;
-        if (AppData.isReleaseMode && AppData.persistentData["threshold"] != "-1") if (thresholdCount > (int.parse(AppData.persistentData["threshold"] ?? "") * 2)) exit(0);
-        // print("$index : ${DateTime.now().second}");
-        setState(() {});
+        if (AppData.isReleaseMode && AppData.persistentData["threshold"] != "-1") {
+          if (thresholdCount > (int.parse(AppData.persistentData["threshold"] ?? "5") * 2)) {
+            exit(0);
+          }
+        }
+        setState(() {}); // 这里可能导致问题，先检查 mounted
       } else {
-        // print("timerRe End ${DateTime.now().second}");
         refreshTimer(0);
       }
     }
@@ -161,7 +157,9 @@ class TodayCourseListState extends State<TodayCourseList> {
       isTimerInit = true;
       Future.delayed(
         Duration(seconds: 1),
-        () => next(),
+        () {
+          if (mounted) next();
+        },
       );
     }
   }

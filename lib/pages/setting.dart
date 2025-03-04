@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:glutassistantn/common/log.dart';
 import 'package:remixicon/remixicon.dart';
 
-import '/common/init.dart';
 import '/common/io.dart';
 import '/common/style.dart';
 import '/custom/expansiontile.dart' as CustomExpansionTile;
@@ -175,7 +174,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                             )
                           ],
                         ),
-                        Text(AppData.persistentData["week"] ?? "",
+                        Text(AppData.week.toString(),
                             style: TextStyle(
                               color: readColor(),
                             )),
@@ -579,7 +578,6 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
     AppData.persistentData["username"] = "";
     AppData.persistentData["name"] = "";
     AppData.persistentData["password"] = "";
-    await initSchedule();
     AppData.todaySchedule = [];
     AppData.tomorrowSchedule = [];
     eventBus.fire(ReloadTodayListState());

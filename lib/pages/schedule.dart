@@ -18,7 +18,7 @@ class RowHeader extends StatefulWidget {
 }
 
 class RowHeaderState extends State<RowHeader> {
-  String _week = weekInt(exclusionZero: true).toString();
+  int _week = weekInt(exclusionZero: true);
 
   @override
   Widget build(BuildContext context) {
@@ -32,12 +32,12 @@ class RowHeaderState extends State<RowHeader> {
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: _loopRowHeader(AppData.persistentData["week"] == _week),
+                children: _loopRowHeader(AppData.week == _week),
               ),
               (AppData.persistentData["showDayByWeekDay"] ?? "0") == "1"
                   ? Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: _loopRowHeader2(DateTime.now(), int.parse(_week)),
+                      children: _loopRowHeader2(DateTime.now(), _week),
                     )
                   : Container(),
             ],
@@ -48,11 +48,11 @@ class RowHeaderState extends State<RowHeader> {
   }
 
   void onPressed(int week) {
-    setState(() => _week = week.toString());
+    setState(() => _week = week);
   }
 }
 
-List<Widget> _loopRowHeader(bool currentWeek) {
+List<Widget> _loopRowHeader(bool isCurrentWeek) {
   List _weekDayList = ["一", "二", "三", "四", "五", "六", "日"];
   List<Widget> list = [];
   for (int i = 0; i < 7; i++) {
@@ -63,7 +63,7 @@ List<Widget> _loopRowHeader(bool currentWeek) {
           child: Center(
             child: Text(
               "周${_weekDayList[i]}",
-              style: TextStyle(color: currentWeek ? (i + 1 == DateTime.now().weekday ? readColor() : Colors.grey) : Colors.grey),
+              style: TextStyle(color: isCurrentWeek ? (i + 1 == DateTime.now().weekday ? readColor() : Colors.grey) : Colors.grey),
             ),
           ),
         ),
@@ -93,7 +93,7 @@ List<int> fillWeekWithWeekOffset(DateTime today, int difference) {
 
 List<Widget> _loopRowHeader2(DateTime current, int currentWeek) {
   List<Widget> list = [];
-  int difference = currentWeek - int.parse(AppData.persistentData["week"]!);
+  int difference = currentWeek - AppData.week;
   List<int> weekDays = fillWeekWithWeekOffset(current, difference);
   for (var value in weekDays) {
     list.add(
@@ -186,7 +186,7 @@ class SchedulePageState extends State<SchedulePage> with AutomaticKeepAliveClien
     });
     eventBusListener = eventBus.on<ReloadSchedulePageState>().listen((event) {
       setState(() {});
-      if (AppData.persistentData["week"] != _currentScheduleWeek.toString()) {
+      if (AppData.week != _currentScheduleWeek) {
         _currentScheduleWeek = weekInt(exclusionZero: true);
         weekKey.currentState!.onPressed(weekInt(exclusionZero: true));
         barKey.currentState!.onPressed(weekInt(exclusionZero: true));
@@ -299,23 +299,23 @@ class SchedulePageColumn extends StatefulWidget {
 }
 
 class SchedulePageColumnState extends State<SchedulePageColumn> {
-  String _findWeek = weekInt(exclusionZero: true).toString();
+  int _findWeek = weekInt(exclusionZero: true);
 
   @override
   Widget build(BuildContext context) {
-    if (int.parse(_findWeek) > 20) {
-      _findWeek = "20";
+    if (_findWeek > 20) {
+      _findWeek = 20;
     }
     return Expanded(
       child: Row(
         mainAxisSize: MainAxisSize.min,
-        children: _loopWeekDayCol(_findWeek),
+        children: _loopWeekDayCol(_findWeek.toString()),
       ),
     );
   }
 
   void onPressed(int week) {
-    setState(() => _findWeek = week.toString());
+    setState(() => _findWeek = week);
   }
 }
 
