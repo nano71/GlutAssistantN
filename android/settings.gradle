@@ -10,38 +10,30 @@ pluginManagement {
     includeBuild("$flutterSdkPath/packages/flutter_tools/gradle")
 
     repositories {
-        maven {
-            url 'https://maven.aliyun.com/repository/google'
-        }
-        maven {
-            url 'https://maven.aliyun.com/repository/public'
-        }
-        maven {
-            url 'https://maven.aliyun.com/repository/jcenter'
-        }
-        maven {
-            url 'https://repo.huaweicloud.com/repository/maven/'
-        }
-        maven{
-            url 'https://mirrors.cloud.tencent.com/nexus/repository/maven-public/'
-        }
-        maven{
-            url 'https://mirrors.163.com/maven/repository/maven-public/'
-        }
-        maven {
-            url "https://kotlin.bintray.com/kotlinx"
-        }
-        gradlePluginPortal()
+        // Flutter 插件源
+        maven { url 'https://mirrors.aliyun.com/flutter/' } // Flutter 国内镜像
+        maven { url 'https://storage.googleapis.com/download.flutter.io' }
+
+        // Google 官方 Android Gradle 插件源
+        maven { url 'https://maven.aliyun.com/repository/google' } // Google 国内镜像
+        maven { url 'https://dl.google.com/dl/android/maven2/' }
+
+        // Kotlin 插件
+        maven { url 'https://maven.aliyun.com/repository/gradle-plugin' } // Gradle Plugin 国内镜像
+        maven { url 'https://plugins.gradle.org/m2/' }
+
+        // 其他默认仓库
         google()
-        mavenLocal()
         mavenCentral()
+        mavenLocal()
+        gradlePluginPortal()
     }
 }
 
 plugins {
     id "dev.flutter.flutter-plugin-loader" version "1.0.0"
-    id "com.android.application" version '8.5.1' apply false
-    id "org.jetbrains.kotlin.android" version "2.0.0" apply false
+    id "com.android.application" version '8.9.0' apply false
+    id "org.jetbrains.kotlin.android" version "2.0.21" apply false
 }
 
 include ":app"
