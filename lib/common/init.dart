@@ -46,10 +46,9 @@ initTodaySchedule() async {
       }
     });
   }
-
+  AppData.todaySchedule = toDay;
   if (toDay.isNotEmpty) {
     todayScheduleTitle = "今天的";
-    AppData.todaySchedule = toDay;
   } else {
     todayScheduleTitle = "今天没课";
   }
