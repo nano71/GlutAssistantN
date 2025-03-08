@@ -1,10 +1,11 @@
 package com.nano71.glutassistantn
 
+import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.content.res.Resources
-import android.net.Uri
 import android.os.Build
 import android.util.DisplayMetrics
 import android.util.Log
@@ -12,7 +13,7 @@ import android.util.SizeF
 import android.view.View
 import android.widget.RemoteViews
 import androidx.annotation.RequiresApi
-import es.antonborri.home_widget.HomeWidgetLaunchIntent
+import androidx.core.net.toUri
 import es.antonborri.home_widget.HomeWidgetProvider
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
@@ -143,21 +144,33 @@ class HomeWidgetProvider : HomeWidgetProvider() {
 
     private fun bindOnClickEvent(context: Context, remoteViews: RemoteViews) {
         println("HomeWidgetExampleProvider.bindOnClickEvent")
-        val pendingIntent = HomeWidgetLaunchIntent.getActivity(
-            context,
-            MainActivity::class.java,
-            Uri.parse("homeWidgetExample://open")
-        )
 
-        val pendingIntentWithData = HomeWidgetLaunchIntent.getActivity(
-            context,
-            MainActivity::class.java,
-            Uri.parse("homeWidgetExample://refresh")
-        )
+        val intent = Intent(context, MainActivity::class.java).apply {
+            action = Intent.ACTION_VIEW
+            data = "homeWidgetExample://open".toUri()
+        }
+
+        val pendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+        } else {
+            PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        }
+
+        val refreshIntent = Intent(context, MainActivity::class.java).apply {
+            action = Intent.ACTION_VIEW
+            data = "homeWidgetExample://refresh".toUri()
+        }
+
+        val refreshPendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            PendingIntent.getActivity(context, 1, refreshIntent, PendingIntent.FLAG_IMMUTABLE)
+        } else {
+            PendingIntent.getActivity(context, 1, refreshIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+        }
 
         remoteViews.setOnClickPendingIntent(R.id.widget_container, pendingIntent)
-        remoteViews.setOnClickPendingIntent(R.id.refresh_icon, pendingIntentWithData)
+        remoteViews.setOnClickPendingIntent(R.id.refresh_icon, refreshPendingIntent)
     }
+
 
     @RequiresApi(Build.VERSION_CODES.S)
     private fun updateContent(context: Context, widgetData: SharedPreferences, remoteViews: RemoteViews, isSmall: Boolean) {
