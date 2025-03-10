@@ -5,9 +5,7 @@ import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.content.res.Resources
 import android.os.Build
-import android.util.DisplayMetrics
 import android.util.Log
 import android.util.SizeF
 import android.view.View
@@ -18,7 +16,6 @@ import es.antonborri.home_widget.HomeWidgetProvider
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import java.time.LocalDateTime
-import kotlin.math.roundToInt
 
 @Serializable
 data class CustomData(val value: List<List<String>>)
@@ -230,48 +227,5 @@ class HomeWidgetProvider : HomeWidgetProvider() {
             toastCount = 0
             isInitialized = true
         }
-        val screenInfo = ScreenInfo()
-        screenInfo.getScreenInfo(context)
     }
 }
-
-class ScreenInfo {
-    private lateinit var context: Context
-    private lateinit var resources: Resources
-    private var displayMetrics: DisplayMetrics = Resources.getSystem().displayMetrics
-    fun getScreenInfo(context: Context) {
-        this.context = context
-        resources = context.resources
-        Log.d(TAG, "getScreenInfo.getStatusBarHeightInDp: ${getStatusBarHeightInDp()}")
-        Log.d(TAG, "getScreenInfo.getScreenWidthInDp: ${getScreenWidthInDp()}")
-        Log.d(TAG, "getScreenInfo.getScreenHeightInDp: ${getScreenHeightInDp()}")
-        Log.d(TAG, "getScreenInfo.getNavigationBarHeightInDp: ${getNavigationBarHeightInDp()}")
-    }
-
-    private fun getStatusBarHeightInDp(): Int {
-        val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
-        val statusBarHeightPx = resources.getDimensionPixelSize(resourceId)
-        return pxToDp(statusBarHeightPx.toFloat())
-    }
-
-    private fun getScreenWidthInDp(): Int {
-        return pxToDp(displayMetrics.widthPixels.toFloat())
-    }
-
-    private fun getScreenHeightInDp(): Int {
-        return pxToDp(displayMetrics.heightPixels.toFloat())
-    }
-
-    private fun getNavigationBarHeightInDp(): Int {
-        val resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android")
-        val navigationBarHeightPx = resources.getDimensionPixelSize(resourceId)
-        return pxToDp(navigationBarHeightPx.toFloat())
-    }
-
-    private fun pxToDp(px: Float): Int {
-        return (px / (displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)).roundToInt()
-    }
-
-
-}
-
