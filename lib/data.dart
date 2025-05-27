@@ -5,6 +5,12 @@ import 'package:flutter/material.dart';
 
 EventBus eventBus = EventBus();
 
+class ErrorEvent {
+  final String message;
+
+  ErrorEvent(this.message);
+}
+
 class SetPageIndex {
   late int index;
 
@@ -301,4 +307,16 @@ bool isLoggedIn() {
 
 bool isContainCourse(String courseNumber, String courseType) {
   return containCourseTypes.contains(courseType) && !excludedCourseNumbers.contains(courseNumber);
+}
+
+String getUsername() {
+  return AppData.persistentData["username"] ?? "";
+}
+
+String getPassword() {
+  return AppData.persistentData["password"] ?? "";
+}
+
+String getAccount() {
+  return "${getUsername()}${getPassword()}";
 }

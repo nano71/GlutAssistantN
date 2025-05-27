@@ -1,9 +1,13 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:glutassistantn/common/log.dart';
 import 'package:home_widget/home_widget.dart';
 import 'package:package_info_plus/package_info_plus.dart' as PackageInfoPlus;
+import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:workmanager/workmanager.dart';
 
+import '../common/aes.dart';
 import '/common/get.dart';
 import '/common/init.dart';
 import '/common/io.dart';
@@ -97,6 +101,7 @@ class Layout extends StatefulWidget {
 class _LayoutState extends State<Layout> {
   late final AppLifecycleListener _listener;
   bool isResumed = true;
+  late StreamSubscription<ErrorEvent> eventBusListener;
 
   @override
   void initState() {
@@ -104,6 +109,18 @@ class _LayoutState extends State<Layout> {
     _listener = AppLifecycleListener(
       onStateChange: didChangeAppLifecycleState,
     );
+    eventBusListener = eventBus.on<ErrorEvent>().listen((event) {
+      if (!mounted) return;
+      Future.microtask(() {
+        ScaffoldMessenger.of(context).removeCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, event.message, 4));
+      });
+    });
+
+    Sentry.configureScope((scope) {
+      final encrypted = AESHelper.encryptText(getAccount());
+      scope.setTag("encrypted", encrypted);
+    });
   }
 
   Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
@@ -139,6 +156,7 @@ class _LayoutState extends State<Layout> {
   void dispose() {
     // 注销监听器
     _listener.dispose();
+    eventBusListener.cancel();
     super.dispose();
   }
 

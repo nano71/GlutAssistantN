@@ -80,9 +80,11 @@ class LoginPageState extends State<LoginPage> {
         _codeImgSrc = response.bodyBytes;
       });
     } catch (e) {
+      print('LoginPageState._getCode Error');
+      print(e);
       setState(() {
         messageColor = Colors.red;
-        message = "网络错误";
+        message = AppConfig.retryError;
       });
     }
   }
@@ -140,7 +142,7 @@ class LoginPageState extends State<LoginPage> {
         if (AppConfig.login) {
           setState(() {
             messageColor = Colors.yellow;
-            message = "登录成功,但程序发生了错误";
+            message = "登录成功,但应用程序发生了异常";
           });
           _getCode();
         }

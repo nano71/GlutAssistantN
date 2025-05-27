@@ -144,6 +144,8 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
         curve: Curves.linear,
       );
       afterSuccess() async {
+
+
         print('HomePageState.afterSuccess');
         await readSchedule();
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
@@ -168,6 +170,8 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(1, "数据已更新!", 1));
         HomeWidgetUtils.updateWidgetContent();
+        // throw Error();
+        // throw UnimplementedError();
       }
 
       _scheduleParser(dynamic result) async {

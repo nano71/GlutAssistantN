@@ -170,7 +170,7 @@ Widget homeCard3 = Stack(
 
 class HomeCardsState {
   static double iconSize = 36;
-  static List icons = [Remix.restart_line, Remix.search_eye_line, Remix.file_list_3_line];
+  static List icons = [Remix.refresh_line, Remix.search_eye_line, Remix.file_list_3_line];
   static List iconTexts = ["课表刷新", "成绩查询", "我的考试"];
   static EdgeInsetsGeometry textMargin = EdgeInsets.fromLTRB(0, 44, 0, 0);
   static EdgeInsetsGeometry iconMargin = EdgeInsets.fromLTRB(0, 0, 0, 32);

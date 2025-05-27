@@ -28,6 +28,10 @@ Future<String> codeCheck(String code) async {
     print("getExam Error");
     print(e);
     return AppConfig.socketError;
+  } catch (e) {
+    print("getExam Error");
+    print(e);
+    return "未知异常";
   }
 }
 
