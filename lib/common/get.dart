@@ -496,7 +496,9 @@ Future<dynamic> getExam() async {
     List<String> timeList = time.split("-");
     _list.add(_row[i].querySelectorAll("td")[1].text);
     _list.add(time);
-    _list.add(_row[i].querySelectorAll("td")[3].text.replaceAll("空港校区", "").replaceAll("教", "").trim().substring(1).trim());
+    String examAddress = _row[i].querySelectorAll("td")[3].text;
+    print(examAddress);
+    _list.add(examAddress.replaceAll(RegExp(r'\s'), " ").split(" ").last);
     _list.add(_row[i].querySelectorAll("td")[4].text);
 
     if (timeList.indexOf("未公布") != -1) {
