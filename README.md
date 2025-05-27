@@ -78,10 +78,10 @@
 ```
 
 #### 推荐环境：
-Android SDK 26-34  
-Gradle 8.7.0  
+Android SDK 26-35  
+Gradle 8.11.1  
 OpenJDK 17.0.8.1 2023-08-24  
-Kotlin 2.0.0
+Kotlin 2.0.21
 Flutter 3.24.3  
 Dart 3.5.3  
 
