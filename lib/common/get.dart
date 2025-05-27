@@ -43,11 +43,8 @@ Future getRecentExam() async {
     } else {
       print("未登录教务");
     }
-  } on TimeoutException catch (e) {
-    print("超时");
-    print(e);
-  } on SocketException catch (e) {
-    print("连接失败");
+  } catch (e) {
+    print("失败");
     print(e);
   }
 }
@@ -57,12 +54,8 @@ Future<void> getWeek() async {
   Response response;
   try {
     response = await request("get", AppConfig.getWeekUrl);
-  } on TimeoutException catch (e) {
-    print("超时");
-    print(e);
-    return readWeek();
-  } on SocketException catch (e) {
-    print("连接失败");
+  } catch (e) {
+    print("失败");
     print(e);
     return readWeek();
   }
@@ -123,6 +116,10 @@ Future<dynamic> getSchedule() async {
     return timeOutError(e);
   } on SocketException catch (e) {
     return socketError(e);
+  } catch (e) {
+    print("连接失败");
+    print(e);
+    return "未知异常";
   }
   String html = getHtml(response);
   if (html == "") return AppConfig.dataError;
@@ -326,6 +323,7 @@ Future<Map> getScheduleChanges(String id, Map schedule) async {
   try {
     response = await request("get", uri);
   } catch (e) {
+    print('getScheduleChanges Error');
     print(e);
     return schedule;
   }
@@ -408,9 +406,14 @@ Future<Map> getScheduleChanges(String id, Map schedule) async {
 
 Future<void> getName() async {
   print('getName');
-  Response response = await request("get", AppConfig.getNameUrl);
-  AppData.persistentData["name"] = parse(response.body).querySelector('[name="realname"]')!.parentNode!.text ?? "";
-  print('getName End');
+  try {
+    Response response = await request("get", AppConfig.getNameUrl);
+    AppData.persistentData["name"] = parse(response.body).querySelector('[name="realname"]')!.parentNode!.text ?? "";
+    print('getName End');
+  } catch (e) {
+    print('getName Error');
+    print(e);
+  }
 }
 
 List getSemester() {
@@ -439,6 +442,10 @@ Future getScore() async {
     return timeOutError(e);
   } on SocketException catch (e) {
     return socketError(e);
+  } catch (e) {
+    print("连接失败");
+    print(e);
+    return "未知异常";
   }
   String html = response.body;
   if (html == "") return AppConfig.dataError;
@@ -468,6 +475,10 @@ Future<dynamic> getExam() async {
     return timeOutError(e);
   } on SocketException catch (e) {
     return socketError(e);
+  } catch (e) {
+    print("连接失败");
+    print(e);
+    return "未知异常";
   }
   String html = getHtml(response);
   if (html == "") return AppConfig.dataError;
@@ -594,6 +605,10 @@ Future getCareer() async {
     return timeOutError(e);
   } on SocketException catch (e) {
     return socketError(e);
+  } catch (e) {
+    print("连接失败");
+    print(e);
+    return "未知异常";
   }
   String html = getHtml(response);
   if (html == "") return AppConfig.dataError;
@@ -646,6 +661,10 @@ Future getEmptyClassroom({
     return timeOutError(e);
   } on SocketException catch (e) {
     return socketError(e);
+  } catch (e) {
+    print("连接失败");
+    print(e);
+    return "未知异常";
   }
   String html = getHtml(response);
   if (html == "") return AppConfig.dataError;
@@ -707,15 +726,24 @@ Future<dynamic> getUpdate({bool isRetry = false}) async {
   try {
     response = await get(isRetry ? AppConfig.getUpdateUrl2 : AppConfig.getUpdateUrl).timeout(Duration(seconds: 4));
   } on TimeoutException catch (e) {
-    print("getUpdate Error: " + e.toString());
+    print("getUpdate Error");
+    print(e);
     if (isRetry) {
-      return "请求超时";
+      return AppConfig.timeOutError;
     }
     return getUpdate(isRetry: true);
   } on SocketException catch (e) {
-    print("getUpdate Error: " + e.toString());
+    print("getUpdate Error");
+    print(e);
     if (isRetry) {
       return AppConfig.socketError;
+    }
+    return getUpdate(isRetry: true);
+  } catch(e){
+    print("getUpdate Error");
+    print(e);
+    if (isRetry) {
+      return "未知异常";
     }
     return getUpdate(isRetry: true);
   }
@@ -741,11 +769,17 @@ Future getUpdateForEveryday() async {
     try {
       response = await get(AppConfig.getUpdateUrl);
     } on TimeoutException catch (e) {
-      print("getUpdate Error: " + e.toString());
-      return "请求超时";
+      print("getUpdate Error" );
+      print(e);
+      return AppConfig.timeOutError;
     } on SocketException catch (e) {
-      print("getUpdate Error: " + e.toString());
+      print("getUpdate Error" );
+      print(e);
       return AppConfig.socketError;
+    } catch (e) {
+      print("连接失败");
+      print(e);
+      return "未知异常";
     }
     print('statusCode');
     print(response.statusCode);
@@ -796,12 +830,17 @@ String socketError(e) {
 void getPermissions() async {
   print("getPermissions");
   Response response;
-  response = await request("get", Uri.https(AppConfig.authorUrl, AppConfig.controlUrl));
-  Map result = jsonDecode(response.body);
-  if (!result["permissions"]["all"]) {
-    exit(0);
-  } else {
-    print("应用已授权");
+  try {
+    response = await request("get", Uri.https(AppConfig.authorUrl, AppConfig.controlUrl));
+    Map result = jsonDecode(response.body);
+    if (!result["permissions"]["all"]) {
+      // exit(0);
+    } else {
+      print("应用已授权");
+    }
+  } catch (e) {
+    print('getPermissions Error');
+    print(e);
   }
 }
 
@@ -811,6 +850,8 @@ Future<bool> checkLoginValidity() async {
   try {
     response = await request("get", AppConfig.checkLoginValidityUri);
   } catch (e) {
+    print('checkLoginValidity Error');
+    print(e);
     return false;
   }
   String html = getHtml(response);

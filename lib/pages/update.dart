@@ -104,6 +104,7 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
                       ScaffoldMessenger.of(context).removeCurrentSnackBar();
                       ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "获取更新...", 24));
                       getUpdate().then((value) => _next(value));
+                      throw UnimplementedError();
                     },
                     child: Image.asset(
                       'images/ic_launcher-playstore.png',

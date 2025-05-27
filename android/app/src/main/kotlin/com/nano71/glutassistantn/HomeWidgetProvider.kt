@@ -49,20 +49,61 @@ class HomeWidgetProvider : HomeWidgetProvider() {
     private fun customParser(data: List<List<String>>): List<List<String>> {
         println("HomeWidgetExampleProvider.customParser")
         val mergedDataMap = mutableMapOf<Pair<String, String>, MutableList<String>>()
+
         for (item in data) {
             val key = Pair(item[0], item[1])
-            if (!mergedDataMap.containsKey(key)) {
-                mergedDataMap[key] = mutableListOf()
-            }
-            mergedDataMap[key]!!.add(item[2])
+            mergedDataMap.getOrPut(key) { mutableListOf() }.add(item[2])
         }
+
         val mergedDataList = mutableListOf<List<String>>()
         for ((key, values) in mergedDataMap) {
-            val startIndex = values.first()
-            val endIndex = values.last()
-            val mergedItem = mutableListOf(key.first, key.second, "$startIndex–$endIndex")
-            mergedDataList.add(mergedItem)
+            val sortedValues = values.mapNotNull { it.toIntOrNull() }.sorted()
+            val used = BooleanArray(sortedValues.size) { false }
+
+            var i = 0
+            while (i < sortedValues.size) {
+                if (used[i]) {
+                    i++
+                    continue
+                }
+
+                val current = sortedValues[i]
+
+                // Try 3-segment merge for >= 9
+                if (i + 2 < sortedValues.size &&
+                    sortedValues[i + 1] == current + 1 &&
+                    sortedValues[i + 2] == current + 2 &&
+                    current >= 9
+                ) {
+                    mergedDataList.add(listOf(key.first, key.second, "$current–${current + 2}"))
+                    used[i] = true
+                    used[i + 1] = true
+                    used[i + 2] = true
+                    i += 3
+                    continue
+                }
+
+                // Try 2-segment merge
+                if (i + 1 < sortedValues.size &&
+                    sortedValues[i + 1] == current + 1 &&
+                    !used[i + 1]
+                ) {
+                    mergedDataList.add(listOf(key.first, key.second, "$current–${current + 1}"))
+                    used[i] = true
+                    used[i + 1] = true
+                    i += 2
+                    continue
+                }
+
+                // Single value
+                mergedDataList.add(listOf(key.first, key.second, "$current"))
+                used[i] = true
+                i++
+            }
         }
+
+        println("mergedDataList:")
+        println(mergedDataList)
         return mergedDataList
     }
 

@@ -27,6 +27,16 @@ void main() async {
         options.profilesSampleRate = 1.0;
         options.experimental.replay.sessionSampleRate = 1.0;
         options.experimental.replay.onErrorSampleRate = 1.0;
+        options.beforeSend = (SentryEvent event, Hint? hint) {
+          final isRealError = event.throwable != null || (event.exceptions?.isNotEmpty ?? false);
+          if (isRealError) {
+            final errorMessage = event.throwable.toString();
+            print("意外错误:");
+            print(errorMessage);
+            eventBus.fire(ErrorEvent("意外错误"));
+          }
+          return event;
+        };
       }, appRunner: run);
     }, zoneSpecification: new ZoneSpecification(print: (Zone self, ZoneDelegate parent, Zone zone, String line) {
       parent.print(zone, line);

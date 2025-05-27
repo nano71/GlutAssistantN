@@ -18,10 +18,13 @@ class RefreshIconWidgetDynamicState extends State<RefreshIconWidgetDynamic> {
   Widget build(BuildContext context) {
     return Transform.rotate(
       angle: _angle,
-      child: Icon(
-        HomeCardsState.icons[0],
-        color: readColor(),
-        size: 32,
+      child: Transform.translate(
+        offset: const Offset(-0.7, 0.2), // 向左移动 1px
+        child: Icon(
+          HomeCardsState.icons[0],
+          color: readColor(),
+          size: 32,
+        ),
       ),
     );
   }
