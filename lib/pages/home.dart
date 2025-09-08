@@ -144,8 +144,6 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
         curve: Curves.linear,
       );
       afterSuccess() async {
-
-
         print('HomePageState.afterSuccess');
         await readSchedule();
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
@@ -177,8 +175,6 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
       _scheduleParser(dynamic result) async {
         if (result is bool) {
           if (result) {
-            ScaffoldMessenger.of(context).removeCurrentSnackBar();
-            ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "获取课表...", 10));
             await afterSuccess();
           } else {
             if (!isLoggedIn()) {
@@ -212,9 +208,12 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
       _updateIntervalTimer = Timer(Duration(seconds: 1), () async {
         print("更新开始");
-        getWeek();
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "连接教务...", 10));
+        await getWeek();
+        await readWeek();
+        ScaffoldMessenger.of(context).removeCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "获取课表...", 10));
         await _scheduleParser(await getSchedule());
         _timeOutBool = true;
         _updateButtonClickCount = 0;

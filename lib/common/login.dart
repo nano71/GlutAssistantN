@@ -8,6 +8,7 @@ import 'package:http/http.dart';
 
 import '../config.dart';
 import 'encode.dart';
+import 'io.dart';
 
 Future<String> codeCheck(String code) async {
   print("codeCheck...");
@@ -43,6 +44,7 @@ Future<String> login(String username, String password, String code) async {
     if (response.headers['location'] == "/academic/index_new.jsp") {
       await parseRawCookies(response.headers['set-cookie']);
       await getWeek();
+      await readWeek();
       return "success";
     } else {
       return "fail";

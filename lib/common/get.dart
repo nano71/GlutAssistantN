@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_gbk2utf8/flutter_gbk2utf8.dart';
+import 'package:glutassistantn/main.dart';
 import 'package:html/dom.dart';
 import 'package:html/parser.dart';
 import 'package:http/http.dart';
@@ -98,6 +99,7 @@ Future<void> getWeek() async {
   }
   AppData.persistentData = persistentData;
   print("getWeek Save");
+  print(week + "周");
   await writeConfig();
   print("getWeek End");
 }
@@ -741,7 +743,7 @@ Future<dynamic> getUpdate({bool isRetry = false}) async {
       return AppConfig.socketError;
     }
     return getUpdate(isRetry: true);
-  } catch(e){
+  } catch (e) {
     print("getUpdate Error");
     print(e);
     if (isRetry) {
@@ -771,11 +773,11 @@ Future getUpdateForEveryday() async {
     try {
       response = await get(AppConfig.getUpdateUrl);
     } on TimeoutException catch (e) {
-      print("getUpdate Error" );
+      print("getUpdate Error");
       print(e);
       return AppConfig.timeOutError;
     } on SocketException catch (e) {
-      print("getUpdate Error" );
+      print("getUpdate Error");
       print(e);
       return AppConfig.socketError;
     } catch (e) {
