@@ -70,7 +70,7 @@ class HomeCardState extends State<HomeCard> with AutomaticKeepAliveClientMixin {
   Widget build(BuildContext context) {
     super.build(context);
     return Container(
-      height: 100,
+      height: 120,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(12.0)),
         // color: Global.homeCardsColor,
@@ -80,12 +80,12 @@ class HomeCardState extends State<HomeCard> with AutomaticKeepAliveClientMixin {
         Align(
           alignment: Alignment.centerRight,
           child: Container(
-            margin: EdgeInsets.fromLTRB(0, 0, 18, 0),
+            margin: EdgeInsets.fromLTRB(0, 0, 16, 0),
             child: SizedBox(
               //限制进度条的高度
-              height: 60.0,
+              height: 80,
               //限制进度条的宽度
-              width: 60,
+              width: 80,
               child: CircularProgressDynamic(key: indicatorKey),
             ),
           ),
@@ -93,13 +93,13 @@ class HomeCardState extends State<HomeCard> with AutomaticKeepAliveClientMixin {
         Align(
             alignment: Alignment.centerRight,
             child: Container(
-              margin: EdgeInsets.fromLTRB(0, 0, 32, 0),
+              margin: EdgeInsets.fromLTRB(0, 0, 16 + 25 , 0),
               child: TextProgressDynamic(key: textKey),
             )),
         Align(
           alignment: Alignment.topRight,
           child: Container(
-            margin: EdgeInsets.fromLTRB(0, 24, 90, 0),
+            margin: EdgeInsets.fromLTRB(0, 32, 110, 0),
             child: Text(
               "第${weekInt()}周",
               style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w900),
@@ -109,14 +109,14 @@ class HomeCardState extends State<HomeCard> with AutomaticKeepAliveClientMixin {
         Align(
             alignment: Alignment.bottomRight,
             child: Container(
-              margin: EdgeInsets.fromLTRB(0, 0, 90, 24),
+              margin: EdgeInsets.fromLTRB(0, 0, 110, 32),
               child: Text(_weekText(), style: TextStyle(color: Colors.white)),
             )),
         Align(
             alignment: Alignment.centerLeft,
             child: Container(
-                width: 60,
-                margin: EdgeInsets.fromLTRB(12, 0, 0, 0),
+                width: 80,
+                margin: EdgeInsets.fromLTRB(16, 0, 0, 0),
                 child: Center(child: Text(DateTime.now().weekday.toString(), style: TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 14)))))
       ]),
     );
@@ -195,7 +195,7 @@ class CircularProgressDynamicState extends State<CircularProgressDynamic> {
   @override
   Widget build(BuildContext context) {
     return CircularProgressIndicator(
-      strokeWidth: 3.5,
+      strokeWidth: 4,
       value: _value,
       backgroundColor: Color.fromARGB(48, 255, 255, 255),
       valueColor: AlwaysStoppedAnimation<Color>(Colors.white),

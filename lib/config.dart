@@ -135,8 +135,8 @@ Color readColorEnd() {
 LinearGradient setCardTemplate(List<Color> colors) {
   return LinearGradient(
     colors: colors,
-    begin: Alignment.topRight,
-    end: Alignment.bottomCenter,
+    begin: Alignment.centerLeft,
+    end: Alignment.topRight,
   );
 }
 

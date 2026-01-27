@@ -98,7 +98,10 @@ class QueryConditionCardState extends State<QueryConditionCard> {
         String value = (i + 1).toString();
         query["dayOfWeek"]![value] = "周" + weekList4CN[i];
       }
-      weekSelect = DateTime.now().weekday.toString();
+      weekSelect = DateTime
+          .now()
+          .weekday
+          .toString();
       print('weekSelect');
       print(weekSelect);
       query["dayOfWeek"]!.remove("-1");
@@ -108,11 +111,15 @@ class QueryConditionCardState extends State<QueryConditionCard> {
 
   void initWhichWeek() {
     setState(() {
-      for (int i = 1; i < 20; i++) {
+      for (int i = 1; i <= 20; i++) {
         String value = i.toString();
         query["weekOfSemester"]![value] = "第" + value + "周";
       }
-      whichWeekSelect = AppData.week.toString();
+      if (AppData.week > 20) {
+        whichWeekSelect = "20";
+      } else {
+        whichWeekSelect = AppData.week.toString();
+      }
       query["weekOfSemester"]!.remove("-1");
     });
   }
@@ -159,7 +166,7 @@ class QueryConditionCardState extends State<QueryConditionCard> {
           false,
           "需要验证",
           context,
-          () {
+              () {
             ScaffoldMessenger.of(context).removeCurrentSnackBar();
             getEmptyClassroom().then(process);
             Navigator.pop(context);

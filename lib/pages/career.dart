@@ -251,82 +251,12 @@ class _CareerPageBodyState extends State<CareerPageBody> {
               child: Column(
                 children: [
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            padding: EdgeInsets.fromLTRB(8, 0, 0, 0),
-                            decoration: BoxDecoration(
-                              border: Border(
-                                left: BorderSide(
-                                  width: 3.5, //宽度
-                                  color: Colors.white, //边框颜色
-                                ),
-                              ),
-                            ),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Container(
-                                  margin: EdgeInsets.only(right: 8),
-                                  child: Text(
-                                    careerNumber.toString() + "",
-                                    style: TextStyle(fontSize: 38, color: Colors.white, fontWeight: FontWeight.w300),
-                                  ),
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    Text("全部课程总计", style: TextStyle(color: Colors.white)),
-                                    Text("预估", style: TextStyle(color: Colors.white)),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(
-                            //限制进度条的高度
-                            height: 10,
-                          ),
-                          Container(
-                            padding: EdgeInsets.fromLTRB(8, 0, 0, 0),
-                            decoration: BoxDecoration(
-                              border: Border(
-                                left: BorderSide(
-                                  width: 3.5, //宽度
-                                  color: Colors.white, //边框颜色
-                                ),
-                              ),
-                            ),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Container(
-                                  margin: EdgeInsets.only(right: 8),
-                                  child: Text(
-                                    careerJobNumber.toString() + "",
-                                    style: TextStyle(fontSize: 38, color: Colors.white, fontWeight: FontWeight.w300),
-                                  ),
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    Text("全部专业课程", style: TextStyle(color: Colors.white)),
-                                    Text("预估", style: TextStyle(color: Colors.white)),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
                       Container(
                         height: 100,
                         width: 100,
-                        margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                        margin: EdgeInsets.fromLTRB(0, 0, 16, 0),
                         child: Stack(
                           children: [
                             Align(
@@ -347,11 +277,41 @@ class _CareerPageBodyState extends State<CareerPageBody> {
                           ],
                         ),
                       ),
+                      Expanded(child:     Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        // crossAxisAlignment: CrossAxisAlignment.start,
+
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                careerNumber.toString() + "",
+                                style: TextStyle(fontSize: 38, color: Colors.white, fontWeight: FontWeight.w300),
+                              ),
+                              Text("全部课程", style: TextStyle(color: Colors.white)),
+                              // Text("预估数量", style: TextStyle(color: Colors.white)),
+                            ],
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                careerJobNumber.toString() + "",
+                                style: TextStyle(fontSize: 38, color: Colors.white, fontWeight: FontWeight.w300),
+                              ),
+                              Text("专业课程", style: TextStyle(color: Colors.white)),
+                              // Text("预估数量", style: TextStyle(color: Colors.white)),
+                            ],
+                          ),
+                        ],
+                      ),)
+
                     ],
                   ),
                   Container(
                     height: 0.5,
-                    margin: EdgeInsets.fromLTRB(0, 18, 0, 12),
+                    margin: EdgeInsets.fromLTRB(0, 16, 0, 16),
                     decoration: BoxDecoration(
                       border: Border(
                         bottom: BorderSide(
@@ -366,56 +326,22 @@ class _CareerPageBodyState extends State<CareerPageBody> {
                     children: [
                       Column(
                         children: [
-                          Text("成绩合格", style: TextStyle(color: Colors.white)),
-                          Container(
-                            margin: EdgeInsets.fromLTRB(0, 4, 0, 4),
-                            child: SizedBox(
-                              height: 3.5,
-                              width: 50,
-                              child: LinearProgressIndicator(
-                                color: Colors.white,
-                                backgroundColor: Color.fromARGB(48, 255, 255, 255),
-                                value: careerCount[1] == careerNumber ? 0.0 : careerCount[1] / careerNumber, //精确模式，进度20%
-                              ),
-                            ),
-                          ),
                           Text("${careerCount[1]} 门", style: TextStyle(color: Colors.white)),
+                          Text("成绩合格", style: TextStyle(color: Colors.white)),
                         ],
                       ),
                       Column(
                         children: [
-                          Text("重修/补考", style: TextStyle(color: Colors.white)),
-                          Container(
-                            margin: EdgeInsets.fromLTRB(0, 4, 0, 4),
-                            child: SizedBox(
-                              height: 3.5,
-                              width: 50,
-                              child: LinearProgressIndicator(
-                                color: Colors.white,
-                                backgroundColor: Color.fromARGB(48, 255, 255, 255),
-                                value: careerCount[0] == careerNumber ? 0.0 : careerCount[0] / careerNumber, //精确模式，进度20%
-                              ),
-                            ),
-                          ),
                           Text("${careerCount[0]} 门", style: TextStyle(color: Colors.white)),
+
+                          Text("重修/补考", style: TextStyle(color: Colors.white)),
+
                         ],
                       ),
                       Column(
                         children: [
-                          Text("成绩未知", style: TextStyle(color: Colors.white)),
-                          Container(
-                            margin: EdgeInsets.fromLTRB(0, 4, 0, 4),
-                            child: SizedBox(
-                              height: 3.5,
-                              width: 50,
-                              child: LinearProgressIndicator(
-                                color: Colors.white,
-                                backgroundColor: Color.fromARGB(48, 255, 255, 255),
-                                value: careerCount[2] == careerNumber ? 0.0 : careerCount[2] / careerNumber, //精确模式，进度20%
-                              ),
-                            ),
-                          ),
                           Text("${careerCount[2]} 门", style: TextStyle(color: Colors.white)),
+                          Text("成绩未知", style: TextStyle(color: Colors.white)),
                         ],
                       ),
                     ],
@@ -575,7 +501,7 @@ class CircularProgressDynamicStateForCareer extends State<CircularProgressDynami
   @override
   Widget build(BuildContext context) {
     return CircularProgressIndicator(
-      strokeWidth: 3.5,
+      strokeWidth: 4,
       value: _value,
       backgroundColor: Color.fromARGB(48, 255, 255, 255),
       valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
