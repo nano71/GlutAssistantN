@@ -322,7 +322,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       },
                       child: Container(
                         margin: EdgeInsets.fromLTRB(0, 8, 4, 16),
-                        height: 100,
+                        height: 110,
                         width: width / 3 - 48 / 3,
                         decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(12.0)), color: _animationForLeftCard.value),
                         child: Stack(
@@ -365,7 +365,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       },
                       child: Container(
                         margin: EdgeInsets.fromLTRB(4, 8, 4, 16),
-                        height: 100,
+                        height: 110,
                         width: width / 3 - 48 / 3,
                         decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(12.0)), color: _animationForCenterCard.value),
                         child: Stack(
@@ -409,7 +409,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       },
                       child: Container(
                         margin: EdgeInsets.fromLTRB(4, 8, 0, 16),
-                        height: 100,
+                        height: 110,
                         width: width / 3 - 48 / 3,
                         decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(12.0)), color: _animationForRightCard.value),
                         child: Stack(

@@ -70,7 +70,7 @@ class HomeCardState extends State<HomeCard> with AutomaticKeepAliveClientMixin {
   Widget build(BuildContext context) {
     super.build(context);
     return Container(
-      height: 120,
+      height: 110,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(12.0)),
         // color: Global.homeCardsColor,
@@ -83,9 +83,9 @@ class HomeCardState extends State<HomeCard> with AutomaticKeepAliveClientMixin {
             margin: EdgeInsets.fromLTRB(0, 0, 16, 0),
             child: SizedBox(
               //限制进度条的高度
-              height: 80,
+              height: 110 - 32 - 4,
               //限制进度条的宽度
-              width: 80,
+              width: 110 - 32 - 4,
               child: CircularProgressDynamic(key: indicatorKey),
             ),
           ),
@@ -93,9 +93,9 @@ class HomeCardState extends State<HomeCard> with AutomaticKeepAliveClientMixin {
         Align(
             alignment: Alignment.centerRight,
             child: Container(
-              margin: EdgeInsets.fromLTRB(0, 0, 16 + 25 , 0),
-              child: TextProgressDynamic(key: textKey),
-            )),
+              margin: EdgeInsets.fromLTRB(0, 0, 16 + (110 - 32) / 2 - 20, 0),
+              child: SizedBox(width: 40, child:TextProgressDynamic(key: textKey))),
+            ),
         Align(
           alignment: Alignment.topRight,
           child: Container(
@@ -219,7 +219,10 @@ class TextProgressDynamicState extends State<TextProgressDynamic> {
 
   @override
   Widget build(BuildContext context) {
-    return Text((_value < 10 ? "0" + _value.toString() + "%" : _value.toString() + "%"), style: TextStyle(color: Colors.white));
+    return Text((_value < 10 ? "0" + _value.toString() + "%" : _value.toString() + "%"),
+        style: TextStyle(color: Colors.white),
+      textAlign: TextAlign.center,
+    );
   }
 
   void onPressed(int value) {

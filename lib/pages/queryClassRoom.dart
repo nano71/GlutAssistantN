@@ -304,13 +304,13 @@ class QueryConditionCardState extends State<QueryConditionCard> {
               ],
             ),
             SizedBox(
-              height: 8,
+              height: 16,
             ),
             SizedBox(
               width: double.infinity,
               height: 50,
               child: Container(
-                margin: EdgeInsets.fromLTRB(0, 8, 0, 0),
+                margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
                 child: TextButton(
                     autofocus: true,
                     style: ButtonStyle(
