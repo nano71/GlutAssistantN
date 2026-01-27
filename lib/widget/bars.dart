@@ -97,16 +97,16 @@ SliverAppBar publicTopBarWithInfoIcon(String title, [dynamic inkWell = const Tex
                 style: TextStyle(color: color2),
               ),
               SizedBox(
-                width: 8,
-              ),
-              SizedBox(
-                width: 12,
-                height: 12,
-                child: IconButton(
-                  padding: EdgeInsets.zero,
-                  iconSize: 12,
-                  icon: const Icon(Remix.information_line, color: Colors.white),
-                  onPressed: onPressed,
+                height: 28,
+                width: 28,
+                child: Container(
+                  margin: EdgeInsets.only(top: 4),
+                  child: IconButton(
+                    padding: EdgeInsets.zero,
+                    iconSize: 12,
+                    icon: const Icon(Remix.information_line, color: Colors.white),
+                    onPressed: onPressed,
+                  ),
                 ),
               )
             ],

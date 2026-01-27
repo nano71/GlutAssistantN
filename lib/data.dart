@@ -251,12 +251,29 @@ final List colorList2 = const [
   Colors.deepPurpleAccent,
 ];
 
+final List colorList3 = const [
+  Colors.teal,
+  Colors.lightBlue,
+  Colors.blue,
+  Colors.green,
+  Colors.purple,
+  Colors.lightGreen,
+  Colors.blueAccent,
+  Colors.deepPurpleAccent,
+  Colors.teal,
+  Colors.cyan
+];
+
 Color randomColors() {
   return colorList[randomInt(0, colorList.length - 1)];
 }
 
 Color randomColors2() {
   return colorList2[randomInt(0, colorList2.length - 1)];
+}
+
+Color randomColors3() {
+  return colorList3[randomInt(0, colorList3.length - 1)];
 }
 
 int randomInt(int min, int max) {

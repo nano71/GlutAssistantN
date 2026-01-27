@@ -15,7 +15,11 @@ void main() async {
   void run() {
     WidgetsFlutterBinding.ensureInitialized();
     Workmanager().initialize(callbackDispatcher, isInDebugMode: true);
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarColor: Colors.transparent, systemNavigationBarColor: Colors.white));
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      systemNavigationBarColor: Colors.white,
+      systemNavigationBarIconBrightness: Brightness.dark, // 导航栏按钮为黑色
+    ));
     print("startApp...");
     runApp(App());
   }
