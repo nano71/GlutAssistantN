@@ -99,7 +99,7 @@ class HomeCardState extends State<HomeCard> with AutomaticKeepAliveClientMixin {
         Align(
           alignment: Alignment.topRight,
           child: Container(
-            margin: EdgeInsets.fromLTRB(0, 32, 110, 0),
+            margin: EdgeInsets.fromLTRB(0, 30, 110, 0),
             child: Text(
               "第${weekInt()}周",
               style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w900),
@@ -109,7 +109,7 @@ class HomeCardState extends State<HomeCard> with AutomaticKeepAliveClientMixin {
         Align(
             alignment: Alignment.bottomRight,
             child: Container(
-              margin: EdgeInsets.fromLTRB(0, 0, 110, 32),
+              margin: EdgeInsets.fromLTRB(0, 0, 110, 30),
               child: Text(_weekText(), style: TextStyle(color: Colors.white)),
             )),
         Align(
