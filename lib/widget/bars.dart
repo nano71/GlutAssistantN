@@ -19,7 +19,7 @@ SliverAppBar homeTopBar(BuildContext context) {
     pinned: true,
     collapsedHeight: 56.00,
     primary: true,
-    backgroundColor: Colors.white,
+    backgroundColor: readBackgroundColor(),
     stretch: true,
     expandedHeight: 125.0,
     elevation: 0.3,
@@ -31,11 +31,11 @@ SliverAppBar homeTopBar(BuildContext context) {
             Text(
               "今日一览",
               style: TextStyle(
-                color: Colors.black,
+                color: readTextColor(),
               ),
             ),
             InkWell(
-              child: Icon(Remix.more_fill, size: 24),
+              child: Icon(Remix.more_fill, size: 24,color: readTextColor(),),
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(builder: (context) => SettingPage(title: "设置")));
               },
@@ -168,7 +168,7 @@ class ScheduleTopBarState extends State<ScheduleTopBar> {
     return AppBar(
       automaticallyImplyLeading: false,
       elevation: 0.3,
-      backgroundColor:readBackgroundColor(),
+      backgroundColor: readBackgroundColor(),
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

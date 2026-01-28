@@ -78,6 +78,9 @@ class _AppState extends State<App> {
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           useMaterial3: false,
+          navigationBarTheme: NavigationBarThemeData(
+            labelTextStyle: WidgetStatePropertyAll(TextStyle(color: readTextColor())),
+          ),
         ),
         title: AppConfig.appTitle,
         home: DataPreloadPage());

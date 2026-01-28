@@ -14,6 +14,19 @@ import '../widget/lists.dart';
 import 'layout.dart';
 import 'person.dart';
 
+List<DropdownMenuItem<String>> dropdownMenuColorItems() {
+  List<DropdownMenuItem<String>> widgets = [];
+  for (var color in colorTexts) {
+    widgets.add(DropdownMenuItem(
+        child: Text(
+          color,
+          style: TextStyle(color: readColor(color)),
+        ),
+        value: color));
+  }
+  return widgets;
+}
+
 class SettingPage extends StatefulWidget {
   final String title;
 
@@ -53,12 +66,13 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
             publicTopBar(
               "设置",
               InkWell(
-                child: Icon(Remix.close_line, size: 24),
+                child: Icon(Remix.close_line, size: 24,color: readTextColor(),),
                 onTap: () {
                   Navigator.of(context).pop();
                 },
               ),
               readBackgroundColor(),
+              readTextColor()
             ),
             SliverToBoxAdapter(
               child: Container(
@@ -108,69 +122,39 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                     ColumnGap(16),
                     CustomCard(
                       child: Column(children: [
-                        settingItem(Remix.palette_line, "主题颜色", Builder(builder: (BuildContext context) {
-                          return DropdownButton(
-                            value: AppData.persistentData["color"] ?? null,
-                            icon: Icon(
-                              Remix.arrow_down_s_line,
-                              size: 18,
-                            ),
-                            enableFeedback: true,
-                            iconEnabledColor: readColor(),
-                            elevation: 0,
-                            items: [
-                              DropdownMenuItem(
-                                  child: Text(
-                                    "purple",
-                                    style: TextStyle(color: Colors.deepPurple),
-                                  ),
-                                  value: "purple"),
-                              DropdownMenuItem(
-                                  child: Text(
-                                    "red",
-                                    style: TextStyle(color: Colors.redAccent),
-                                  ),
-                                  value: "red"),
-                              DropdownMenuItem(
-                                  child: Text(
-                                    "blue",
-                                    style: TextStyle(color: Colors.blue),
-                                  ),
-                                  value: "blue"),
-                              DropdownMenuItem(
-                                  child: Text(
-                                    "cyan",
-                                    style: TextStyle(color: Colors.cyan[400]),
-                                  ),
-                                  value: "cyan"),
-                              DropdownMenuItem(
-                                  child: Text(
-                                    "pink",
-                                    style: TextStyle(color: Colors.pinkAccent[100]),
-                                  ),
-                                  value: "pink"),
-                              DropdownMenuItem(
-                                  child: Text(
-                                    "yellow",
-                                    style: TextStyle(color: Colors.yellow[600]),
-                                  ),
-                                  value: "yellow"),
-                            ],
-                            underline: Container(),
-                            onChanged: (value) {
-                              setState(() {
-                                AppData.persistentData["color"] = value.toString();
-                              });
-                              writeConfig();
-                              eventBus.fire(SetPageIndex());
-                              Navigator.pushAndRemoveUntil(
-                                context,
-                                AppRouter(Layout()),
-                                (route) => false,
+                        settingItem(
+                          Remix.palette_line,
+                          "主题颜色",
+                          Builder(
+                            builder: (BuildContext context) {
+                              return DropdownButton(
+                                value: AppData.persistentData["color"] ?? null,
+                                icon: Icon(
+                                  Remix.arrow_down_s_line,
+                                  size: 18,
+                                ),
+                                enableFeedback: true,
+                                iconEnabledColor: readColor(),
+                                elevation: 0,
+                                items: dropdownMenuColorItems(),
+                                underline: Container(),
+                                onChanged: (value) {
+                                  setState(() {
+                                    AppData.persistentData["color"] = value.toString();
+                                  });
+                                  writeConfig();
+                                  eventBus.fire(SetPageIndex());
+                                  saveSplashColor(readBackgroundColor());
+                                  Navigator.pushAndRemoveUntil(
+                                    context,
+                                    AppRouter(Layout()),
+                                    (route) => false,
+                                  );
+                                },
                               );
                             },
-                          );
-                        },),),
+                          ),
+                        ),
                         ColumnGap(),
                         settingItem(Remix.apps_2_line, "程序生命", Builder(builder: (BuildContext context) {
                           return DropdownButton(
@@ -197,81 +181,93 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                           );
                         })),
                         ColumnGap(),
-                        settingItem(Remix.timer_2_line, "小节时间", Builder(builder: (BuildContext context) {
-                          return DropdownButton(
-                            icon: Icon(
-                              Remix.arrow_down_s_line,
-                              size: 18,
-                            ),
-                            enableFeedback: true,
-                            // style: TextStyle(color: readColor()),
-                            iconEnabledColor: readColor(),
-                            elevation: 0,
-                            hint: Text(
-                              (AppData.persistentData["showLessonTimeInList"] ?? "0") == "1" ? "显示" : "隐藏",
-                              style: TextStyle(color: readColor(), fontSize: 14),
-                            ),
-                            items: [
-                              DropdownMenuItem(
-                                  child: Text(
-                                    "显示",
-                                    style: TextStyle(fontSize: 14),
-                                  ),
-                                  value: "1"),
-                              DropdownMenuItem(
-                                  child: Text(
-                                    "隐藏",
-                                    style: TextStyle(fontSize: 14),
-                                  ),
-                                  value: "0")
-                            ],
-                            underline: Container(height: 0),
-                            onChanged: (value) {
-                              setState(() {
-                                AppData.persistentData["showLessonTimeInList"] = value.toString();
-                              });
-                              writeConfig();
+                        settingItem(
+                          Remix.timer_2_line,
+                          "小节时间",
+                          Builder(
+                            builder: (BuildContext context) {
+                              return DropdownButton(
+                                icon: Icon(
+                                  Remix.arrow_down_s_line,
+                                  size: 18,
+                                ),
+                                enableFeedback: true,
+                                // style: TextStyle(color: readColor()),
+                                iconEnabledColor: readColor(),
+                                elevation: 0,
+                                hint: Text(
+                                  (AppData.persistentData["showLessonTimeInList"] ?? "0") == "1" ? "显示" : "隐藏",
+                                  style: TextStyle(color: readColor(), fontSize: 14),
+                                ),
+                                items: [
+                                  DropdownMenuItem(
+                                      child: Text(
+                                        "显示",
+                                        style: TextStyle(fontSize: 14),
+                                      ),
+                                      value: "1"),
+                                  DropdownMenuItem(
+                                      child: Text(
+                                        "隐藏",
+                                        style: TextStyle(fontSize: 14),
+                                      ),
+                                      value: "0")
+                                ],
+                                underline: Container(height: 0),
+                                onChanged: (value) {
+                                  setState(() {
+                                    AppData.persistentData["showLessonTimeInList"] = value.toString();
+                                  });
+                                  writeConfig();
+                                },
+                              );
                             },
-                          );
-                        },),),
+                          ),
+                        ),
                         ColumnGap(),
-                        settingItem(Remix.calendar_2_line, "课表日期", Builder(builder: (BuildContext context) {
-                          return DropdownButton(
-                            icon: Icon(
-                              Remix.arrow_down_s_line,
-                              size: 18,
-                            ),
-                            enableFeedback: true,
-                            // style: TextStyle(color: readColor()),
-                            iconEnabledColor: readColor(),
-                            elevation: 0,
-                            hint: Text(
-                              (AppData.persistentData["showDayByWeekDay"] ?? "0") == "1" ? "显示" : "隐藏",
-                              style: TextStyle(color: readColor(), fontSize: 14),
-                            ),
-                            items: [
-                              DropdownMenuItem(
-                                  child: Text(
-                                    "显示",
-                                    style: TextStyle(fontSize: 14),
-                                  ),
-                                  value: "1"),
-                              DropdownMenuItem(
-                                  child: Text(
-                                    "隐藏",
-                                    style: TextStyle(fontSize: 14),
-                                  ),
-                                  value: "0")
-                            ],
-                            underline: Container(height: 0),
-                            onChanged: (value) {
-                              setState(() {
-                                AppData.persistentData["showDayByWeekDay"] = value.toString();
-                              });
-                              writeConfig();
+                        settingItem(
+                          Remix.calendar_2_line,
+                          "课表日期",
+                          Builder(
+                            builder: (BuildContext context) {
+                              return DropdownButton(
+                                icon: Icon(
+                                  Remix.arrow_down_s_line,
+                                  size: 18,
+                                ),
+                                enableFeedback: true,
+                                // style: TextStyle(color: readColor()),
+                                iconEnabledColor: readColor(),
+                                elevation: 0,
+                                hint: Text(
+                                  (AppData.persistentData["showDayByWeekDay"] ?? "0") == "1" ? "显示" : "隐藏",
+                                  style: TextStyle(color: readColor(), fontSize: 14),
+                                ),
+                                items: [
+                                  DropdownMenuItem(
+                                      child: Text(
+                                        "显示",
+                                        style: TextStyle(fontSize: 14),
+                                      ),
+                                      value: "1"),
+                                  DropdownMenuItem(
+                                      child: Text(
+                                        "隐藏",
+                                        style: TextStyle(fontSize: 14),
+                                      ),
+                                      value: "0")
+                                ],
+                                underline: Container(height: 0),
+                                onChanged: (value) {
+                                  setState(() {
+                                    AppData.persistentData["showDayByWeekDay"] = value.toString();
+                                  });
+                                  writeConfig();
+                                },
+                              );
                             },
-                          );
-                        },),),
+                          ),
+                        ),
                         ColumnGap(),
                         settingItem(Remix.exchange_2_line, "调课补课", Builder(builder: (BuildContext context) {
                           return DropdownButton(
@@ -356,7 +352,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                                     "清除数据",
                                     style: TextStyle(
                                       fontSize: 16,
-                                      color: _isExpanded ? Colors.redAccent : Colors.black,
+                                      color: _isExpanded ? Colors.redAccent :  readTextColor()
                                     ),
                                   ),
                                 )
@@ -438,7 +434,7 @@ Widget settingItem(IconData icon, String title, Widget rightWidget) {
             padding: EdgeInsets.fromLTRB(16, 14, 0, 14),
             child: Text(
               title,
-              style: TextStyle(fontSize: 16, color: Colors.black),
+              style: TextStyle(fontSize: 16, color: readTextColor()),
             ),
           )
         ],

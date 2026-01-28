@@ -173,9 +173,8 @@ class SchedulePageState extends State<SchedulePage> with AutomaticKeepAliveClien
     super.initState();
     Duration duration = Duration(milliseconds: 500);
     Timer(duration, () {
-      if (AppData.persistentData["prompt"] == null) {
-        AppData.persistentData["prompt"] = "5";
-      }
+      AppData.persistentData["prompt"] ??= "5";
+
       int _number = int.parse(AppData.persistentData["prompt"] ?? "");
       if (_number > 0) {
         _showPrompt();

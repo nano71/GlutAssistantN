@@ -55,12 +55,34 @@ Uri httpUri(
 }
 
 readBackgroundColor() {
+  if (AppData.persistentData["color"] == "dark") {
+    return Color(0xFF101014);
+  }
   return Color(0xFFFAFAFA);
 }
 
+readTextColor() {
+  if (AppData.persistentData["color"] == "dark") {
+    return Colors.white;
+  }
+  return Colors.black;
+}
+
+readArrowIconColor() {
+  if (AppData.persistentData["color"] == "dark") {
+    return Colors.white60;
+  }
+  return Colors.black26;
+}
+
 readCardBackgroundColor() {
+  if (AppData.persistentData["color"] == "dark") {
+    return Color(0xFF18181c);
+  }
   return Colors.white;
 }
+
+List<String> colorTexts = ["dark", "purple", "red", "pink", "blue", "cyan", "yellow"];
 
 LinearGradient readGradient() {
   switch (AppData.persistentData["color"]) {
@@ -81,8 +103,12 @@ LinearGradient readGradient() {
   }
 }
 
-readColor() {
-  switch (AppData.persistentData["color"]) {
+readColor([String? color]) {
+  color ??= AppData.persistentData["color"];
+
+  switch (color) {
+    case "dark":
+      return Color(0xFF06f7a1);
     case "purple":
       return Colors.deepPurpleAccent;
     case "red":
@@ -140,6 +166,8 @@ LinearGradient readCardGradient2() {
 
 Color readColorBegin() {
   switch (AppData.persistentData["color"]) {
+    case "dark":
+      return Color(0x1a029cde);
     case "purple":
       return Color(0x2adbcfff);
     case "red":

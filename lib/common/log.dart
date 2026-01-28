@@ -30,9 +30,8 @@ Future<void> writeLog() async {
 
   isWritingLog = true;
 
-  if (directory == null) {
-    directory = await getApplicationSupportDirectory();
-  }
+  directory ??= await getApplicationSupportDirectory();
+
   final file = File('${directory!.path}/log.json');
 
   if (await file.exists()) {

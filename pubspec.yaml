@@ -44,6 +44,7 @@ dependencies:
   sentry_flutter: ^8.10.1
   share_plus: ^10.1.2
   encrypt: ^5.0.3
+  shared_preferences: ^2.5.3
 dev_dependencies:
   sentry_dart_plugin: ^2.1.0
   flutter_test:
