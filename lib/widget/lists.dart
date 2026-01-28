@@ -476,7 +476,7 @@ class ScoreListState extends State<ScoreList> {
       return SliverList(
         delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
           return Container(
-            color: Colors.white,
+            color: readListPageBackgroundColor(),
             height: 500,
           );
         }, childCount: 1),
@@ -858,7 +858,7 @@ List<Widget> occupancyList(List<bool> boolList) {
 class RowGap extends StatelessWidget {
   late final double gap;
 
-  ColumnGap([double gap = 8]){
+  RowGap([double gap = 8]){
     this.gap = gap;
   }
 

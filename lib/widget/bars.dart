@@ -175,7 +175,7 @@ class ScheduleTopBarState extends State<ScheduleTopBar> {
           InkWell(
             child: Text(
               month() + "Week $_week",
-              style: TextStyle(color: Colors.black),
+              style: TextStyle(color: readTextColor()),
             ),
             onTap: () {
               back();
@@ -186,7 +186,7 @@ class ScheduleTopBarState extends State<ScheduleTopBar> {
               children: [
                 Text(
                   date(),
-                  style: TextStyle(color: Colors.black, fontSize: 14),
+                  style: TextStyle(color: readTextColor(), fontSize: 14),
                 ),
                 goCurrent
               ],
@@ -245,7 +245,6 @@ class BottomNavBarState extends State<BottomNavBar> {
       backgroundColor: readCardBackgroundColor(),
       indicatorColor: readColorEnd(),
       shadowColor: Colors.transparent,
-      surfaceTintColor: Colors.black87,
       selectedIndex: AppConfig.pageIndex,
       onDestinationSelected: (int index) {
         if (AppConfig.pageIndex != index) {
@@ -258,6 +257,7 @@ class BottomNavBarState extends State<BottomNavBar> {
         NavigationDestination(
           icon: Icon(
             Remix.home_3_line,
+            color: readTextColor(),
           ),
           selectedIcon: Icon(
             Remix.home_3_fill,
@@ -268,6 +268,7 @@ class BottomNavBarState extends State<BottomNavBar> {
         NavigationDestination(
           icon: Icon(
             Remix.calendar_todo_line,
+            color: readTextColor(),
           ),
           selectedIcon: Icon(
             Remix.calendar_todo_fill,
@@ -297,6 +298,7 @@ class BottomNavBarState extends State<BottomNavBar> {
             ),
             child: Icon(
               Remix.emotion_happy_line,
+              color: readTextColor(),
             ),
           ),
           label: "我的",

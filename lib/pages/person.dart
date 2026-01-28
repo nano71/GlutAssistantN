@@ -41,7 +41,7 @@ class MinePageState extends State<MinePage> {
     }
     return Container(
       child: CustomScrollView(physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()), slivers: [
-        publicTopBar(text, Text(""), readBackgroundColor()),
+        publicTopBar(text, Text(""), readBackgroundColor(),readTextColor()),
         SliverToBoxAdapter(
             child: Container(
           width: double.infinity,

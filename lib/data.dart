@@ -20,6 +20,10 @@ class SetPageIndex {
   SetPageIndex({this.index = 0});
 }
 
+class UpdateAppThemeState{
+  UpdateAppThemeState();
+}
+
 class ReloadExamListState {
   ReloadExamListState();
 }

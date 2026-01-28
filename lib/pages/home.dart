@@ -337,7 +337,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                 margin: HomeCardsState.textMargin,
                                 child: Text(
                                   HomeCardsState.iconTexts[0],
-                                  style: HomeCardsState.textStyle,
+                                  style: TextStyle(color: readTextColor2()),
                                 ),
                               ),
                             ),
@@ -382,7 +382,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                             Align(
                               child: Container(
                                 margin: HomeCardsState.textMargin,
-                                child: Text(HomeCardsState.iconTexts[1], style: HomeCardsState.textStyle),
+                                child: Text(HomeCardsState.iconTexts[1], style: TextStyle(color: readTextColor2())),
                               ),
                             ),
                           ],
@@ -426,7 +426,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                             Align(
                               child: Container(
                                 margin: HomeCardsState.textMargin,
-                                child: Text(HomeCardsState.iconTexts[2], style: HomeCardsState.textStyle),
+                                child: Text(HomeCardsState.iconTexts[2], style: TextStyle(color: readTextColor2())),
                               ),
                             ),
                           ],

@@ -180,7 +180,14 @@ class _QueryBodyState extends State<QueryBody> {
         gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [readColor(), readColor(), Colors.transparent, Colors.transparent, Colors.transparent, Colors.transparent],
+            colors: [
+              readListPageTopAreaBackgroundColor(),
+              readListPageTopAreaBackgroundColor(),
+              readListPageBackgroundColor(),
+              readListPageBackgroundColor(),
+              readListPageBackgroundColor(),
+              readListPageBackgroundColor(),
+            ],
             stops: [0, .5, .50001, .6, .61, 1]),
       ),
       margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
@@ -193,7 +200,7 @@ class _QueryBodyState extends State<QueryBody> {
                 child: Icon(
                   Remix.close_line,
                   size: 24,
-                  color: Colors.white,
+                  color: readTextColor(),
                 ),
                 onTap: () {
                   Navigator.of(context).pop();
@@ -201,13 +208,13 @@ class _QueryBodyState extends State<QueryBody> {
               ),
               () => infoDialog(context,
                   "2019级及以后的平均学分绩点计算方式:\n\n绩点 = ∑(课程学分 × 绩点) / ∑课程学分\n\n1.参与计算的课程仅为选课属性必修课和集中性实践教学环节, 体育等素质类必修课不参与学分绩点计算\n\n2.采用五级记分制的课程和集中性实践性教学环节、毕业设计(论文)成绩折算成百分制后再进行计算, 不及格为40分"),
-              readColor(),
-              Colors.white,
+              readListPageTopAreaBackgroundColor(),
+              readTextColor(),
               0),
           SliverToBoxAdapter(
             child: Container(
               padding: EdgeInsets.fromLTRB(16, 8, 16, 16),
-              color: readColor(),
+              color: readListPageTopAreaBackgroundColor(),
               margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
               child: Column(
                 children: [
@@ -301,7 +308,7 @@ class _QueryBodyState extends State<QueryBody> {
                       ),
                       Text(
                         "|",
-                        style: TextStyle(color: readColor()),
+                        style: TextStyle(color: Colors.transparent),
                       ),
                       Text(
                         "算术平均分: ${scores[1]}",
@@ -309,11 +316,11 @@ class _QueryBodyState extends State<QueryBody> {
                       ),
                       Text(
                         "|",
-                        style: TextStyle(color: readColor()),
+                        style: TextStyle(color: Colors.transparent),
                       ),
                       Text(
                         "加权平均分: ${scores[1]}",
-                        style: TextStyle(color: readColor()),
+                        style: TextStyle(color: Colors.transparent),
                       )
                     ],
                   )

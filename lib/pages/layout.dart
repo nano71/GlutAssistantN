@@ -70,6 +70,7 @@ class _DataPreloadPageState extends State<DataPreloadPage> {
     await readCookie();
     getUpdateForEveryday();
     updateAppwidget();
+    eventBus.fire(UpdateAppThemeState());
     Navigator.pushAndRemoveUntil(
       context,
       AppRouter(Layout(), 2000),

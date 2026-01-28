@@ -139,7 +139,7 @@ Widget homeCard2 = Stack(
     Align(
       child: Container(
         margin: HomeCardsState.textMargin,
-        child: Text(HomeCardsState.iconTexts[1], style: HomeCardsState.textStyle),
+        // child: Text(HomeCardsState.iconTexts[1], style: HomeCardsState.textStyle),
       ),
     ),
   ],
@@ -160,7 +160,7 @@ Widget homeCard3 = Stack(
     Align(
       child: Container(
         margin: HomeCardsState.textMargin,
-        child: Text(HomeCardsState.iconTexts[2], style: HomeCardsState.textStyle),
+        // child: Text(HomeCardsState.iconTexts[2], style: HomeCardsState.textStyle),
       ),
     ),
   ],
@@ -177,7 +177,6 @@ class HomeCardsState {
     color: Color.fromARGB(42, 199, 229, 253),
   );
   static double width = double.infinity;
-  static TextStyle textStyle = TextStyle(color: Colors.black54);
 }
 
 class CircularProgressDynamic extends StatefulWidget {

@@ -54,6 +54,20 @@ Uri httpUri(
   return Uri.http(AppConfig.jwUrl, path, queryParameters);
 }
 
+readBorderColor() {
+  if (AppData.persistentData["color"] == "dark") {
+    return Color(0xFF26262a);
+  }
+  return Colors.white;
+}
+
+readListPageBackgroundColor() {
+  if (AppData.persistentData["color"] == "dark") {
+    return readBackgroundColor();
+  }
+  return Colors.transparent;
+}
+
 readBackgroundColor() {
   if (AppData.persistentData["color"] == "dark") {
     return Color(0xFF101014);
@@ -66,6 +80,13 @@ readTextColor() {
     return Colors.white;
   }
   return Colors.black;
+}
+
+readTextColor2() {
+  if (AppData.persistentData["color"] == "dark") {
+    return Colors.white54;
+  }
+  return Colors.black54;
 }
 
 readArrowIconColor() {
@@ -82,10 +103,33 @@ readCardBackgroundColor() {
   return Colors.white;
 }
 
+readCardBackgroundColor2() {
+  if (AppData.persistentData["color"] == "dark") {
+    return Color(0xFF26262a);
+  }
+  return Colors.white;
+}
+
+readTextContentBackgroundColor() {
+  if (AppData.persistentData["color"] == "dark") {
+    return readCardBackgroundColor2();
+  }
+  return readColorEnd();
+}
+
+readListPageTopAreaBackgroundColor() {
+  if (AppData.persistentData["color"] == "dark") {
+    return Color(0xFF18181c);
+  }
+  return readColor();
+}
+
 List<String> colorTexts = ["dark", "purple", "red", "pink", "blue", "cyan", "yellow"];
 
 LinearGradient readGradient() {
   switch (AppData.persistentData["color"]) {
+    case "dark":
+      return setTemplate([Color(0xff11998e), Color(0xFF38ef7d )]);
     case "purple":
       return setTemplate([Color(0xfff0abfc), Color(0xff4f46e5)]);
     case "red":
@@ -167,7 +211,7 @@ LinearGradient readCardGradient2() {
 Color readColorBegin() {
   switch (AppData.persistentData["color"]) {
     case "dark":
-      return Color(0x1a029cde);
+      return Color(0xFF18181c);
     case "purple":
       return Color(0x2adbcfff);
     case "red":
@@ -194,6 +238,8 @@ Color readColorBegin() {
 
 Color readColorEnd() {
   switch (AppData.persistentData["color"]) {
+    case "dark":
+      return Color(0xFF26262a);
     case "purple":
       return Color(0x6ECFBCFD);
     case "red":

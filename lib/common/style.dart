@@ -4,11 +4,11 @@ import '../config.dart';
 
 ButtonStyle buttonStyle() {
   return ButtonStyle(
-    backgroundColor: WidgetStateProperty.all<Color>(Colors.white),
+    backgroundColor: WidgetStateProperty.all<Color>(readCardBackgroundColor2()),
     overlayColor: WidgetStateProperty.all<Color>(readColorEnd()),
   );
 }
 
 TextStyle tomorrowAndTodayTextStyle() {
-  return TextStyle(fontSize: 14, color: Colors.black, decoration: TextDecoration.none);
+  return TextStyle(fontSize: 14, color: readTextColor(), decoration: TextDecoration.none);
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:glutassistantn/widget/lists.dart';
 import 'package:http/http.dart';
 import 'package:remixicon/remixicon.dart';
 
@@ -128,7 +129,11 @@ infoDialog(BuildContext context, String text) {
                 ],
               ),
               InkWell(
-                child: Icon(Remix.close_line, size: 32),
+                child: Icon(
+                  Remix.close_line,
+                  size: 32,
+                  color: readTextColor(),
+                ),
                 onTap: () {
                   Navigator.of(context).pop();
                 },
@@ -141,13 +146,13 @@ infoDialog(BuildContext context, String text) {
             fontSize: 25,
           ),
           contentPadding: EdgeInsets.only(left: 0, right: 0, bottom: 0),
-          backgroundColor: Colors.white,
+          backgroundColor: readCardBackgroundColor(),
           children: [
             Container(
                 padding: EdgeInsets.fromLTRB(12, 12, 12, 12),
                 margin: EdgeInsets.fromLTRB(8, 0, 8, 8),
                 decoration: BoxDecoration(
-                  color: readColorEnd(),
+                  color: readTextContentBackgroundColor(),
                   borderRadius: BorderRadius.all(
                     Radius.circular(12.0),
                   ),
@@ -192,6 +197,7 @@ codeCheckDialog(BuildContext context, Function callback) async {
   TextEditingController textFieldController = TextEditingController();
   var response = await get(AppConfig.getCodeUrl).timeout(Duration(seconds: 3));
   bool clicked = false;
+  bool hasRowGap = AppData.persistentData["color"] == "dark";
   getCode(Function fn) async {
     response = await get(AppConfig.getCodeUrl).timeout(Duration(seconds: 3));
     parseRawCookies(response.headers['set-cookie']);
@@ -245,7 +251,8 @@ codeCheckDialog(BuildContext context, Function callback) async {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16.0),
             ),
-            title: Text('提示'),
+            title: Text('提示', style: TextStyle(color: readTextColor())),
+            backgroundColor: readCardBackgroundColor(),
             children: <Widget>[
               Container(
                 margin: EdgeInsets.fromLTRB(24, 0, 24, 4),
@@ -307,6 +314,7 @@ codeCheckDialog(BuildContext context, Function callback) async {
                     ),
                   ),
                 ),
+                RowGap(hasRowGap?8:0),
                 Container(
                   margin: EdgeInsets.fromLTRB(0, 8, 24, 0),
                   child: TextButton(
@@ -424,7 +432,7 @@ scheduleDialog(BuildContext context, String week, String weekDay, String index) 
               ],
             ),
             InkWell(
-              child: Icon(Remix.close_line, size: 32),
+              child: Icon(Remix.close_line, size: 32,color: readTextColor(),),
               onTap: () {
                 Navigator.of(context).pop();
               },
@@ -437,7 +445,7 @@ scheduleDialog(BuildContext context, String week, String weekDay, String index) 
           fontSize: 25,
         ),
         contentPadding: EdgeInsets.only(left: 0, right: 0, bottom: 0),
-        backgroundColor: Colors.white,
+        backgroundColor: readCardBackgroundColor(),
         children: [scheduleDialogItem(_schedule[0], _time, _schedule[1], _schedule[2])],
       );
     },

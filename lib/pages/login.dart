@@ -164,9 +164,9 @@ class LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: readBackgroundColor(),
       body: Container(
-        color: Colors.white,
+        color: readBackgroundColor(),
         margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
         child: CustomScrollView(
           controller: _scrollController,
@@ -175,11 +175,17 @@ class LoginPageState extends State<LoginPage> {
             publicTopBar(
                 "桂工助手N",
                 InkWell(
-                  child: Icon(Remix.close_line, size: 24),
+                  child: Icon(
+                    Remix.close_line,
+                    size: 24,
+                    color: readTextColor(),
+                  ),
                   onTap: () {
                     Navigator.of(context).pop();
                   },
-                )),
+                ),
+                readBackgroundColor(),
+                readTextColor()),
             SliverToBoxAdapter(
               child: Container(
                 margin: EdgeInsets.fromLTRB(16, 0, 16, 0),
@@ -212,6 +218,7 @@ class LoginPageState extends State<LoginPage> {
                         onTap: () {
                           _tap();
                         },
+                        style: TextStyle(color: readTextColor()),
                         cursorColor: readColor(),
                         keyboardType: TextInputType.number,
                         inputFormatters: [FilteringTextInputFormatter.digitsOnly],
@@ -220,7 +227,7 @@ class LoginPageState extends State<LoginPage> {
                         decoration: InputDecoration(
                           icon: Icon(
                             Remix.user_3_line,
-                            color: studentIdFocusNode.hasFocus ? readColor() : null,
+                            color: studentIdFocusNode.hasFocus ? readColor() : readTextColor(),
                           ),
                           border: InputBorder.none,
                           hintText: "请输入学号", //类似placeholder效果
@@ -242,16 +249,18 @@ class LoginPageState extends State<LoginPage> {
                         onTap: () {
                           _tap();
                         },
+                        style: TextStyle(color: readTextColor()),
                         focusNode: passwordFocusNode,
                         cursorColor: readColor(),
                         controller: passwordController,
                         decoration: InputDecoration(
                           icon: Icon(
                             Remix.key_line,
-                            color: passwordFocusNode.hasFocus ? readColor() : null,
+                            color: passwordFocusNode.hasFocus ? readColor() : readTextColor(),
                           ),
                           border: InputBorder.none,
                           hintText: "请输入密码", //类似placeholder效果
+                          hintStyle: TextStyle(color: readTextColor2())
                         ),
                       ),
                     ),
@@ -266,6 +275,7 @@ class LoginPageState extends State<LoginPage> {
                               onTap: () {
                                 _tap();
                               },
+                              style: TextStyle(color: readTextColor()),
                               keyboardType: TextInputType.number,
                               cursorColor: readColor(),
                               focusNode: checkCodeFocusNode,
@@ -273,10 +283,11 @@ class LoginPageState extends State<LoginPage> {
                               decoration: InputDecoration(
                                 icon: Icon(
                                   Remix.magic_line,
-                                  color: checkCodeFocusNode.hasFocus ? readColor() : null,
+                                  color: checkCodeFocusNode.hasFocus ? readColor() : readTextColor(),
                                 ),
                                 border: InputBorder.none,
                                 hintText: "请输入验证码", //类似placeholder效果
+                                hintStyle: TextStyle(color: readTextColor2())
                               ),
                             ),
                           ),

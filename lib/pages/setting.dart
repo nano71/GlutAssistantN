@@ -144,6 +144,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                                   });
                                   writeConfig();
                                   eventBus.fire(SetPageIndex());
+                                  eventBus.fire(UpdateAppThemeState());
                                   saveSplashColor(readBackgroundColor());
                                   Navigator.pushAndRemoveUntil(
                                     context,
@@ -263,6 +264,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                                     AppData.persistentData["showDayByWeekDay"] = value.toString();
                                   });
                                   writeConfig();
+                                  eventBus.fire(ReloadSchedulePageState());
                                 },
                               );
                             },

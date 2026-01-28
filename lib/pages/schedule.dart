@@ -124,11 +124,11 @@ Widget _leftGrid(String title) {
       border: Border(
           top: BorderSide(
             width: 1, //宽度
-            color: Color(0xffFFFFFF), //边框颜色
+            color: readBorderColor(), //边框颜色
           ),
           right: BorderSide(
             width: 1, //宽度
-            color: Color(0xffFFFFFF), //边框颜色
+            color: readBorderColor(), //边框颜色
           )),
     ),
     child: Text(
@@ -395,11 +395,11 @@ class Grid extends StatelessWidget {
         border: Border(
           bottom: BorderSide(
             width: 1, //宽度
-            color: Colors.white, //边框颜色
+            color: readBorderColor(), //边框颜色
           ),
           right: BorderSide(
             width: 1, //宽度
-            color: Colors.white, //边框颜色
+            color: readBorderColor(), //边框颜色
           ),
         ),
       );
@@ -409,11 +409,11 @@ class Grid extends StatelessWidget {
         border: Border(
           top: BorderSide(
             width: 1, //宽度
-            color: Colors.white, //边框颜色
+            color: readBorderColor(), //边框颜色
           ),
           right: BorderSide(
             width: 1, //宽度
-            color: Colors.white, //边框颜色
+            color: readBorderColor(), //边框颜色
           ),
         ),
       );
@@ -423,11 +423,11 @@ class Grid extends StatelessWidget {
         border: Border(
           bottom: BorderSide(
             width: 1, //宽度
-            color: Colors.white, //边框颜色
+            color: readBorderColor(), //边框颜色
           ),
           right: BorderSide(
             width: 1, //宽度
-            color: Colors.white, //边框颜色
+            color: readBorderColor(), //边框颜色
           ),
         ),
       );
@@ -437,7 +437,7 @@ class Grid extends StatelessWidget {
         border: Border(
           right: BorderSide(
             width: 1, //宽度
-            color: Colors.white, //边框颜色
+            color: readBorderColor(), //边框颜色
           ),
         ),
       );
