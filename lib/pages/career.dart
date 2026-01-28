@@ -174,7 +174,7 @@ class _CareerPageBodyState extends State<CareerPageBody> {
       }
     });
     return Container(
-      color: Colors.white,
+      color:readBackgroundColor(),
       margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
       child: CustomScrollView(
         physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
@@ -182,7 +182,7 @@ class _CareerPageBodyState extends State<CareerPageBody> {
           publicTopBar(
             "我的大学生涯",
             InkWell(
-              child: Icon(Remix.close_line, size: 24),
+              child: Icon(Remix.close_line, size: 24,color: readTextColor(),),
               onTap: () {
                 if (type == 0) {
                   Navigator.of(context).pop();
@@ -191,6 +191,8 @@ class _CareerPageBodyState extends State<CareerPageBody> {
                 }
               },
             ),
+            readBackgroundColor(),
+            readTextColor(),
           ),
           SliverToBoxAdapter(
             child: Container(

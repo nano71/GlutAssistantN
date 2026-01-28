@@ -272,6 +272,8 @@ codeCheckDialog(BuildContext context, Function callback) async {
                         autofocus: true,
                         keyboardType: TextInputType.number,
                         controller: textFieldController,
+                        style: TextStyle(color: readTextColor()),
+
                         decoration: InputDecoration(
                           icon: Icon(
                             Remix.magic_line,
@@ -279,6 +281,7 @@ codeCheckDialog(BuildContext context, Function callback) async {
                           ),
                           border: InputBorder.none,
                           hintText: "验证码", //类似placeholder效果
+                          hintStyle: TextStyle(color:readTextColor2())
                         ),
                       ),
                     ),
