@@ -54,22 +54,30 @@ Uri httpUri(
   return Uri.http(AppConfig.jwUrl, path, queryParameters);
 }
 
+readBackgroundColor() {
+  return Color(0xFFFAFAFA);
+}
+
+readCardBackgroundColor() {
+  return Colors.white;
+}
+
 LinearGradient readGradient() {
   switch (AppData.persistentData["color"]) {
     case "purple":
-      return setCardTemplate([Color(0xfff0abfc), Color(0xff4f46e5)]);
+      return setTemplate([Color(0xfff0abfc), Color(0xff4f46e5)]);
     case "red":
-      return setCardTemplate([Color(0xFFfbab66), Color(0xFFf7418c)]);
+      return setTemplate([Color(0xFFfbab66), Color(0xFFf7418c)]);
     case "pink":
-      return setCardTemplate([Color(0xfff0abfc), Color(0xff4f46e5)]);
+      return setTemplate([Color(0xfff0abfc), Color(0xff4f46e5)]);
     case "blue":
-      return setCardTemplate([Color(0xff66cefb), Color(0xff4175f7)]);
+      return setTemplate([Color(0xff66cefb), Color(0xff4175f7)]);
     case "yellow":
-      return setCardTemplate([Color(0xfffbef66), Color(0xfff7a841)]);
+      return setTemplate([Color(0xfffbef66), Color(0xfff7a841)]);
     case "cyan":
-      return setCardTemplate([Color(0xff66fbce), Color(0xff16bbb4)]);
+      return setTemplate([Color(0xff66fbce), Color(0xff16bbb4)]);
     default:
-      return setCardTemplate([Color(0xff66cefb), Color(0xff4175f7)]);
+      return setTemplate([Color(0xff66cefb), Color(0xff4175f7)]);
   }
 }
 
@@ -92,16 +100,10 @@ readColor() {
   }
 }
 
-readBackgroundColor() {
-  return Color(0xFFFAFAFA);
-}
-
-readCardBackgroundColor() {
-  return Colors.white;
-}
-
 LinearGradient readCardGradient() {
   switch (AppData.persistentData["color"]) {
+    case "purple":
+      return setCardTemplate([Color(0xffd978ff), Color(0xFF8a41f7)]);
     case "red":
       return setCardTemplate([Color(0xFFfbab66), Color(0xFFf7418c)]);
     case "pink":
@@ -117,33 +119,72 @@ LinearGradient readCardGradient() {
   }
 }
 
+LinearGradient readCardGradient2() {
+  switch (AppData.persistentData["color"]) {
+    case "purple":
+      return setCardTemplate2([Color(0x12AE66FB), Color(0x4E8A41F7)]);
+    case "red":
+      return setCardTemplate2([Color(0x12fbab66), Color(0x4Ef7418c)]);
+    case "pink":
+      return setCardTemplate2([Color(0x12f479dc), Color(0x4Eff60cd)]);
+    case "blue":
+      return setCardTemplate2([Color(0x1266cefb), Color(0x4E419bff)]);
+    case "yellow":
+      return setCardTemplate2([Color(0x12fbef66), Color(0x4Ef7a841)]);
+    case "cyan":
+      return setCardTemplate2([Color(0x1266fbce), Color(0x4E16bbb4)]);
+    default:
+      return setCardTemplate2([Color(0x1266cefb), Color(0x4E419bff)]);
+  }
+}
+
 Color readColorBegin() {
-  if (AppData.persistentData["color"] == "red" || AppData.persistentData["color"] == "pink") {
-    return Color.fromARGB(42, 255, 229, 253);
-  } else if (AppData.persistentData["color"] == "blue") {
-    return Color.fromARGB(42, 199, 229, 253);
-  } else if (AppData.persistentData["color"] == "yellow") {
-    return Color.fromARGB(42, 253, 249, 199);
-  } else if (AppData.persistentData["color"] == "cyan") {
-    return Color.fromARGB(42, 199, 251, 253);
-  } else {
-    return Color.fromARGB(42, 199, 229, 253);
+  switch (AppData.persistentData["color"]) {
+    case "purple":
+      return Color(0x2adbcfff);
+    case "red":
+    case "pink":
+      // A=42, R=255, G=229, B=253
+      return Color(0x2AFAD4F8);
+
+    case "blue":
+      // A=42, R=199, G=229, B=253
+      return Color(0x2AC7E5FD);
+
+    case "yellow":
+      // A=42, R=253, G=249, B=199
+      return Color(0x2AFFF76C);
+
+    case "cyan":
+      // A=42, R=199, G=251, B=253
+      return Color(0x2AC7FBFD);
+
+    default:
+      return Color(0x2AC7E5FD);
   }
 }
 
 Color readColorEnd() {
-  if (AppData.persistentData["color"] == "red") {
-    return Color.fromARGB(110, 253, 199, 199);
-  } else if (AppData.persistentData["color"] == "pink") {
-    return Color.fromARGB(110, 253, 199, 228);
-  } else if (AppData.persistentData["color"] == "blue") {
-    return Color.fromARGB(110, 199, 229, 253);
-  } else if (AppData.persistentData["color"] == "yellow") {
-    return Color.fromARGB(110, 253, 246, 199);
-  } else if (AppData.persistentData["color"] == "cyan") {
-    return Color.fromARGB(110, 199, 251, 253);
-  } else {
-    return Color.fromARGB(110, 199, 229, 253);
+  switch (AppData.persistentData["color"]) {
+    case "purple":
+      return Color(0x6ECFBCFD);
+    case "red":
+      // A=110, R=253, G=199, B=199
+      return Color(0x6EFDC7C7);
+    case "pink":
+      // A=110, R=253, G=199, B=228
+      return Color(0x6EFDC7E4);
+    case "blue":
+      // A=110, R=199, G=229, B=253
+      return Color(0x6EC7E5FD);
+    case "yellow":
+      // A=110, R=253, G=246, B=199
+      return Color(0x6EFDF6C7);
+    case "cyan":
+      // A=110, R=199, G=251, B=253
+      return Color(0x6EC7FBFD);
+    default:
+      return Color(0x6EC7E5FD);
   }
 }
 
@@ -155,10 +196,18 @@ LinearGradient setCardTemplate(List<Color> colors) {
   );
 }
 
+LinearGradient setCardTemplate2(List<Color> colors) {
+  return LinearGradient(
+    colors: colors,
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+  );
+}
+
 LinearGradient setTemplate(List<Color> colors) {
   return LinearGradient(
     colors: colors,
-    begin: Alignment.centerLeft,
-    end: Alignment.topRight,
+    begin: Alignment.topLeft,
+    end: Alignment.centerRight,
   );
 }

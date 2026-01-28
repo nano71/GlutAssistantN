@@ -197,7 +197,7 @@ class QueryConditionCardState extends State<QueryConditionCard> {
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
       child: Container(
-        decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(12.0)), color: readColorBegin(), gradient: readGradient()),
+        decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(12.0)), gradient: readCardGradient2()),
         padding: EdgeInsets.fromLTRB(16, 16, 16, 16),
         margin: EdgeInsets.fromLTRB(16, 16, 16, 16),
         child: Column(
