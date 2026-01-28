@@ -242,7 +242,7 @@ class BottomNavBarState extends State<BottomNavBar> {
       //   ),
       // ),
       animationDuration: Duration(seconds: 1),
-      backgroundColor: Colors.grey.shade50,
+      backgroundColor: readCardBackgroundColor(),
       indicatorColor: readColorEnd(),
       shadowColor: Colors.transparent,
       surfaceTintColor: Colors.black87,

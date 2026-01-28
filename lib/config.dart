@@ -47,66 +47,73 @@ class AppConfig {
   static String reLoginErrorText = "请重新登录";
 }
 
-Uri httpUri(path, [
+Uri httpUri(
+  path, [
   Map<String, dynamic>? queryParameters,
 ]) {
   return Uri.http(AppConfig.jwUrl, path, queryParameters);
 }
 
 LinearGradient readGradient() {
-  if (AppData.persistentData["color"] == "red") {
-    return setCardTemplate([Color(0xFFfbab66), Color(0xFFf7418c)]);
-  } else if (AppData.persistentData["color"] == "pink") {
-    return setCardTemplate([Color(0xffeca299), Color(0xfffc6caa)]);
-  } else if (AppData.persistentData["color"] == "blue") {
-    return setCardTemplate([Color(0xff66cefb), Color(0xff4175f7)]);
-  } else if (AppData.persistentData["color"] == "yellow") {
-    return setCardTemplate([Color(0xfffbef66), Color(0xfff7a841)]);
-  } else if (AppData.persistentData["color"] == "cyan") {
-    return setCardTemplate([Color(0xff66fbce), Color(0xff16bbb4)]);
-  } else {
-    return setCardTemplate([Color(0xff66cefb), Color(0xff4175f7)]);
+  switch (AppData.persistentData["color"]) {
+    case "purple":
+      return setCardTemplate([Color(0xfff0abfc), Color(0xff4f46e5)]);
+    case "red":
+      return setCardTemplate([Color(0xFFfbab66), Color(0xFFf7418c)]);
+    case "pink":
+      return setCardTemplate([Color(0xfff0abfc), Color(0xff4f46e5)]);
+    case "blue":
+      return setCardTemplate([Color(0xff66cefb), Color(0xff4175f7)]);
+    case "yellow":
+      return setCardTemplate([Color(0xfffbef66), Color(0xfff7a841)]);
+    case "cyan":
+      return setCardTemplate([Color(0xff66fbce), Color(0xff16bbb4)]);
+    default:
+      return setCardTemplate([Color(0xff66cefb), Color(0xff4175f7)]);
   }
 }
 
 readColor() {
-  if (AppData.persistentData["color"] == "blue") {
-    return Colors.blue;
-  } else if (AppData.persistentData["color"] == "pink") {
-    return Colors.pink[300];
-  } else if (AppData.persistentData["color"] == "red") {
-    return Colors.redAccent;
-  } else if (AppData.persistentData["color"] == "yellow") {
-    return Color(0xFFFFC107);
-  } else if (AppData.persistentData["color"] == "cyan") {
-    return Colors.cyan[600];
-  } else {
-    return Colors.blue;
+  switch (AppData.persistentData["color"]) {
+    case "purple":
+      return Colors.deepPurpleAccent;
+    case "red":
+      return Colors.pinkAccent;
+    case "pink":
+      return Colors.pinkAccent;
+    case "blue":
+      return Colors.blue;
+    case "yellow":
+      return Color(0xFFFFC107);
+    case "cyan":
+      return Colors.cyan[600];
+    default:
+      return Colors.blue;
   }
 }
 
 readBackgroundColor() {
-  return Color(0xFFFBFBFB);
+  return Color(0xFFFAFAFA);
 }
 
-readCardBackgroundColor(){
+readCardBackgroundColor() {
   return Colors.white;
-
 }
 
 LinearGradient readCardGradient() {
-  if (AppData.persistentData["color"] == "red") {
-    return setCardTemplate([Color(0xFFfbab66), Color(0xFFf7418c)]);
-  } else if (AppData.persistentData["color"] == "pink") {
-    return setCardTemplate([Color(0xffeca299), Color(0xfffc6caa)]);
-  } else if (AppData.persistentData["color"] == "blue") {
-    return setCardTemplate([Color(0xff66cefb), Color(0xff4175f7)]);
-  } else if (AppData.persistentData["color"] == "yellow") {
-    return setCardTemplate([Color(0xfffbef66), Color(0xfff7a841)]);
-  } else if (AppData.persistentData["color"] == "cyan") {
-    return setCardTemplate([Color(0xff66fbce), Color(0xff16bbb4)]);
-  } else {
-    return setCardTemplate([Color(0xff66cefb), Color(0xff4175f7)]);
+  switch (AppData.persistentData["color"]) {
+    case "red":
+      return setCardTemplate([Color(0xFFfbab66), Color(0xFFf7418c)]);
+    case "pink":
+      return setCardTemplate([Color(0xfff479dc), Color(0xffff60cd)]);
+    case "blue":
+      return setCardTemplate([Color(0xff66cefb), Color(0xff4175f7)]);
+    case "yellow":
+      return setCardTemplate([Color(0xfffbef66), Color(0xfff7a841)]);
+    case "cyan":
+      return setCardTemplate([Color(0xff66fbce), Color(0xff16bbb4)]);
+    default:
+      return setCardTemplate([Color(0xff66cefb), Color(0xff4175f7)]);
   }
 }
 

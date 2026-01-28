@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_gbk2utf8/flutter_gbk2utf8.dart';
-import 'package:glutassistantn/main.dart';
 import 'package:html/dom.dart';
 import 'package:html/parser.dart';
 import 'package:http/http.dart';
@@ -768,6 +767,7 @@ Future<dynamic> getUpdate({bool isRetry = false}) async {
 
 Future getUpdateForEveryday() async {
   print("getUpdateForEveryday");
+  // ignore: dead_code
   if (true || "${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}" != AppData.persistentData["newTime"]) {
     Response response;
     try {

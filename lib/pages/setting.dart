@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:glutassistantn/common/log.dart';
 import 'package:remixicon/remixicon.dart';
 
-import '../widget/icons.dart';
 import '/common/io.dart';
 import '/common/style.dart';
 import '/custom/expansiontile.dart' as CustomExpansionTile;
@@ -120,6 +119,12 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                             iconEnabledColor: readColor(),
                             elevation: 0,
                             items: [
+                              DropdownMenuItem(
+                                  child: Text(
+                                    "purple",
+                                    style: TextStyle(color: Colors.deepPurple),
+                                  ),
+                                  value: "purple"),
                               DropdownMenuItem(
                                   child: Text(
                                     "red",
