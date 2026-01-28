@@ -19,11 +19,21 @@ List timeUntilNextClass(dynamic index) {
   var endHour = endTimeList[index - 1][0];
   var startMinute = startTimeList[index - 1][1];
   var endMinute = endTimeList[index - 1][1];
-  var year = DateTime.now().year;
-  var month = DateTime.now().month;
-  var day = DateTime.now().day;
-  var hour = DateTime.now().hour;
-  var minute = DateTime.now().minute;
+  var year = DateTime
+      .now()
+      .year;
+  var month = DateTime
+      .now()
+      .month;
+  var day = DateTime
+      .now()
+      .day;
+  var hour = DateTime
+      .now()
+      .hour;
+  var minute = DateTime
+      .now()
+      .minute;
   var startTimeDifference = DateTime(year, month, day, startHour, startMinute).difference(DateTime(year, month, day, hour, minute));
   var endTimeDifference = DateTime(year, month, day, endHour, endMinute).difference(DateTime(year, month, day, hour, minute));
   bool studying = false;
@@ -140,7 +150,9 @@ class TodayCourseListState extends State<TodayCourseList> {
   void refreshTimer(int index) {
     void next() {
       isTimerInit = false;
-      if (DateTime.now().second < 2) {
+      if (DateTime
+          .now()
+          .second < 2) {
         thresholdCount++;
         if (AppData.isReleaseMode && AppData.persistentData["threshold"] != "-1") {
           if (thresholdCount > (int.parse(AppData.persistentData["threshold"] ?? "5") * 2)) {
@@ -157,7 +169,7 @@ class TodayCourseListState extends State<TodayCourseList> {
       isTimerInit = true;
       Future.delayed(
         Duration(seconds: 1),
-        () {
+            () {
           if (mounted) next();
         },
       );
@@ -305,11 +317,12 @@ class TodayCourseListItemState extends State<TodayCourseListItem> {
                       Baseline(baseline: 12, baselineType: TextBaseline.ideographic, child: Text(" | ", style: smallTextStyle())),
                       isShowLessonTimeInList()
                           ? Baseline(
-                              baseline: 13,
-                              baselineType: TextBaseline.ideographic,
-                              child: Text(
-                                  ('${timePreprocessor(startTimeList[int.parse(courseInfo()[4]) - 1].join(":"))} - ${timePreprocessor(endTimeList[int.parse(courseInfo()[4]) - 1].join(":"))}'),
-                                  style: smallTextStyle()))
+                          baseline: 13,
+                          baselineType: TextBaseline.ideographic,
+                          child: Text(
+                              ('${timePreprocessor(startTimeList[int.parse(courseInfo()[4]) - 1].join(":"))} - ${timePreprocessor(endTimeList[int.parse(courseInfo()[4]) - 1].join(
+                                  ":"))}'),
+                              style: smallTextStyle()))
                           : Container(),
                       isShowLessonTimeInList() ? Baseline(baseline: 12, baselineType: TextBaseline.ideographic, child: Text(" | ", style: smallTextStyle())) : Container(),
                       Text(courseInfo()[1], style: smallTextStyle()),
@@ -452,7 +465,7 @@ class ScoreListState extends State<ScoreList> {
       if (queryScore[0] == AppConfig.socketError || queryScore[0] == AppConfig.timeOutError || queryScore[0] == "登录过期") {
         return SliverList(
           delegate: SliverChildBuilderDelegate(
-            (BuildContext context, int index) {
+                (BuildContext context, int index) {
               return null;
             },
           ),
@@ -489,7 +502,10 @@ class ScoreListState extends State<ScoreList> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Container(
-                            width: MediaQuery.of(context).size.width - 60 - 32,
+                            width: MediaQuery
+                                .of(context)
+                                .size
+                                .width - 60 - 32,
                             child: Text(
                               queryScore[index][2],
                               style: TextStyle(fontSize: 16),
@@ -517,7 +533,7 @@ class ScoreListState extends State<ScoreList> {
                     ),
                     child: Column(children: [
                       Text(
-                          // "不及格",
+                        // "不及格",
                           queryScore[index][4],
                           style: TextStyle(fontSize: 16, color: Colors.white)),
                       Text(queryScore[index][5], style: TextStyle(color: Colors.white, fontSize: 12)),
@@ -702,11 +718,11 @@ class ClassroomListState extends State<ClassroomList> {
     // throw UnimplementedError();
     return SliverList(
         delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
-      Map item = _classroomList[index];
-      // print(632);
-      // print(item);
-      return ClassroomListItem(item);
-    }, childCount: _classroomList.length));
+          Map item = _classroomList[index];
+          // print(632);
+          // print(item);
+          return ClassroomListItem(item);
+        }, childCount: _classroomList.length));
   }
 }
 
@@ -836,4 +852,35 @@ List<Widget> occupancyList(List<bool> boolList) {
     ));
   }
   return list;
+}
+
+
+class RowGap extends StatelessWidget {
+  late final double gap;
+
+  ColumnGap([double gap = 8]){
+    this.gap = gap;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: gap,
+    );
+  }
+}
+
+class ColumnGap extends StatelessWidget {
+  late final double gap;
+
+  ColumnGap([double gap = 8]){
+    this.gap = gap;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: gap,
+    );
+  }
 }

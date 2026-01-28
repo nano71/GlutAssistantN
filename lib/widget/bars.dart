@@ -168,7 +168,7 @@ class ScheduleTopBarState extends State<ScheduleTopBar> {
     return AppBar(
       automaticallyImplyLeading: false,
       elevation: 0.3,
-      backgroundColor: Colors.white,
+      backgroundColor:readBackgroundColor(),
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

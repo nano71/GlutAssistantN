@@ -120,15 +120,15 @@ Widget _leftGrid(String title) {
     height: AppConfig.schedulePageGridHeight,
     alignment: Alignment.center,
     decoration: BoxDecoration(
-      color: Colors.white,
+      color: readBackgroundColor(),
       border: Border(
           top: BorderSide(
-            width: 0.5, //宽度
-            color: title != "1" ? Color(0xfff9f9f9) : Colors.white, //边框颜色
+            width: 1, //宽度
+            color: Color(0xffFFFFFF), //边框颜色
           ),
           right: BorderSide(
-            width: 0.5, //宽度
-            color: Color(0xfff9f9f9), //边框颜色
+            width: 1, //宽度
+            color: Color(0xffFFFFFF), //边框颜色
           )),
     ),
     child: Text(
@@ -252,7 +252,7 @@ class SchedulePageState extends State<SchedulePage> with AutomaticKeepAliveClien
   Widget build(BuildContext context) {
     super.build(context);
     return Container(
-      color: Colors.white,
+      color: readBackgroundColor(),
       child: Column(
         children: [
           ScheduleTopBar(key: barKey),
@@ -360,7 +360,7 @@ List<Widget> _loopWeekDayColGrid(String week, String weekDay) {
       } else
         s = i;
     } else
-      list.add(Grid(week, weekDay, 0, 0, "", "", "", Colors.white));
+      list.add(Grid(week, weekDay, i, 0, "", "", "", readBackgroundColor()));
   }
   return list;
 }
@@ -382,9 +382,70 @@ class Grid extends StatelessWidget {
   Widget build(BuildContext context) {
     // TODO: implement build
     TextStyle style = TextStyle(fontSize: 12, color: Colors.white);
+    BoxDecoration decoration = BoxDecoration(
+      color: color,
+      border: Border.all(
+        width: 1, //宽度
+        color: readBackgroundColor(), //边框颜色
+      ),
+      borderRadius: BorderRadius.all(Radius.circular(6.0)),
+    );
+    if (index == 11 && index2 == 0) {
+      decoration = BoxDecoration(
+        color: color,
+        border: Border(
+          bottom: BorderSide(
+            width: 1, //宽度
+            color: Colors.white, //边框颜色
+          ),
+          right: BorderSide(
+            width: 1, //宽度
+            color: Colors.white, //边框颜色
+          ),
+        ),
+      );
+    } else if (index == 1 && index2 == 0) {
+      decoration = BoxDecoration(
+        color: color,
+        border: Border(
+          top: BorderSide(
+            width: 1, //宽度
+            color: Colors.white, //边框颜色
+          ),
+          right: BorderSide(
+            width: 1, //宽度
+            color: Colors.white, //边框颜色
+          ),
+        ),
+      );
+    } else if (index % 2 == 0 && index2 == 0) {
+      decoration = BoxDecoration(
+        color: color,
+        border: Border(
+          bottom: BorderSide(
+            width: 1, //宽度
+            color: Colors.white, //边框颜色
+          ),
+          right: BorderSide(
+            width: 1, //宽度
+            color: Colors.white, //边框颜色
+          ),
+        ),
+      );
+    } else if (index2 == 0) {
+      decoration = BoxDecoration(
+        color: color,
+        border: Border(
+          right: BorderSide(
+            width: 1, //宽度
+            color: Colors.white, //边框颜色
+          ),
+        ),
+      );
+    }
     return InkWell(
       onTap: () {
-        if (index != 0 || index2 != 0) {
+        if (index != 0 && index2 != 0) {
           print(index2);
           print(index);
           scheduleDialog(context, week, weekDay, index.toString());
@@ -394,28 +455,7 @@ class Grid extends StatelessWidget {
       },
       child: Container(
           height: height,
-          decoration: BoxDecoration(
-            color: color,
-            border: Border(
-              top: BorderSide(
-                width: 1, //宽度
-                color: Colors.white, //边框颜色
-              ),
-              right: BorderSide(
-                width: 1, //宽度
-                color: Colors.white, //边框颜色
-              ),
-              bottom: BorderSide(
-                width: 1, //宽度
-                color: Colors.white, //边框颜色
-              ),
-              left: BorderSide(
-                width: 1, //宽度
-                color: Colors.white, //边框颜色
-              ),
-            ),
-            borderRadius: BorderRadius.all(Radius.circular(6.0)),
-          ),
+          decoration: decoration,
           padding: EdgeInsets.only(left: 5, right: 5, top: 5, bottom: 5),
           alignment: Alignment.center,
           child: Column(

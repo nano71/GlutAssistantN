@@ -47,8 +47,7 @@ class AppConfig {
   static String reLoginErrorText = "请重新登录";
 }
 
-Uri httpUri(
-  path, [
+Uri httpUri(path, [
   Map<String, dynamic>? queryParameters,
 ]) {
   return Uri.http(AppConfig.jwUrl, path, queryParameters);
@@ -74,16 +73,25 @@ readColor() {
   if (AppData.persistentData["color"] == "blue") {
     return Colors.blue;
   } else if (AppData.persistentData["color"] == "pink") {
-    return Colors.pinkAccent[100];
+    return Colors.pink[300];
   } else if (AppData.persistentData["color"] == "red") {
     return Colors.redAccent;
   } else if (AppData.persistentData["color"] == "yellow") {
-    return Colors.yellow[600];
+    return Color(0xFFFFC107);
   } else if (AppData.persistentData["color"] == "cyan") {
-    return Colors.cyan[400];
+    return Colors.cyan[600];
   } else {
     return Colors.blue;
   }
+}
+
+readBackgroundColor() {
+  return Color(0xFFFBFBFB);
+}
+
+readCardBackgroundColor(){
+  return Colors.white;
+
 }
 
 LinearGradient readCardGradient() {

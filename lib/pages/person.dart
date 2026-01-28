@@ -1,5 +1,7 @@
 import 'package:badges/badges.dart' as badges;
 import 'package:flutter/material.dart';
+import 'package:glutassistantn/widget/cards.dart';
+import 'package:glutassistantn/widget/lists.dart';
 import 'package:remixicon/remixicon.dart';
 
 import '/pages/career.dart';
@@ -31,10 +33,15 @@ class MinePageState extends State<MinePage> {
 
   @override
   Widget build(BuildContext context) {
+    String text;
+    if (isLoggedIn()) {
+      text = "Hi! " + (AppData.persistentData["name"] ?? "");
+    } else {
+      text = "请先登录教务";
+    }
     return Container(
-      color: Colors.white,
       child: CustomScrollView(physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()), slivers: [
-        publicTopBar(isLoggedIn() ? "Hi! " + (AppData.persistentData["name"] ?? "") : "请先登录教务"),
+        publicTopBar(text, Text(""), readBackgroundColor()),
         SliverToBoxAdapter(
             child: Container(
           width: double.infinity,
@@ -42,66 +49,81 @@ class MinePageState extends State<MinePage> {
           child: Column(
             textDirection: TextDirection.ltr,
             children: [
-              InkWell(
-                onTap: () {
-                  Navigator.of(context).push(
-                    // 在FormPage()里传入参数
-                    MaterialPageRoute(
-                      builder: (context) => LoginPage(),
+              CustomCard(
+                  child: Column(
+                children: [
+                  InkWell(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        // 在FormPage()里传入参数
+                        MaterialPageRoute(
+                          builder: (context) => LoginPage(),
+                        ),
+                      );
+                    },
+                    child: mineItem(
+                      Remix.user_5_line,
+                      EdgeInsets.fromLTRB(16, 14, 0, 14),
+                      (AppData.persistentData["name"] != "" ? "更换账号" : "登录教务"),
+                      readColor(),
                     ),
-                  );
-                },
-                child: mineItem(
-                  Remix.user_5_line,
-                  EdgeInsets.fromLTRB(16, 14, 0, 14),
-                  (AppData.persistentData["name"] != "" ? "更换账号" : "登录教务"),
-                  readColor(),
-                ),
-              ),
-              InkWell(
-                onTap: () {
-                  if (AppData.persistentData["username"] == "") {
-                    // Navigator.push(context, SlideTopRoute(page: LoginPage()));
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => LoginPage()));
-                  } else {
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => CareerPage()));
-                  }
-                },
-                child: mineItem(Remix.timer_flash_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "课程生涯", readColor()),
-              ),
-              InkWell(
-                onTap: () {
-                  if (AppData.persistentData["username"] == "") {
-                    // Navigator.push(context, SlideTopRoute(page: LoginPage()));
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => LoginPage()));
-                  } else {
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => QueryRoomPage()));
-                  }
-                },
-                child: mineItem(Remix.building_4_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "教室查询", readColor()),
-              ),
-              topLine,
-              InkWell(
-                onTap: () {
-                  // launch("https://github.com/ChinaGamer/GlutAssistantN/releases/latest");
+                  ),
+                  ColumnGap(),
+                  InkWell(
+                    onTap: () {
+                      if (AppData.persistentData["username"] == "") {
+                        // Navigator.push(context, SlideTopRoute(page: LoginPage()));
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => LoginPage()));
+                      } else {
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => CareerPage()));
+                      }
+                    },
+                    child: mineItem(Remix.timer_flash_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "课程生涯", readColor()),
+                  ),
+                  ColumnGap(),
+                  InkWell(
+                    onTap: () {
+                      if (AppData.persistentData["username"] == "") {
+                        // Navigator.push(context, SlideTopRoute(page: LoginPage()));
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => LoginPage()));
+                      } else {
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => QueryRoomPage()));
+                      }
+                    },
+                    child: mineItem(Remix.building_4_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "教室查询", readColor()),
+                  ),
+                ],
+              )),
+              ColumnGap(16),
+              CustomCard(
+                child: Column(
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        // launch("https://github.com/ChinaGamer/GlutAssistantN/releases/latest");
 
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => UpdatePage()));
-                },
-                child: AppData.hasNewVersion
-                    ? mineItem5(Remix.download_cloud_2_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "版本更新", readColor())
-                    : mineItem(Remix.download_cloud_2_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "版本更新", readColor()),
-              ),
-              InkWell(
-                onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => InfoPage()));
-                },
-                child: mineItem(Remix.information_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "说明", readColor()),
-              ),
-              InkWell(
-                onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => SettingPage(title: "设置2")));
-                },
-                child: mineItem(Remix.settings_3_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "设置", readColor()),
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => UpdatePage()));
+                      },
+                      child: AppData.hasNewVersion
+                          ? mineItem5(Remix.download_cloud_2_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "版本更新", readColor())
+                          : mineItem(Remix.download_cloud_2_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "版本更新", readColor()),
+                    ),
+                    ColumnGap(),
+                    InkWell(
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => InfoPage()));
+                      },
+                      child: mineItem(Remix.information_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "说明", readColor()),
+                    ),
+                    ColumnGap(),
+                    InkWell(
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => SettingPage(title: "设置2")));
+                      },
+                      child: mineItem(Remix.settings_3_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "设置", readColor()),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),

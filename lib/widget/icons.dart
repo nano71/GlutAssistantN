@@ -36,16 +36,15 @@ class RefreshIconWidgetDynamicState extends State<RefreshIconWidgetDynamic> {
 
 Icon chevronRight = Icon(
   Remix.arrow_right_s_line,
-  color: Colors.black45,
-  size: 18,
+  color: Colors.black26
 );
 Icon chevronDown = Icon(
   Remix.arrow_down_s_line,
-  color: Colors.black45,
+  color: Colors.black26,
 );
 Icon chevronUp = Icon(
   Remix.arrow_up_s_line,
-  color: Colors.black45,
+  color: Colors.black26,
 );
 Icon goCurrent = Icon(
   Remix.map_pin_line,

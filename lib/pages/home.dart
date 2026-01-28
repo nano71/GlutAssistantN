@@ -277,7 +277,6 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
     double width = MediaQuery.of(context).size.width;
     // print("HomePage create");
     return Container(
-      color: Colors.white,
       child: CustomScrollView(
         controller: _scrollController,
         physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),

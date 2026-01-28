@@ -164,7 +164,7 @@ class _LayoutState extends State<Layout> {
   Widget build(BuildContext context) {
     print("View build");
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: readBackgroundColor(),
       body: PageView(
         physics: NeverScrollableScrollPhysics(),
         controller: AppConfig.pageControl,

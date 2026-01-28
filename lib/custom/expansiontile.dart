@@ -7,6 +7,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:glutassistantn/widget/icons.dart';
 
 const Duration _kExpand = Duration(milliseconds: 200);
 
@@ -646,7 +647,7 @@ class _ExpansionTileState extends State<ExpansionTile> with SingleTickerProvider
   Widget? _buildIcon(BuildContext context) {
     return RotationTransition(
       turns: _iconTurns,
-      child: const Icon(Icons.expand_more),
+      child: chevronDown,
     );
   }
 

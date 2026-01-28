@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:glutassistantn/widget/icons.dart';
 import 'package:remixicon/remixicon.dart';
 import '/common/get.dart';
 import '/data.dart';
@@ -197,7 +198,7 @@ class QueryConditionCardState extends State<QueryConditionCard> {
     return SliverToBoxAdapter(
       child: Container(
         decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(12.0)), color: readColorBegin(), gradient: readGradient()),
-        padding: EdgeInsets.fromLTRB(16, 6, 16, 16),
+        padding: EdgeInsets.fromLTRB(16, 16, 16, 16),
         margin: EdgeInsets.fromLTRB(16, 16, 16, 16),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -213,8 +214,8 @@ class QueryConditionCardState extends State<QueryConditionCard> {
                   height: 40,
                   child: DropdownButton(
                     enableFeedback: true,
-                    icon: Icon(Remix.arrow_right_s_line),
-                    iconSize: 16,
+                    icon: chevronRight,
+                    iconSize: 18,
                     underline: Container(),
                     alignment: Alignment.centerRight,
                     elevation: 0,
@@ -254,8 +255,8 @@ class QueryConditionCardState extends State<QueryConditionCard> {
                     selectedItemBuilder: (context) {
                       return dropdownMenuItemList("weekOfSemester", true);
                     },
-                    icon: Icon(Remix.arrow_right_s_line),
-                    iconSize: 16,
+                    icon: chevronRight,
+                    iconSize: 18,
                     underline: Container(),
                     alignment: Alignment.centerRight,
                     elevation: 0,
@@ -286,8 +287,8 @@ class QueryConditionCardState extends State<QueryConditionCard> {
                     selectedItemBuilder: (context) {
                       return dropdownMenuItemList("dayOfWeek", true);
                     },
-                    icon: Icon(Remix.arrow_right_s_line),
-                    iconSize: 16,
+                    icon: chevronRight,
+                    iconSize: 18,
                     underline: Container(),
                     alignment: Alignment.centerRight,
                     elevation: 0,
@@ -303,9 +304,7 @@ class QueryConditionCardState extends State<QueryConditionCard> {
                 ),
               ],
             ),
-            SizedBox(
-              height: 16,
-            ),
+            ColumnGap(16),
             SizedBox(
               width: double.infinity,
               height: 50,

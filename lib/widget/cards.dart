@@ -91,11 +91,9 @@ class HomeCardState extends State<HomeCard> with AutomaticKeepAliveClientMixin {
           ),
         ),
         Align(
-            alignment: Alignment.centerRight,
-            child: Container(
-              margin: EdgeInsets.fromLTRB(0, 0, 16 + (110 - 32) / 2 - 20, 0),
-              child: SizedBox(width: 40, child:TextProgressDynamic(key: textKey))),
-            ),
+          alignment: Alignment.centerRight,
+          child: Container(margin: EdgeInsets.fromLTRB(0, 0, 16 + (110 - 32) / 2 - 20, 0), child: SizedBox(width: 40, child: TextProgressDynamic(key: textKey))),
+        ),
         Align(
           alignment: Alignment.topRight,
           child: Container(
@@ -219,13 +217,33 @@ class TextProgressDynamicState extends State<TextProgressDynamic> {
 
   @override
   Widget build(BuildContext context) {
-    return Text((_value < 10 ? "0" + _value.toString() + "%" : _value.toString() + "%"),
-        style: TextStyle(color: Colors.white),
+    return Text(
+      (_value < 10 ? "0" + _value.toString() + "%" : _value.toString() + "%"),
+      style: TextStyle(color: Colors.white),
       textAlign: TextAlign.center,
     );
   }
 
   void onPressed(int value) {
     setState(() => _value = value);
+  }
+}
+
+class CustomCard extends StatelessWidget {
+  late final Widget child;
+
+  CustomCard({required Widget child}) {
+    this.child = child;
+  }
+
+  @override
+  Widget build(BuildContext contex) {
+    return Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(12)),
+          color: readCardBackgroundColor(),
+        ),
+        padding: EdgeInsets.all(16),
+        child: child);
   }
 }
