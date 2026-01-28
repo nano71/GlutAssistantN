@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:glutassistantn/pages/person.dart';
 import 'package:http/http.dart';
 import 'package:remixicon/remixicon.dart';
 
@@ -206,14 +207,6 @@ class LoginPageState extends State<LoginPage> {
                     Container(
                       margin: EdgeInsets.fromLTRB(16, 0, 16, 0),
                       padding: EdgeInsets.fromLTRB(0, 4, 0, 4),
-                      decoration: BoxDecoration(
-                        border: Border(
-                          bottom: BorderSide(
-                            width: 0, //宽度
-                            color: Color(0xfff1f1f1), //边框颜色
-                          ),
-                        ),
-                      ),
                       child: TextField(
                         onTap: () {
                           _tap();
@@ -234,17 +227,10 @@ class LoginPageState extends State<LoginPage> {
                         ),
                       ),
                     ),
+                    line,
                     Container(
                       margin: EdgeInsets.fromLTRB(16, 0, 16, 0),
                       padding: EdgeInsets.fromLTRB(0, 4, 0, 4),
-                      decoration: BoxDecoration(
-                        border: Border(
-                          bottom: BorderSide(
-                            width: 0, //宽度
-                            color: Color(0xfff1f1f1), //边框颜色
-                          ),
-                        ),
-                      ),
                       child: TextField(
                         onTap: () {
                           _tap();
@@ -264,6 +250,7 @@ class LoginPageState extends State<LoginPage> {
                         ),
                       ),
                     ),
+                    line,
                     Container(
                       margin: EdgeInsets.fromLTRB(16, 0, 16, 16),
                       padding: EdgeInsets.fromLTRB(0, 4, 0, 4),
@@ -342,3 +329,10 @@ class LoginPageState extends State<LoginPage> {
     );
   }
 }
+
+Container line = Container(
+  width: double.infinity,
+  margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
+  color: Color(0xFFf1f1f1),
+  height: 1,
+);

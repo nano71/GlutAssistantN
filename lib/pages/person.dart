@@ -201,7 +201,7 @@ Widget mineItem4(IconData icon, EdgeInsets padding, String title, Color color) {
             padding: padding,
             child: Text(
               title,
-              style: TextStyle(fontSize: 16),
+              style: TextStyle(fontSize: 16,color: readTextColor()),
             ),
           )
         ],

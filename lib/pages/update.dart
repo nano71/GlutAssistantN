@@ -75,7 +75,7 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
       }
     });
     return Container(
-      color: Colors.white,
+      color: readBackgroundColor(),
       margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
       child: CustomScrollView(
         physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
@@ -83,11 +83,13 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
           publicTopBar(
             "获取新版本",
             InkWell(
-              child: Icon(Remix.close_line, size: 24),
+              child: Icon(Remix.close_line, size: 24,color: readTextColor(),),
               onTap: () {
                 Navigator.of(context).pop();
               },
             ),
+            readBackgroundColor(),
+            readTextColor()
           ),
           SliverToBoxAdapter(
             child: SizedBox(
@@ -116,7 +118,7 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
                   ),
                   Text(
                     PackageInfo.appName,
-                    style: TextStyle(fontSize: 20),
+                    style: TextStyle(fontSize: 20,color: readTextColor()),
                   ),
                   Text(
                     PackageInfo.version,
@@ -136,7 +138,7 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
                               margin: EdgeInsets.fromLTRB(0, 0, 0, 7),
                               child: Text(
                                 "版本号:" + PackageInfo.version + "  >  " + (AppData.persistentData["newVersion"] ?? ""),
-                                style: TextStyle(color: Colors.black54),
+                                style: TextStyle(color: readTextColor2()),
                               ),
                             ),
                             Text(
@@ -148,7 +150,7 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
                               margin: EdgeInsets.fromLTRB(0, 32, 0, 8),
                               child: Text(
                                 "选择以下渠道获取更新",
-                                style: TextStyle(color: Colors.black),
+                                style: TextStyle(color: readTextColor()),
                               ),
                             ),
                             customInkWell("https://nano71.com/gan/GlutAssistantN.apk", Remix.download_2_line, "直接下载", readColor()),
@@ -168,7 +170,7 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
                               margin: EdgeInsets.fromLTRB(0, 0, 0, 7),
                               child: Text(
                                 "版本号:" + PackageInfo.version,
-                                style: TextStyle(color: Colors.black54),
+                                style: TextStyle(color: readTextColor2()),
                               ),
                             ),
                             Text(
@@ -180,7 +182,7 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
                               margin: EdgeInsets.fromLTRB(0, 32, 0, 8),
                               child: Text(
                                 "以下方式,关注项目",
-                                style: TextStyle(color: Colors.black),
+                                style: TextStyle(color: readTextColor()),
                               ),
                             ),
                             // coolapk(),

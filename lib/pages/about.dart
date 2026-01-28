@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:glutassistantn/config.dart';
+import 'package:glutassistantn/widget/cards.dart';
+import 'package:glutassistantn/widget/icons.dart';
 import 'package:remixicon/remixicon.dart';
 
 import '/custom/expansiontile.dart' as CustomExpansionTile;
@@ -18,9 +21,9 @@ class _InfoPageState extends State<InfoPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: readBackgroundColor(),
       body: Container(
-        color: Colors.white,
+        color: readBackgroundColor(),
         margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
         child: CustomScrollView(
           physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
@@ -28,11 +31,13 @@ class _InfoPageState extends State<InfoPage> {
             publicTopBar(
               "说明",
               InkWell(
-                child: Icon(Remix.close_line, size: 24),
+                child: Icon(Remix.close_line, size: 24,color: readTextColor(),),
                 onTap: () {
                   Navigator.of(context).pop();
                 },
               ),
+                readBackgroundColor(),
+                readTextColor(),
             ),
             SliverToBoxAdapter(
               child: Container(
@@ -46,16 +51,18 @@ class _InfoPageState extends State<InfoPage> {
             SliverToBoxAdapter(
                 child: Container(
               width: double.infinity,
-              padding: EdgeInsets.fromLTRB(16, 42, 16, 64),
-              child: Column(
+              padding: EdgeInsets.fromLTRB(16, 32, 16, 64),
+              child:
+              CustomCard(child:   Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   CustomExpansionTile.ExpansionTile(
                       initiallyExpanded: true,
-                      collapsedIconColor: Colors.black45,
-                      iconColor: Colors.black45,
-                      textColor: Colors.black,
+                      collapsedIconColor: readColor(),
+                      iconColor: readColor(),
+                      textColor: readTextColor(),
+                      collapsedTextColor: readTextColor(),
                       tilePadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                       title: infoItem(Icons.privacy_tip_outlined, EdgeInsets.fromLTRB(16, 14, 0, 14), "隐私"),
                       children: [
@@ -69,9 +76,10 @@ class _InfoPageState extends State<InfoPage> {
                       ]),
                   CustomExpansionTile.ExpansionTile(
                       initiallyExpanded: true,
-                      collapsedIconColor: Colors.black45,
-                      iconColor: Colors.black45,
-                      textColor: Colors.black,
+                      collapsedIconColor: readColor(),
+                      iconColor: readColor(),
+                      textColor: readTextColor(),
+                      collapsedTextColor: readTextColor(),
                       tilePadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                       title: infoItem(Icons.insert_emoticon_sharp, EdgeInsets.fromLTRB(16, 14, 0, 14), "可信"),
                       children: [
@@ -85,9 +93,10 @@ class _InfoPageState extends State<InfoPage> {
                       ]),
                   CustomExpansionTile.ExpansionTile(
                       initiallyExpanded: true,
-                      collapsedIconColor: Colors.black45,
-                      iconColor: Colors.black45,
-                      textColor: Colors.black,
+                      collapsedIconColor: readColor(),
+                      iconColor: readColor(),
+                      textColor: readTextColor(),
+                      collapsedTextColor: readTextColor(),
                       tilePadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                       title: infoItem(Icons.check_circle_outline, EdgeInsets.fromLTRB(16, 14, 0, 14), "验证"),
                       children: [
@@ -101,9 +110,10 @@ class _InfoPageState extends State<InfoPage> {
                       ]),
                   // CustomExpansionTile.ExpansionTile(
                   //     initiallyExpanded: true,
-                  //     collapsedIconColor: Colors.black45,
-                  //     iconColor: Colors.black45,
+                  //     collapsedIconColor: readColor(),
+                  //     iconColor: readColor(),
                   //     textColor: Colors.black,
+                  //     collapsedTextColor: readTextColor(),
                   //     tilePadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                   //     title: infoItem(Icons.check_circle_outline, EdgeInsets.fromLTRB(16, 14, 0, 14), "成绩"),
                   //     children: [
@@ -117,9 +127,10 @@ class _InfoPageState extends State<InfoPage> {
                   //     ]),
                   CustomExpansionTile.ExpansionTile(
                       initiallyExpanded: true,
-                      collapsedIconColor: Colors.black45,
-                      iconColor: Colors.black45,
-                      textColor: Colors.black,
+                      collapsedIconColor: readColor(),
+                      iconColor: readColor(),
+                      textColor: readTextColor(),
+                      collapsedTextColor: readTextColor(),
                       tilePadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                       title: infoItem(Icons.feedback_outlined, EdgeInsets.fromLTRB(16, 14, 0, 14), "反馈"),
                       children: [
@@ -184,7 +195,8 @@ class _InfoPageState extends State<InfoPage> {
                         ),
                       ])
                 ],
-              ),
+              ),)
+
             ))
           ],
         ),
