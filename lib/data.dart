@@ -352,33 +352,3 @@ void setSystemNavigationBarColor(Color color) {
   ));
 }
 late bool isDark;
-late Brightness navigationBarIconBrightness;
-late Color borderColor;
-late Color lineColor;
-late Color listPageBackgroundColor;
-late Color backgroundColor;
-late Color textColor;
-late Color textColor2;
-late Color textColor3;
-late Color arrowIconColor;
-late Color cardBackgroundColor;
-late Color cardBackgroundColor2;
-late Color textContentBackgroundColor;
-late Color listPageTopAreaBackgroundColor;
-
-
-void initThemeColors() {
-  navigationBarIconBrightness = readNavigationBarIconBrightness();
-  borderColor = readBorderColor();
-  lineColor = readLineColor();
-  listPageBackgroundColor = readListPageBackgroundColor();
-  backgroundColor = readBackgroundColor();
-  textColor = readTextColor();
-  textColor2 = readTextColor2();
-  textColor3 = readTextColor3();
-  arrowIconColor = readArrowIconColor();
-  cardBackgroundColor = readCardBackgroundColor();
-  cardBackgroundColor2 = readCardBackgroundColor2();
-  textContentBackgroundColor = readTextContentBackgroundColor();
-  listPageTopAreaBackgroundColor = readListPageTopAreaBackgroundColor();
-}

@@ -102,7 +102,7 @@ readLineColor() {
   if (isDark) {
     return Color(0x1AFFFFFF);
   }
-  return Color(0xFFFAFAFA);
+  return Color(0x66f1f1f1);
 }
 
 readListPageBackgroundColor() {

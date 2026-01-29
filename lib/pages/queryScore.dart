@@ -184,7 +184,7 @@ class _QueryBodyState extends State<QueryBody> {
                 child: Icon(
                   Remix.close_line,
                   size: 24,
-                  color: readTextColor(),
+                  color: Colors.white,
                 ),
                 onTap: () {
                   Navigator.of(context).pop();
@@ -193,7 +193,7 @@ class _QueryBodyState extends State<QueryBody> {
               () => infoDialog(context,
                   "2019级及以后的平均学分绩点计算方式:\n\n绩点 = ∑(课程学分 × 绩点) / ∑课程学分\n\n1.参与计算的课程仅为选课属性必修课和集中性实践教学环节, 体育等素质类必修课不参与学分绩点计算\n\n2.采用五级记分制的课程和集中性实践性教学环节、毕业设计(论文)成绩折算成百分制后再进行计算, 不及格为40分"),
               readListPageTopAreaBackgroundColor(),
-              readTextColor(),
+              Colors.white,
               0),
           SliverToBoxAdapter(
             child: Transform.translate(

@@ -463,24 +463,8 @@ class ScoreListState extends State<ScoreList> {
   Widget build(BuildContext context) {
     if (queryScore.length == 1) {
       if (queryScore[0] == AppConfig.socketError || queryScore[0] == AppConfig.timeOutError || queryScore[0] == "登录过期") {
-        return SliverList(
-          delegate: SliverChildBuilderDelegate(
-                (BuildContext context, int index) {
-              return null;
-            },
-          ),
-        );
+        return Container();
       }
-    }
-    if (queryScore.isEmpty) {
-      return SliverList(
-        delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
-          return Container(
-            color: readListPageBackgroundColor(),
-            height: 500,
-          );
-        }, childCount: 1),
-      );
     }
     return SliverList(
       delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
@@ -580,16 +564,6 @@ class ExamListState extends State<ExamList> {
 
   @override
   Widget build(BuildContext context) {
-    if (examList.isEmpty) {
-      return SliverList(
-        delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
-          return Container(
-            color: Colors.white,
-            height: 500,
-          );
-        }, childCount: 1),
-      );
-    }
     return SliverList(
       delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
         return Container(

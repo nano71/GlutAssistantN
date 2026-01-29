@@ -114,7 +114,7 @@ class _QueryExamBodyState extends State<QueryExamBody> {
               },
             ),
             readListPageTopAreaBackgroundColor(),
-            readTextColor(),
+            Colors.white,
             0),
         SliverToBoxAdapter(
           child: Transform.translate(
