@@ -465,6 +465,7 @@ careerDialog(context, index, type, year) {
     builder: (BuildContext context) {
       return NoRippleOverScroll(
           child: SimpleDialog(
+        backgroundColor: readCardBackgroundColor(),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16.0),
         ),
@@ -482,7 +483,7 @@ careerDialog(context, index, type, year) {
               ],
             ),
             InkWell(
-              child: Icon(Remix.close_line, size: 32),
+              child: Icon(Remix.close_line, size: 32,color: readTextColor(),),
               onTap: () {
                 Navigator.of(context).pop();
               },
@@ -495,7 +496,6 @@ careerDialog(context, index, type, year) {
           fontSize: 25,
         ),
         contentPadding: EdgeInsets.only(left: 0, right: 0, bottom: 0),
-        backgroundColor: Colors.white,
         children: careerDialogLoop(index, type),
       ));
     },

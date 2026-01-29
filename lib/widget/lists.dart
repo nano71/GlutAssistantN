@@ -488,10 +488,6 @@ class ScoreListState extends State<ScoreList> {
           children: [
             Container(
               padding: EdgeInsets.fromLTRB(16, index == 0 ? 16 : 0, 16, 0),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                border: Border.all(width: 0, color: Colors.white),
-              ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -508,13 +504,13 @@ class ScoreListState extends State<ScoreList> {
                                 .width - 60 - 32,
                             child: Text(
                               queryScore[index][2],
-                              style: TextStyle(fontSize: 16),
+                              style: TextStyle(fontSize: 16,color: readTextColor()),
                             ),
                           ),
                           Container(
                             child: Text(
                               queryScore[index][3] == "" ? "慕课成绩不会被统计" : queryScore[index][3],
-                              style: TextStyle(color: Colors.black45, fontSize: 12),
+                              style: TextStyle(color:readTextColor2(), fontSize: 12),
                             ),
                           ),
                         ],
@@ -543,10 +539,9 @@ class ScoreListState extends State<ScoreList> {
               ),
             ),
             Container(
-              color: Colors.white,
               padding: EdgeInsets.fromLTRB(36, 16, 36, 16),
               child: Container(
-                color: Color(0xfffafafa),
+                color: readLineColor(),
                 height: 1,
               ),
             )
@@ -573,7 +568,7 @@ class ExamListState extends State<ExamList> {
     if (examListC[index]) {
       return Colors.grey;
     }
-    return Colors.black;
+    return readTextColor();
   }
 
   _getIcon(int index) {
@@ -598,10 +593,6 @@ class ExamListState extends State<ExamList> {
     return SliverList(
       delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
         return Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            border: Border.all(width: 0, color: Colors.white),
-          ),
           padding: EdgeInsets.fromLTRB(16, index == 0 ? 16 : 0, 16, 0),
           child: Column(
             children: [
@@ -634,7 +625,7 @@ class ExamListState extends State<ExamList> {
                           ),
                           Text(
                             examList[index][1],
-                            style: TextStyle(fontSize: 12, color: Colors.black45),
+                            style: TextStyle(fontSize: 12, color: readTextColor2()),
                           ),
                         ],
                       ),
@@ -642,16 +633,15 @@ class ExamListState extends State<ExamList> {
                   ),
                   Text(
                     examList[index][2],
-                    style: TextStyle(color: Colors.black45),
+                    style: TextStyle(color: readTextColor2()),
                   ),
                   // Text(examList[index][3]),
                 ],
               ),
               Container(
-                color: Colors.white,
                 padding: EdgeInsets.fromLTRB(36, 16, 36, 16),
                 child: Container(
-                  color: Color(0xfffafafa),
+                  color: readLineColor(),
                   height: 1,
                 ),
               )
@@ -739,7 +729,7 @@ class ClassroomListItem extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(12.0)),
-        color: item["todayEmpty"] ? Colors.grey : randomColors2(),
+        color: readClassRoomCardBackgroundColor(item["todayEmpty"]),
       ),
       padding: EdgeInsets.fromLTRB(12, 12, 12, 12),
       margin: EdgeInsets.fromLTRB(16, 0, 16, 16),
@@ -795,7 +785,7 @@ class ClassroomListItem extends StatelessWidget {
           Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(12.0)),
-              color: readColorBegin(),
+              color: readClassRoomCardTextContentBackgroundColor(item["todayEmpty"]),
             ),
             padding: EdgeInsets.fromLTRB(12, 12, 12, 12),
             margin: EdgeInsets.fromLTRB(0, 16, 0, 0),
@@ -847,7 +837,7 @@ List<Widget> occupancyList(List<bool> boolList) {
       child: Text(
         text,
         textAlign: TextAlign.center,
-        style: TextStyle(color: boolList[i] ? Colors.white : readColorBegin(), fontSize: 12),
+        style: TextStyle(color: readClassRoomCardTextContentColor(!boolList[i]), fontSize: 12),
       ),
     ));
   }

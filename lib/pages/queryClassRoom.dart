@@ -130,7 +130,7 @@ class QueryConditionCardState extends State<QueryConditionCard> {
       list.add(DropdownMenuItem(
         child: Text(
           value,
-          style: TextStyle(fontSize: 14, color: isBuilder ? readTextColor2() : null),
+          style: TextStyle(fontSize: 14, color: isBuilder ? readTextColor() : null),
         ),
         value: key,
       ));
@@ -139,7 +139,7 @@ class QueryConditionCardState extends State<QueryConditionCard> {
       list.add(DropdownMenuItem(
           child: Text(
             "-",
-            style: isBuilder ? TextStyle(fontSize: 14, color: readTextColor2()) : null,
+            style: isBuilder ? TextStyle(fontSize: 14, color: readTextColor()) : null,
           ),
           value: "请选择"));
     }
@@ -220,7 +220,7 @@ class QueryConditionCardState extends State<QueryConditionCard> {
                     elevation: 0,
                     hint: Text(
                       query["buildingCode"]?[buildingSelect],
-                      style: TextStyle(fontSize: 14,color: readTextColor2()),
+                      style: TextStyle(fontSize: 14,color: readTextColor()),
                     ),
                     items: dropdownMenuItemList("buildingCode"),
                     onTap: () {

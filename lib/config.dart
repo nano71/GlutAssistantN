@@ -54,11 +54,49 @@ Uri httpUri(
   return Uri.http(AppConfig.jwUrl, path, queryParameters);
 }
 
+readClassRoomCardBackgroundColor(bool isEmpty) {
+  if (isEmpty) {
+    if (AppData.persistentData["color"] == "dark") {
+      return Color(0xFF18181c);
+    }
+    return Colors.grey;
+  }
+  return randomColors2();
+}
+
+readClassRoomCardTextContentBackgroundColor(bool isEmpty) {
+
+  if (isEmpty) {
+    if (AppData.persistentData["color"] == "dark") {
+      return Color(0xFF26262a);
+    }
+  }
+  return Color(0x2AFFFFFF);
+}
+
+readClassRoomCardTextContentColor(bool isEmpty) {
+
+  if (isEmpty) {
+    if (AppData.persistentData["color"] == "dark") {
+      return readTextColor3();
+    }
+    return Color(0x2AFFFFFF);
+  }
+  return Colors.white;
+}
+
 readBorderColor() {
   if (AppData.persistentData["color"] == "dark") {
     return Color(0xFF26262a);
   }
   return Colors.white;
+}
+
+readLineColor() {
+  if (AppData.persistentData["color"] == "dark") {
+    return Color(0x1AFFFFFF);
+  }
+  return Color(0xFFFAFAFA);
 }
 
 readListPageBackgroundColor() {
@@ -87,6 +125,13 @@ readTextColor2() {
     return Colors.white54;
   }
   return Colors.black54;
+}
+
+readTextColor3() {
+  if (AppData.persistentData["color"] == "dark") {
+    return Colors.white38;
+  }
+  return Colors.black45;
 }
 
 readArrowIconColor() {
@@ -129,7 +174,7 @@ List<String> colorTexts = ["dark", "purple", "red", "pink", "blue", "cyan", "yel
 LinearGradient readGradient() {
   switch (AppData.persistentData["color"]) {
     case "dark":
-      return setTemplate([Color(0xff11998e), Color(0xFF38ef7d )]);
+      return setTemplate([Color(0xff11998e), Color(0xFF38ef7d)]);
     case "purple":
       return setTemplate([Color(0xfff0abfc), Color(0xff4f46e5)]);
     case "red":
@@ -172,6 +217,8 @@ readColor([String? color]) {
 
 LinearGradient readCardGradient() {
   switch (AppData.persistentData["color"]) {
+    case "dark":
+      return setCardTemplate([Color(0xff11998e), Color(0xff38ef7d)]);
     case "purple":
       return setCardTemplate([Color(0xffd978ff), Color(0xFF8a41f7)]);
     case "red":
@@ -191,6 +238,8 @@ LinearGradient readCardGradient() {
 
 LinearGradient readCardGradient2() {
   switch (AppData.persistentData["color"]) {
+    case "dark":
+      return setCardTemplate2([Color(0xa011998e), Color(0xe638ef7d)]);
     case "purple":
       return setCardTemplate2([Color(0x12AE66FB), Color(0x4E8A41F7)]);
     case "red":
