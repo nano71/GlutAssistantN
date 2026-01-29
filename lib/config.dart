@@ -54,6 +54,12 @@ Uri httpUri(
   return Uri.http(AppConfig.jwUrl, path, queryParameters);
 }
 
+readNavigationBarIconBrightness(){
+  if (AppData.persistentData["color"] == "dark") {
+    return Brightness.light;
+  }
+  return Brightness.dark;
+}
 readClassRoomCardBackgroundColor(bool isEmpty) {
   if (isEmpty) {
     if (AppData.persistentData["color"] == "dark") {

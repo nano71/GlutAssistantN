@@ -145,7 +145,6 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                                   writeConfig();
                                   eventBus.fire(SetPageIndex());
                                   eventBus.fire(UpdateAppThemeState());
-                                  saveLaunchColor(readBackgroundColor());
                                   Navigator.pushAndRemoveUntil(
                                     context,
                                     AppRouter(Layout()),

@@ -70,7 +70,9 @@ class _DataPreloadPageState extends State<DataPreloadPage> {
     await readCookie();
     getUpdateForEveryday();
     updateAppwidget();
-    eventBus.fire(UpdateAppThemeState());
+    Timer(Duration(seconds: 1), () {
+      setSystemNavigationBarColor(readCardBackgroundColor());
+    });
     Navigator.pushAndRemoveUntil(
       context,
       AppRouter(Layout(), 2000),
@@ -99,10 +101,17 @@ class Layout extends StatefulWidget {
   State<Layout> createState() => _LayoutState();
 }
 
-class _LayoutState extends State<Layout> {
+class _LayoutState extends State<Layout> with RouteAware {
   late final AppLifecycleListener _listener;
   bool isResumed = true;
   late StreamSubscription<ErrorEvent> eventBusListener;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // 必须在这里订阅 RouteObserver
+    routeObserver.subscribe(this, ModalRoute.of(context)!);
+  }
 
   @override
   void initState() {
@@ -158,7 +167,31 @@ class _LayoutState extends State<Layout> {
     // 注销监听器
     _listener.dispose();
     eventBusListener.cancel();
+    routeObserver.unsubscribe(this);
+
     super.dispose();
+  }
+
+  @override
+  void didPush() {
+    print('PageView 被 push');
+  }
+
+  @override
+  void didPopNext() {
+    print('PageView 覆盖的页面被 pop，自己重新显示');
+    setSystemNavigationBarColor(readCardBackgroundColor());
+  }
+
+  @override
+  void didPop() {
+    print('PageView 被 pop');
+  }
+
+  @override
+  void didPushNext() {
+    print('PageView 上有新页面 push 进来');
+    setSystemNavigationBarColor(readBackgroundColor());
   }
 
   @override
@@ -190,3 +223,5 @@ Future<void> updateAppwidget() async {
     print("桌面微件尚未添加");
   }
 }
+
+final RouteObserver<ModalRoute<void>> routeObserver = RouteObserver<ModalRoute<void>>();

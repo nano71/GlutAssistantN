@@ -3,10 +3,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:glutassistantn/common/log.dart';
+import 'package:glutassistantn/pages/layout.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:workmanager/workmanager.dart';
 
-import '/pages/Layout.dart';
 import 'common/io.dart';
 import 'common/service.dart';
 import 'config.dart';
@@ -77,14 +77,10 @@ class _AppState extends State<App> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    setSystemNavigationBarColor(readBackgroundColor());
 
     eventBusListener = eventBus.on<UpdateAppThemeState>().listen((event) {
       print("更换主题");
-      bool isDark = AppData.persistentData["color"] == "dark";
-      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-        systemNavigationBarColor: readCardBackgroundColor(),
-        systemNavigationBarIconBrightness: isDark ? Brightness.light : Brightness.dark, // 导航栏按钮为黑色
-      ));
       setState(() {
         labelTextColor = readTextColor();
         selectedLabelTextColor = readColor();
@@ -97,6 +93,7 @@ class _AppState extends State<App> {
     return MaterialApp(
         key: appKey,
         debugShowCheckedModeBanner: false,
+        navigatorObservers: [routeObserver],
         theme: ThemeData(
           useMaterial3: false,
           navigationBarTheme: NavigationBarThemeData(
