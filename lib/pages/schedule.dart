@@ -116,28 +116,26 @@ List<Widget> _loopRowHeader2(DateTime current, int currentWeek) {
 
 Widget _leftGrid(String title) {
   return Container(
-    width: 20,
-    height: AppConfig.schedulePageGridHeight,
-    alignment: Alignment.center,
-    decoration: BoxDecoration(
-      color: readBackgroundColor(),
-      border: Border(
-          top: BorderSide(
-            width: 1, //宽度
-            color: readBorderColor(), //边框颜色
+      width: 20,
+      height: AppConfig.schedulePageGridHeight,
+      child: Container(
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: readBackgroundColor(),
+          border: Border(
+            bottom: BorderSide(
+              width: 1, //宽度
+              color: title == "11" ? Colors.transparent : readBorderColor(), //边框颜色
+            ),
           ),
-          right: BorderSide(
-            width: 1, //宽度
-            color: readBorderColor(), //边框颜色
-          )),
-    ),
-    child: Text(
-      title,
-      maxLines: 1,
-      overflow: TextOverflow.ellipsis,
-      style: TextStyle(fontSize: 12, color: readColor()),
-    ),
-  );
+        ),
+        child: Text(
+          title,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(fontSize: 12, color: readColor()),
+        ),
+      ));
 }
 
 List<Widget> _loopLeftGrid() {
@@ -162,7 +160,7 @@ class SchedulePageState extends State<SchedulePage> with AutomaticKeepAliveClien
   late double _startPositionX;
   late double _startPositionY;
   int _currentScheduleWeek = weekInt(exclusionZero: true);
-  GlobalKey<SchedulePageColumnState> weekKey = GlobalKey();
+  GlobalKey<SchedulePageColumnsState> weekKey = GlobalKey();
   GlobalKey<ScheduleTopBarState> barKey = GlobalKey();
   GlobalKey<RowHeaderState> rowHeaderKey = GlobalKey();
   late StreamSubscription<ReloadSchedulePageState> eventBusListener;
@@ -269,11 +267,20 @@ class SchedulePageState extends State<SchedulePage> with AutomaticKeepAliveClien
                 physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
                 scrollDirection: Axis.vertical,
                 child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Column(
-                      children: _loopLeftGrid(),
+                    Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: readBorderColor(),
+                          width: 1,
+                        ),
+                      ),
+                      child: Column(
+                        children: _loopLeftGrid(),
+                      ),
                     ),
-                    SchedulePageColumn(key: weekKey),
+                    SchedulePageColumns(key: weekKey),
                   ],
                 ),
               ),
@@ -290,14 +297,14 @@ class SchedulePageState extends State<SchedulePage> with AutomaticKeepAliveClien
 }
 
 //星期几
-class SchedulePageColumn extends StatefulWidget {
-  SchedulePageColumn({Key? key}) : super(key: key);
+class SchedulePageColumns extends StatefulWidget {
+  SchedulePageColumns({Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => SchedulePageColumnState();
+  State<StatefulWidget> createState() => SchedulePageColumnsState();
 }
 
-class SchedulePageColumnState extends State<SchedulePageColumn> {
+class SchedulePageColumnsState extends State<SchedulePageColumns> {
   int _findWeek = weekInt(exclusionZero: true);
 
   @override
@@ -328,8 +335,17 @@ List<Widget> _loopWeekDayCol(String week) {
 
 Widget _col(String week, String weekDay) {
   return Expanded(
-    child: Column(
-      children: _loopWeekDayColGrid(week, weekDay),
+    child: Container(
+      decoration: BoxDecoration(
+        border: Border(
+          right: BorderSide(width: 1, color: readBorderColor()),
+          top: BorderSide(width: 1, color: readBorderColor()),
+          bottom: BorderSide(width: 1, color: readBorderColor()),
+        ),
+      ),
+      child: Column(
+        children: _loopWeekDayColGrid(week, weekDay),
+      ),
     ),
   );
 }
@@ -349,15 +365,16 @@ List<Widget> _loopWeekDayColGrid(String week, String weekDay) {
       bool studyAreaNotIsNextStudyArea() => studyArea != _schedule[(i + 1).toString()][2];
       bool studyAreaIsPreviousStudyArea() => studyArea == _schedule[(i - 1).toString()][2];
 
-      if (i == 1)
+      if (i == 1) {
         s = i;
-      else if (studyAreaIsPreviousStudyArea() && courseNameIsPreviousCourseName()) {
+      } else if (studyAreaIsPreviousStudyArea() && courseNameIsPreviousCourseName()) {
         double height = AppConfig.schedulePageGridHeight * (i - s + 1);
-        if (i == 11)
+        if (i == 11 || studyAreaNotIsNextStudyArea() || courseNameNotIsNextCourseName()) {
           list.add(Grid(week, weekDay, i, s, courseName, studyArea, teacher, randomColors(), height));
-        else if (studyAreaNotIsNextStudyArea() || courseNameNotIsNextCourseName()) list.add(Grid(week, weekDay, i, s, courseName, studyArea, teacher, randomColors(), height));
-      } else
+        }
+      } else {
         s = i;
+      }
     } else
       list.add(Grid(week, weekDay, i, 0, "", "", "", readBackgroundColor()));
   }
@@ -381,114 +398,81 @@ class Grid extends StatelessWidget {
   Widget build(BuildContext context) {
     // TODO: implement build
     TextStyle style = TextStyle(fontSize: 12, color: Colors.white);
-    BoxDecoration decoration = BoxDecoration(
-      color: color,
-      border: Border.all(
-        width: 1, //宽度
-        color: readBackgroundColor(), //边框颜色
-      ),
-      borderRadius: BorderRadius.all(Radius.circular(6.0)),
-    );
-    if (index == 11 && index2 == 0) {
+    late BoxDecoration decoration;
+    if (index % 2 == 0) {
       decoration = BoxDecoration(
-        color: color,
         border: Border(
           bottom: BorderSide(
             width: 1, //宽度
             color: readBorderColor(), //边框颜色
           ),
-          right: BorderSide(
-            width: 1, //宽度
-            color: readBorderColor(), //边框颜色
-          ),
         ),
       );
-    } else if (index == 1 && index2 == 0) {
+    } else {
       decoration = BoxDecoration(
-        color: color,
-        border: Border(
-          top: BorderSide(
-            width: 1, //宽度
-            color: readBorderColor(), //边框颜色
-          ),
-          right: BorderSide(
-            width: 1, //宽度
-            color: readBorderColor(), //边框颜色
-          ),
-        ),
-      );
-    } else if (index % 2 == 0 && index2 == 0) {
-      decoration = BoxDecoration(
-        color: color,
         border: Border(
           bottom: BorderSide(
             width: 1, //宽度
-            color: readBorderColor(), //边框颜色
-          ),
-          right: BorderSide(
-            width: 1, //宽度
-            color: readBorderColor(), //边框颜色
-          ),
-        ),
-      );
-    } else if (index2 == 0) {
-      decoration = BoxDecoration(
-        color: color,
-        border: Border(
-          right: BorderSide(
-            width: 1, //宽度
-            color: readBorderColor(), //边框颜色
+            color: Colors.transparent, //边框颜色
           ),
         ),
       );
     }
     return InkWell(
-      onTap: () {
-        if (index != 0 && index2 != 0) {
-          print(index2);
-          print(index);
-          scheduleDialog(context, week, weekDay, index.toString());
-          // ScaffoldMessenger.of(context).removeCurrentSnackBar();
-          // ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(1, teacher, 2));
-        }
-      },
-      child: Container(
+        onTap: () {
+          if (index != 0 && index2 != 0) {
+            print(index2);
+            print(index);
+            scheduleDialog(context, week, weekDay, index.toString());
+            // ScaffoldMessenger.of(context).removeCurrentSnackBar();
+            // ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(1, teacher, 2));
+          }
+        },
+        child: Container(
           height: height,
-          decoration: decoration,
-          padding: EdgeInsets.only(left: 5, right: 5, top: 5, bottom: 5),
-          alignment: Alignment.center,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Text(
-                title,
-                textAlign: TextAlign.center,
-                softWrap: true,
-                style: style,
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Column(
-                children: [
-                  // Text(
-                  //   teacher,
-                  //   textAlign: TextAlign.center,
-                  //   softWrap: true,
-                  //   style: style,
-                  // ),
-                  Text(
-                    studyArea,
-                    textAlign: TextAlign.center,
-                    softWrap: true,
-                    style: style,
-                  ),
-                ],
-              ),
-            ],
-          )),
-    );
+          child: Container(
+            decoration: decoration,
+            child: Container(
+                margin: EdgeInsets.all(1),
+                decoration: BoxDecoration(
+                  color: color,
+                  borderRadius: BorderRadius.all(Radius.circular(6.0)),
+                ),
+                padding: EdgeInsets.only(left: 5, right: 5, top: 5, bottom: 5),
+                alignment: Alignment.center,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Text(
+                      title,
+                      textAlign: TextAlign.center,
+                      softWrap: true,
+                      style: style,
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Column(
+                      children: [
+                        // Text(
+                        //   teacher,
+                        //   textAlign: TextAlign.center,
+                        //   softWrap: true,
+                        //   style: style,
+                        // ),
+                        Text(
+                          studyArea,
+                          textAlign: TextAlign.center,
+                          softWrap: true,
+                          style: style,
+                        ),
+                      ],
+                    ),
+                  ],
+                )),
+          ),
+        ));
   }
 }
 
