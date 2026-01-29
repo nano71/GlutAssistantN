@@ -26,7 +26,7 @@ class _UpdatePageState extends State<UpdatePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: readBackgroundColor(),
       body: UpdatePageBody(),
     );
   }
@@ -74,13 +74,10 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
         ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "获取更新...", 24));
       }
     });
-    return Container(
-      color: readBackgroundColor(),
-      margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
-      child: CustomScrollView(
-        physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
-        slivers: [
-          publicTopBar(
+    return CustomScrollView(
+      physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+      slivers: [
+        publicTopBar(
             "获取新版本",
             InkWell(
               child: Icon(Remix.close_line, size: 24,color: readTextColor(),),
@@ -90,130 +87,129 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
             ),
             readBackgroundColor(),
             readTextColor()
+        ),
+        SliverToBoxAdapter(
+          child: SizedBox(
+            height: 64,
           ),
-          SliverToBoxAdapter(
-            child: SizedBox(
-              height: 64,
-            ),
-          ),
-          SliverToBoxAdapter(
-            child: Container(
-              padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
-              child: Column(
-                children: [
-                  InkWell(
-                    onTap: () {
-                      ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                      ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "获取更新...", 24));
-                      getUpdate().then((value) => _next(value));
-                      throw UnimplementedError();
-                    },
-                    child: Image.asset(
-                      'images/ic_launcher-playstore.png',
-                      width: 72,
+        ),
+        SliverToBoxAdapter(
+          child: Container(
+            padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
+            child: Column(
+              children: [
+                InkWell(
+                  onTap: () {
+                    ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                    ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "获取更新...", 24));
+                    getUpdate().then((value) => _next(value));
+                    throw UnimplementedError();
+                  },
+                  child: Image.asset(
+                    'images/ic_launcher-playstore.png',
+                    width: 72,
+                  ),
+                ),
+                SizedBox(
+                  height: 16,
+                ),
+                Text(
+                  PackageInfo.appName,
+                  style: TextStyle(fontSize: 20,color: readTextColor()),
+                ),
+                Text(
+                  PackageInfo.version,
+                  style: TextStyle(fontSize: 14, color: Colors.grey),
+                ),
+                Container(
+                  width: double.infinity,
+                  margin: EdgeInsets.fromLTRB(0, 64, 0, 16),
+                ),
+                AppData.hasNewVersion
+                    ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    mineItem4(Remix.lightbulb_flash_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "有新版本可以更新!", Colors.red),
+                    Container(
+                      width: double.infinity,
+                      margin: EdgeInsets.fromLTRB(0, 0, 0, 7),
+                      child: Text(
+                        "版本号:" + PackageInfo.version + "  >  " + (AppData.persistentData["newVersion"] ?? ""),
+                        style: TextStyle(color: readTextColor2()),
+                      ),
                     ),
-                  ),
-                  SizedBox(
-                    height: 16,
-                  ),
-                  Text(
-                    PackageInfo.appName,
-                    style: TextStyle(fontSize: 20,color: readTextColor()),
-                  ),
-                  Text(
-                    PackageInfo.version,
-                    style: TextStyle(fontSize: 14, color: Colors.grey),
-                  ),
-                  Container(
-                    width: double.infinity,
-                    margin: EdgeInsets.fromLTRB(0, 64, 0, 16),
-                  ),
-                  AppData.hasNewVersion
-                      ? Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            mineItem4(Remix.lightbulb_flash_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "有新版本可以更新!", Colors.red),
-                            Container(
-                              width: double.infinity,
-                              margin: EdgeInsets.fromLTRB(0, 0, 0, 7),
-                              child: Text(
-                                "版本号:" + PackageInfo.version + "  >  " + (AppData.persistentData["newVersion"] ?? ""),
-                                style: TextStyle(color: readTextColor2()),
-                              ),
-                            ),
-                            Text(
-                              AppData.persistentData["newBody"] ?? "",
-                              style: TextStyle(color: Colors.grey),
-                            ),
-                            Container(
-                              width: double.infinity,
-                              margin: EdgeInsets.fromLTRB(0, 32, 0, 8),
-                              child: Text(
-                                "选择以下渠道获取更新",
-                                style: TextStyle(color: readTextColor()),
-                              ),
-                            ),
-                            customInkWell("https://nano71.com/gan/GlutAssistantN.apk", Remix.download_2_line, "直接下载", readColor()),
-                            // coolapk(),
-                            customInkWell("", Remix.earth_line, "学校官网（暂不可用）", Colors.blueAccent),
-                            customInkWell(AppData.persistentData["githubDownload"] ?? "", Remix.github_line, "Github", Colors.blueGrey)
-                          ],
-                        )
-                      : Container(),
-                  (!networkError && !AppData.hasNewVersion)
-                      ? Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            mineItem4(Remix.lightbulb_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "当前版本变更", Colors.blue),
-                            Container(
-                              width: double.infinity,
-                              margin: EdgeInsets.fromLTRB(0, 0, 0, 7),
-                              child: Text(
-                                "版本号:" + PackageInfo.version,
-                                style: TextStyle(color: readTextColor2()),
-                              ),
-                            ),
-                            Text(
-                              AppData.persistentData["newBody"] ?? "",
-                              style: TextStyle(color: Colors.grey),
-                            ),
-                            Container(
-                              width: double.infinity,
-                              margin: EdgeInsets.fromLTRB(0, 32, 0, 8),
-                              child: Text(
-                                "以下方式,关注项目",
-                                style: TextStyle(color: readTextColor()),
-                              ),
-                            ),
-                            // coolapk(),
-                            customInkWell("https://github.com/nano71/GlutAssistantN", Remix.github_line, "Github", Colors.blueGrey),
-                            customInkWell("https://nano71.com/gan", Remix.earth_line, "项目官网", Colors.blueAccent)
-                          ],
-                        )
-                      : Container(),
-                  (networkError && !AppData.hasNewVersion)
-                      ? Column(
-                          children: [
-                            Container(
-                              width: double.infinity,
-                              margin: EdgeInsets.fromLTRB(0, 32, 0, 8),
-                              child: Text(
-                                "选择以下渠道手动获取更新",
-                                style: TextStyle(color: Colors.black),
-                              ),
-                            ),
-                            customInkWell("https://github.com/nano71/GlutAssistantN/releases/latest", Remix.github_line, "Github", Colors.blueGrey),
-                            customInkWell("https://nano71.com/gan", Remix.earth_line, "项目官网", Colors.blueAccent)
-                            // coolapk(),
-                          ],
-                        )
-                      : Container()
-                ],
-              ),
+                    Text(
+                      AppData.persistentData["newBody"] ?? "",
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                    Container(
+                      width: double.infinity,
+                      margin: EdgeInsets.fromLTRB(0, 32, 0, 8),
+                      child: Text(
+                        "选择以下渠道获取更新",
+                        style: TextStyle(color: readTextColor()),
+                      ),
+                    ),
+                    customInkWell("https://nano71.com/gan/GlutAssistantN.apk", Remix.download_2_line, "直接下载", readColor()),
+                    // coolapk(),
+                    customInkWell("", Remix.earth_line, "学校官网（暂不可用）", Colors.blueAccent),
+                    customInkWell(AppData.persistentData["githubDownload"] ?? "", Remix.github_line, "Github", Colors.blueGrey)
+                  ],
+                )
+                    : Container(),
+                (!networkError && !AppData.hasNewVersion)
+                    ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    mineItem4(Remix.lightbulb_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "当前版本变更", Colors.blue),
+                    Container(
+                      width: double.infinity,
+                      margin: EdgeInsets.fromLTRB(0, 0, 0, 7),
+                      child: Text(
+                        "版本号:" + PackageInfo.version,
+                        style: TextStyle(color: readTextColor2()),
+                      ),
+                    ),
+                    Text(
+                      AppData.persistentData["newBody"] ?? "",
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                    Container(
+                      width: double.infinity,
+                      margin: EdgeInsets.fromLTRB(0, 32, 0, 8),
+                      child: Text(
+                        "以下方式,关注项目",
+                        style: TextStyle(color: readTextColor()),
+                      ),
+                    ),
+                    // coolapk(),
+                    customInkWell("https://github.com/nano71/GlutAssistantN", Remix.github_line, "Github", Colors.blueGrey),
+                    customInkWell("https://nano71.com/gan", Remix.earth_line, "项目官网", Colors.blueAccent)
+                  ],
+                )
+                    : Container(),
+                (networkError && !AppData.hasNewVersion)
+                    ? Column(
+                  children: [
+                    Container(
+                      width: double.infinity,
+                      margin: EdgeInsets.fromLTRB(0, 32, 0, 8),
+                      child: Text(
+                        "选择以下渠道手动获取更新",
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    ),
+                    customInkWell("https://github.com/nano71/GlutAssistantN/releases/latest", Remix.github_line, "Github", Colors.blueGrey),
+                    customInkWell("https://nano71.com/gan", Remix.earth_line, "项目官网", Colors.blueAccent)
+                    // coolapk(),
+                  ],
+                )
+                    : Container()
+              ],
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

@@ -273,16 +273,14 @@ codeCheckDialog(BuildContext context, Function callback) async {
                         keyboardType: TextInputType.number,
                         controller: textFieldController,
                         style: TextStyle(color: readTextColor()),
-
                         decoration: InputDecoration(
-                          icon: Icon(
-                            Remix.magic_line,
-                            color: readColor(),
-                          ),
-                          border: InputBorder.none,
-                          hintText: "验证码", //类似placeholder效果
-                          hintStyle: TextStyle(color:readTextColor2())
-                        ),
+                            icon: Icon(
+                              Remix.magic_line,
+                              color: readColor(),
+                            ),
+                            border: InputBorder.none,
+                            hintText: "验证码", //类似placeholder效果
+                            hintStyle: TextStyle(color: readTextColor2())),
                       ),
                     ),
                     InkWell(
@@ -304,20 +302,22 @@ codeCheckDialog(BuildContext context, Function callback) async {
                 endIndent: 24,
               ),
               Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-                Container(
-                  margin: EdgeInsets.fromLTRB(0, 8, 0, 0),
-                  child: TextButton(
-                    style: buttonStyle(),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: Text(
-                      !clicked ? "取消" : "",
-                      style: TextStyle(color: readColor()),
-                    ),
-                  ),
-                ),
-                RowGap(hasRowGap?8:0),
+                !clicked
+                    ? Container(
+                        margin: EdgeInsets.fromLTRB(0, 8, 0, 0),
+                        child: TextButton(
+                          style: buttonStyle(),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: Text(
+                            "取消",
+                            style: TextStyle(color: readColor()),
+                          ),
+                        ),
+                      )
+                    : Container(),
+                RowGap(hasRowGap ? 8 : 0),
                 Container(
                   margin: EdgeInsets.fromLTRB(0, 8, 24, 0),
                   child: TextButton(
@@ -435,7 +435,11 @@ scheduleDialog(BuildContext context, String week, String weekDay, String index) 
               ],
             ),
             InkWell(
-              child: Icon(Remix.close_line, size: 32,color: readTextColor(),),
+              child: Icon(
+                Remix.close_line,
+                size: 32,
+                color: readTextColor(),
+              ),
               onTap: () {
                 Navigator.of(context).pop();
               },

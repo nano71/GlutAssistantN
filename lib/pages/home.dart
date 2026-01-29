@@ -5,7 +5,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:home_widget/home_widget.dart';
 
-import '../common/homeWidget.dart';
 import '/common/get.dart';
 import '/common/init.dart';
 import '/pages/queryExam.dart';
@@ -14,13 +13,13 @@ import '/widget/bars.dart';
 import '/widget/cards.dart';
 import '/widget/icons.dart';
 import '/widget/lists.dart';
+import '../common/homeWidget.dart';
 import '../common/io.dart';
 import '../common/style.dart';
 import '../config.dart';
 import '../data.dart';
-
-import 'login.dart';
 import 'layout.dart';
+import 'login.dart';
 
 class HomePage extends StatefulWidget {
   final bool refresh;
@@ -276,183 +275,181 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
     }
     double width = MediaQuery.of(context).size.width;
     // print("HomePage create");
-    return Container(
-      child: CustomScrollView(
-        controller: _scrollController,
-        physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
-        slivers: [
-          homeTopBar(context),
-          SliverToBoxAdapter(
-              child: Container(
-            width: double.infinity,
-            padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              verticalDirection: VerticalDirection.down,
-              textDirection: TextDirection.ltr,
-              children: [
-                InkWell(
-                  onTap: () {
-                    eventBus.fire(SetPageIndex(index: 1));
-                    eventBus.fire(ReloadSchedulePageState());
-                  },
-                  child: HomeCard(),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    GestureDetector(
-                      onTapCancel: () {
-                        _animationControllerForLeftCard.reverse();
-                      },
-                      onTapUp: (d) {
-                        Future.delayed(Duration(milliseconds: 100), () {
-                          if (AppData.persistentData["username"] == "") {
-                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => LoginPage()));
-                          } else {
-                            _refresh();
-                          }
+    return CustomScrollView(
+      controller: _scrollController,
+      physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+      slivers: [
+        homeTopBar(context),
+        SliverToBoxAdapter(
+            child: Container(
+              width: double.infinity,
+              padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                verticalDirection: VerticalDirection.down,
+                textDirection: TextDirection.ltr,
+                children: [
+                  InkWell(
+                    onTap: () {
+                      eventBus.fire(SetPageIndex(index: 1));
+                      eventBus.fire(ReloadSchedulePageState());
+                    },
+                    child: HomeCard(),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      GestureDetector(
+                        onTapCancel: () {
                           _animationControllerForLeftCard.reverse();
-                        });
-                      },
-                      onTapDown: (d) {
-                        _animationControllerForLeftCard.forward();
-                      },
-                      child: Container(
-                        margin: EdgeInsets.fromLTRB(0, 8, 4, 16),
-                        height: 110,
-                        width: width / 3 - 48 / 3,
-                        decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(12.0)), color: _animationForLeftCard.value),
-                        child: Stack(
-                          children: [
-                            Align(
-                              child: Container(
-                                margin: HomeCardsState.iconMargin,
-                                child: RefreshIconWidgetDynamic(key: iconKey),
-                              ),
-                            ),
-                            Align(
-                              child: Container(
-                                margin: HomeCardsState.textMargin,
-                                child: Text(
-                                  HomeCardsState.iconTexts[0],
-                                  style: TextStyle(color: readTextColor2()),
+                        },
+                        onTapUp: (d) {
+                          Future.delayed(Duration(milliseconds: 100), () {
+                            if (AppData.persistentData["username"] == "") {
+                              Navigator.of(context).push(MaterialPageRoute(builder: (context) => LoginPage()));
+                            } else {
+                              _refresh();
+                            }
+                            _animationControllerForLeftCard.reverse();
+                          });
+                        },
+                        onTapDown: (d) {
+                          _animationControllerForLeftCard.forward();
+                        },
+                        child: Container(
+                          margin: EdgeInsets.fromLTRB(0, 8, 4, 16),
+                          height: 110,
+                          width: width / 3 - 48 / 3,
+                          decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(12.0)), color: _animationForLeftCard.value),
+                          child: Stack(
+                            children: [
+                              Align(
+                                child: Container(
+                                  margin: HomeCardsState.iconMargin,
+                                  child: RefreshIconWidgetDynamic(key: iconKey),
                                 ),
                               ),
-                            ),
-                          ],
+                              Align(
+                                child: Container(
+                                  margin: HomeCardsState.textMargin,
+                                  child: Text(
+                                    HomeCardsState.iconTexts[0],
+                                    style: TextStyle(color: readTextColor2()),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                    GestureDetector(
-                      onTapCancel: () {
-                        _animationControllerForCenterCard.reverse();
-                      },
-                      onTapUp: (d) {
-                        Future.delayed(Duration(milliseconds: 100), () {
-                          if (AppData.persistentData["username"] == "") {
-                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => LoginPage()));
-                          } else {
-                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => QueryPage()));
-                          }
+                      GestureDetector(
+                        onTapCancel: () {
                           _animationControllerForCenterCard.reverse();
-                        });
-                      },
-                      onTapDown: (d) {
-                        _animationControllerForCenterCard.forward();
-                      },
-                      child: Container(
-                        margin: EdgeInsets.fromLTRB(4, 8, 4, 16),
-                        height: 110,
-                        width: width / 3 - 48 / 3,
-                        decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(12.0)), color: _animationForCenterCard.value),
-                        child: Stack(
-                          children: [
-                            Align(
-                              child: Container(
-                                margin: HomeCardsState.iconMargin,
-                                child: Icon(
-                                  HomeCardsState.icons[1],
-                                  color: readColor(),
-                                  size: HomeCardsState.iconSize,
+                        },
+                        onTapUp: (d) {
+                          Future.delayed(Duration(milliseconds: 100), () {
+                            if (AppData.persistentData["username"] == "") {
+                              Navigator.of(context).push(MaterialPageRoute(builder: (context) => LoginPage()));
+                            } else {
+                              Navigator.of(context).push(MaterialPageRoute(builder: (context) => QueryPage()));
+                            }
+                            _animationControllerForCenterCard.reverse();
+                          });
+                        },
+                        onTapDown: (d) {
+                          _animationControllerForCenterCard.forward();
+                        },
+                        child: Container(
+                          margin: EdgeInsets.fromLTRB(4, 8, 4, 16),
+                          height: 110,
+                          width: width / 3 - 48 / 3,
+                          decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(12.0)), color: _animationForCenterCard.value),
+                          child: Stack(
+                            children: [
+                              Align(
+                                child: Container(
+                                  margin: HomeCardsState.iconMargin,
+                                  child: Icon(
+                                    HomeCardsState.icons[1],
+                                    color: readColor(),
+                                    size: HomeCardsState.iconSize,
+                                  ),
                                 ),
                               ),
-                            ),
-                            Align(
-                              child: Container(
-                                margin: HomeCardsState.textMargin,
-                                child: Text(HomeCardsState.iconTexts[1], style: TextStyle(color: readTextColor2())),
+                              Align(
+                                child: Container(
+                                  margin: HomeCardsState.textMargin,
+                                  child: Text(HomeCardsState.iconTexts[1], style: TextStyle(color: readTextColor2())),
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                    GestureDetector(
-                      onTapCancel: () {
-                        _animationControllerForRightCard.reverse();
-                      },
-                      onTapUp: (d) {
-                        Future.delayed(Duration(milliseconds: 100), () {
-                          if (AppData.persistentData["username"] == "") {
-                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => LoginPage()));
-                          } else {
-                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => QueryExamPage()));
-                          }
+                      GestureDetector(
+                        onTapCancel: () {
                           _animationControllerForRightCard.reverse();
-                        });
-                      },
-                      onTapDown: (d) {
-                        _animationControllerForRightCard.forward();
-                      },
-                      child: Container(
-                        margin: EdgeInsets.fromLTRB(4, 8, 0, 16),
-                        height: 110,
-                        width: width / 3 - 48 / 3,
-                        decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(12.0)), color: _animationForRightCard.value),
-                        child: Stack(
-                          children: [
-                            Align(
-                              child: Container(
-                                margin: HomeCardsState.iconMargin,
-                                child: Icon(
-                                  HomeCardsState.icons[2],
-                                  color: readColor(),
-                                  size: HomeCardsState.iconSize,
+                        },
+                        onTapUp: (d) {
+                          Future.delayed(Duration(milliseconds: 100), () {
+                            if (AppData.persistentData["username"] == "") {
+                              Navigator.of(context).push(MaterialPageRoute(builder: (context) => LoginPage()));
+                            } else {
+                              Navigator.of(context).push(MaterialPageRoute(builder: (context) => QueryExamPage()));
+                            }
+                            _animationControllerForRightCard.reverse();
+                          });
+                        },
+                        onTapDown: (d) {
+                          _animationControllerForRightCard.forward();
+                        },
+                        child: Container(
+                          margin: EdgeInsets.fromLTRB(4, 8, 0, 16),
+                          height: 110,
+                          width: width / 3 - 48 / 3,
+                          decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(12.0)), color: _animationForRightCard.value),
+                          child: Stack(
+                            children: [
+                              Align(
+                                child: Container(
+                                  margin: HomeCardsState.iconMargin,
+                                  child: Icon(
+                                    HomeCardsState.icons[2],
+                                    color: readColor(),
+                                    size: HomeCardsState.iconSize,
+                                  ),
                                 ),
                               ),
-                            ),
-                            Align(
-                              child: Container(
-                                margin: HomeCardsState.textMargin,
-                                child: Text(HomeCardsState.iconTexts[2], style: TextStyle(color: readTextColor2())),
+                              Align(
+                                child: Container(
+                                  margin: HomeCardsState.textMargin,
+                                  child: Text(HomeCardsState.iconTexts[2], style: TextStyle(color: readTextColor2())),
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-                // ExamsTipsBar(),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(todayScheduleTitle, style: tomorrowAndTodayTextStyle()),
-                ),
-              ],
-            ),
-          )),
-          TodayCourseList(),
-          SliverToBoxAdapter(
-              child: Container(
-            padding: EdgeInsets.fromLTRB(16, 16, 16, 16),
-            child: Align(alignment: Alignment.centerLeft, child: Text(tomorrowScheduleTitle, style: tomorrowAndTodayTextStyle())),
-          )),
-          TomorrowCourseList(),
-          !isLoggedIn() ? NeedLogin() : SliverToBoxAdapter(child: Center()),
-        ],
-      ),
+                    ],
+                  ),
+                  // ExamsTipsBar(),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(todayScheduleTitle, style: tomorrowAndTodayTextStyle()),
+                  ),
+                ],
+              ),
+            )),
+        TodayCourseList(),
+        SliverToBoxAdapter(
+            child: Container(
+              padding: EdgeInsets.fromLTRB(16, 16, 16, 16),
+              child: Align(alignment: Alignment.centerLeft, child: Text(tomorrowScheduleTitle, style: tomorrowAndTodayTextStyle())),
+            )),
+        TomorrowCourseList(),
+        !isLoggedIn() ? NeedLogin() : SliverToBoxAdapter(child: Center()),
+      ],
     );
   }
 }

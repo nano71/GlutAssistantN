@@ -89,7 +89,7 @@ class _TimeManagePageState extends State<TimeManagePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: readBackgroundColor(),
       body: Container(
         color: Colors.white,
         margin: EdgeInsets.fromLTRB(0, 0, 0, 0),

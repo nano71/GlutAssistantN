@@ -26,7 +26,7 @@ class _QueryPageState extends State<QueryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: readBackgroundColor(),
       body: QueryBody(),
     );
   }
@@ -175,23 +175,7 @@ class _QueryBodyState extends State<QueryBody> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              readListPageTopAreaBackgroundColor(),
-              readListPageTopAreaBackgroundColor(),
-              readListPageBackgroundColor(),
-              readListPageBackgroundColor(),
-              readListPageBackgroundColor(),
-              readListPageBackgroundColor(),
-            ],
-            stops: [0, .5, .50001, .6, .61, 1]),
-      ),
-      margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
-      child: CustomScrollView(
+    return CustomScrollView(
         physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
         slivers: [
           publicTopBarWithInfoIcon(
@@ -212,125 +196,127 @@ class _QueryBodyState extends State<QueryBody> {
               readTextColor(),
               0),
           SliverToBoxAdapter(
-            child: Container(
-              padding: EdgeInsets.fromLTRB(16, 8, 16, 16),
-              color: readListPageTopAreaBackgroundColor(),
-              margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          DropdownButton(
-                            enableFeedback: true,
-                            icon: Icon(Remix.arrow_down_s_line),
-                            iconSize: 16,
-                            iconEnabledColor: Colors.white,
-                            elevation: 0,
-                            hint: SizedBox(
-                              width: 40,
-                              child: Text(
-                                AppData.persistentData["queryYear"] ?? "",
-                                style: TextStyle(
-                                  color: Colors.white,
+            child: Transform.translate(
+              offset: const Offset(0, -1),
+              child: Container(
+                padding: EdgeInsets.fromLTRB(16, 8, 16, 16),
+                color: readListPageTopAreaBackgroundColor(),
+                margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            DropdownButton(
+                              enableFeedback: true,
+                              icon: Icon(Remix.arrow_down_s_line),
+                              iconSize: 16,
+                              iconEnabledColor: Colors.white,
+                              elevation: 0,
+                              hint: SizedBox(
+                                width: 40,
+                                child: Text(
+                                  AppData.persistentData["queryYear"] ?? "",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                  ),
                                 ),
                               ),
+                              items: yearList(0),
+                              underline: Container(height: 0),
+                              onChanged: (value) {
+                                setState(() {
+                                  AppData.persistentData["queryYear"] = value.toString();
+                                });
+                              },
                             ),
-                            items: yearList(0),
-                            underline: Container(height: 0),
-                            onChanged: (value) {
-                              setState(() {
-                                AppData.persistentData["queryYear"] = value.toString();
-                              });
-                            },
-                          ),
-                          SizedBox(
-                            width: 25,
-                          ),
-                          DropdownButton(
-                            enableFeedback: true,
-                            icon: Icon(Remix.arrow_down_s_line),
-                            iconSize: 16,
-                            iconEnabledColor: Colors.white,
-                            elevation: 0,
-                            hint: SizedBox(
-                              width: 40,
-                              child: Text(
-                                AppData.persistentData["querySemester"] ?? "",
-                                style: TextStyle(
-                                  color: Colors.white,
+                            SizedBox(
+                              width: 25,
+                            ),
+                            DropdownButton(
+                              enableFeedback: true,
+                              icon: Icon(Remix.arrow_down_s_line),
+                              iconSize: 16,
+                              iconEnabledColor: Colors.white,
+                              elevation: 0,
+                              hint: SizedBox(
+                                width: 40,
+                                child: Text(
+                                  AppData.persistentData["querySemester"] ?? "",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                  ),
                                 ),
                               ),
+                              underline: Container(height: 0),
+                              items: [
+                                DropdownMenuItem(child: Text("全部"), value: "全部"),
+                                DropdownMenuItem(child: Text("春"), value: "春"),
+                                DropdownMenuItem(child: Text("秋"), value: "秋"),
+                              ],
+                              onChanged: (String? value) {
+                                setState(() {
+                                  if (value != null) AppData.persistentData["querySemester"] = value;
+                                });
+                              },
                             ),
-                            underline: Container(height: 0),
-                            items: [
-                              DropdownMenuItem(child: Text("全部"), value: "全部"),
-                              DropdownMenuItem(child: Text("春"), value: "春"),
-                              DropdownMenuItem(child: Text("秋"), value: "秋"),
-                            ],
-                            onChanged: (String? value) {
-                              setState(() {
-                                if (value != null) AppData.persistentData["querySemester"] = value;
-                              });
-                            },
-                          ),
-                        ],
-                      ),
-                      InkWell(
-                        onTap: () {
-                          _query();
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(6.0)),
-                            color: Color(0x1ff1f1f1),
-                          ),
-                          padding: EdgeInsets.fromLTRB(16, 8, 16, 8),
-                          child: Text(
-                            "查询",
-                            style: TextStyle(color: Colors.white),
+                          ],
+                        ),
+                        InkWell(
+                          onTap: () {
+                            _query();
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.all(Radius.circular(6.0)),
+                              color: Color(0x1ff1f1f1),
+                            ),
+                            padding: EdgeInsets.fromLTRB(16, 8, 16, 8),
+                            child: Text(
+                              "查询",
+                              style: TextStyle(color: Colors.white),
+                            ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 8,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "平均绩点: ${scores[0]}",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      Text(
-                        "|",
-                        style: TextStyle(color: Colors.transparent),
-                      ),
-                      Text(
-                        "算术平均分: ${scores[1]}",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      Text(
-                        "|",
-                        style: TextStyle(color: Colors.transparent),
-                      ),
-                      Text(
-                        "加权平均分: ${scores[1]}",
-                        style: TextStyle(color: Colors.transparent),
-                      )
-                    ],
-                  )
-                ],
+                      ],
+                    ),
+                    SizedBox(
+                      height: 8,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "平均绩点: ${scores[0]}",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        Text(
+                          "|",
+                          style: TextStyle(color: Colors.transparent),
+                        ),
+                        Text(
+                          "算术平均分: ${scores[1]}",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        Text(
+                          "|",
+                          style: TextStyle(color: Colors.transparent),
+                        ),
+                        Text(
+                          "加权平均分: ${scores[1]}",
+                          style: TextStyle(color: Colors.transparent),
+                        )
+                      ],
+                    )
+                  ],
+                ),
               ),
             ),
           ),
           ScoreList(),
         ],
-      ),
-    );
+      );
   }
 }

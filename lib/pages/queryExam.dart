@@ -23,7 +23,7 @@ class _QueryExamPageState extends State<QueryExamPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: readBackgroundColor(),
       body: QueryExamBody(),
     );
   }
@@ -98,34 +98,27 @@ class _QueryExamBodyState extends State<QueryExamBody> {
       }
     });
     // TODO: implement build
-    return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [readColor(), readColor(), Colors.transparent, Colors.transparent, Colors.transparent, Colors.transparent],
-            stops: [0, .5, .50001, .6, .61, 1]),
-      ),
-      margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
-      child: CustomScrollView(
-        physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
-        slivers: [
-          publicTopBar(
-              "我的考试",
-              InkWell(
-                child: Icon(
-                  Remix.close_line,
-                  size: 24,
-                  color: Colors.white,
-                ),
-                onTap: () {
-                  Navigator.of(context).pop();
-                },
+    return  CustomScrollView(
+      physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+      slivers: [
+        publicTopBar(
+            "我的考试",
+            InkWell(
+              child: Icon(
+                Remix.close_line,
+                size: 24,
+                color: Colors.white,
               ),
-              readColor(),
-              Colors.white,
-              0),
-          SliverToBoxAdapter(
+              onTap: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            readColor(),
+            Colors.white,
+            0),
+        SliverToBoxAdapter(
+          child: Transform.translate(
+            offset: const Offset(0, -1),
             child: Container(
               padding: EdgeInsets.fromLTRB(16, 8, 16, 16),
               color: readColor(),
@@ -201,9 +194,9 @@ class _QueryExamBodyState extends State<QueryExamBody> {
               ),
             ),
           ),
-          ExamList(),
-        ],
-      ),
+        ),
+        ExamList(),
+      ],
     );
   }
 }

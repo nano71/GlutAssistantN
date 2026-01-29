@@ -32,37 +32,33 @@ class QueryRoomPageState extends State<QueryRoomPage> {
     // TODO: implement build
     return Scaffold(
       backgroundColor: readBackgroundColor(),
-      body: Container(
-        color:readBackgroundColor(),
-        margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
-        child: CustomScrollView(
-          physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
-          slivers: [
-            publicTopBar(
-              "教室查询",
-              InkWell(
-                child: Icon(Remix.close_line, size: 24,color: readTextColor(),),
-                onTap: () {
-                  Navigator.of(context).pop();
-                },
-              ),
+      body: CustomScrollView(
+        physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+        slivers: [
+          publicTopBar(
+            "教室查询",
+            InkWell(
+              child: Icon(Remix.close_line, size: 24,color: readTextColor(),),
+              onTap: () {
+                Navigator.of(context).pop();
+              },
+            ),
 
-              readBackgroundColor(),
-              readTextColor(),
-            ),
-            SliverToBoxAdapter(
-              child: Container(
-                margin: EdgeInsets.fromLTRB(16, 0, 16, 0),
-                child: Text(
-                  message,
-                  style: TextStyle(color: messageColor),
-                ),
+            readBackgroundColor(),
+            readTextColor(),
+          ),
+          SliverToBoxAdapter(
+            child: Container(
+              margin: EdgeInsets.fromLTRB(16, 0, 16, 0),
+              child: Text(
+                message,
+                style: TextStyle(color: messageColor),
               ),
             ),
-            QueryConditionCard(),
-            ClassroomList(),
-          ],
-        ),
+          ),
+          QueryConditionCard(),
+          ClassroomList(),
+        ],
       ),
     );
   }

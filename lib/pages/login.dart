@@ -166,80 +166,77 @@ class LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: readBackgroundColor(),
-      body: Container(
-        color: readBackgroundColor(),
-        margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
-        child: CustomScrollView(
-          controller: _scrollController,
-          physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
-          slivers: [
-            publicTopBar(
-                "桂工助手N",
-                InkWell(
-                  child: Icon(
-                    Remix.close_line,
-                    size: 24,
-                    color: readTextColor(),
-                  ),
-                  onTap: () {
-                    Navigator.of(context).pop();
-                  },
+      body: CustomScrollView(
+        controller: _scrollController,
+        physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+        slivers: [
+          publicTopBar(
+              "桂工助手N",
+              InkWell(
+                child: Icon(
+                  Remix.close_line,
+                  size: 24,
+                  color: readTextColor(),
                 ),
-                readBackgroundColor(),
-                readTextColor()),
-            SliverToBoxAdapter(
-              child: Container(
-                margin: EdgeInsets.fromLTRB(16, 0, 16, 0),
-                child: Text(
-                  message,
-                  style: TextStyle(color: messageColor),
-                ),
+                onTap: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              readBackgroundColor(),
+              readTextColor()),
+          SliverToBoxAdapter(
+            child: Container(
+              margin: EdgeInsets.fromLTRB(16, 0, 16, 0),
+              child: Text(
+                message,
+                style: TextStyle(color: messageColor),
               ),
             ),
-            SliverToBoxAdapter(
-              child: Container(
-                height: MediaQuery.of(context).size.height * 0.7 - 125,
-                width: double.infinity,
-                padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      margin: EdgeInsets.fromLTRB(16, 0, 16, 0),
-                      padding: EdgeInsets.fromLTRB(0, 4, 0, 4),
-                      child: TextField(
-                        onTap: () {
-                          _tap();
-                        },
-                        style: TextStyle(color: readTextColor()),
-                        cursorColor: readColor(),
-                        keyboardType: TextInputType.number,
-                        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                        focusNode: studentIdFocusNode,
-                        controller: studentIdController,
-                        decoration: InputDecoration(
-                          icon: Icon(
-                            Remix.user_3_line,
-                            color: studentIdFocusNode.hasFocus ? readColor() : readTextColor(),
-                          ),
-                          border: InputBorder.none,
-                          hintText: "请输入学号", //类似placeholder效果
+          ),
+          SliverToBoxAdapter(
+            child: Container(
+              height: MediaQuery.of(context).size.height * 0.7 - 125,
+              width: double.infinity,
+              padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    margin: EdgeInsets.fromLTRB(16, 0, 16, 0),
+                    padding: EdgeInsets.fromLTRB(0, 4, 0, 4),
+                    child: TextField(
+                      onTap: () {
+                        _tap();
+                      },
+                      style: TextStyle(color: readTextColor()),
+                      cursorColor: readColor(),
+                      keyboardType: TextInputType.number,
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                      focusNode: studentIdFocusNode,
+                      controller: studentIdController,
+                      decoration: InputDecoration(
+                        icon: Icon(
+                          Remix.user_3_line,
+                          color: studentIdFocusNode.hasFocus ? readColor() : readTextColor(),
                         ),
+                        border: InputBorder.none,
+                        hintText: "请输入学号", //类似placeholder效果
                       ),
                     ),
-                    line,
-                    Container(
-                      margin: EdgeInsets.fromLTRB(16, 0, 16, 0),
-                      padding: EdgeInsets.fromLTRB(0, 4, 0, 4),
-                      child: TextField(
-                        onTap: () {
-                          _tap();
-                        },
-                        style: TextStyle(color: readTextColor()),
-                        focusNode: passwordFocusNode,
-                        cursorColor: readColor(),
-                        controller: passwordController,
-                        decoration: InputDecoration(
+                  ),
+                  line,
+                  Container(
+                    margin: EdgeInsets.fromLTRB(16, 0, 16, 0),
+                    padding: EdgeInsets.fromLTRB(0, 4, 0, 4),
+                    child: TextField(
+                      onTap: () {
+                        _tap();
+                      },
+                      style: TextStyle(color: readTextColor()),
+                      focusNode: passwordFocusNode,
+                      cursorColor: readColor(),
+                      controller: passwordController,
+                      decoration: InputDecoration(
                           icon: Icon(
                             Remix.key_line,
                             color: passwordFocusNode.hasFocus ? readColor() : readTextColor(),
@@ -247,27 +244,27 @@ class LoginPageState extends State<LoginPage> {
                           border: InputBorder.none,
                           hintText: "请输入密码", //类似placeholder效果
                           hintStyle: TextStyle(color: readTextColor2())
-                        ),
                       ),
                     ),
-                    line,
-                    Container(
-                      margin: EdgeInsets.fromLTRB(16, 0, 16, 16),
-                      padding: EdgeInsets.fromLTRB(0, 4, 0, 4),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: TextField(
-                              onTap: () {
-                                _tap();
-                              },
-                              style: TextStyle(color: readTextColor()),
-                              keyboardType: TextInputType.number,
-                              cursorColor: readColor(),
-                              focusNode: checkCodeFocusNode,
-                              controller: checkCodeController,
-                              decoration: InputDecoration(
+                  ),
+                  line,
+                  Container(
+                    margin: EdgeInsets.fromLTRB(16, 0, 16, 16),
+                    padding: EdgeInsets.fromLTRB(0, 4, 0, 4),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            onTap: () {
+                              _tap();
+                            },
+                            style: TextStyle(color: readTextColor()),
+                            keyboardType: TextInputType.number,
+                            cursorColor: readColor(),
+                            focusNode: checkCodeFocusNode,
+                            controller: checkCodeController,
+                            decoration: InputDecoration(
                                 icon: Icon(
                                   Remix.magic_line,
                                   color: checkCodeFocusNode.hasFocus ? readColor() : readTextColor(),
@@ -275,56 +272,55 @@ class LoginPageState extends State<LoginPage> {
                                 border: InputBorder.none,
                                 hintText: "请输入验证码", //类似placeholder效果
                                 hintStyle: TextStyle(color: readTextColor2())
-                              ),
                             ),
                           ),
-                          InkWell(
-                            child: _codeImgSrc.length > 1
-                                ? Image.memory(
-                                    _codeImgSrc,
-                                    height: 25,
-                                    width: 80,
-                                  )
-                                : Container(
-                                    height: 25,
-                                  ),
-                            onTap: () {
-                              _getCode();
-                            },
+                        ),
+                        InkWell(
+                          child: _codeImgSrc.length > 1
+                              ? Image.memory(
+                            _codeImgSrc,
+                            height: 25,
+                            width: 80,
+                          )
+                              : Container(
+                            height: 25,
                           ),
-                        ],
-                      ),
+                          onTap: () {
+                            _getCode();
+                          },
+                        ),
+                      ],
                     ),
-                    SizedBox(
-                      width: double.infinity,
-                      height: 50,
-                      child: Container(
-                        margin: EdgeInsets.fromLTRB(12, 0, 12, 0),
-                        child: TextButton(
-                            autofocus: true,
-                            style: ButtonStyle(
-                              //设置水波纹颜色
-                              overlayColor: WidgetStateProperty.all(Colors.yellow),
-                              backgroundColor: WidgetStateProperty.resolveWith((states) {
-                                return readColor();
-                              }),
-                              shape: WidgetStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(28))),
-                            ),
-                            child: Text(
-                              buttonTitle,
-                              style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 14),
-                            ),
-                            onPressed: () {
-                              _check();
+                  ),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 50,
+                    child: Container(
+                      margin: EdgeInsets.fromLTRB(12, 0, 12, 0),
+                      child: TextButton(
+                          autofocus: true,
+                          style: ButtonStyle(
+                            //设置水波纹颜色
+                            overlayColor: WidgetStateProperty.all(Colors.yellow),
+                            backgroundColor: WidgetStateProperty.resolveWith((states) {
+                              return readColor();
                             }),
-                      ),
-                    )
-                  ],
-                ),
+                            shape: WidgetStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(28))),
+                          ),
+                          child: Text(
+                            buttonTitle,
+                            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 14),
+                          ),
+                          onPressed: () {
+                            _check();
+                          }),
+                    ),
+                  )
+                ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

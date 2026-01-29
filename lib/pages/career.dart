@@ -28,7 +28,7 @@ class _CareerPageState extends State<CareerPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: readBackgroundColor(),
       body: CareerPageBody(
         type: type,
       ),
@@ -173,10 +173,7 @@ class _CareerPageBodyState extends State<CareerPageBody> {
         ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "获取数据...", AppConfig.timeOutSec * 2));
       }
     });
-    return Container(
-      color:readBackgroundColor(),
-      margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
-      child: CustomScrollView(
+    return CustomScrollView(
         physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
         slivers: [
           publicTopBar(
@@ -358,8 +355,7 @@ class _CareerPageBodyState extends State<CareerPageBody> {
             }, childCount: allYear),
           ),
         ],
-      ),
-    );
+      );
   }
 }
 
