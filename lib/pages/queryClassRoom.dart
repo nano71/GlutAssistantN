@@ -213,7 +213,7 @@ class QueryConditionCardState extends State<QueryConditionCard> {
                   height: 40,
                   child: DropdownButton(
                     enableFeedback: true,
-                    icon: chevronRight,
+                    icon: chevronRight(),
                     iconSize: 18,
                     underline: Container(),
                     alignment: Alignment.centerRight,
@@ -254,7 +254,7 @@ class QueryConditionCardState extends State<QueryConditionCard> {
                     selectedItemBuilder: (context) {
                       return dropdownMenuItemList("weekOfSemester", true);
                     },
-                    icon: chevronRight,
+                    icon: chevronRight(),
                     iconSize: 18,
                     underline: Container(),
                     alignment: Alignment.centerRight,
@@ -286,7 +286,7 @@ class QueryConditionCardState extends State<QueryConditionCard> {
                     selectedItemBuilder: (context) {
                       return dropdownMenuItemList("dayOfWeek", true);
                     },
-                    icon: chevronRight,
+                    icon: chevronRight(),
                     iconSize: 18,
                     underline: Container(),
                     alignment: Alignment.centerRight,

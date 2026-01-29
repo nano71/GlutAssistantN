@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="LaunchTheme" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/launch_bg</item>
+
+        <!-- 关键：去掉启动图标 -->
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher_foreground</item>
+
+        <!-- 可选：禁用动画 -->
+        <item name="windowSplashScreenAnimationDuration">0</item>
+
+        <!-- 去掉图标圆形背景（可选） -->
+        <item name="windowSplashScreenIconBackgroundColor">@android:color/transparent</item>
+
+        <!-- 启动结束后切换到正常主题 -->
+        <item name="postSplashScreenTheme">@style/AppTheme</item>
+
+    </style>
+</resources>

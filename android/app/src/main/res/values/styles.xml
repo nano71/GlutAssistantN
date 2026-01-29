@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="LaunchTheme"
+            parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:windowBackground">@color/launch_bg</item>
+    </style>
+
+    <style name="AppTheme"
+            parent="Theme.Material3.DynamicColors.DayNight">
+    </style>
+</resources>

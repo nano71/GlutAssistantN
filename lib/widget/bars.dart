@@ -188,7 +188,7 @@ class ScheduleTopBarState extends State<ScheduleTopBar> {
                   date(),
                   style: TextStyle(color: readTextColor(), fontSize: 14),
                 ),
-                goCurrent
+                goCurrent()
               ],
             ),
             onTap: () {

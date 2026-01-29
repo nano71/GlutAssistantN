@@ -55,14 +55,14 @@ Uri httpUri(
 }
 
 readNavigationBarIconBrightness(){
-  if (AppData.persistentData["color"] == "dark") {
+  if (isDark) {
     return Brightness.light;
   }
   return Brightness.dark;
 }
 readClassRoomCardBackgroundColor(bool isEmpty) {
   if (isEmpty) {
-    if (AppData.persistentData["color"] == "dark") {
+    if (isDark) {
       return Color(0xFF18181c);
     }
     return Colors.grey;
@@ -73,7 +73,7 @@ readClassRoomCardBackgroundColor(bool isEmpty) {
 readClassRoomCardTextContentBackgroundColor(bool isEmpty) {
 
   if (isEmpty) {
-    if (AppData.persistentData["color"] == "dark") {
+    if (isDark) {
       return Color(0xFF26262a);
     }
   }
@@ -83,7 +83,7 @@ readClassRoomCardTextContentBackgroundColor(bool isEmpty) {
 readClassRoomCardTextContentColor(bool isEmpty) {
 
   if (isEmpty) {
-    if (AppData.persistentData["color"] == "dark") {
+    if (isDark) {
       return readTextColor3();
     }
     return Color(0x2AFFFFFF);
@@ -92,84 +92,84 @@ readClassRoomCardTextContentColor(bool isEmpty) {
 }
 
 readBorderColor() {
-  if (AppData.persistentData["color"] == "dark") {
+  if (isDark) {
     return Color(0xFF26262a);
   }
   return Colors.white;
 }
 
 readLineColor() {
-  if (AppData.persistentData["color"] == "dark") {
+  if (isDark) {
     return Color(0x1AFFFFFF);
   }
   return Color(0xFFFAFAFA);
 }
 
 readListPageBackgroundColor() {
-  if (AppData.persistentData["color"] == "dark") {
+  if (isDark) {
     return readBackgroundColor();
   }
   return Colors.transparent;
 }
 
 readBackgroundColor() {
-  if (AppData.persistentData["color"] == "dark") {
+  if (isDark) {
     return Color(0xFF101014);
   }
   return Color(0xFFFAFAFA);
 }
 
 readTextColor() {
-  if (AppData.persistentData["color"] == "dark") {
+  if (isDark) {
     return Colors.white;
   }
   return Colors.black;
 }
 
 readTextColor2() {
-  if (AppData.persistentData["color"] == "dark") {
+  if (isDark) {
     return Colors.white54;
   }
   return Colors.black54;
 }
 
 readTextColor3() {
-  if (AppData.persistentData["color"] == "dark") {
+  if (isDark) {
     return Colors.white38;
   }
   return Colors.black45;
 }
 
 readArrowIconColor() {
-  if (AppData.persistentData["color"] == "dark") {
+  if (isDark) {
     return Colors.white60;
   }
   return Colors.black26;
 }
 
 readCardBackgroundColor() {
-  if (AppData.persistentData["color"] == "dark") {
+  if (isDark) {
     return Color(0xFF18181c);
   }
   return Colors.white;
 }
 
 readCardBackgroundColor2() {
-  if (AppData.persistentData["color"] == "dark") {
+  if (isDark) {
     return Color(0xFF26262a);
   }
   return Colors.white;
 }
 
 readTextContentBackgroundColor() {
-  if (AppData.persistentData["color"] == "dark") {
+  if (isDark) {
     return readCardBackgroundColor2();
   }
   return readColorEnd();
 }
 
 readListPageTopAreaBackgroundColor() {
-  if (AppData.persistentData["color"] == "dark") {
+  if (isDark) {
     return Color(0xFF18181c);
   }
   return readColor();

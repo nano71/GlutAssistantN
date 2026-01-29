@@ -160,7 +160,7 @@ Widget mineItem(IconData icon, EdgeInsets padding, String title, Color color) {
           )
         ],
       ),
-      chevronRight
+      chevronRight()
     ],
   );
 }
@@ -183,7 +183,7 @@ Widget mineItem5(IconData icon, EdgeInsets padding, String title, Color color) {
               ))
         ],
       ),
-      chevronRight
+      chevronRight()
     ],
   );
 }
@@ -250,7 +250,7 @@ Widget mineItem2(IconData icon, EdgeInsets padding, String title) {
           )
         ],
       ),
-      chevronDown
+      chevronDown()
     ],
   );
 }

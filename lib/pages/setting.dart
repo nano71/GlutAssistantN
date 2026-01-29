@@ -64,16 +64,19 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
           physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
           slivers: [
             publicTopBar(
-              "设置",
-              InkWell(
-                child: Icon(Remix.close_line, size: 24,color: readTextColor(),),
-                onTap: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-              readBackgroundColor(),
-              readTextColor()
-            ),
+                "设置",
+                InkWell(
+                  child: Icon(
+                    Remix.close_line,
+                    size: 24,
+                    color: readTextColor(),
+                  ),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                readBackgroundColor(),
+                readTextColor()),
             SliverToBoxAdapter(
               child: Container(
                 width: double.infinity,
@@ -142,6 +145,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                                   setState(() {
                                     AppData.persistentData["color"] = value.toString();
                                   });
+                                  isDark = value.toString() == "dark";
                                   writeConfig();
                                   eventBus.fire(SetPageIndex());
                                   eventBus.fire(UpdateAppThemeState());
@@ -351,10 +355,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                                   padding: EdgeInsets.fromLTRB(16, 14, 0, 14),
                                   child: Text(
                                     "清除数据",
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      color: _isExpanded ? Colors.redAccent :  readTextColor()
-                                    ),
+                                    style: TextStyle(fontSize: 16, color: _isExpanded ? Colors.redAccent : readTextColor()),
                                   ),
                                 )
                               ],

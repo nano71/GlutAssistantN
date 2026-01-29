@@ -34,20 +34,28 @@ class RefreshIconWidgetDynamicState extends State<RefreshIconWidgetDynamic> {
   }
 }
 
-Icon chevronRight = Icon(
-  Remix.arrow_right_s_line,
-  color: readArrowIconColor()
-);
-Icon chevronDown = Icon(
-  Remix.arrow_down_s_line,
-  color: readArrowIconColor(),
-);
-Icon chevronUp = Icon(
-  Remix.arrow_up_s_line,
-  color: readArrowIconColor(),
-);
-Icon goCurrent = Icon(
-  Remix.map_pin_line,
-  color: readTextColor(),
-  size: 14,
-);
+Icon chevronRight() {
+  return Icon(Remix.arrow_right_s_line, color: readArrowIconColor());
+}
+
+Icon chevronDown() {
+  return Icon(
+    Remix.arrow_down_s_line,
+    color: readArrowIconColor(),
+  );
+}
+
+Icon chevronUp() {
+  return Icon(
+    Remix.arrow_up_s_line,
+    color: readArrowIconColor(),
+  );
+}
+
+Icon goCurrent() {
+  return Icon(
+    Remix.map_pin_line,
+    color: readTextColor(),
+    size: 14,
+  );
+}

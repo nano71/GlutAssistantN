@@ -221,10 +221,12 @@ class LoginPageState extends State<LoginPage> {
                         ),
                         border: InputBorder.none,
                         hintText: "请输入学号", //类似placeholder效果
+                        hintStyle: TextStyle(color: readTextColor2())
+
                       ),
                     ),
                   ),
-                  line,
+                  _line,
                   Container(
                     margin: EdgeInsets.fromLTRB(16, 0, 16, 0),
                     padding: EdgeInsets.fromLTRB(0, 4, 0, 4),
@@ -247,7 +249,7 @@ class LoginPageState extends State<LoginPage> {
                       ),
                     ),
                   ),
-                  line,
+                  _line,
                   Container(
                     margin: EdgeInsets.fromLTRB(16, 0, 16, 16),
                     padding: EdgeInsets.fromLTRB(0, 4, 0, 4),
@@ -326,9 +328,9 @@ class LoginPageState extends State<LoginPage> {
   }
 }
 
-Container line = Container(
+Container _line = Container(
   width: double.infinity,
   margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
-  color: Color(0xFFf1f1f1),
+  color: readLineColor(),
   height: 1,
 );

@@ -647,7 +647,7 @@ class _ExpansionTileState extends State<ExpansionTile> with SingleTickerProvider
   Widget? _buildIcon(BuildContext context) {
     return RotationTransition(
       turns: _iconTurns,
-      child: chevronDown,
+      child: chevronDown(),
     );
   }
 

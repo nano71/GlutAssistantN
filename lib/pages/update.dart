@@ -103,12 +103,21 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
                     ScaffoldMessenger.of(context).removeCurrentSnackBar();
                     ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "获取更新...", 24));
                     getUpdate().then((value) => _next(value));
-                    throw UnimplementedError();
+                    // throw UnimplementedError();
                   },
-                  child: Image.asset(
-                    'images/ic_launcher-playstore.png',
-                    width: 72,
-                  ),
+                  child:Container(
+                    padding: EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      color: readCardBackgroundColor2(),
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(12.0),
+                      ),
+                    ),
+                    child:Image.asset(
+                        'images/Frame 1000002879-4.png',
+                        width: 72,
+                    ) ,
+                  ) ,
                 ),
                 SizedBox(
                   height: 16,

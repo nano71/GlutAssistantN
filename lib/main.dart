@@ -20,6 +20,7 @@ void main() async {
     print("startApp...");
 
     await readConfig();
+    isDark = AppData.persistentData["color"] == "dark";
     runApp(App());
   }
 
@@ -81,6 +82,7 @@ class _AppState extends State<App> {
 
     eventBusListener = eventBus.on<UpdateAppThemeState>().listen((event) {
       print("更换主题");
+      setSystemNavigationBarColor(readCardBackgroundColor());
       setState(() {
         labelTextColor = readTextColor();
         selectedLabelTextColor = readColor();
