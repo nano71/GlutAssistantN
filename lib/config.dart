@@ -54,12 +54,35 @@ Uri httpUri(
   return Uri.http(AppConfig.jwUrl, path, queryParameters);
 }
 
-readNavigationBarIconBrightness(){
+readScoreColor(String score) {
+  int value = int.parse(levelToNumber(score));
+
+  if (value >= 95) {
+    return Colors.blue;
+  } else if (value >= 90) {
+    return Colors.blue[700];
+  } else if (value >= 85) {
+    return Colors.blue[700];
+  } else if (value >= 80) {
+    return Colors.green;
+  } else if (value >= 75) {
+    return Colors.green[600];
+  } else if (value >= 70) {
+    return Colors.orange;
+  } else if (value >= 65) {
+    return Colors.deepOrange;
+  } else {
+    return Colors.red;
+  }
+}
+
+readNavigationBarIconBrightness() {
   if (isDark) {
     return Brightness.light;
   }
   return Brightness.dark;
 }
+
 readClassRoomCardBackgroundColor(bool isEmpty) {
   if (isEmpty) {
     if (isDark) {
@@ -71,7 +94,6 @@ readClassRoomCardBackgroundColor(bool isEmpty) {
 }
 
 readClassRoomCardTextContentBackgroundColor(bool isEmpty) {
-
   if (isEmpty) {
     if (isDark) {
       return Color(0xFF26262a);
@@ -81,7 +103,6 @@ readClassRoomCardTextContentBackgroundColor(bool isEmpty) {
 }
 
 readClassRoomCardTextContentColor(bool isEmpty) {
-
   if (isEmpty) {
     if (isDark) {
       return readTextColor3();
@@ -93,7 +114,7 @@ readClassRoomCardTextContentColor(bool isEmpty) {
 
 readBorderColor() {
   if (isDark) {
-    return Color(0xFF26262a);
+    return Color(0xFF18181c);
   }
   return Colors.white;
 }
@@ -186,7 +207,7 @@ LinearGradient readGradient() {
     case "red":
       return setTemplate([Color(0xFFfbab66), Color(0xFFf7418c)]);
     case "pink":
-      return setTemplate([Color(0xfff0abfc), Color(0xff4f46e5)]);
+      return setTemplate([Color(0xffc471f5), Color(0xfffa71cd)]);
     case "blue":
       return setTemplate([Color(0xff66cefb), Color(0xff4175f7)]);
     case "yellow":

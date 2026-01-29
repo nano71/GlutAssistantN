@@ -509,7 +509,7 @@ class ScoreListState extends State<ScoreList> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.all(Radius.circular(6.0)),
                       // color: Global.homeCardsColor,
-                      color: queryScore[index][4] == "不及格" ? Colors.red : randomColors3(),
+                      color:  readScoreColor(queryScore[index][4]),
                     ),
                     child: Column(children: [
                       Text(
