@@ -7,12 +7,14 @@
 
     <application
             android:label="桂工助手N"
-            android:icon="@mipmap/ic_launcher">
+            android:icon="@mipmap/ic_launcher"
+            android:theme="@style/AppTheme"
+            >
         <activity
                 android:name=".MainActivity"
                 android:exported="true"
                 android:launchMode="singleTop"
-                android:theme="@style/Theme.Material3.DynamicColors.DayNight"
+                android:theme="@style/LaunchTheme"
                 android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
                 android:hardwareAccelerated="true"
                 android:windowSoftInputMode="adjustResize"
