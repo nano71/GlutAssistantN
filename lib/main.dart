@@ -7,16 +7,19 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:workmanager/workmanager.dart';
 
 import '/pages/Layout.dart';
+import 'common/io.dart';
 import 'common/service.dart';
 import 'config.dart';
 import 'data.dart';
 
 void main() async {
-  void run() {
+  Future<void> run() async {
     WidgetsFlutterBinding.ensureInitialized();
     Workmanager().initialize(callbackDispatcher, isInDebugMode: true);
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarColor: Colors.transparent));
     print("startApp...");
+
+    await readConfig();
     runApp(App());
   }
 
@@ -61,7 +64,7 @@ class App extends StatefulWidget {
 class _AppState extends State<App> {
   Key appKey = UniqueKey();
   late StreamSubscription<UpdateAppThemeState> eventBusListener;
-  Color labelTextColor = Colors.black;
+  Color labelTextColor = readTextColor();
   Color selectedLabelTextColor = readColor();
 
   void restartApp() {

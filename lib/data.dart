@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 EventBus eventBus = EventBus();
@@ -345,4 +346,12 @@ String getAccount() {
 Future<void> saveSplashColor(Color color) async {
   final prefs = await SharedPreferences.getInstance();
   prefs.setInt('splashColor', color.value);
+}
+const _channel = MethodChannel('app/theme');
+
+Future<void> saveLaunchColor(Color color) async {
+  await _channel.invokeMethod(
+    'saveLaunchColor',
+    color.value, // int ARGB
+  );
 }

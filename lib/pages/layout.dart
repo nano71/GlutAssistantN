@@ -7,7 +7,6 @@ import 'package:package_info_plus/package_info_plus.dart' as PackageInfoPlus;
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:workmanager/workmanager.dart';
 
-import '../common/aes.dart';
 import '/common/get.dart';
 import '/common/init.dart';
 import '/common/io.dart';
@@ -16,6 +15,7 @@ import '/pages/home.dart';
 import '/pages/person.dart';
 import '/pages/schedule.dart';
 import '/widget/bars.dart';
+import '../common/aes.dart';
 import '../common/homeWidget.dart';
 import '../data.dart';
 import '../type/packageInfo.dart';
@@ -41,8 +41,8 @@ class DataPreloadPage extends StatefulWidget {
   _DataPreloadPageState createState() => _DataPreloadPageState();
 }
 
-Future<void> reinitialize({refreshState = false}) async {
-  await readConfig();
+Future<void> reinitialize({refreshState = false, ignoreReadConfig = false}) async {
+  if (!ignoreReadConfig) await readConfig();
   await readWeek();
   await readSchedule();
   await initTodaySchedule();
@@ -66,7 +66,7 @@ class _DataPreloadPageState extends State<DataPreloadPage> {
     // initService();
     getPermissions();
     readPackageInfo();
-    await reinitialize();
+    await reinitialize(ignoreReadConfig: true);
     await readCookie();
     getUpdateForEveryday();
     updateAppwidget();
@@ -86,7 +86,7 @@ class _DataPreloadPageState extends State<DataPreloadPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(color: Colors.white);
+    return Container(color: readBackgroundColor());
   }
 }
 
