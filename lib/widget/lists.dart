@@ -19,21 +19,12 @@ List timeUntilNextClass(dynamic index) {
   var endHour = endTimeList[index - 1][0];
   var startMinute = startTimeList[index - 1][1];
   var endMinute = endTimeList[index - 1][1];
-  var year = DateTime
-      .now()
-      .year;
-  var month = DateTime
-      .now()
-      .month;
-  var day = DateTime
-      .now()
-      .day;
-  var hour = DateTime
-      .now()
-      .hour;
-  var minute = DateTime
-      .now()
-      .minute;
+  var now = DateTime.now();
+  var year = now.year;
+  var month = now.month;
+  var day = now.day;
+  var hour = now.hour;
+  var minute = now.minute;
   var startTimeDifference = DateTime(year, month, day, startHour, startMinute).difference(DateTime(year, month, day, hour, minute));
   var endTimeDifference = DateTime(year, month, day, endHour, endMinute).difference(DateTime(year, month, day, hour, minute));
   bool studying = false;
@@ -150,9 +141,7 @@ class TodayCourseListState extends State<TodayCourseList> {
   void refreshTimer(int index) {
     void next() {
       isTimerInit = false;
-      if (DateTime
-          .now()
-          .second < 2) {
+      if (DateTime.now().second < 2) {
         thresholdCount++;
         if (AppData.isReleaseMode && AppData.persistentData["threshold"] != "-1") {
           if (thresholdCount > (int.parse(AppData.persistentData["threshold"] ?? "5") * 2)) {
@@ -169,7 +158,7 @@ class TodayCourseListState extends State<TodayCourseList> {
       isTimerInit = true;
       Future.delayed(
         Duration(seconds: 1),
-            () {
+        () {
           if (mounted) next();
         },
       );
@@ -216,9 +205,9 @@ class TodayCourseListItemState extends State<TodayCourseListItem> {
       return readColor();
     } else {
       if (_timeText(index).contains("下课")) {
-        return Colors.teal;
+        return readColor();
       } else {
-        return Colors.black26;
+        return readScheduleListTextColor3();
       }
     }
   }
@@ -226,12 +215,12 @@ class TodayCourseListItemState extends State<TodayCourseListItem> {
   Color _textColorsTop(int index) {
     String result = timeUntilNextClass(AppData.todaySchedule[index][4])[3];
     if (result == "before") {
-      return Color(0xff333333);
+      return readScheduleListTextColor();
     } else {
       if (_timeText(index).contains("下课")) {
-        return Colors.teal;
+        return readColor();
       } else {
-        return Colors.black26;
+        return readScheduleListTextColor3();
       }
     }
   }
@@ -239,12 +228,12 @@ class TodayCourseListItemState extends State<TodayCourseListItem> {
   Color _textColorsDown(int index) {
     String result = timeUntilNextClass(AppData.todaySchedule[index][4])[3];
     if (result == "before") {
-      return Color(0xff999999);
+      return readScheduleListTextColor2();
     } else {
       if (_timeText(index).contains("下课")) {
-        return Colors.teal;
+        return readColor();
       } else {
-        return Colors.black26;
+        return readScheduleListTextColor3();
       }
     }
   }
@@ -317,12 +306,11 @@ class TodayCourseListItemState extends State<TodayCourseListItem> {
                       Baseline(baseline: 12, baselineType: TextBaseline.ideographic, child: Text(" | ", style: smallTextStyle())),
                       isShowLessonTimeInList()
                           ? Baseline(
-                          baseline: 13,
-                          baselineType: TextBaseline.ideographic,
-                          child: Text(
-                              ('${timePreprocessor(startTimeList[int.parse(courseInfo()[4]) - 1].join(":"))} - ${timePreprocessor(endTimeList[int.parse(courseInfo()[4]) - 1].join(
-                                  ":"))}'),
-                              style: smallTextStyle()))
+                              baseline: 13,
+                              baselineType: TextBaseline.ideographic,
+                              child: Text(
+                                  ('${timePreprocessor(startTimeList[int.parse(courseInfo()[4]) - 1].join(":"))} - ${timePreprocessor(endTimeList[int.parse(courseInfo()[4]) - 1].join(":"))}'),
+                                  style: smallTextStyle()))
                           : Container(),
                       isShowLessonTimeInList() ? Baseline(baseline: 12, baselineType: TextBaseline.ideographic, child: Text(" | ", style: smallTextStyle())) : Container(),
                       Text(courseInfo()[1], style: smallTextStyle()),
@@ -380,6 +368,10 @@ class TomorrowCourseListState extends State<TomorrowCourseList> {
   Widget build(BuildContext context) {
     return SliverList(
       delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
+        bool _isFirstClass = _tomorrowSchedule[index][4] == "1" && index == 0;
+        Color _iconColor = readColor();
+        Color _topTextColor = readScheduleListTextColor();
+        Color _bottomTextColor = readScheduleListTextColor2();
         return Container(
           padding: _tomorrowSchedule[index][3] == "1" && index == 0 ? EdgeInsets.fromLTRB(16, 0, 16, 4) : EdgeInsets.fromLTRB(16, 0, 16, 0),
           margin: EdgeInsets.fromLTRB(0, 0, 0, 16),
@@ -397,7 +389,7 @@ class TomorrowCourseListState extends State<TomorrowCourseList> {
                     child: Icon(
                       // Remix.time_line,
                       Icons.hourglass_top_outlined,
-                      color: (_tomorrowSchedule[index][4] == "1" && index == 0 ? Colors.orange[900] : readColor()),
+                      color: _iconColor,
                       size: AppConfig.listLeftIconSize,
                     ),
                   ),
@@ -407,30 +399,42 @@ class TomorrowCourseListState extends State<TomorrowCourseList> {
                     children: [
                       Row(
                         children: [
-                          Text(_tomorrowSchedule[index][2] + " ",
-                              style: TextStyle(
-                                  decoration: TextDecoration.none,
-                                  fontSize: 14,
-                                  color: (_tomorrowSchedule[index][4] == "1" && index == 0 ? Colors.orange[900] : Color(0xff333333)))),
-                          Text(courseLongText2Short(_tomorrowSchedule[index][0]),
-                              style: TextStyle(
-                                  decoration: TextDecoration.none,
-                                  fontSize: 16,
-                                  color: (_tomorrowSchedule[index][4] == "1" && index == 0 ? Colors.orange[900] : Color(0xff333333)))),
+                          Text(
+                            _tomorrowSchedule[index][2] + " ",
+                            style: TextStyle(
+                              decoration: TextDecoration.none,
+                              fontSize: 14,
+                              color: _topTextColor,
+                            ),
+                          ),
+                          Text(
+                            courseLongText2Short(_tomorrowSchedule[index][0]),
+                            style: TextStyle(
+                              decoration: TextDecoration.none,
+                              fontSize: 16,
+                              color: _topTextColor,
+                            ),
+                          ),
                         ],
                       ),
                       Row(
                         children: [
-                          Text('第${_tomorrowSchedule[index][4]}节 | ',
-                              style: TextStyle(
-                                  decoration: TextDecoration.none,
-                                  fontSize: 12,
-                                  color: (_tomorrowSchedule[index][4] == "1" && index == 0 ? Colors.orange[900] : Color(0xff999999)))),
-                          Text(_tomorrowSchedule[index][1],
-                              style: TextStyle(
-                                  decoration: TextDecoration.none,
-                                  fontSize: 12,
-                                  color: (_tomorrowSchedule[index][4] == "1" && index == 0 ? Colors.orange[900] : Color(0xff999999)))),
+                          Text(
+                            '第${_tomorrowSchedule[index][4]}节 | ',
+                            style: TextStyle(
+                              decoration: TextDecoration.none,
+                              fontSize: 12,
+                              color: _bottomTextColor,
+                            ),
+                          ),
+                          Text(
+                            _tomorrowSchedule[index][1],
+                            style: TextStyle(
+                              decoration: TextDecoration.none,
+                              fontSize: 12,
+                              color: _bottomTextColor,
+                            ),
+                          ),
                         ],
                       ),
                     ],
@@ -442,7 +446,7 @@ class TomorrowCourseListState extends State<TomorrowCourseList> {
                 children: [
                   Align(
                     alignment: Alignment.centerRight,
-                    child: Text((_tomorrowSchedule[index][4] == "1" && index == 0 ? "别睡懒觉哦" : ""), style: TextStyle(fontSize: 14, color: Colors.orange[900])),
+                    child: Text((_isFirstClass ? "别睡懒觉哦" : ""), style: TextStyle(fontSize: 14, color: Colors.deepOrangeAccent)),
                   ),
                 ],
               ),
@@ -482,19 +486,16 @@ class ScoreListState extends State<ScoreList> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Container(
-                            width: MediaQuery
-                                .of(context)
-                                .size
-                                .width - 60 - 32,
+                            width: MediaQuery.of(context).size.width - 60 - 32,
                             child: Text(
                               queryScore[index][2],
-                              style: TextStyle(fontSize: 16,color: readTextColor()),
+                              style: TextStyle(fontSize: 16, color: readTextColor()),
                             ),
                           ),
                           Container(
                             child: Text(
                               queryScore[index][3] == "" ? "慕课成绩不会被统计" : queryScore[index][3],
-                              style: TextStyle(color:readTextColor2(), fontSize: 12),
+                              style: TextStyle(color: readTextColor2(), fontSize: 12),
                             ),
                           ),
                         ],
@@ -509,11 +510,11 @@ class ScoreListState extends State<ScoreList> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.all(Radius.circular(6.0)),
                       // color: Global.homeCardsColor,
-                      color:  readScoreColor(queryScore[index][4]),
+                      color: readScoreColor(queryScore[index][4]),
                     ),
                     child: Column(children: [
                       Text(
-                        // "不及格",
+                          // "不及格",
                           queryScore[index][4],
                           style: TextStyle(fontSize: 16, color: Colors.white)),
                       Text(queryScore[index][5], style: TextStyle(color: Colors.white, fontSize: 12)),
@@ -543,16 +544,23 @@ class ExamList extends StatefulWidget {
 class ExamListState extends State<ExamList> {
   _getColor(int index) {
     if (examListC[index]) {
-      return Colors.grey;
+      return readScheduleListTextColor3();
     }
     return readColor();
   }
 
   _getColor2(int index) {
     if (examListC[index]) {
-      return Colors.grey;
+      return readScheduleListTextColor3();
     }
     return readTextColor();
+  }
+
+  _getColor3(int index) {
+    if (examListC[index]) {
+      return readScheduleListTextColor3();
+    }
+    return readScheduleListTextColor2();
   }
 
   _getIcon(int index) {
@@ -599,7 +607,7 @@ class ExamListState extends State<ExamList> {
                           ),
                           Text(
                             examList[index][1],
-                            style: TextStyle(fontSize: 12, color: readTextColor2()),
+                            style: TextStyle(fontSize: 12, color: _getColor3(index)),
                           ),
                         ],
                       ),
@@ -607,7 +615,7 @@ class ExamListState extends State<ExamList> {
                   ),
                   Text(
                     examList[index][2],
-                    style: TextStyle(color: readTextColor2()),
+                    style: TextStyle(color: _getColor3(index)),
                   ),
                   // Text(examList[index][3]),
                 ],
@@ -682,11 +690,11 @@ class ClassroomListState extends State<ClassroomList> {
     // throw UnimplementedError();
     return SliverList(
         delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
-          Map item = _classroomList[index];
-          // print(632);
-          // print(item);
-          return ClassroomListItem(item);
-        }, childCount: _classroomList.length));
+      Map item = _classroomList[index];
+      // print(632);
+      // print(item);
+      return ClassroomListItem(item);
+    }, childCount: _classroomList.length));
   }
 }
 
@@ -818,11 +826,10 @@ List<Widget> occupancyList(List<bool> boolList) {
   return list;
 }
 
-
 class RowGap extends StatelessWidget {
   late final double gap;
 
-  RowGap([double gap = 8]){
+  RowGap([double gap = 8]) {
     this.gap = gap;
   }
 
@@ -837,7 +844,7 @@ class RowGap extends StatelessWidget {
 class ColumnGap extends StatelessWidget {
   late final double gap;
 
-  ColumnGap([double gap = 8]){
+  ColumnGap([double gap = 8]) {
     this.gap = gap;
   }
 

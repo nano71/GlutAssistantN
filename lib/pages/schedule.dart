@@ -55,6 +55,14 @@ class RowHeaderState extends State<RowHeader> {
 List<Widget> _loopRowHeader(bool isCurrentWeek) {
   List _weekDayList = ["一", "二", "三", "四", "五", "六", "日"];
   List<Widget> list = [];
+  DateTime now = DateTime.now();
+  Color textColor(int i) {
+    if (isCurrentWeek && i + 1 == now.weekday) {
+      return readColor();
+    }
+    return Colors.grey;
+  }
+
   for (int i = 0; i < 7; i++) {
     list.add(
       Expanded(
@@ -63,7 +71,7 @@ List<Widget> _loopRowHeader(bool isCurrentWeek) {
           child: Center(
             child: Text(
               "周${_weekDayList[i]}",
-              style: TextStyle(color: isCurrentWeek ? (i + 1 == DateTime.now().weekday ? readColor() : Colors.grey) : Colors.grey),
+              style: TextStyle(color: textColor(i)),
             ),
           ),
         ),
@@ -95,6 +103,7 @@ List<Widget> _loopRowHeader2(DateTime current, int currentWeek) {
   List<Widget> list = [];
   int difference = currentWeek - AppData.week;
   List<int> weekDays = fillWeekWithWeekOffset(current, difference);
+  int day = DateTime.now().day;
   for (var value in weekDays) {
     list.add(
       Expanded(
@@ -104,7 +113,7 @@ List<Widget> _loopRowHeader2(DateTime current, int currentWeek) {
           child: Center(
             child: Text(
               "$value",
-              style: TextStyle(color: Colors.grey),
+              style: TextStyle(color: difference == 0 && value == day ? readColor() : Colors.grey),
             ),
           ),
         ),

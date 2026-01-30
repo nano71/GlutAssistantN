@@ -54,6 +54,35 @@ Uri httpUri(
   return Uri.http(AppConfig.jwUrl, path, queryParameters);
 }
 
+readHomePageSmallCardTextColor(){
+  if (isDark) {
+    return Colors.white70;
+  }
+  return Colors.black54;
+}
+
+readScheduleListTextColor(){
+  if(isDark){
+    return Colors.white;
+  }
+  return Colors.black;
+}
+
+readScheduleListTextColor2(){
+  if(isDark){
+    return Colors.white54;
+  }
+  return Color(0xff999999);
+}
+
+readScheduleListTextColor3(){
+  if(isDark){
+    return Colors.white30;
+  }
+  return Colors.black26;
+}
+
+
 readScoreColor(String score) {
   int value = int.parse(levelToNumber(score));
 

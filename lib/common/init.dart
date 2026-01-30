@@ -27,6 +27,7 @@ initTodaySchedule() async {
   int year = now.year;
   int month = now.month;
   int day = now.day;
+  int weekday = now.weekday;
 
   print('当前日期: $year 年 $month 月 $day 日');
   print(now.toIso8601String());
@@ -36,9 +37,9 @@ initTodaySchedule() async {
   List<List> toDay = [];
   if (_week < 21 && _week != 0) {
     Map weekOfSemester = _schedule[_week.toString()];
-    Map dayOfWeek = weekOfSemester[DateTime.now().weekday.toString()];
+    Map dayOfWeek = weekOfSemester[weekday.toString()];
     dayOfWeek.forEach((key, value) {
-      if (value is List) if (value[1] != "null") {
+      if (value is List && value.length > 1 && value[1] != "null") {
         if (value.length < 5) {
           value.add(key);
         }
@@ -61,24 +62,28 @@ initTodaySchedule() async {
 initTomorrowSchedule() async {
   print("initTomorrowSchedule");
   final int _week = AppData.week;
+  DateTime now = DateTime.now();
+  int weekday = now.weekday;
+  String weekdayString = "1";
+
   Map _schedule = Map.from(AppData.schedule);
   List<List> tomorrow = [];
-  String _getWeekDay() {
-    if (DateTime.now().weekday <= 6) {
-      return (DateTime.now().weekday + 1).toString();
-    } else {
-      return "1";
-    }
+
+  if (weekday <= 6) {
+    weekdayString = (weekday + 1).toString();
   }
 
-  if (DateTime.now().weekday <= 6) {
+  if (weekday <= 6) {
     if (_week < 21 && _week != 0)
-      await _schedule[_week.toString()][_getWeekDay()].forEach((key, value) => {
-            if (value[1] != "null") {value.add(key), tomorrow.add(value)}
-          });
+      await _schedule[_week.toString()][weekdayString].forEach((key, value) {
+        if (value[1] != "null") {
+          value.add(key);
+          tomorrow.add(value);
+        }
+      });
   } else {
     if (_week < 20)
-      await _schedule[(_week + 1).toString()][_getWeekDay()].forEach((key, value) {
+      await _schedule[(_week + 1).toString()][weekdayString].forEach((key, value) {
         if (value[1] != "null") {
           value.add(key);
           tomorrow.add(value);
