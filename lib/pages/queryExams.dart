@@ -10,48 +10,25 @@ import '/widget/lists.dart';
 import '../data.dart';
 import 'career.dart';
 
-class QueryExamPage extends StatefulWidget {
-  final String title;
+class QueryExamsPage extends StatefulWidget {
 
-  QueryExamPage({Key? key, this.title = "生涯"}) : super(key: key);
-
-  @override
-  State<QueryExamPage> createState() => _QueryExamPageState();
-}
-
-class _QueryExamPageState extends State<QueryExamPage> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: readBackgroundColor(),
-      body: QueryExamBody(),
-    );
-  }
-}
-
-class QueryExamBody extends StatefulWidget {
-  QueryExamBody({Key? key}) : super(key: key);
+  QueryExamsPage({Key? key}) : super(key: key);
 
   @override
-  State<QueryExamBody> createState() => _QueryExamBodyState();
+  State<QueryExamsPage> createState() => _QueryExamsPageState();
 }
 
-class _QueryExamBodyState extends State<QueryExamBody> {
-  bool login = true;
-
+class _QueryExamsPageState extends State<QueryExamsPage> {
   // ignore: cancel_subscriptions
   late StreamSubscription<ReloadExamListState> eventBusListener;
-  int _examAllNumber = examAllNumber;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (login) {
-        ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "获取数据...", 6));
-        getExam().then(process);
-      }
+      ScaffoldMessenger.of(context).removeCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "获取数据...", 6));
+      getExam().then(process);
     });
 
     eventBusListener = eventBus.on<ReloadExamListState>().listen((event) {
@@ -68,7 +45,6 @@ class _QueryExamBodyState extends State<QueryExamBody> {
   void process(value) {
     if (value is bool) {
       if (value) {
-        login = false;
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "处理数据...", 10));
         setState(() {});
@@ -98,8 +74,9 @@ class _QueryExamBodyState extends State<QueryExamBody> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    return CustomScrollView(
+    return Scaffold(
+        backgroundColor: readBackgroundColor(),
+        body:  CustomScrollView(
       physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
       slivers: [
         publicTopBar(
@@ -135,7 +112,7 @@ class _QueryExamBodyState extends State<QueryExamBody> {
                             Container(
                               width: 50,
                               child: Text(
-                                "$examListA",
+                                "$completedExamCount",
                                 textAlign: TextAlign.center,
                                 style: TextStyle(color: Colors.white, fontSize: 24),
                               ),
@@ -143,7 +120,7 @@ class _QueryExamBodyState extends State<QueryExamBody> {
                             Container(
                               width: 50,
                               child: Text(
-                                "$examListB",
+                                "$upcomingExamCount",
                                 textAlign: TextAlign.center,
                                 style: TextStyle(color: Colors.white, fontSize: 24),
                               ),
@@ -155,14 +132,11 @@ class _QueryExamBodyState extends State<QueryExamBody> {
                                   Navigator.of(context)
                                       .push(MaterialPageRoute(builder: (context) => CareerPage(type: 1)))
                                       .then((result) {
-                                    print(examAllNumber);
-                                    setState(() {
-                                      _examAllNumber = examAllNumber;
-                                    });
+                                    setState(() {});
                                   });
                                 },
                                 child: Text(
-                                  (_examAllNumber.toString() == "0" ? "获取" : _examAllNumber.toString()),
+                                  (totalExamCount == 0 ? "获取" : totalExamCount.toString()),
                                   textAlign: TextAlign.center,
                                   style: TextStyle(color: Colors.white, fontSize: 24),
                                 ),
@@ -200,6 +174,6 @@ class _QueryExamBodyState extends State<QueryExamBody> {
         ),
         ExamList(),
       ],
-    );
+    ),);
   }
 }

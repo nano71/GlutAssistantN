@@ -14,10 +14,10 @@ class QueryRoomPage extends StatefulWidget {
   QueryRoomPage({Key? key, this.title = "空教室查询"}) : super(key: key);
 
   @override
-  State<QueryRoomPage> createState() => QueryRoomPageState();
+  State<QueryRoomPage> createState() => _QueryRoomPageState();
 }
 
-class QueryRoomPageState extends State<QueryRoomPage> {
+class _QueryRoomPageState extends State<QueryRoomPage> {
   String message = "查询选择的教学楼全部教室";
   Color messageColor = Colors.grey;
 
@@ -59,7 +59,7 @@ class QueryRoomPageState extends State<QueryRoomPage> {
               ),
             ),
           ),
-          QueryConditionCard(),
+          _FormCard(),
           ClassroomList(),
         ],
       ),
@@ -67,15 +67,15 @@ class QueryRoomPageState extends State<QueryRoomPage> {
   }
 }
 
-class QueryConditionCard extends StatefulWidget {
+class _FormCard extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return QueryConditionCardState();
+    return _FormCardState();
   }
 }
 
-class QueryConditionCardState extends State<QueryConditionCard> {
+class _FormCardState extends State<_FormCard> {
   Map<String, Map> query = {
     "buildingCode": {"-1": "请选择"},
     "weekOfSemester": {"-1": "请选择"},
@@ -124,8 +124,8 @@ class QueryConditionCardState extends State<QueryConditionCard> {
     });
   }
 
-  List<DropdownMenuItem<Object>> dropdownMenuItemList(String queryKey, [bool isBuilder = false]) {
-    List<DropdownMenuItem<Object>> list = [];
+  List<DropdownMenuItem<String>> DropdownMenuItemList(String queryKey, [bool isBuilder = false]) {
+    List<DropdownMenuItem<String>> list = [];
     query[queryKey]!.forEach((key, value) {
       list.add(DropdownMenuItem(
         child: Text(
@@ -171,7 +171,7 @@ class QueryConditionCardState extends State<QueryConditionCard> {
             getEmptyClassroom().then(process);
             Navigator.pop(context);
           },
-          hideSnackBarSeconds: AppConfig.timeOutSec,
+          hideSnackBarSeconds: AppConfig.timeoutSecond,
         ));
       }
     } else if (value is String) {
@@ -181,7 +181,7 @@ class QueryConditionCardState extends State<QueryConditionCard> {
     }
   }
 
-  void _getEmptyClassroom() {
+  void precheck() {
     if (buildingSelect != "-1") {
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "查询中...", 10));
@@ -222,9 +222,11 @@ class QueryConditionCardState extends State<QueryConditionCard> {
                       query["buildingCode"]?[buildingSelect],
                       style: TextStyle(fontSize: 14, color: readTextColor()),
                     ),
-                    items: dropdownMenuItemList("buildingCode"),
+                    items: DropdownMenuItemList("buildingCode"),
                     onTap: () {
-                      if (query["buildingCode"]!.length == 1) getEmptyClassroom().then(process);
+                      if (query["buildingCode"]!.length == 1) {
+                        getEmptyClassroom().then(process);
+                      }
                     },
                     onChanged: (value) {
                       setState(() {
@@ -247,12 +249,12 @@ class QueryConditionCardState extends State<QueryConditionCard> {
                 ),
                 SizedBox(
                   height: 40,
-                  child: DropdownButton(
+                  child: DropdownButton<String>(
                     enableFeedback: true,
                     value: whichWeekSelect,
                     // style: TextStyle(fontSize: 14, color: Colors.black.withOpacity(0.6)),
                     selectedItemBuilder: (context) {
-                      return dropdownMenuItemList("weekOfSemester", true);
+                      return DropdownMenuItemList("weekOfSemester", true);
                     },
                     icon: chevronRight(),
                     iconSize: 18,
@@ -261,11 +263,11 @@ class QueryConditionCardState extends State<QueryConditionCard> {
                     elevation: 0,
                     hint: Text(query["weekOfSemester"]?[whichWeekSelect],
                         style: TextStyle(fontSize: 14, color: readTextColor2())),
-                    items: dropdownMenuItemList("weekOfSemester"),
+                    items: DropdownMenuItemList("weekOfSemester"),
                     onChanged: (value) {
                       print(value);
                       setState(() {
-                        whichWeekSelect = value.toString();
+                        whichWeekSelect = value!;
                       });
                     },
                   ),
@@ -281,11 +283,11 @@ class QueryConditionCardState extends State<QueryConditionCard> {
                 ),
                 SizedBox(
                   height: 40,
-                  child: DropdownButton(
+                  child: DropdownButton<String>(
                     value: weekSelect,
                     enableFeedback: true,
                     selectedItemBuilder: (context) {
-                      return dropdownMenuItemList("dayOfWeek", true);
+                      return DropdownMenuItemList("dayOfWeek", true);
                     },
                     icon: chevronRight(),
                     iconSize: 18,
@@ -293,11 +295,11 @@ class QueryConditionCardState extends State<QueryConditionCard> {
                     alignment: Alignment.centerRight,
                     elevation: 0,
                     // hint: Text(query["dayOfWeek"]?[weekSelect], style: TextStyle(fontSize: 14)),
-                    items: dropdownMenuItemList("dayOfWeek"),
+                    items: DropdownMenuItemList("dayOfWeek"),
                     onChanged: (value) {
                       print(value);
                       setState(() {
-                        weekSelect = value.toString();
+                        weekSelect = value!;
                       });
                     },
                   ),
@@ -311,22 +313,21 @@ class QueryConditionCardState extends State<QueryConditionCard> {
               child: Container(
                 margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
                 child: TextButton(
-                    autofocus: true,
-                    style: ButtonStyle(
-                      //设置水波纹颜色
-                      overlayColor: WidgetStateProperty.all(Colors.yellow),
-                      backgroundColor: WidgetStateProperty.resolveWith((states) {
-                        return readColor();
-                      }),
-                      shape: WidgetStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
-                    ),
-                    child: Text(
-                      "即刻查询",
-                      style: TextStyle(fontWeight: FontWeight.w500, color: Colors.white, fontSize: 14),
-                    ),
-                    onPressed: () {
-                      _getEmptyClassroom();
+                  autofocus: true,
+                  style: ButtonStyle(
+                    //设置水波纹颜色
+                    overlayColor: WidgetStateProperty.all(Colors.yellow),
+                    backgroundColor: WidgetStateProperty.resolveWith((states) {
+                      return readColor();
                     }),
+                    shape: WidgetStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+                  ),
+                  child: Text(
+                    "即刻查询",
+                    style: TextStyle(fontWeight: FontWeight.w500, color: Colors.white, fontSize: 14),
+                  ),
+                  onPressed: precheck,
+                ),
               ),
             )
           ],

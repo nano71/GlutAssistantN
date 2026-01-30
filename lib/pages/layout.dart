@@ -12,7 +12,7 @@ import '/common/init.dart';
 import '/common/io.dart';
 import '/config.dart';
 import '/pages/home.dart';
-import '/pages/person.dart';
+import '/pages/mine.dart';
 import '/pages/schedule.dart';
 import '/widget/bars.dart';
 import '../common/aes.dart';
@@ -105,7 +105,7 @@ class Layout extends StatefulWidget {
 }
 
 class _LayoutState extends State<Layout> with RouteAware {
-  late final AppLifecycleListener _listener;
+  late final AppLifecycleListener appLifecycleListener;
   bool isResumed = true;
   late StreamSubscription<ErrorEvent> eventBusListener;
 
@@ -120,7 +120,7 @@ class _LayoutState extends State<Layout> with RouteAware {
   void initState() {
     super.initState();
     AppData.isInitialized = true;
-    _listener = AppLifecycleListener(
+    appLifecycleListener = AppLifecycleListener(
       onStateChange: didChangeAppLifecycleState,
     );
     eventBusListener = eventBus.on<ErrorEvent>().listen((event) {
@@ -169,7 +169,7 @@ class _LayoutState extends State<Layout> with RouteAware {
   @override
   void dispose() {
     // 注销监听器
-    _listener.dispose();
+    appLifecycleListener.dispose();
     eventBusListener.cancel();
     routeObserver.unsubscribe(this);
 

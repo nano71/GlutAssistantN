@@ -12,7 +12,7 @@ import '/data.dart';
 import '/widget/bars.dart';
 import '../type/packageInfo.dart';
 import '../widget/dialog.dart';
-import 'person.dart';
+import 'mine.dart';
 
 class UpdatePage extends StatefulWidget {
   UpdatePage({Key? key}) : super(key: key);
@@ -281,6 +281,6 @@ InkWell customInkWell(String url, IconData icon, String title, Color color) {
     onTap: () {
       launch(url);
     },
-    child: mineItem(icon, padding, title, color),
+    child: LinkItem(icon, padding, title, color),
   );
 }

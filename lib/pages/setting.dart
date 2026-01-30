@@ -12,7 +12,7 @@ import '../data.dart';
 import '../widget/cards.dart';
 import '../widget/lists.dart';
 import 'layout.dart';
-import 'person.dart';
+import 'mine.dart';
 
 List<DropdownMenuItem<String>> dropdownMenuColorItems() {
   List<DropdownMenuItem<String>> widgets = [];
@@ -310,7 +310,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(builder: (context) => TimeManagePage()));
                             },
-                            child: mineItem(Remix.timer_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "课节时间", readColor()),
+                            child: LinkItem(Remix.timer_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "课节时间", readColor()),
                           ),
                           ColumnGap(),
                           InkWell(
@@ -319,7 +319,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                               ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "准备文件中...", 4));
                               shareLogFile();
                             },
-                            child: mineItem(Remix.bug_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "导出日志", readColor()),
+                            child: LinkItem(Remix.bug_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "导出日志", readColor()),
                           ),
                           ColumnGap(),
                           // InkWell(
@@ -393,7 +393,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
 
   void clear() async {
     await clearAll();
-    AppData.studentID = "";
+    AppData.studentId = "";
     AppData.studentName = "";
     AppData.password = "";
     AppData.todaySchedule = [];

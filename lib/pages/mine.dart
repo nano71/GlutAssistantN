@@ -1,4 +1,5 @@
 import 'package:badges/badges.dart' as badges;
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:glutassistantn/widget/cards.dart';
 import 'package:glutassistantn/widget/lists.dart';
@@ -13,16 +14,17 @@ import '/widget/icons.dart';
 import '../config.dart';
 import '../data.dart';
 import 'about.dart';
+import 'layout.dart';
 import 'login.dart';
 
 class MinePage extends StatefulWidget {
   MinePage({Key? key}) : super(key: key);
 
   @override
-  MinePageState createState() => MinePageState();
+  _MinePageState createState() => _MinePageState();
 }
 
-class MinePageState extends State<MinePage> {
+class _MinePageState extends State<MinePage> {
   @override
   void initState() {
     // TODO: implement initState
@@ -54,13 +56,12 @@ class MinePageState extends State<MinePage> {
                 InkWell(
                   onTap: () {
                     Navigator.of(context).push(
-                      // 在FormPage()里传入参数
                       MaterialPageRoute(
                         builder: (context) => LoginPage(),
                       ),
                     );
                   },
-                  child: mineItem(
+                  child: LinkItem(
                     Remix.user_5_line,
                     EdgeInsets.fromLTRB(16, 14, 0, 14),
                     (AppData.isLoggedIn ? "更换账号" : "登录教务"),
@@ -77,7 +78,7 @@ class MinePageState extends State<MinePage> {
                       Navigator.of(context).push(MaterialPageRoute(builder: (context) => CareerPage()));
                     }
                   },
-                  child: mineItem(Remix.timer_flash_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "课程生涯", readColor()),
+                  child: LinkItem(Remix.timer_flash_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "课程生涯", readColor()),
                 ),
                 ColumnGap(),
                 InkWell(
@@ -89,7 +90,7 @@ class MinePageState extends State<MinePage> {
                       Navigator.of(context).push(MaterialPageRoute(builder: (context) => QueryRoomPage()));
                     }
                   },
-                  child: mineItem(Remix.building_4_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "教室查询", readColor()),
+                  child: LinkItem(Remix.building_4_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "教室查询", readColor()),
                 ),
               ],
             )),
@@ -106,22 +107,22 @@ class MinePageState extends State<MinePage> {
                     child: AppData.hasNewVersion
                         ? mineItem5(
                             Remix.download_cloud_2_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "版本更新", readColor())
-                        : mineItem(
+                        : LinkItem(
                             Remix.download_cloud_2_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "版本更新", readColor()),
                   ),
                   ColumnGap(),
                   InkWell(
                     onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => InfoPage()));
+                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => AboutPage()));
                     },
-                    child: mineItem(Remix.information_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "说明", readColor()),
+                    child: LinkItem(Remix.information_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "说明", readColor()),
                   ),
                   ColumnGap(),
                   InkWell(
                     onTap: () {
                       Navigator.of(context).push(MaterialPageRoute(builder: (context) => SettingPage(title: "设置2")));
                     },
-                    child: mineItem(Remix.settings_3_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "设置", readColor()),
+                    child: LinkItem(Remix.settings_3_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "设置", readColor()),
                   ),
                 ],
               ),
@@ -133,20 +134,7 @@ class MinePageState extends State<MinePage> {
   }
 }
 
-Container topLine = Container(
-  width: double.infinity,
-  margin: EdgeInsets.fromLTRB(16, 14, 16, 14),
-  decoration: BoxDecoration(
-    border: Border(
-      top: BorderSide(
-        width: 1, //宽度
-        color: Color(0x60eeeeee), //边框颜色
-      ),
-    ),
-  ),
-);
-
-Widget mineItem(IconData icon, EdgeInsets padding, String title, Color color) {
+Widget LinkItem(IconData icon, EdgeInsets padding, String title, Color color) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [

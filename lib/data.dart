@@ -70,7 +70,7 @@ class AppData {
   static bool showDayByWeekDay = false;
   static String studentName = "";
   static String password = "";
-  static String studentID = "";
+  static String studentId = "";
   static  String queryYear = "";
   static  String querySemester = "";
   static int programBackendSurvivalThreshold = 5;
@@ -121,14 +121,16 @@ List careerList = [];
 List careerList2 = [];
 List<String> careerInfo = ["", "", "", "", "", "", "", "", "", ""];
 List<int> careerCount = [0, 0, 0, 0];
-int careerNumber = 0;
-int careerJobNumber = 0;
-int examAllNumber = 0;
+int totalCourseCount = 0;
+int totalMajorCourseCount = 0;
+int totalExamCount = 0;
 List<List<String>> examList = [];
+List<bool> examList2 = [];
+
 List<Map> classroomList = [];
-List<bool> examListC = [];
-int examListA = 0;
-int examListB = 0;
+
+int completedExamCount = 0;
+int upcomingExamCount = 0;
 String todayScheduleTitle = "";
 String tomorrowScheduleTitle = "";
 List<List<int>> startTimeListBk = [];
@@ -368,7 +370,7 @@ bool isContainCourse(String courseNumber, String courseType) {
 }
 
 String getAccount() {
-  return "${AppData.studentID}${AppData.password}";
+  return "${AppData.studentId}${AppData.password}";
 }
 
 void setSystemNavigationBarColor(Color color) {

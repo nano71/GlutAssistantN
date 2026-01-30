@@ -222,7 +222,7 @@ codeCheckDialog(BuildContext context, Function callback) async {
     Future<void> _next(String value) async {
       print(value);
       if (value == "success") {
-        await login(AppData.studentID, AppData.password,
+        await login(AppData.studentId, AppData.password,
                 textFieldController.text)
             .then((String value) => _next2(value));
       } else if (value == "fail") {
@@ -243,7 +243,7 @@ codeCheckDialog(BuildContext context, Function callback) async {
         clicked = !clicked;
       });
       print(textFieldController.text);
-      await codeCheck(textFieldController.text).then((String value) => _next(value));
+      await checkVerificationCode(textFieldController.text).then((String value) => _next(value));
     }
   }
 

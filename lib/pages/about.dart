@@ -7,16 +7,16 @@ import 'package:remixicon/remixicon.dart';
 import '/custom/expansiontile.dart' as CustomExpansionTile;
 import '/widget/bars.dart';
 
-class InfoPage extends StatefulWidget {
+class AboutPage extends StatefulWidget {
   final String title;
 
-  InfoPage({Key? key, this.title = "说明"}) : super(key: key);
+  AboutPage({Key? key, this.title = "说明"}) : super(key: key);
 
   @override
-  State<InfoPage> createState() => _InfoPageState();
+  State<AboutPage> createState() => _AboutPageState();
 }
 
-class _InfoPageState extends State<InfoPage> {
+class _AboutPageState extends State<AboutPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,7 +64,7 @@ class _InfoPageState extends State<InfoPage> {
                               textColor: readTextColor(),
                               collapsedTextColor: readTextColor(),
                               tilePadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                              title: infoItem(Icons.privacy_tip_outlined, EdgeInsets.fromLTRB(16, 14, 0, 14), "隐私"),
+                              title: _infoItem(Icons.privacy_tip_outlined, EdgeInsets.fromLTRB(16, 14, 0, 14), "隐私"),
                               children: [
                                 Container(
                                   padding: EdgeInsets.fromLTRB(16, 0, 16, 16),
@@ -81,7 +81,7 @@ class _InfoPageState extends State<InfoPage> {
                               textColor: readTextColor(),
                               collapsedTextColor: readTextColor(),
                               tilePadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                              title: infoItem(Icons.insert_emoticon_sharp, EdgeInsets.fromLTRB(16, 14, 0, 14), "可信"),
+                              title: _infoItem(Icons.insert_emoticon_sharp, EdgeInsets.fromLTRB(16, 14, 0, 14), "可信"),
                               children: [
                                 Container(
                                   padding: EdgeInsets.fromLTRB(16, 0, 16, 16),
@@ -98,7 +98,7 @@ class _InfoPageState extends State<InfoPage> {
                               textColor: readTextColor(),
                               collapsedTextColor: readTextColor(),
                               tilePadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                              title: infoItem(Icons.check_circle_outline, EdgeInsets.fromLTRB(16, 14, 0, 14), "验证"),
+                              title: _infoItem(Icons.check_circle_outline, EdgeInsets.fromLTRB(16, 14, 0, 14), "验证"),
                               children: [
                                 Container(
                                   padding: EdgeInsets.fromLTRB(16, 0, 16, 16),
@@ -132,7 +132,7 @@ class _InfoPageState extends State<InfoPage> {
                               textColor: readTextColor(),
                               collapsedTextColor: readTextColor(),
                               tilePadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                              title: infoItem(Icons.feedback_outlined, EdgeInsets.fromLTRB(16, 14, 0, 14), "反馈"),
+                              title: _infoItem(Icons.feedback_outlined, EdgeInsets.fromLTRB(16, 14, 0, 14), "反馈"),
                               children: [
                                 Container(
                                   padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
@@ -202,7 +202,7 @@ class _InfoPageState extends State<InfoPage> {
   }
 }
 
-Widget infoItem(IconData icon, EdgeInsets padding, String title) {
+Widget _infoItem(IconData icon, EdgeInsets padding, String title) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [

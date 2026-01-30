@@ -127,7 +127,7 @@ Future<void> writeConfig() async {
   final now = DateTime.now();
 
   Map<String, dynamic> preEncodeData = {
-    "studentID": AppData.studentID,
+    "studentId": AppData.studentId,
     "password": AppData.password,
     "studentName": AppData.studentName,
     "year": AppData.year,
@@ -240,8 +240,8 @@ Future<void> readConfig() async {
             break;
 
           case "username":
-          case "studentID":
-            AppData.studentID = value;
+          case "studentId":
+            AppData.studentId = value;
             break;
 
           case "password":

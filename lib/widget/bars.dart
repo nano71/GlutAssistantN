@@ -80,7 +80,7 @@ SliverAppBar publicTopBar(String title,
   );
 }
 
-SliverAppBar publicTopBarWithInfoIcon(String title,
+SliverAppBar TopNavigationBarWithTipIcon(String title,
     [dynamic inkWell = const Text(""),
     Function()? onPressed,
     color = Colors.white,

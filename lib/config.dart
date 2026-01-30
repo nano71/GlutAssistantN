@@ -4,7 +4,6 @@ import 'data.dart';
 
 class AppConfig {
   static String appTitle = "桂工助手N";
-  static bool login = false;
   static int pageIndex = 0;
   static PageController pageControl = PageController(
     initialPage: 0,
@@ -15,7 +14,7 @@ class AppConfig {
   static String dataError = "教务未知错误!";
   static String notLoginError = "请先登录!";
   static String retryError = "未知错误,请重试!";
-  static int timeOutSec = 12;
+  static int timeoutSecond = 12;
   static double listLeftIconSize = 18;
   static Map cookie = {};
   static String jwUrl = "jw.glutnn.cn";

@@ -514,9 +514,9 @@ Future<dynamic> getExam() async {
   if (html == "") return AppConfig.dataError;
   Document document = parse(html);
   examList = [];
-  examListC = [];
-  examListA = 0;
-  examListB = 0;
+  examList2 = [];
+  completedExamCount = 0;
+  upcomingExamCount = 0;
   document = parse(response.body);
   examList = [];
   var _row = document.querySelectorAll(".datalist> tbody > tr");
@@ -532,8 +532,8 @@ Future<dynamic> getExam() async {
     _list.add(_row[i].querySelectorAll("td")[4].text);
 
     if (timeList.indexOf("未公布") != -1) {
-      examListB++;
-      examListC.add(false);
+      upcomingExamCount++;
+      examList2.add(false);
     } else {
       try {
         DateTime startDate = DateTime.now();
@@ -541,11 +541,11 @@ Future<dynamic> getExam() async {
             int.parse(timeList[2].substring(0, 2)));
         int days = endDate.difference(startDate).inDays;
         if (days < 0) {
-          examListC.add(true);
-          examListA++;
+          examList2.add(true);
+          completedExamCount++;
         } else {
-          examListB++;
-          examListC.add(false);
+          upcomingExamCount++;
+          examList2.add(false);
         }
       } catch (error, stackTrace) {
         Sentry.captureException(error, stackTrace: stackTrace, hint: Hint.withMap({"time": time}));
@@ -828,9 +828,9 @@ Future<Response> request(String method, Uri uri, {Map<String, String>? body, Enc
   Map<String, String>? headers = {"cookie": mapCookieToString()};
   if (method == "post") {
     return await post(uri, body: body, headers: headers, encoding: encoding)
-        .timeout(Duration(seconds: AppConfig.timeOutSec));
+        .timeout(Duration(seconds: AppConfig.timeoutSecond));
   } else {
-    return await get(uri, headers: headers).timeout(Duration(seconds: AppConfig.timeOutSec));
+    return await get(uri, headers: headers).timeout(Duration(seconds: AppConfig.timeoutSecond));
   }
 }
 

@@ -24,13 +24,13 @@ class LoginPage extends StatefulWidget {
 }
 
 class LoginPageState extends State<LoginPage> {
-  final ScrollController _scrollController = ScrollController();
+  final ScrollController scrollController = ScrollController();
   final studentIdController = TextEditingController();
   final passwordController = TextEditingController();
   final checkCodeController = TextEditingController();
   String message = "不辜负每一次相遇";
   Color messageColor = Colors.grey;
-  Uint8List _codeImgSrc = Base64Decoder().convert(
+  Uint8List verificationCodeImageBytes = Base64Decoder().convert(
       "iVBORw0KGgoAAAANSUhEUgAAAEgAAAAeCAYAAACPOlitAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAHYcAAB2HAY/l8WUAAABYSURBVGhD7dChAcAgEMDAb/ffGSpqIQvcmfg86zMcvX85MCgYFAwKBgWDgkHBoGBQMCgYFAwKBgWDgkHBoGBQMCgYFAwKBgWDgkHBoGBQMCgYFAwKBl3NbAiZBDiX3e/AAAAAAElFTkSuQmCC");
   String buttonTitle = "即刻登录";
   bool logged = false;
@@ -42,12 +42,12 @@ class LoginPageState extends State<LoginPage> {
   @override
   initState() {
     super.initState();
-    studentIdController.text = AppData.studentID;
+    studentIdController.text = AppData.studentId;
     passwordController.text = AppData.password;
-    _getCode();
+    getVerificationCode();
   }
 
-  void _check() {
+  void precheck() {
     if (!logged) {
       FocusScope.of(context).requestFocus(FocusNode());
       if (passwordController.text.isEmpty && studentIdController.text.isEmpty) {
@@ -66,18 +66,18 @@ class LoginPageState extends State<LoginPage> {
           message = "你忘输密码了...";
         });
       } else {
-        _codeCheck();
+        checking();
       }
     }
   }
 
-  void _getCode() async {
+  void getVerificationCode() async {
     try {
       print("getCode...");
       var response = await get(AppConfig.getCodeUrl).timeout(Duration(milliseconds: 6000));
       parseRawCookies(response.headers['set-cookie']);
       setState(() {
-        _codeImgSrc = response.bodyBytes;
+        verificationCodeImageBytes = response.bodyBytes;
       });
     } catch (e) {
       print('LoginPageState._getCode Error');
@@ -89,13 +89,13 @@ class LoginPageState extends State<LoginPage> {
     }
   }
 
-  void _codeCheck() async {
-    void _next(String value) {
+  void checking() async {
+    void next(String value) {
       if (value == "success") {
         setState(() {
           buttonTitle = "马上就好,获取数据中...";
         });
-        _loginJW();
+        logging();
       } else {
         setState(() {
           messageColor = Colors.red;
@@ -105,23 +105,23 @@ class LoginPageState extends State<LoginPage> {
       }
     }
 
-    await codeCheck(checkCodeController.text.toString()).then((String value) => _next(value));
+    await checkVerificationCode(checkCodeController.text).then(next);
   }
 
-  void _loginJW() async {
-    String _studentId = studentIdController.text.toString();
-    String _password = passwordController.text.toString();
-    Future<void> _next(String value) async {
+  void logging() async {
+    String studentId = studentIdController.text;
+    String password = passwordController.text;
+    Future<void> next(String value) async {
       if (value == "success") {
-        AppConfig.login = true;
+        AppData.isLoggedIn = true;
         logged = true;
         setState(() {
           messageColor = Colors.blue;
           message = "登录成功";
           buttonTitle = "马上就好,处理数据中...";
         });
-        AppData.studentID = _studentId;
-        AppData.password = _password;
+        AppData.studentId = studentId;
+        AppData.password = password;
         await getStudentName();
         await writeConfig();
         print("initSchedule End");
@@ -137,25 +137,23 @@ class LoginPageState extends State<LoginPage> {
           message = "学号或密码有误";
           buttonTitle = "请检查后再试一次";
         });
-        _getCode();
+        getVerificationCode();
       } else {
-        if (AppConfig.login) {
+        if (AppData.isLoggedIn) {
           setState(() {
             messageColor = Colors.yellow;
             message = "登录成功,但应用程序发生了异常";
           });
-          _getCode();
+          getVerificationCode();
         }
       }
     }
 
-    await login(studentIdController.text.toString(), passwordController.text.toString(),
-            checkCodeController.text.toString())
-        .then((String value) => _next(value));
+    await login(studentIdController.text, passwordController.text, checkCodeController.text).then(next);
   }
 
-  void _tap() {
-    _scrollController.animateTo(
+  void onInputTap() {
+    scrollController.animateTo(
       56.0, //滚动到底部
       duration: Duration(milliseconds: 500),
       curve: Curves.easeOut,
@@ -168,7 +166,7 @@ class LoginPageState extends State<LoginPage> {
     return Scaffold(
       backgroundColor: readBackgroundColor(),
       body: CustomScrollView(
-        controller: _scrollController,
+        controller: scrollController,
         physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
         slivers: [
           publicTopBar(
@@ -206,9 +204,7 @@ class LoginPageState extends State<LoginPage> {
                     margin: EdgeInsets.fromLTRB(16, 0, 16, 0),
                     padding: EdgeInsets.fromLTRB(0, 4, 0, 4),
                     child: TextField(
-                      onTap: () {
-                        _tap();
-                      },
+                      onTap: onInputTap,
                       style: TextStyle(color: readTextColor()),
                       cursorColor: readColor(),
                       keyboardType: TextInputType.number,
@@ -230,9 +226,7 @@ class LoginPageState extends State<LoginPage> {
                     margin: EdgeInsets.fromLTRB(16, 0, 16, 0),
                     padding: EdgeInsets.fromLTRB(0, 4, 0, 4),
                     child: TextField(
-                      onTap: () {
-                        _tap();
-                      },
+                      onTap: onInputTap,
                       style: TextStyle(color: readTextColor()),
                       focusNode: passwordFocusNode,
                       cursorColor: readColor(),
@@ -256,9 +250,7 @@ class LoginPageState extends State<LoginPage> {
                       children: [
                         Expanded(
                           child: TextField(
-                            onTap: () {
-                              _tap();
-                            },
+                            onTap: onInputTap,
                             style: TextStyle(color: readTextColor()),
                             keyboardType: TextInputType.number,
                             cursorColor: readColor(),
@@ -275,18 +267,16 @@ class LoginPageState extends State<LoginPage> {
                           ),
                         ),
                         InkWell(
-                          child: _codeImgSrc.length > 1
+                          child: verificationCodeImageBytes.length > 1
                               ? Image.memory(
-                                  _codeImgSrc,
+                                  verificationCodeImageBytes,
                                   height: 25,
                                   width: 80,
                                 )
                               : Container(
                                   height: 25,
                                 ),
-                          onTap: () {
-                            _getCode();
-                          },
+                          onTap: getVerificationCode,
                         ),
                       ],
                     ),
@@ -297,23 +287,22 @@ class LoginPageState extends State<LoginPage> {
                     child: Container(
                       margin: EdgeInsets.fromLTRB(12, 0, 12, 0),
                       child: TextButton(
-                          autofocus: true,
-                          style: ButtonStyle(
-                            //设置水波纹颜色
-                            overlayColor: WidgetStateProperty.all(Colors.yellow),
-                            backgroundColor: WidgetStateProperty.resolveWith((states) {
-                              return readColor();
-                            }),
-                            shape: WidgetStateProperty.all(
-                                RoundedRectangleBorder(borderRadius: BorderRadius.circular(28))),
-                          ),
-                          child: Text(
-                            buttonTitle,
-                            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 14),
-                          ),
-                          onPressed: () {
-                            _check();
+                        autofocus: true,
+                        style: ButtonStyle(
+                          //设置水波纹颜色
+                          overlayColor: WidgetStateProperty.all(Colors.yellow),
+                          backgroundColor: WidgetStateProperty.resolveWith((states) {
+                            return readColor();
                           }),
+                          shape:
+                              WidgetStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(28))),
+                        ),
+                        child: Text(
+                          buttonTitle,
+                          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 14),
+                        ),
+                        onPressed: precheck,
+                      ),
                     ),
                   )
                 ],

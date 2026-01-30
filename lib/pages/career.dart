@@ -25,37 +25,10 @@ class _CareerPageState extends State<CareerPage> {
 
   _CareerPageState({this.type = 0});
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: readBackgroundColor(),
-      body: CareerPageBody(
-        type: type,
-      ),
-    );
-  }
-}
-
-class CareerPageBody extends StatefulWidget {
-  final int type;
-
-  CareerPageBody({Key? key, required this.type}) : super(key: key);
-
-  @override
-  State<StatefulWidget> createState() => _CareerPageBodyState(type: this.type);
-}
-
-class _CareerPageBodyState extends State<CareerPageBody> {
-  final int type;
-
-  _CareerPageBodyState({required this.type});
-
-  bool login = true;
-
   // ignore: cancel_subscriptions
   late StreamSubscription<ReloadCareerPageState> eventBusListener;
-  GlobalKey<CircularProgressDynamicStateForCareer> indicatorKey = GlobalKey();
-  GlobalKey<TextProgressDynamicStateForCareer> textKey = GlobalKey();
+  GlobalKey<_DynamicCircularProgressBarState> indicatorKey = GlobalKey();
+  GlobalKey<_DynamicProgressTextState> textKey = GlobalKey();
   int year = 0;
   int allYear = 0;
 
@@ -65,24 +38,26 @@ class _CareerPageBodyState extends State<CareerPageBody> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (login) {
-        ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "获取数据...", AppConfig.timeOutSec * 2));
-      }
+      getData();
     });
     print("type:");
     print(type);
     eventBusListener = eventBus.on<ReloadCareerPageState>().listen((event) {
-      ScaffoldMessenger.of(context).removeCurrentSnackBar();
-      ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "获取数据...", AppConfig.timeOutSec * 2));
-      getCareer().then(process);
+      getData();
     });
+  }
+
+  getData() {
+    ScaffoldMessenger.of(context).removeCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "获取数据...", AppConfig.timeoutSecond * 2));
     getCareer().then(process);
   }
 
   @override
   void dispose() {
     eventBusListener.cancel();
+    _weekTimer?.cancel();
+
     super.dispose();
   }
 
@@ -93,23 +68,22 @@ class _CareerPageBodyState extends State<CareerPageBody> {
       ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, value, 4));
     } else {
       if (value) {
-        login = false;
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "处理数据...", AppConfig.timeOutSec));
+        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "处理数据...", AppConfig.timeoutSecond));
         setState(() {});
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(1, "数据已更新!", 1));
-        examAllNumber = 0;
-        careerNumber = 0;
-        careerJobNumber = 0;
+        totalExamCount = 0;
+        totalCourseCount = 0;
+        totalMajorCourseCount = 0;
         careerList.forEach((element) {
           if (element.contains("考试")) {
-            examAllNumber++;
+            totalExamCount++;
           }
           if (element.length > 3) {
-            careerNumber++;
+            totalCourseCount++;
             if (element[5].contains("专业")) {
-              careerJobNumber++;
+              totalMajorCourseCount++;
             }
           }
         });
@@ -127,21 +101,42 @@ class _CareerPageBodyState extends State<CareerPageBody> {
             eventBus.fire(ReloadCareerPageState());
             Navigator.pop(context);
           },
-          hideSnackBarSeconds: AppConfig.timeOutSec,
+          hideSnackBarSeconds: AppConfig.timeoutSecond,
         ));
       }
     }
   }
 
+  Timer? _weekTimer;
+
   void _weekProgressAnimation() {
-    double _count = 0.0;
-    Duration period = Duration(milliseconds: 10);
-    final double max = _weekProgressDouble();
-    Timer.periodic(period, (timer) {
-      _count += 0.01;
-      indicatorKey.currentState!.onPressed(_count);
-      textKey.currentState!.onPressed((_count * 100).toInt());
-      if (_count >= max) {
+    double count = 0.0;
+    const period = Duration(milliseconds: 10);
+    final max = _weekProgressDouble();
+
+    _weekTimer?.cancel();
+
+    _weekTimer = Timer.periodic(period, (timer) {
+      if (!mounted) {
+        timer.cancel();
+        return;
+      }
+
+      count += 0.01;
+      if (count > max) count = max;
+
+      final indicatorState = indicatorKey.currentState;
+      final textState = textKey.currentState;
+
+      if (indicatorState == null || textState == null) {
+        timer.cancel();
+        return;
+      }
+
+      indicatorState.onPressed(count);
+      textState.onPressed((count * 100).toInt());
+
+      if (count >= max) {
         timer.cancel();
       }
     });
@@ -174,214 +169,170 @@ class _CareerPageBodyState extends State<CareerPageBody> {
 
   @override
   Widget build(BuildContext context) {
-    return CustomScrollView(
-      physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
-      slivers: [
-        publicTopBar(
-          "我的大学生涯",
-          InkWell(
-            child: Icon(
-              Remix.close_line,
-              size: 24,
-              color: readTextColor(),
-            ),
-            onTap: () {
-              if (type == 0) {
-                Navigator.of(context).pop();
-              } else if (type == 1) {
-                Navigator.of(context).pop(1);
-              }
-            },
-          ),
-          readBackgroundColor(),
-          readTextColor(),
-        ),
-        SliverToBoxAdapter(
-          child: Container(
-              // margin:  EdgeInsets.fromLTRB(16, 0, 16, 0),
-              // padding:  EdgeInsets.fromLTRB(8, 8, 8, 8),
-              // decoration: BoxDecoration(
-              //     borderRadius:  BorderRadius.all(Radius.circular(12.0)), color: readColor()),
-              // child: Row(
-              //   children: [
-              //     Container(
-              //       decoration: BoxDecoration(
-              //           borderRadius:  BorderRadius.all(Radius.circular(12.0)),
-              //           color: readColor()),
-              //       margin:  EdgeInsets.fromLTRB(16, 0, 0, 0),
-              //       padding:  EdgeInsets.fromLTRB(8, 8, 8, 8),
-              //       child: Icon(
-              //         Remix.checkbox_circle_line,
-              //         size: 64,
-              //         color: Colors.white,
-              //       ),
-              //     ),
-              //     Expanded(
-              //         child: Container(
-              //       margin:  EdgeInsets.fromLTRB(0, 0, 16, 0),
-              //       padding:  EdgeInsets.fromLTRB(8, 12, 8, 0),
-              //       height: 80,
-              //       decoration: BoxDecoration(
-              //         borderRadius:  BorderRadius.all(Radius.circular(12.0)),
-              //       ),
-              //       child: Column(
-              //         crossAxisAlignment: CrossAxisAlignment.start,
-              //         children: [
-              //           Text(
-              //             AppData.writeData["name"],
-              //           ),
-              //           Text(
-              //             careerInfo[1],
-              //           ),
-              //           Text(
-              //             careerInfo[2] + "  " + careerInfo[4],
-              //           ),
-              //         ],
-              //       ),
-              //     )),
-              //   ],
-              // ),
+    return Scaffold(
+      backgroundColor: readBackgroundColor(),
+      body: CustomScrollView(
+        physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+        slivers: [
+          publicTopBar(
+            "我的大学生涯",
+            InkWell(
+              child: Icon(
+                Remix.close_line,
+                size: 24,
+                color: readTextColor(),
               ),
-        ),
-        SliverToBoxAdapter(
-          child: Container(
-            margin: EdgeInsets.fromLTRB(16, 16, 16, 16),
-            padding: EdgeInsets.fromLTRB(16, 16, 16, 16),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(12.0)),
-              // color: readCardColor(),
-              gradient: readCardGradient(),
+              onTap: () {
+                if (type == 0) {
+                  Navigator.of(context).pop();
+                } else if (type == 1) {
+                  Navigator.of(context).pop(1);
+                }
+              },
             ),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Container(
-                      height: 100,
-                      width: 100,
-                      margin: EdgeInsets.fromLTRB(0, 0, 16, 0),
-                      child: Stack(
-                        children: [
-                          Align(
-                            child: SizedBox(
-                              //限制进度条的高度
-                              height: 100,
-                              //限制进度条的宽度
-                              width: 100,
-                              child: CircularProgressDynamicForCareer(key: indicatorKey),
+            readBackgroundColor(),
+            readTextColor(),
+          ),
+          SliverToBoxAdapter(
+            child: Container(
+              margin: EdgeInsets.fromLTRB(16, 16, 16, 16),
+              padding: EdgeInsets.fromLTRB(16, 16, 16, 16),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                // color: readCardColor(),
+                gradient: readCardGradient(),
+              ),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Container(
+                        height: 100,
+                        width: 100,
+                        margin: EdgeInsets.fromLTRB(0, 0, 16, 0),
+                        child: Stack(
+                          children: [
+                            Align(
+                              child: SizedBox(
+                                //限制进度条的高度
+                                height: 100,
+                                //限制进度条的宽度
+                                width: 100,
+                                child: _DynamicCircularProgressBar(key: indicatorKey),
+                              ),
                             ),
-                          ),
-                          Align(
-                              alignment: Alignment.center,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  TextProgressDynamicForCareer(key: textKey),
-                                  Text("大学进程", style: TextStyle(color: Colors.white, fontSize: 12))
-                                ],
-                              )),
-                        ],
+                            Align(
+                                alignment: Alignment.center,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    _DynamicProgressText(key: textKey),
+                                    Text("大学进程", style: TextStyle(color: Colors.white, fontSize: 12))
+                                  ],
+                                )),
+                          ],
+                        ),
                       ),
-                    ),
-                    Expanded(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        // crossAxisAlignment: CrossAxisAlignment.start,
+                      Expanded(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          // crossAxisAlignment: CrossAxisAlignment.start,
 
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                careerNumber.toString() + "",
-                                style: TextStyle(fontSize: 38, color: Colors.white, fontWeight: FontWeight.w300),
-                              ),
-                              Text("全部课程", style: TextStyle(color: Colors.white)),
-                              // Text("预估数量", style: TextStyle(color: Colors.white)),
-                            ],
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                careerJobNumber.toString() + "",
-                                style: TextStyle(fontSize: 38, color: Colors.white, fontWeight: FontWeight.w300),
-                              ),
-                              Text("专业课程", style: TextStyle(color: Colors.white)),
-                              // Text("预估数量", style: TextStyle(color: Colors.white)),
-                            ],
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-                Container(
-                  height: 0.5,
-                  margin: EdgeInsets.fromLTRB(0, 16, 0, 16),
-                  decoration: BoxDecoration(
-                    border: Border(
-                      bottom: BorderSide(
-                        width: 0.5, //宽度
-                        color: Colors.white60, //边框颜色
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  totalCourseCount.toString() + "",
+                                  style: TextStyle(fontSize: 38, color: Colors.white, fontWeight: FontWeight.w300),
+                                ),
+                                Text("全部课程", style: TextStyle(color: Colors.white)),
+                                // Text("预估数量", style: TextStyle(color: Colors.white)),
+                              ],
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  totalMajorCourseCount.toString() + "",
+                                  style: TextStyle(fontSize: 38, color: Colors.white, fontWeight: FontWeight.w300),
+                                ),
+                                Text("专业课程", style: TextStyle(color: Colors.white)),
+                                // Text("预估数量", style: TextStyle(color: Colors.white)),
+                              ],
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                  Container(
+                    height: 0.5,
+                    margin: EdgeInsets.fromLTRB(0, 16, 0, 16),
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                          width: 0.5, //宽度
+                          color: Colors.white60, //边框颜色
+                        ),
                       ),
                     ),
                   ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Column(
-                      children: [
-                        Text("${careerCount[1]} 门", style: TextStyle(color: Colors.white)),
-                        Text("成绩合格", style: TextStyle(color: Colors.white)),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        Text("${careerCount[0]} 门", style: TextStyle(color: Colors.white)),
-                        Text("重修/补考", style: TextStyle(color: Colors.white)),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        Text("${careerCount[2]} 门", style: TextStyle(color: Colors.white)),
-                        Text("成绩未知", style: TextStyle(color: Colors.white)),
-                      ],
-                    ),
-                  ],
-                )
-              ],
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Column(
+                        children: [
+                          Text("${careerCount[1]} 门", style: TextStyle(color: Colors.white)),
+                          Text("成绩合格", style: TextStyle(color: Colors.white)),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          Text("${careerCount[0]} 门", style: TextStyle(color: Colors.white)),
+                          Text("重修/补考", style: TextStyle(color: Colors.white)),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          Text("${careerCount[2]} 门", style: TextStyle(color: Colors.white)),
+                          Text("成绩未知", style: TextStyle(color: Colors.white)),
+                        ],
+                      ),
+                    ],
+                  )
+                ],
+              ),
             ),
           ),
-        ),
-        SliverList(
-          delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
-            return CareerListProcess(index);
-          }, childCount: allYear),
-        ),
-      ],
+          SliverList(
+            delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
+              return _AcademicYearList(index);
+            }, childCount: allYear),
+          ),
+        ],
+      ),
     );
   }
 }
 
-class CareerListProcess extends StatefulWidget {
+class _AcademicYearList extends StatefulWidget {
   final int index;
 
-  CareerListProcess(this.index, {Key? key}) : super(key: key);
+  _AcademicYearList(this.index, {Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => CareerListProcessState(index);
+  State<StatefulWidget> createState() => _AcademicYearListState(index);
 }
 
-class CareerListProcessState extends State<CareerListProcess> {
+class _AcademicYearListState extends State<_AcademicYearList> {
   bool _isExpanded = false;
   String title = "";
   final int index;
   final int startYear = int.parse(careerInfo[2].replaceAll("级", "").trim());
 
-  CareerListProcessState(this.index);
+  _AcademicYearListState(this.index);
 
   @override
   initState() {
@@ -503,14 +454,14 @@ class CareerListProcessState extends State<CareerListProcess> {
   }
 }
 
-class CircularProgressDynamicForCareer extends StatefulWidget {
-  CircularProgressDynamicForCareer({Key? key}) : super(key: key);
+class _DynamicCircularProgressBar extends StatefulWidget {
+  _DynamicCircularProgressBar({Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => CircularProgressDynamicStateForCareer();
+  State<StatefulWidget> createState() => _DynamicCircularProgressBarState();
 }
 
-class CircularProgressDynamicStateForCareer extends State<CircularProgressDynamicForCareer> {
+class _DynamicCircularProgressBarState extends State<_DynamicCircularProgressBar> {
   double _value = 0.0;
 
   @override
@@ -528,14 +479,14 @@ class CircularProgressDynamicStateForCareer extends State<CircularProgressDynami
   }
 }
 
-class TextProgressDynamicForCareer extends StatefulWidget {
-  TextProgressDynamicForCareer({Key? key}) : super(key: key);
+class _DynamicProgressText extends StatefulWidget {
+  _DynamicProgressText({Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => TextProgressDynamicStateForCareer();
+  State<StatefulWidget> createState() => _DynamicProgressTextState();
 }
 
-class TextProgressDynamicStateForCareer extends State<TextProgressDynamicForCareer> {
+class _DynamicProgressTextState extends State<_DynamicProgressText> {
   int _value = 0;
 
   @override
