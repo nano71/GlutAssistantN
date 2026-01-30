@@ -1,5 +1,4 @@
 import '/config.dart';
-
 import 'io.dart';
 
 String mapCookieToString() {

@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:glutassistantn/pages/person.dart';
 import 'package:http/http.dart';
 import 'package:remixicon/remixicon.dart';
 
@@ -43,8 +42,8 @@ class LoginPageState extends State<LoginPage> {
   @override
   initState() {
     super.initState();
-    studentIdController.text = AppData.persistentData["username"] ?? "";
-    passwordController.text = AppData.persistentData["password"] ?? "";
+    studentIdController.text = AppData.studentID;
+    passwordController.text = AppData.password;
     _getCode();
   }
 
@@ -121,9 +120,9 @@ class LoginPageState extends State<LoginPage> {
           message = "登录成功";
           buttonTitle = "马上就好,处理数据中...";
         });
-        AppData.persistentData["username"] = _studentId;
-        AppData.persistentData["password"] = _password;
-        await getName();
+        AppData.studentID = _studentId;
+        AppData.password = _password;
+        await getStudentName();
         await writeConfig();
         print("initSchedule End");
         eventBus.fire(SetPageIndex());
@@ -150,7 +149,9 @@ class LoginPageState extends State<LoginPage> {
       }
     }
 
-    await login(studentIdController.text.toString(), passwordController.text.toString(), checkCodeController.text.toString()).then((String value) => _next(value));
+    await login(studentIdController.text.toString(), passwordController.text.toString(),
+            checkCodeController.text.toString())
+        .then((String value) => _next(value));
   }
 
   void _tap() {
@@ -215,15 +216,13 @@ class LoginPageState extends State<LoginPage> {
                       focusNode: studentIdFocusNode,
                       controller: studentIdController,
                       decoration: InputDecoration(
-                        icon: Icon(
-                          Remix.user_3_line,
-                          color: studentIdFocusNode.hasFocus ? readColor() : readTextColor(),
-                        ),
-                        border: InputBorder.none,
-                        hintText: "请输入学号", //类似placeholder效果
-                        hintStyle: TextStyle(color: readTextColor2())
-
-                      ),
+                          icon: Icon(
+                            Remix.user_3_line,
+                            color: studentIdFocusNode.hasFocus ? readColor() : readTextColor(),
+                          ),
+                          border: InputBorder.none,
+                          hintText: "请输入学号", //类似placeholder效果
+                          hintStyle: TextStyle(color: readTextColor2())),
                     ),
                   ),
                   _line,
@@ -245,8 +244,7 @@ class LoginPageState extends State<LoginPage> {
                           ),
                           border: InputBorder.none,
                           hintText: "请输入密码", //类似placeholder效果
-                          hintStyle: TextStyle(color: readTextColor2())
-                      ),
+                          hintStyle: TextStyle(color: readTextColor2())),
                     ),
                   ),
                   _line,
@@ -273,20 +271,19 @@ class LoginPageState extends State<LoginPage> {
                                 ),
                                 border: InputBorder.none,
                                 hintText: "请输入验证码", //类似placeholder效果
-                                hintStyle: TextStyle(color: readTextColor2())
-                            ),
+                                hintStyle: TextStyle(color: readTextColor2())),
                           ),
                         ),
                         InkWell(
                           child: _codeImgSrc.length > 1
                               ? Image.memory(
-                            _codeImgSrc,
-                            height: 25,
-                            width: 80,
-                          )
+                                  _codeImgSrc,
+                                  height: 25,
+                                  width: 80,
+                                )
                               : Container(
-                            height: 25,
-                          ),
+                                  height: 25,
+                                ),
                           onTap: () {
                             _getCode();
                           },
@@ -307,7 +304,8 @@ class LoginPageState extends State<LoginPage> {
                             backgroundColor: WidgetStateProperty.resolveWith((states) {
                               return readColor();
                             }),
-                            shape: WidgetStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(28))),
+                            shape: WidgetStateProperty.all(
+                                RoundedRectangleBorder(borderRadius: BorderRadius.circular(28))),
                           ),
                           child: Text(
                             buttonTitle,

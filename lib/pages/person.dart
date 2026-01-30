@@ -34,8 +34,8 @@ class MinePageState extends State<MinePage> {
   @override
   Widget build(BuildContext context) {
     String text;
-    if (isLoggedIn()) {
-      text = "Hi! " + (AppData.persistentData["name"] ?? "");
+    if (AppData.isLoggedIn) {
+      text = "Hi! " + AppData.studentName;
     } else {
       text = "请先登录教务";
     }
@@ -63,14 +63,14 @@ class MinePageState extends State<MinePage> {
                   child: mineItem(
                     Remix.user_5_line,
                     EdgeInsets.fromLTRB(16, 14, 0, 14),
-                    (AppData.persistentData["name"] != "" ? "更换账号" : "登录教务"),
+                    (AppData.isLoggedIn ? "更换账号" : "登录教务"),
                     readColor(),
                   ),
                 ),
                 ColumnGap(),
                 InkWell(
                   onTap: () {
-                    if (AppData.persistentData["username"] == "") {
+                    if (!AppData.isLoggedIn) {
                       // Navigator.push(context, SlideTopRoute(page: LoginPage()));
                       Navigator.of(context).push(MaterialPageRoute(builder: (context) => LoginPage()));
                     } else {
@@ -82,7 +82,7 @@ class MinePageState extends State<MinePage> {
                 ColumnGap(),
                 InkWell(
                   onTap: () {
-                    if (AppData.persistentData["username"] == "") {
+                    if (!AppData.isLoggedIn) {
                       // Navigator.push(context, SlideTopRoute(page: LoginPage()));
                       Navigator.of(context).push(MaterialPageRoute(builder: (context) => LoginPage()));
                     } else {
@@ -104,8 +104,10 @@ class MinePageState extends State<MinePage> {
                       Navigator.of(context).push(MaterialPageRoute(builder: (context) => UpdatePage()));
                     },
                     child: AppData.hasNewVersion
-                        ? mineItem5(Remix.download_cloud_2_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "版本更新", readColor())
-                        : mineItem(Remix.download_cloud_2_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "版本更新", readColor()),
+                        ? mineItem5(
+                            Remix.download_cloud_2_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "版本更新", readColor())
+                        : mineItem(
+                            Remix.download_cloud_2_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "版本更新", readColor()),
                   ),
                   ColumnGap(),
                   InkWell(

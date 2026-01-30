@@ -1,4 +1,3 @@
-
 String submitHexMd5(String s) {
   String encryptPwd1 = rstr2hex(rstrMd5(s));
   return rstr2hex(rstrMd5(encryptPwd1));

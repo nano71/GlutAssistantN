@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:glutassistantn/widget/icons.dart';
 import 'package:remixicon/remixicon.dart';
+
 import '/common/get.dart';
 import '/data.dart';
 import '/widget/bars.dart';
 import '/widget/lists.dart';
-
 import '../config.dart';
 
 class QueryRoomPage extends StatefulWidget {
@@ -38,12 +38,15 @@ class QueryRoomPageState extends State<QueryRoomPage> {
           publicTopBar(
             "教室查询",
             InkWell(
-              child: Icon(Remix.close_line, size: 24,color: readTextColor(),),
+              child: Icon(
+                Remix.close_line,
+                size: 24,
+                color: readTextColor(),
+              ),
               onTap: () {
                 Navigator.of(context).pop();
               },
             ),
-
             readBackgroundColor(),
             readTextColor(),
           ),
@@ -98,10 +101,7 @@ class QueryConditionCardState extends State<QueryConditionCard> {
         String value = (i + 1).toString();
         query["dayOfWeek"]![value] = "周" + weekList4CN[i];
       }
-      weekSelect = DateTime
-          .now()
-          .weekday
-          .toString();
+      weekSelect = DateTime.now().weekday.toString();
       print('weekSelect');
       print(weekSelect);
       query["dayOfWeek"]!.remove("-1");
@@ -166,7 +166,7 @@ class QueryConditionCardState extends State<QueryConditionCard> {
           false,
           "需要验证",
           context,
-              () {
+          () {
             ScaffoldMessenger.of(context).removeCurrentSnackBar();
             getEmptyClassroom().then(process);
             Navigator.pop(context);
@@ -207,7 +207,7 @@ class QueryConditionCardState extends State<QueryConditionCard> {
               children: [
                 Text(
                   "教学楼",
-                  style: TextStyle(fontSize: 16,color: readTextColor()),
+                  style: TextStyle(fontSize: 16, color: readTextColor()),
                 ),
                 SizedBox(
                   height: 40,
@@ -220,7 +220,7 @@ class QueryConditionCardState extends State<QueryConditionCard> {
                     elevation: 0,
                     hint: Text(
                       query["buildingCode"]?[buildingSelect],
-                      style: TextStyle(fontSize: 14,color: readTextColor()),
+                      style: TextStyle(fontSize: 14, color: readTextColor()),
                     ),
                     items: dropdownMenuItemList("buildingCode"),
                     onTap: () {
@@ -243,7 +243,7 @@ class QueryConditionCardState extends State<QueryConditionCard> {
               children: [
                 Text(
                   "时    间",
-                  style: TextStyle(fontSize: 16,color: readTextColor()),
+                  style: TextStyle(fontSize: 16, color: readTextColor()),
                 ),
                 SizedBox(
                   height: 40,
@@ -259,7 +259,8 @@ class QueryConditionCardState extends State<QueryConditionCard> {
                     underline: Container(),
                     alignment: Alignment.centerRight,
                     elevation: 0,
-                    hint: Text(query["weekOfSemester"]?[whichWeekSelect], style: TextStyle(fontSize: 14,color:readTextColor2())),
+                    hint: Text(query["weekOfSemester"]?[whichWeekSelect],
+                        style: TextStyle(fontSize: 14, color: readTextColor2())),
                     items: dropdownMenuItemList("weekOfSemester"),
                     onChanged: (value) {
                       print(value);
@@ -276,7 +277,7 @@ class QueryConditionCardState extends State<QueryConditionCard> {
               children: [
                 Text(
                   "星    期",
-                  style: TextStyle(fontSize: 16,color: readTextColor()),
+                  style: TextStyle(fontSize: 16, color: readTextColor()),
                 ),
                 SizedBox(
                   height: 40,

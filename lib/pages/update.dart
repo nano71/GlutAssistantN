@@ -141,7 +141,8 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
                     ? Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          mineItem4(Remix.lightbulb_flash_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "有新版本可以更新!", Colors.red),
+                          mineItem4(
+                              Remix.lightbulb_flash_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "有新版本可以更新!", Colors.red),
                           Container(
                             width: double.infinity,
                             margin: EdgeInsets.fromLTRB(0, 0, 0, 7),
@@ -162,10 +163,12 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
                               style: TextStyle(color: readTextColor()),
                             ),
                           ),
-                          customInkWell("https://nano71.com/gan/GlutAssistantN.apk", Remix.download_2_line, "直接下载", readColor()),
+                          customInkWell(
+                              "https://nano71.com/gan/GlutAssistantN.apk", Remix.download_2_line, "直接下载", readColor()),
                           // coolapk(),
                           customInkWell("", Remix.earth_line, "学校官网（暂不可用）", Colors.blueAccent),
-                          customInkWell(AppData.persistentData["githubDownload"] ?? "", Remix.github_line, "Github", Colors.blueGrey)
+                          customInkWell(AppData.persistentData["githubDownload"] ?? "", Remix.github_line, "Github",
+                              Colors.blueGrey)
                         ],
                       )
                     : Container(),
@@ -195,7 +198,8 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
                             ),
                           ),
                           // coolapk(),
-                          customInkWell("https://github.com/nano71/GlutAssistantN", Remix.github_line, "Github", Colors.blueGrey),
+                          customInkWell(
+                              "https://github.com/nano71/GlutAssistantN", Remix.github_line, "Github", Colors.blueGrey),
                           customInkWell("https://nano71.com/gan", Remix.earth_line, "项目官网", Colors.blueAccent)
                         ],
                       )
@@ -211,7 +215,8 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
                               style: TextStyle(color: Colors.black),
                             ),
                           ),
-                          customInkWell("https://github.com/nano71/GlutAssistantN/releases/latest", Remix.github_line, "Github", Colors.blueGrey),
+                          customInkWell("https://github.com/nano71/GlutAssistantN/releases/latest", Remix.github_line,
+                              "Github", Colors.blueGrey),
                           customInkWell("https://nano71.com/gan", Remix.earth_line, "项目官网", Colors.blueAccent)
                           // coolapk(),
                         ],

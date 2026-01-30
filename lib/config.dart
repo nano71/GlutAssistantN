@@ -28,7 +28,8 @@ class AppConfig {
   static Uri getWeekUrl = httpUri("/academic/listLeft.do");
   static String getRecentExam = "/academic/student/exam/index.jsdo";
   static Uri getExamUrl = httpUri("/academic/manager/examstu/studentQueryAllExam.do");
-  static Uri getNameUrl = httpUri("/academic/student/studentinfo/studentInfoModifyIndex.do", {"frombase": "0", "wantTag": "0"});
+  static Uri getNameUrl =
+      httpUri("/academic/student/studentinfo/studentInfoModifyIndex.do", {"frombase": "0", "wantTag": "0"});
   static Uri getScoreUrl = httpUri("/academic/manager/score/studentOwnScore.do");
   static Uri getCareerUrl = httpUri("/academic/manager/studyschedule/studentSelfSchedule.jsdo");
   static Uri getUpdateUrl = Uri.https(updateApiUrl, "/repos/nano71/GlutAssistantN/releases/latest");
@@ -54,34 +55,33 @@ Uri httpUri(
   return Uri.http(AppConfig.jwUrl, path, queryParameters);
 }
 
-readHomePageSmallCardTextColor(){
-  if (isDark) {
+readHomePageSmallCardTextColor() {
+  if (AppData.isDarkTheme) {
     return Colors.white70;
   }
   return Colors.black54;
 }
 
-readScheduleListTextColor(){
-  if(isDark){
+readScheduleListTextColor() {
+  if (AppData.isDarkTheme) {
     return Colors.white;
   }
   return Colors.black;
 }
 
-readScheduleListTextColor2(){
-  if(isDark){
+readScheduleListTextColor2() {
+  if (AppData.isDarkTheme) {
     return Colors.white54;
   }
   return Color(0xff999999);
 }
 
-readScheduleListTextColor3(){
-  if(isDark){
+readScheduleListTextColor3() {
+  if (AppData.isDarkTheme) {
     return Colors.white30;
   }
   return Colors.black26;
 }
-
 
 readScoreColor(String score) {
   int value = int.parse(levelToNumber(score));
@@ -106,7 +106,7 @@ readScoreColor(String score) {
 }
 
 readNavigationBarIconBrightness() {
-  if (isDark) {
+  if (AppData.isDarkTheme) {
     return Brightness.light;
   }
   return Brightness.dark;
@@ -114,7 +114,7 @@ readNavigationBarIconBrightness() {
 
 readClassRoomCardBackgroundColor(bool isEmpty) {
   if (isEmpty) {
-    if (isDark) {
+    if (AppData.isDarkTheme) {
       return Color(0xFF18181c);
     }
     return Colors.grey;
@@ -124,7 +124,7 @@ readClassRoomCardBackgroundColor(bool isEmpty) {
 
 readClassRoomCardTextContentBackgroundColor(bool isEmpty) {
   if (isEmpty) {
-    if (isDark) {
+    if (AppData.isDarkTheme) {
       return Color(0xFF26262a);
     }
   }
@@ -133,7 +133,7 @@ readClassRoomCardTextContentBackgroundColor(bool isEmpty) {
 
 readClassRoomCardTextContentColor(bool isEmpty) {
   if (isEmpty) {
-    if (isDark) {
+    if (AppData.isDarkTheme) {
       return readTextColor3();
     }
     return Color(0x2AFFFFFF);
@@ -142,84 +142,84 @@ readClassRoomCardTextContentColor(bool isEmpty) {
 }
 
 readBorderColor() {
-  if (isDark) {
+  if (AppData.isDarkTheme) {
     return Color(0xFF18181c);
   }
   return Colors.white;
 }
 
 readLineColor() {
-  if (isDark) {
+  if (AppData.isDarkTheme) {
     return Color(0x1AFFFFFF);
   }
   return Color(0x66f1f1f1);
 }
 
 readListPageBackgroundColor() {
-  if (isDark) {
+  if (AppData.isDarkTheme) {
     return readBackgroundColor();
   }
   return Colors.transparent;
 }
 
 readBackgroundColor() {
-  if (isDark) {
+  if (AppData.isDarkTheme) {
     return Color(0xFF101014);
   }
   return Color(0xFFFAFAFA);
 }
 
 readTextColor() {
-  if (isDark) {
+  if (AppData.isDarkTheme) {
     return Colors.white;
   }
   return Colors.black;
 }
 
 readTextColor2() {
-  if (isDark) {
+  if (AppData.isDarkTheme) {
     return Colors.white54;
   }
   return Colors.black54;
 }
 
 readTextColor3() {
-  if (isDark) {
+  if (AppData.isDarkTheme) {
     return Colors.white38;
   }
   return Colors.black45;
 }
 
 readArrowIconColor() {
-  if (isDark) {
+  if (AppData.isDarkTheme) {
     return Colors.white60;
   }
   return Colors.black26;
 }
 
 readCardBackgroundColor() {
-  if (isDark) {
+  if (AppData.isDarkTheme) {
     return Color(0xFF18181c);
   }
   return Colors.white;
 }
 
 readCardBackgroundColor2() {
-  if (isDark) {
+  if (AppData.isDarkTheme) {
     return Color(0xFF26262a);
   }
   return Colors.white;
 }
 
 readTextContentBackgroundColor() {
-  if (isDark) {
+  if (AppData.isDarkTheme) {
     return readCardBackgroundColor2();
   }
   return readColorEnd();
 }
 
 readListPageTopAreaBackgroundColor() {
-  if (isDark) {
+  if (AppData.isDarkTheme) {
     return Color(0xFF18181c);
   }
   return readColor();
@@ -228,7 +228,7 @@ readListPageTopAreaBackgroundColor() {
 List<String> colorTexts = ["dark", "purple", "red", "pink", "blue", "cyan", "yellow"];
 
 LinearGradient readGradient() {
-  switch (AppData.persistentData["color"]) {
+  switch (AppData.theme) {
     case "dark":
       return setTemplate([Color(0xff11998e), Color(0xFF38ef7d)]);
     case "purple":
@@ -249,7 +249,7 @@ LinearGradient readGradient() {
 }
 
 readColor([String? color]) {
-  color ??= AppData.persistentData["color"];
+  color ??= AppData.theme;
 
   switch (color) {
     case "dark":
@@ -272,7 +272,7 @@ readColor([String? color]) {
 }
 
 LinearGradient readCardGradient() {
-  switch (AppData.persistentData["color"]) {
+  switch (AppData.theme) {
     case "dark":
       return setCardTemplate([Color(0xff11998e), Color(0xff38ef7d)]);
     case "purple":
@@ -293,7 +293,7 @@ LinearGradient readCardGradient() {
 }
 
 LinearGradient readCardGradient2() {
-  switch (AppData.persistentData["color"]) {
+  switch (AppData.theme) {
     case "dark":
       return setCardTemplate2([Color(0xa011998e), Color(0xe638ef7d)]);
     case "purple":
@@ -314,7 +314,7 @@ LinearGradient readCardGradient2() {
 }
 
 Color readColorBegin() {
-  switch (AppData.persistentData["color"]) {
+  switch (AppData.theme) {
     case "dark":
       return Color(0xFF18181c);
     case "purple":
@@ -342,7 +342,7 @@ Color readColorBegin() {
 }
 
 Color readColorEnd() {
-  switch (AppData.persistentData["color"]) {
+  switch (AppData.theme) {
     case "dark":
       return Color(0xFF26262a);
     case "purple":

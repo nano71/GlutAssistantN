@@ -92,7 +92,9 @@ class HomeCardState extends State<HomeCard> with AutomaticKeepAliveClientMixin {
         ),
         Align(
           alignment: Alignment.centerRight,
-          child: Container(margin: EdgeInsets.fromLTRB(0, 0, 16 + (110 - 32) / 2 - 20, 0), child: SizedBox(width: 40, child: TextProgressDynamic(key: textKey))),
+          child: Container(
+              margin: EdgeInsets.fromLTRB(0, 0, 16 + (110 - 32) / 2 - 20, 0),
+              child: SizedBox(width: 40, child: TextProgressDynamic(key: textKey))),
         ),
         Align(
           alignment: Alignment.topRight,
@@ -115,7 +117,9 @@ class HomeCardState extends State<HomeCard> with AutomaticKeepAliveClientMixin {
             child: Container(
                 width: 80,
                 margin: EdgeInsets.fromLTRB(16, 0, 0, 0),
-                child: Center(child: Text(DateTime.now().weekday.toString(), style: TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 14)))))
+                child: Center(
+                    child: Text(DateTime.now().weekday.toString(),
+                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 14)))))
       ]),
     );
   }

@@ -25,8 +25,10 @@ List timeUntilNextClass(dynamic index) {
   var day = now.day;
   var hour = now.hour;
   var minute = now.minute;
-  var startTimeDifference = DateTime(year, month, day, startHour, startMinute).difference(DateTime(year, month, day, hour, minute));
-  var endTimeDifference = DateTime(year, month, day, endHour, endMinute).difference(DateTime(year, month, day, hour, minute));
+  var startTimeDifference =
+      DateTime(year, month, day, startHour, startMinute).difference(DateTime(year, month, day, hour, minute));
+  var endTimeDifference =
+      DateTime(year, month, day, endHour, endMinute).difference(DateTime(year, month, day, hour, minute));
   bool studying = false;
   List returnList = [
     startTimeDifference.inDays,
@@ -143,8 +145,8 @@ class TodayCourseListState extends State<TodayCourseList> {
       isTimerInit = false;
       if (DateTime.now().second < 2) {
         thresholdCount++;
-        if (AppData.isReleaseMode && AppData.persistentData["threshold"] != "-1") {
-          if (thresholdCount > (int.parse(AppData.persistentData["threshold"] ?? "5") * 2)) {
+        if (AppData.isReleaseMode && AppData.programBackendSurvivalThreshold != -1) {
+          if (thresholdCount > AppData.programBackendSurvivalThreshold * 2) {
             exit(0);
           }
         }
@@ -269,10 +271,6 @@ class TodayCourseListItemState extends State<TodayCourseListItem> {
     }
   }
 
-  bool isShowLessonTimeInList() {
-    return AppData.persistentData["showLessonTimeInList"] == "1";
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -303,8 +301,11 @@ class TodayCourseListItemState extends State<TodayCourseListItem> {
                   Row(
                     children: [
                       Text('第${courseInfo()[4]}节', style: smallTextStyle()),
-                      Baseline(baseline: 12, baselineType: TextBaseline.ideographic, child: Text(" | ", style: smallTextStyle())),
-                      isShowLessonTimeInList()
+                      Baseline(
+                          baseline: 12,
+                          baselineType: TextBaseline.ideographic,
+                          child: Text(" | ", style: smallTextStyle())),
+                      AppData.showLessonTimeInList
                           ? Baseline(
                               baseline: 13,
                               baselineType: TextBaseline.ideographic,
@@ -312,7 +313,12 @@ class TodayCourseListItemState extends State<TodayCourseListItem> {
                                   ('${timePreprocessor(startTimeList[int.parse(courseInfo()[4]) - 1].join(":"))} - ${timePreprocessor(endTimeList[int.parse(courseInfo()[4]) - 1].join(":"))}'),
                                   style: smallTextStyle()))
                           : Container(),
-                      isShowLessonTimeInList() ? Baseline(baseline: 12, baselineType: TextBaseline.ideographic, child: Text(" | ", style: smallTextStyle())) : Container(),
+                      AppData.showLessonTimeInList
+                          ? Baseline(
+                              baseline: 12,
+                              baselineType: TextBaseline.ideographic,
+                              child: Text(" | ", style: smallTextStyle()))
+                          : Container(),
                       Text(courseInfo()[1], style: smallTextStyle()),
                     ],
                   ),
@@ -373,7 +379,9 @@ class TomorrowCourseListState extends State<TomorrowCourseList> {
         Color _topTextColor = readScheduleListTextColor();
         Color _bottomTextColor = readScheduleListTextColor2();
         return Container(
-          padding: _tomorrowSchedule[index][3] == "1" && index == 0 ? EdgeInsets.fromLTRB(16, 0, 16, 4) : EdgeInsets.fromLTRB(16, 0, 16, 0),
+          padding: _tomorrowSchedule[index][3] == "1" && index == 0
+              ? EdgeInsets.fromLTRB(16, 0, 16, 4)
+              : EdgeInsets.fromLTRB(16, 0, 16, 0),
           margin: EdgeInsets.fromLTRB(0, 0, 0, 16),
           height: 50,
           decoration: BoxDecoration(
@@ -446,7 +454,8 @@ class TomorrowCourseListState extends State<TomorrowCourseList> {
                 children: [
                   Align(
                     alignment: Alignment.centerRight,
-                    child: Text((_isFirstClass ? "别睡懒觉哦" : ""), style: TextStyle(fontSize: 14, color: Colors.deepOrangeAccent)),
+                    child: Text((_isFirstClass ? "别睡懒觉哦" : ""),
+                        style: TextStyle(fontSize: 14, color: Colors.deepOrangeAccent)),
                   ),
                 ],
               ),
@@ -466,7 +475,9 @@ class ScoreListState extends State<ScoreList> {
   @override
   Widget build(BuildContext context) {
     if (queryScore.length == 1) {
-      if (queryScore[0] == AppConfig.socketError || queryScore[0] == AppConfig.timeOutError || queryScore[0] == "登录过期") {
+      if (queryScore[0] == AppConfig.socketError ||
+          queryScore[0] == AppConfig.timeOutError ||
+          queryScore[0] == "登录过期") {
         return Container();
       }
     }
@@ -789,7 +800,8 @@ class ClassroomListItem extends StatelessWidget {
                       ),
                       onTap: () {
                         ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, ClassroomListState.promptMessage(item["occupancyList"]), 4, 22));
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            jwSnackBar(2, ClassroomListState.promptMessage(item["occupancyList"]), 4, 22));
                       },
                     )
                   ],

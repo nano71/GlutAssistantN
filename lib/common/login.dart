@@ -2,10 +2,9 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:glutassistantn/common/get.dart';
-
-import '/common/cookie.dart';
 import 'package:http/http.dart';
 
+import '/common/cookie.dart';
 import '../config.dart';
 import 'encode.dart';
 import 'io.dart';
@@ -17,7 +16,8 @@ Future<String> codeCheck(String code) async {
     "captchaCode": code,
   };
   try {
-    var response = await post(_url, body: postData, headers: {"cookie": mapCookieToString()}).timeout(Duration(seconds: 3));
+    var response =
+        await post(_url, body: postData, headers: {"cookie": mapCookieToString()}).timeout(Duration(seconds: 3));
     String result = "success";
     if (response.body != "true") result = "fail";
     return result;
@@ -36,15 +36,15 @@ Future<String> codeCheck(String code) async {
   }
 }
 
-Future<String> login(String username, String password, String code) async {
+Future<String> login(String studentID, String password, String code) async {
   try {
     print("loginJW...");
-    var postData = {"j_username": username, "j_password": submitHexMd5(password), "j_captcha": code};
-    var response = await post(AppConfig.loginUrl, body: postData, headers: {"cookie": mapCookieToString()}).timeout(Duration(seconds: 3));
+    var postData = {"j_username": studentID, "j_password": submitHexMd5(password), "j_captcha": code};
+    var response = await post(AppConfig.loginUrl, body: postData, headers: {"cookie": mapCookieToString()})
+        .timeout(Duration(seconds: 3));
     if (response.headers['location'] == "/academic/index_new.jsp") {
       await parseRawCookies(response.headers['set-cookie']);
       await getWeek();
-      await readWeek();
       return "success";
     } else {
       return "fail";

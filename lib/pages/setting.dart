@@ -37,22 +37,11 @@ class SettingPage extends StatefulWidget {
 }
 
 class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
-  final TextEditingController _textFieldController1 = TextEditingController();
-  final TextEditingController _textFieldController2 = TextEditingController();
   FocusNode focusNode = FocusNode();
   FocusNode focusNode2 = FocusNode();
   bool _isExpanded = false;
   bool focusNode2Type = false;
   bool focusNodeType = false;
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-
-    _textFieldController1.text = AppData.persistentData["year"]!;
-    _textFieldController2.text = AppData.persistentData["semester"]!;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +80,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                             Remix.calendar_line,
                             "当前学年",
                             Text(
-                              AppData.persistentData["year"] ?? "",
+                              AppData.year.toString(),
                               style: TextStyle(
                                 color: readColor(),
                               ),
@@ -102,7 +91,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                             Remix.mickey_line,
                             "当前学期",
                             Text(
-                              AppData.persistentData["semester"] ?? "",
+                              AppData.semester,
                               style: TextStyle(
                                 color: readColor(),
                               ),
@@ -130,8 +119,8 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                           "主题颜色",
                           Builder(
                             builder: (BuildContext context) {
-                              return DropdownButton(
-                                value: AppData.persistentData["color"] ?? null,
+                              return DropdownButton<String>(
+                                value: AppData.theme,
                                 icon: Icon(
                                   Remix.arrow_down_s_line,
                                   size: 18,
@@ -143,9 +132,9 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                                 underline: Container(),
                                 onChanged: (value) {
                                   setState(() {
-                                    AppData.persistentData["color"] = value.toString();
+                                    AppData.theme = value!;
                                   });
-                                  isDark = value.toString() == "dark";
+                                  AppData.isDarkTheme = value == "dark";
                                   writeConfig();
                                   eventBus.fire(SetPageIndex());
                                   eventBus.fire(UpdateAppThemeState());
@@ -161,7 +150,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                         ),
                         ColumnGap(),
                         settingItem(Remix.apps_2_line, "程序生命", Builder(builder: (BuildContext context) {
-                          return DropdownButton(
+                          return DropdownButton<int>(
                             icon: Icon(
                               Remix.arrow_down_s_line,
                               size: 18,
@@ -171,14 +160,14 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                             iconEnabledColor: readColor(),
                             elevation: 0,
                             hint: Text(
-                              (AppData.persistentData["threshold"] ?? "5") + "分钟",
+                              AppData.programBackendSurvivalThreshold.toString() + "分钟",
                               style: TextStyle(color: readColor(), fontSize: 14),
                             ),
                             items: thresholdItemList(),
                             underline: Container(height: 0),
                             onChanged: (value) {
                               setState(() {
-                                AppData.persistentData["threshold"] = value.toString();
+                                AppData.programBackendSurvivalThreshold = value!;
                               });
                               writeConfig();
                             },
@@ -190,7 +179,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                           "小节时间",
                           Builder(
                             builder: (BuildContext context) {
-                              return DropdownButton(
+                              return DropdownButton<bool>(
                                 icon: Icon(
                                   Remix.arrow_down_s_line,
                                   size: 18,
@@ -200,7 +189,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                                 iconEnabledColor: readColor(),
                                 elevation: 0,
                                 hint: Text(
-                                  (AppData.persistentData["showLessonTimeInList"] ?? "0") == "1" ? "显示" : "隐藏",
+                                  AppData.showLessonTimeInList ? "显示" : "隐藏",
                                   style: TextStyle(color: readColor(), fontSize: 14),
                                 ),
                                 items: [
@@ -209,18 +198,18 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                                         "显示",
                                         style: TextStyle(fontSize: 14),
                                       ),
-                                      value: "1"),
+                                      value: true),
                                   DropdownMenuItem(
                                       child: Text(
                                         "隐藏",
                                         style: TextStyle(fontSize: 14),
                                       ),
-                                      value: "0")
+                                      value: false)
                                 ],
                                 underline: Container(height: 0),
                                 onChanged: (value) {
                                   setState(() {
-                                    AppData.persistentData["showLessonTimeInList"] = value.toString();
+                                    AppData.showLessonTimeInList = value!;
                                   });
                                   writeConfig();
                                 },
@@ -234,7 +223,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                           "课表日期",
                           Builder(
                             builder: (BuildContext context) {
-                              return DropdownButton(
+                              return DropdownButton<bool>(
                                 icon: Icon(
                                   Remix.arrow_down_s_line,
                                   size: 18,
@@ -244,7 +233,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                                 iconEnabledColor: readColor(),
                                 elevation: 0,
                                 hint: Text(
-                                  (AppData.persistentData["showDayByWeekDay"] ?? "0") == "1" ? "显示" : "隐藏",
+                                  AppData.showDayByWeekDay ? "显示" : "隐藏",
                                   style: TextStyle(color: readColor(), fontSize: 14),
                                 ),
                                 items: [
@@ -253,18 +242,18 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                                         "显示",
                                         style: TextStyle(fontSize: 14),
                                       ),
-                                      value: "1"),
+                                      value: true),
                                   DropdownMenuItem(
                                       child: Text(
                                         "隐藏",
                                         style: TextStyle(fontSize: 14),
                                       ),
-                                      value: "0")
+                                      value: false)
                                 ],
                                 underline: Container(height: 0),
                                 onChanged: (value) {
                                   setState(() {
-                                    AppData.persistentData["showDayByWeekDay"] = value.toString();
+                                    AppData.showDayByWeekDay = value!;
                                   });
                                   writeConfig();
                                   eventBus.fire(ReloadSchedulePageState());
@@ -275,7 +264,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                         ),
                         ColumnGap(),
                         settingItem(Remix.exchange_2_line, "调课补课", Builder(builder: (BuildContext context) {
-                          return DropdownButton(
+                          return DropdownButton<bool>(
                             icon: Icon(
                               Remix.arrow_down_s_line,
                               size: 18,
@@ -285,7 +274,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                             iconEnabledColor: readColor(),
                             elevation: 0,
                             hint: Text(
-                              (AppData.persistentData["showScheduleChange"] ?? "0") == "1" ? "显示" : "隐藏",
+                              AppData.showScheduleChange ? "显示" : "隐藏",
                               style: TextStyle(color: readColor(), fontSize: 14),
                             ),
                             items: [
@@ -294,18 +283,18 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                                     "显示",
                                     style: TextStyle(fontSize: 14),
                                   ),
-                                  value: "1"),
+                                  value: true),
                               DropdownMenuItem(
                                   child: Text(
                                     "隐藏",
                                     style: TextStyle(fontSize: 14),
                                   ),
-                                  value: "0")
+                                  value: false)
                             ],
                             underline: Container(height: 0),
                             onChanged: (value) {
                               setState(() {
-                                AppData.persistentData["showScheduleChange"] = value.toString();
+                                AppData.showScheduleChange = value!;
                               });
                               writeConfig();
                             },
@@ -350,12 +339,14 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                             tilePadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                             title: Row(
                               children: [
-                                Icon(_isExpanded ? Remix.alarm_warning_line : Remix.delete_bin_2_line, color: _isExpanded ? Colors.redAccent : readColor()),
+                                Icon(_isExpanded ? Remix.alarm_warning_line : Remix.delete_bin_2_line,
+                                    color: _isExpanded ? Colors.redAccent : readColor()),
                                 Container(
                                   padding: EdgeInsets.fromLTRB(16, 14, 0, 14),
                                   child: Text(
                                     "清除数据",
-                                    style: TextStyle(fontSize: 16, color: _isExpanded ? Colors.redAccent : readTextColor()),
+                                    style: TextStyle(
+                                        fontSize: 16, color: _isExpanded ? Colors.redAccent : readTextColor()),
                                   ),
                                 )
                               ],
@@ -402,9 +393,9 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
 
   void clear() async {
     await clearAll();
-    AppData.persistentData["username"] = "";
-    AppData.persistentData["name"] = "";
-    AppData.persistentData["password"] = "";
+    AppData.studentID = "";
+    AppData.studentName = "";
+    AppData.password = "";
     AppData.todaySchedule = [];
     AppData.tomorrowSchedule = [];
     eventBus.fire(ReloadTodayListState());
@@ -446,25 +437,28 @@ Widget settingItem(IconData icon, String title, Widget rightWidget) {
   );
 }
 
-List<DropdownMenuItem<Object>>? yearList(int type) {
-  List<DropdownMenuItem<Object>>? list = [];
+List<DropdownMenuItem<String>>? yearList(int type) {
+  final int year= AppData.year;
+  List<DropdownMenuItem<String>>? list = [];
   if (type == 0) {
     list.add(
       DropdownMenuItem(child: Text("全部"), value: "全部"),
     );
   } else {
-    list.add(DropdownMenuItem(child: Text((int.parse(AppData.persistentData["year"]!) + 1).toString()), value: (int.parse(AppData.persistentData["year"]!) + 1).toString()));
+    list.add(DropdownMenuItem(
+        child: Text((year + 1).toString()),
+        value: (year + 1).toString()));
   }
 
-  for (int i = int.parse(AppData.persistentData["year"]!); i > (int.parse(AppData.persistentData["year"]!) - 5); i--) {
+  for (int i = year; i > year - 5; i--) {
     list.add(DropdownMenuItem(child: Text(i.toString()), value: i.toString()));
   }
   return list;
 }
 
-List<DropdownMenuItem<String>> thresholdItemList() {
-  List<DropdownMenuItem<String>> list = [];
-  Map<String, String> cache = const {"5分钟": "5", "10分钟": "10", "20分钟": "20", "40分钟": "40", "不限": "-1"};
+List<DropdownMenuItem<int>> thresholdItemList() {
+  List<DropdownMenuItem<int>> list = [];
+  Map<String, int> cache = const {"5分钟": 5, "10分钟": 10, "20分钟": 20, "40分钟": 40, "不限": -1};
 
   cache.forEach((key, value) {
     list.add(DropdownMenuItem(

@@ -34,7 +34,7 @@ class RowHeaderState extends State<RowHeader> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: _loopRowHeader(AppData.week == _week),
               ),
-              (AppData.persistentData["showDayByWeekDay"] ?? "0") == "1"
+              AppData.showDayByWeekDay
                   ? Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: _loopRowHeader2(DateTime.now(), _week),
@@ -178,18 +178,14 @@ class SchedulePageState extends State<SchedulePage> with AutomaticKeepAliveClien
   void initState() {
     // TODO: implement initState
     super.initState();
-    Duration duration = Duration(milliseconds: 500);
-    Timer(duration, () {
-      AppData.persistentData["prompt"] ??= "5";
 
-      int _number = int.parse(AppData.persistentData["prompt"] ?? "");
-      if (_number > 0) {
+    if (AppData.schedulePagePromptCount < 5) {
+      Timer(Duration(milliseconds: 500), () {
         _showPrompt();
-        _number--;
-        AppData.persistentData["prompt"] = _number.toString();
-        writeConfig();
-      }
-    });
+        AppData.schedulePagePromptCount++;
+      });
+    }
+
     eventBusListener = eventBus.on<ReloadSchedulePageState>().listen((event) {
       setState(() {});
       if (AppData.week != _currentScheduleWeek) {
@@ -401,7 +397,8 @@ class Grid extends StatelessWidget {
   final String week;
   final String weekDay;
 
-  Grid(this.week, this.weekDay, this.index, this.index2, this.title, this.studyArea, this.teacher, this.color, [this.height = 60.0]);
+  Grid(this.week, this.weekDay, this.index, this.index2, this.title, this.studyArea, this.teacher, this.color,
+      [this.height = 60.0]);
 
   @override
   Widget build(BuildContext context) {

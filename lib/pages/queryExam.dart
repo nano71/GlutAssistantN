@@ -98,7 +98,7 @@ class _QueryExamBodyState extends State<QueryExamBody> {
       }
     });
     // TODO: implement build
-    return  CustomScrollView(
+    return CustomScrollView(
       physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
       slivers: [
         publicTopBar(
@@ -151,7 +151,9 @@ class _QueryExamBodyState extends State<QueryExamBody> {
                               width: 50,
                               child: InkWell(
                                 onTap: () {
-                                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => CareerPage(type: 1))).then((result) {
+                                  Navigator.of(context)
+                                      .push(MaterialPageRoute(builder: (context) => CareerPage(type: 1)))
+                                      .then((result) {
                                     print(examAllNumber);
                                     setState(() {
                                       _examAllNumber = examAllNumber;

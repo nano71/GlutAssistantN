@@ -137,23 +137,23 @@ class ExpansionTileController {
       ),
       ErrorDescription(
         'No ExpansionTile ancestor could be found starting from the context that was passed to ExpansionTileController.of(). '
-            'This usually happens when the context provided is from the same StatefulWidget as that '
-            'whose build function actually creates the ExpansionTile widget being sought.',
+        'This usually happens when the context provided is from the same StatefulWidget as that '
+        'whose build function actually creates the ExpansionTile widget being sought.',
       ),
       ErrorHint(
         'There are several ways to avoid this problem. The simplest is to use a Builder to get a '
-            'context that is "under" the ExpansionTile. For an example of this, please see the '
-            'documentation for ExpansionTileController.of():\n'
-            '  https://api.flutter.dev/flutter/material/ExpansionTile/of.html',
+        'context that is "under" the ExpansionTile. For an example of this, please see the '
+        'documentation for ExpansionTileController.of():\n'
+        '  https://api.flutter.dev/flutter/material/ExpansionTile/of.html',
       ),
       ErrorHint(
         'A more efficient solution is to split your build function into several widgets. This '
-            'introduces a new context from which you can obtain the ExpansionTile. In this solution, '
-            'you would have an outer widget that creates the ExpansionTile populated by instances of '
-            'your new inner widgets, and then in these inner widgets you would use ExpansionTileController.of().\n'
-            'An other solution is assign a GlobalKey to the ExpansionTile, '
-            'then use the key.currentState property to obtain the ExpansionTile rather than '
-            'using the ExpansionTileController.of() function.',
+        'introduces a new context from which you can obtain the ExpansionTile. In this solution, '
+        'you would have an outer widget that creates the ExpansionTile populated by instances of '
+        'your new inner widgets, and then in these inner widgets you would use ExpansionTileController.of().\n'
+        'An other solution is assign a GlobalKey to the ExpansionTile, '
+        'then use the key.currentState property to obtain the ExpansionTile rather than '
+        'using the ExpansionTileController.of() function.',
       ),
       context.describeElement('The context used was'),
     ]);
@@ -248,10 +248,10 @@ class ExpansionTile extends StatefulWidget {
     this.enabled = true,
     this.expansionAnimationStyle,
   }) : assert(
-  expandedCrossAxisAlignment != CrossAxisAlignment.baseline,
-  'CrossAxisAlignment.baseline is not supported since the expanded children '
-      'are aligned in a column, not a row. Try to use another constant.',
-  );
+          expandedCrossAxisAlignment != CrossAxisAlignment.baseline,
+          'CrossAxisAlignment.baseline is not supported since the expanded children '
+          'are aligned in a column, not a row. Try to use another constant.',
+        );
 
   /// A widget to display before the title.
   ///
@@ -413,7 +413,6 @@ class ExpansionTile extends StatefulWidget {
   /// * [ExpansionTileTheme.of], which returns the nearest [ExpansionTileTheme]'s
   ///   [ExpansionTileThemeData].
   final Color? collapsedIconColor;
-
 
   /// The color of the tile's titles when the sublist is expanded.
   ///
@@ -676,9 +675,8 @@ class _ExpansionTileState extends State<ExpansionTile> with SingleTickerProvider
     );
     final Clip clipBehavior = widget.clipBehavior ?? expansionTileTheme.clipBehavior ?? Clip.antiAlias;
     final MaterialLocalizations localizations = MaterialLocalizations.of(context);
-    final String onTapHint = _isExpanded
-        ? localizations.expansionTileExpandedTapHint
-        : localizations.expansionTileCollapsedTapHint;
+    final String onTapHint =
+        _isExpanded ? localizations.expansionTileExpandedTapHint : localizations.expansionTileCollapsedTapHint;
     String? semanticsHint;
     switch (theme.platform) {
       case TargetPlatform.android:
@@ -727,9 +725,7 @@ class _ExpansionTileState extends State<ExpansionTile> with SingleTickerProvider
           ),
           ClipRect(
             child: Align(
-              alignment: widget.expandedAlignment
-                  ?? expansionTileTheme.expandedAlignment
-                  ?? Alignment.center,
+              alignment: widget.expandedAlignment ?? expansionTileTheme.expandedAlignment ?? Alignment.center,
               heightFactor: _heightFactor.value,
               child: child,
             ),
@@ -738,8 +734,10 @@ class _ExpansionTileState extends State<ExpansionTile> with SingleTickerProvider
       ),
     );
 
-    final bool isShapeProvided = widget.shape != null || expansionTileTheme.shape != null
-        || widget.collapsedShape != null || expansionTileTheme.collapsedShape != null;
+    final bool isShapeProvided = widget.shape != null ||
+        expansionTileTheme.shape != null ||
+        widget.collapsedShape != null ||
+        expansionTileTheme.collapsedShape != null;
 
     if (isShapeProvided) {
       return Material(
@@ -761,23 +759,19 @@ class _ExpansionTileState extends State<ExpansionTile> with SingleTickerProvider
     super.didUpdateWidget(oldWidget);
     final ThemeData theme = Theme.of(context);
     final ExpansionTileThemeData expansionTileTheme = ExpansionTileTheme.of(context);
-    final ExpansionTileThemeData defaults = theme.useMaterial3
-        ? _ExpansionTileDefaultsM3(context)
-        : _ExpansionTileDefaultsM2(context);
-    if (widget.collapsedShape != oldWidget.collapsedShape
-        || widget.shape != oldWidget.shape) {
+    final ExpansionTileThemeData defaults =
+        theme.useMaterial3 ? _ExpansionTileDefaultsM3(context) : _ExpansionTileDefaultsM2(context);
+    if (widget.collapsedShape != oldWidget.collapsedShape || widget.shape != oldWidget.shape) {
       _updateShapeBorder(expansionTileTheme, theme);
     }
-    if (widget.collapsedTextColor != oldWidget.collapsedTextColor
-        || widget.textColor != oldWidget.textColor) {
+    if (widget.collapsedTextColor != oldWidget.collapsedTextColor || widget.textColor != oldWidget.textColor) {
       _updateHeaderColor(expansionTileTheme, defaults);
     }
-    if (widget.collapsedIconColor != oldWidget.collapsedIconColor
-        || widget.iconColor != oldWidget.iconColor) {
+    if (widget.collapsedIconColor != oldWidget.collapsedIconColor || widget.iconColor != oldWidget.iconColor) {
       _updateIconColor(expansionTileTheme, defaults);
     }
-    if (widget.backgroundColor != oldWidget.backgroundColor
-        || widget.collapsedBackgroundColor != oldWidget.collapsedBackgroundColor) {
+    if (widget.backgroundColor != oldWidget.backgroundColor ||
+        widget.collapsedBackgroundColor != oldWidget.collapsedBackgroundColor) {
       _updateBackgroundColor(expansionTileTheme);
     }
     if (widget.expansionAnimationStyle != oldWidget.expansionAnimationStyle) {
@@ -790,9 +784,8 @@ class _ExpansionTileState extends State<ExpansionTile> with SingleTickerProvider
   void didChangeDependencies() {
     final ThemeData theme = Theme.of(context);
     final ExpansionTileThemeData expansionTileTheme = ExpansionTileTheme.of(context);
-    final ExpansionTileThemeData defaults = theme.useMaterial3
-        ? _ExpansionTileDefaultsM3(context)
-        : _ExpansionTileDefaultsM2(context);
+    final ExpansionTileThemeData defaults =
+        theme.useMaterial3 ? _ExpansionTileDefaultsM3(context) : _ExpansionTileDefaultsM2(context);
     _updateAnimationDuration(expansionTileTheme);
     _updateShapeBorder(expansionTileTheme, theme);
     _updateHeaderColor(expansionTileTheme, defaults);
@@ -803,22 +796,21 @@ class _ExpansionTileState extends State<ExpansionTile> with SingleTickerProvider
   }
 
   void _updateAnimationDuration(ExpansionTileThemeData expansionTileTheme) {
-    _animationController.duration = widget.expansionAnimationStyle?.duration
-        ?? expansionTileTheme.expansionAnimationStyle?.duration
-        ?? _kExpand;
+    _animationController.duration =
+        widget.expansionAnimationStyle?.duration ?? expansionTileTheme.expansionAnimationStyle?.duration ?? _kExpand;
   }
 
   void _updateShapeBorder(ExpansionTileThemeData expansionTileTheme, ThemeData theme) {
     _borderTween
-      ..begin = widget.collapsedShape
-          ?? expansionTileTheme.collapsedShape
-          ?? const Border(
+      ..begin = widget.collapsedShape ??
+          expansionTileTheme.collapsedShape ??
+          const Border(
             top: BorderSide(color: Colors.transparent),
             bottom: BorderSide(color: Colors.transparent),
           )
-      ..end = widget.shape
-          ?? expansionTileTheme.shape
-          ?? Border(
+      ..end = widget.shape ??
+          expansionTileTheme.shape ??
+          Border(
             top: BorderSide(color: theme.dividerColor),
             bottom: BorderSide(color: theme.dividerColor),
           );
@@ -826,17 +818,13 @@ class _ExpansionTileState extends State<ExpansionTile> with SingleTickerProvider
 
   void _updateHeaderColor(ExpansionTileThemeData expansionTileTheme, ExpansionTileThemeData defaults) {
     _headerColorTween
-      ..begin = widget.collapsedTextColor
-          ?? expansionTileTheme.collapsedTextColor
-          ?? defaults.collapsedTextColor
+      ..begin = widget.collapsedTextColor ?? expansionTileTheme.collapsedTextColor ?? defaults.collapsedTextColor
       ..end = widget.textColor ?? expansionTileTheme.textColor ?? defaults.textColor;
   }
 
   void _updateIconColor(ExpansionTileThemeData expansionTileTheme, ExpansionTileThemeData defaults) {
     _iconColorTween
-      ..begin = widget.collapsedIconColor
-          ?? expansionTileTheme.collapsedIconColor
-          ?? defaults.collapsedIconColor
+      ..begin = widget.collapsedIconColor ?? expansionTileTheme.collapsedIconColor ?? defaults.collapsedIconColor
       ..end = widget.iconColor ?? expansionTileTheme.iconColor ?? defaults.iconColor;
   }
 
@@ -847,9 +835,8 @@ class _ExpansionTileState extends State<ExpansionTile> with SingleTickerProvider
   }
 
   void _updateHeightFactorCurve(ExpansionTileThemeData expansionTileTheme) {
-    _heightFactorTween.curve = widget.expansionAnimationStyle?.curve
-        ?? expansionTileTheme.expansionAnimationStyle?.curve
-        ?? Curves.easeIn;
+    _heightFactorTween.curve =
+        widget.expansionAnimationStyle?.curve ?? expansionTileTheme.expansionAnimationStyle?.curve ?? Curves.easeIn;
   }
 
   @override

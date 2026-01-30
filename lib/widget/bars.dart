@@ -35,7 +35,11 @@ SliverAppBar homeTopBar(BuildContext context) {
               ),
             ),
             InkWell(
-              child: Icon(Remix.more_fill, size: 24,color: readTextColor(),),
+              child: Icon(
+                Remix.more_fill,
+                size: 24,
+                color: readTextColor(),
+              ),
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(builder: (context) => SettingPage(title: "设置")));
               },
@@ -46,7 +50,8 @@ SliverAppBar homeTopBar(BuildContext context) {
   );
 }
 
-SliverAppBar publicTopBar(String title, [dynamic inkWell = const Text(""), color = Colors.white, color2 = Colors.black, double e = 0.3]) {
+SliverAppBar publicTopBar(String title,
+    [dynamic inkWell = const Text(""), color = Colors.white, color2 = Colors.black, double e = 0.3]) {
   return SliverAppBar(
     pinned: true,
     shadowColor: color,
@@ -75,7 +80,12 @@ SliverAppBar publicTopBar(String title, [dynamic inkWell = const Text(""), color
   );
 }
 
-SliverAppBar publicTopBarWithInfoIcon(String title, [dynamic inkWell = const Text(""), Function()? onPressed, color = Colors.white, color2 = Colors.black, double e = 0.3]) {
+SliverAppBar publicTopBarWithInfoIcon(String title,
+    [dynamic inkWell = const Text(""),
+    Function()? onPressed,
+    color = Colors.white,
+    color2 = Colors.black,
+    double e = 0.3]) {
   return SliverAppBar(
     pinned: true,
     shadowColor: color,
@@ -156,7 +166,7 @@ class ScheduleTopBarState extends State<ScheduleTopBar> {
   ];
 
   String month() {
-    if ((AppData.persistentData["showDayByWeekDay"] ?? "0") == "1") {
+    if (AppData.showDayByWeekDay) {
       int difference = _week - AppData.week;
       return months[DateTime.now().add(Duration(days: difference * 7)).month - 1] + ", ";
     }
@@ -435,7 +445,8 @@ SnackBar jwSnackBar(int type, String text, [int hideSnackBarSeconds = 2, double 
   );
 }
 
-SnackBar jwSnackBarAction(bool result, String text, BuildContext context, Function callback, {int hideSnackBarSeconds = 2, bool isDialogCallback = true}) {
+SnackBar jwSnackBarAction(bool result, String text, BuildContext context, Function callback,
+    {int hideSnackBarSeconds = 2, bool isDialogCallback = true}) {
   Widget resultIcon = result
       ? Icon(
           Remix.checkbox_circle_line,

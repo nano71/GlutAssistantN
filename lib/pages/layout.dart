@@ -29,8 +29,11 @@ class AppRouter extends PageRouteBuilder {
             pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
               return widget;
             },
-            transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
-              return FadeTransition(opacity: Tween(begin: 0.0, end: 1.0).animate(CurvedAnimation(parent: animation, curve: Curves.ease)), child: child);
+            transitionsBuilder: (BuildContext context, Animation<double> animation,
+                Animation<double> secondaryAnimation, Widget child) {
+              return FadeTransition(
+                  opacity: Tween(begin: 0.0, end: 1.0).animate(CurvedAnimation(parent: animation, curve: Curves.ease)),
+                  child: child);
             });
 }
 
@@ -217,7 +220,8 @@ Future<void> updateAppwidget() async {
 
   if (isAdded) {
     print("桌面微件已经添加");
-    Workmanager().registerPeriodicTask("com.nano71.glutassistantn.updateHomeWidget", "updateHomeWidget", initialDelay: Duration(seconds: 0));
+    Workmanager().registerPeriodicTask("com.nano71.glutassistantn.updateHomeWidget", "updateHomeWidget",
+        initialDelay: Duration(seconds: 0));
     HomeWidget.registerInteractivityCallback(backgroundCallback);
   } else {
     print("桌面微件尚未添加");

@@ -275,7 +275,10 @@ class _CareerPageBodyState extends State<CareerPageBody> {
                               alignment: Alignment.center,
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
-                                children: [TextProgressDynamicForCareer(key: textKey), Text("大学进程", style: TextStyle(color: Colors.white, fontSize: 12))],
+                                children: [
+                                  TextProgressDynamicForCareer(key: textKey),
+                                  Text("大学进程", style: TextStyle(color: Colors.white, fontSize: 12))
+                                ],
                               )),
                         ],
                       ),
@@ -440,7 +443,9 @@ class CareerListProcessState extends State<CareerListProcess> {
                   SizedBox(width: 8),
                   Text(
                     "课程列表 - 秋学期",
-                    style: TextStyle(color: readTextColor(),),
+                    style: TextStyle(
+                      color: readTextColor(),
+                    ),
                   )
                 ],
               ),
@@ -471,7 +476,9 @@ class CareerListProcessState extends State<CareerListProcess> {
                   SizedBox(width: 8),
                   Text(
                     "课程列表 - 春学期",
-                    style: TextStyle(color: readTextColor(),),
+                    style: TextStyle(
+                      color: readTextColor(),
+                    ),
                   )
                 ],
               ),

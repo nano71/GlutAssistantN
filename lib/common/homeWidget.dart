@@ -50,7 +50,10 @@ List<List> _customParser(List<List> originalData, [bool isTodaySchedule = true])
       if (i < originalData.length - 1 && i % 2 == 0) {
         List nextItem = originalData[i + 1];
         List lastStatus = timeUntilNextClass(nextItem.last);
-        if (nextItem[0] == item[0] && nextItem[1] == item[1] && nextItem[2] == item[2] && (lastStatus.last == "before" || lastStatus[2] > 0)) {
+        if (nextItem[0] == item[0] &&
+            nextItem[1] == item[1] &&
+            nextItem[2] == item[2] &&
+            (lastStatus.last == "before" || lastStatus[2] > 0)) {
           item.removeAt(1);
           item.removeAt(2);
           processedData.add(item);
@@ -93,7 +96,7 @@ class HomeWidgetUtils {
 
   static void updateWidgetContent() {
     print('Appwidget.updateWidgetContent');
-    // if (!isLoggedIn()) {
+    // if (!AppData.isLoggedIn) {
     //   print('Appwidget.updateWidgetContent.!isLoggedIn');
     //   commitUpdateWidgetTask(title: AppConfig.appTitle, message: AppConfig.notLoginError);
     //   return;

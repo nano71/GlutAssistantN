@@ -1,6 +1,5 @@
 import 'package:encrypt/encrypt.dart';
 
-
 class AESHelper {
   static const String _DSN = String.fromEnvironment('SENTRY_DSN');
   static final _key = Key.fromUtf8(_DSN.substring(_DSN.length - 16));

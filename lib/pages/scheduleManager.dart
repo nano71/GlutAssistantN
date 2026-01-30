@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:remixicon/remixicon.dart';
 
 import '/widget/bars.dart';
-
 import '../config.dart';
 
 class ScheduleManagePage extends StatefulWidget {

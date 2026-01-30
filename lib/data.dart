@@ -61,6 +61,26 @@ class ReloadTodayListState {
 
 class AppData {
   static int week = 0;
+
+  static int year = 0;
+  static String semester = "";
+  static String theme = "blue";
+  static bool showScheduleChange = false;
+  static bool showLessonTimeInList = false;
+  static bool showDayByWeekDay = false;
+  static String studentName = "";
+  static String password = "";
+  static String studentID = "";
+  static  String queryYear = "";
+  static  String querySemester = "";
+  static int programBackendSurvivalThreshold = 5;
+  static String baseWeekTime = "";
+  static int baseWeek = -1;
+  static int schedulePagePromptCount = 0;
+
+  static bool isLoggedIn = false;
+  static bool isDarkTheme = false;
+  static bool startSoon = false;
   static late BuildContext homeContext;
   static bool canCheckImportantUpdate = true;
   static bool hasNewVersion = false;
@@ -72,7 +92,6 @@ class AppData {
     "name": "",
     "semester": "",
     "year": "",
-    "startSoon": "",
     "color": "blue",
     "querySemester": "",
     "queryYear": "",
@@ -287,11 +306,22 @@ int randomInt(int min, int max) {
 }
 
 String courseLongText2Short(String value) {
-  return value.replaceAll("（", "(").replaceAll("）", ")").replaceAll("毛泽东思想和中国特色社会主义理论体系概论", "毛概").replaceAll("习近平新时代中国特色社会主义思想概论", "习近平思想概论");
+  return value
+      .replaceAll("（", "(")
+      .replaceAll("）", ")")
+      .replaceAll("毛泽东思想和中国特色社会主义理论体系概论", "毛概")
+      .replaceAll("习近平新时代中国特色社会主义思想概论", "习近平思想概论");
 }
 
 String levelToNumber(String value) {
-  return value.replaceAll("优", "95").replaceAll("良", "85").replaceAll("中", "75").replaceAll("及格", "65").replaceAll("合格", "65").replaceAll("不及格", "40").replaceAll("不合格", "40");
+  return value
+      .replaceAll("优", "95")
+      .replaceAll("良", "85")
+      .replaceAll("中", "75")
+      .replaceAll("及格", "65")
+      .replaceAll("合格", "65")
+      .replaceAll("不及格", "40")
+      .replaceAll("不合格", "40");
 }
 
 String weekCN2Number(String value) {
@@ -302,7 +332,9 @@ String weekCN2Number(String value) {
 }
 
 int weekInt({bool exclusionZero = false, int customWeek = -1}) {
-  if (customWeek == -1) customWeek = AppData.week;
+  if (customWeek == -1) {
+    customWeek = AppData.week;
+  }
   int week = customWeek;
   if (exclusionZero && week == 0) return 1;
   return week;
@@ -324,24 +356,12 @@ Map emptySchedule() {
   return _schedule;
 }
 
-bool isLoggedIn() {
-  return AppData.persistentData["username"] != "";
-}
-
 bool isContainCourse(String courseNumber, String courseType) {
   return containCourseTypes.contains(courseType) && !excludedCourseNumbers.contains(courseNumber);
 }
 
-String getUsername() {
-  return AppData.persistentData["username"] ?? "";
-}
-
-String getPassword() {
-  return AppData.persistentData["password"] ?? "";
-}
-
 String getAccount() {
-  return "${getUsername()}${getPassword()}";
+  return "${AppData.studentID}${AppData.password}";
 }
 
 void setSystemNavigationBarColor(Color color) {

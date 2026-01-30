@@ -21,7 +21,8 @@ class CodeCheckDialog {
 importantUpdateDialog(BuildContext context) {
   showGeneralDialog(
       context: context,
-      transitionBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
+      transitionBuilder:
+          (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
         return ScaleTransition(scale: animation, child: child);
       },
       pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
@@ -85,7 +86,8 @@ importantUpdateDialog(BuildContext context) {
                               backgroundColor: WidgetStateProperty.resolveWith((states) {
                                 return readColor();
                               }),
-                              shape: WidgetStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(28))),
+                              shape: WidgetStateProperty.all(
+                                  RoundedRectangleBorder(borderRadius: BorderRadius.circular(28))),
                             ),
                             child: Text(
                               "即刻更新",
@@ -107,7 +109,8 @@ importantUpdateDialog(BuildContext context) {
 infoDialog(BuildContext context, String text) {
   showGeneralDialog(
       context: context,
-      transitionBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
+      transitionBuilder:
+          (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
         return ScaleTransition(scale: animation, child: child);
       },
       pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
@@ -175,7 +178,8 @@ infoDialog(BuildContext context, String text) {
                               backgroundColor: WidgetStateProperty.resolveWith((states) {
                                 return readColor();
                               }),
-                              shape: WidgetStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(28))),
+                              shape: WidgetStateProperty.all(
+                                  RoundedRectangleBorder(borderRadius: BorderRadius.circular(28))),
                             ),
                             child: Text(
                               "我知道了",
@@ -218,7 +222,9 @@ codeCheckDialog(BuildContext context, Function callback) async {
     Future<void> _next(String value) async {
       print(value);
       if (value == "success") {
-        await login(AppData.persistentData["username"] ?? "", AppData.persistentData["password"] ?? "", textFieldController.text).then((String value) => _next2(value));
+        await login(AppData.studentID, AppData.password,
+                textFieldController.text)
+            .then((String value) => _next2(value));
       } else if (value == "fail") {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, "验证码错误!"));
@@ -316,7 +322,7 @@ codeCheckDialog(BuildContext context, Function callback) async {
                         ),
                       )
                     : Container(),
-                RowGap(isDark ? 8 : 0),
+                RowGap(AppData.isDarkTheme ? 8 : 0),
                 Container(
                   margin: EdgeInsets.fromLTRB(0, 8, 24, 0),
                   child: TextButton(
@@ -482,7 +488,11 @@ careerDialog(context, index, type, year) {
               ],
             ),
             InkWell(
-              child: Icon(Remix.close_line, size: 32,color: readTextColor(),),
+              child: Icon(
+                Remix.close_line,
+                size: 32,
+                color: readTextColor(),
+              ),
               onTap: () {
                 Navigator.of(context).pop();
               },
@@ -547,7 +557,8 @@ careerDialogItem(element) {
             Text(element[5], style: TextStyle(color: Colors.white)),
             Text("性质: " + element[2], style: TextStyle(color: Colors.white)),
             Text("学分: " + element[3], style: TextStyle(color: Colors.white)),
-            Text("学时: " + element[4].toString().replaceAll(" ", "").replaceAll(RegExp(r"\s+\b|\b\s\n"), "").trim(), style: TextStyle(color: Colors.white)),
+            Text("学时: " + element[4].toString().replaceAll(" ", "").replaceAll(RegExp(r"\s+\b|\b\s\n"), "").trim(),
+                style: TextStyle(color: Colors.white)),
           ],
         ),
       ],

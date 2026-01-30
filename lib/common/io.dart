@@ -114,7 +114,25 @@ Future<File> endTimeLocalSupportFile() async {
 
 Future<void> writeConfig() async {
   print("writeConfig");
-  String str = jsonEncode(AppData.persistentData);
+  final now = DateTime.now();
+
+  Map<String, dynamic> preEncodeData = {
+    "studentID": AppData.studentID,
+    "password": AppData.password,
+    "studentName": AppData.studentName,
+    "year": AppData.year,
+    "semester": AppData.semester,
+    "theme": AppData.theme,
+    "programBackendSurvivalThreshold": AppData.programBackendSurvivalThreshold,
+    "showLessonTimeInList": AppData.showLessonTimeInList,
+    "showDayByWeekDay": AppData.showDayByWeekDay,
+    "showScheduleChange": AppData.showScheduleChange,
+    "schedulePagePromptCount": AppData.schedulePagePromptCount,
+    "baseWeek": AppData.week,
+    "baseWeekTime": "${now.year}-${now.month}-${now.day}"
+  };
+
+  String str = jsonEncode(preEncodeData);
   String startTimeStr = jsonEncode(startTimeList);
   String endTimeStr = jsonEncode(endTimeList);
   final file = await configLocalSupportFile();
@@ -139,19 +157,21 @@ Future<void> writeConfig() async {
 
 Future<void> readWeek() async {
   print('readWeek');
-  String? setBaseWeekTime = AppData.persistentData["setBaseWeekTime"];
-  String? baseWeek = AppData.persistentData["baseWeek"];
-  if (setBaseWeekTime == null || baseWeek == null) return;
-  List<int> _timeList = setBaseWeekTime.split("-").map(int.parse).toList();
+  if (AppData.baseWeekTime == "" || AppData.baseWeek == "") return;
+  List<int> _timeList = AppData.baseWeekTime.split("-").map(int.parse).toList();
   int y = DateTime.now().year;
   int m = DateTime.now().month;
   int d = DateTime.now().day;
-  int _currentWeek = weekInt(customWeek: int.parse(baseWeek)) + weekDifference(DateTime(y, m, d), DateTime(_timeList[0], _timeList[1], _timeList[2]));
+  int _currentWeek = weekInt(customWeek: AppData.baseWeek) +
+      weekDifference(DateTime(y, m, d), DateTime(_timeList[0], _timeList[1], _timeList[2]));
   if (_currentWeek < 0) {
     AppData.week = 1;
     return;
   }
   AppData.week = _currentWeek;
+  if (_currentWeek > 20) {
+    AppData.startSoon = true;
+  }
 }
 
 Future<void> readConfig() async {
@@ -178,6 +198,69 @@ Future<void> readConfig() async {
       print("缓存文件存在");
       jsonDecode(result).forEach((key, value) {
         AppData.persistentData[key] = value.toString();
+        bool parseBool(dynamic value) {
+          return value == "1" || value == true;
+        }
+
+        switch (key) {
+          case "prompt":
+          case "schedulePagePromptCount":
+            AppData.schedulePagePromptCount = value;
+            break;
+
+          case "baseWeek":
+            AppData.baseWeek = value;
+            break;
+
+          case "setBaseWeekTime":
+          case "baseWeekTime":
+            AppData.baseWeekTime = value;
+            break;
+
+          case "username":
+          case "studentID":
+            AppData.studentID = value;
+            break;
+
+          case "password":
+            AppData.password = value;
+            break;
+
+          case "studentName":
+            AppData.studentName = value;
+            break;
+
+          case "year":
+            AppData.year = int.parse(value);
+            AppData.queryYear = value.toString();
+            break;
+
+          case "semester":
+            AppData.semester = value;
+            AppData.querySemester = value;
+            break;
+
+          case "color":
+            AppData.theme = value;
+            break;
+
+          case "showScheduleChange":
+            AppData.showScheduleChange = parseBool(value);
+            break;
+
+          case "showLessonTimeInList":
+            AppData.showLessonTimeInList = parseBool(value);
+            break;
+
+          case "showDayByWeekDay":
+            AppData.showDayByWeekDay = parseBool(value);
+            break;
+
+          case "threshold":
+          case "programBackendSurvivalThreshold":
+            AppData.programBackendSurvivalThreshold = int.parse(value);
+            break;
+        }
       });
     }
     //存在

@@ -53,7 +53,7 @@ initTodaySchedule() async {
   } else {
     todayScheduleTitle = "今天没课";
   }
-  if (AppData.persistentData["username"] == "") {
+  if (!AppData.isLoggedIn) {
     todayScheduleTitle = "";
   }
   print("initTodaySchedule End");
@@ -97,7 +97,7 @@ initTomorrowSchedule() async {
     tomorrowScheduleTitle = "明天没课嗷";
     if (AppData.todaySchedule.isEmpty) tomorrowScheduleTitle = "明天也没课🤣";
   }
-  if (AppData.persistentData["username"] == "") {
+  if (!AppData.isLoggedIn) {
     tomorrowScheduleTitle = "";
   }
   print("initTomorrowSchedule End");

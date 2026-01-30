@@ -20,7 +20,8 @@ void main() async {
     print("startApp...");
 
     await readConfig();
-    isDark = AppData.persistentData["color"] == "dark";
+    isDark = AppData.theme == "dark";
+    AppData.isDarkTheme = AppData.theme == "dark";
     runApp(App());
   }
 

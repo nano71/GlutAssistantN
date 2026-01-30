@@ -22,7 +22,6 @@ class NoRippleOverScrollState extends State<NoRippleOverScroll> {
 }
 
 class _OverScrollBehavior extends ScrollBehavior {
-
   Widget buildViewportChrome(BuildContext context, Widget child, AxisDirection axisDirection) {
     if (getPlatform(context) == TargetPlatform.android || getPlatform(context) == TargetPlatform.fuchsia) {
       return GlowingOverscrollIndicator(

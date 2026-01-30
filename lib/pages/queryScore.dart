@@ -148,8 +148,8 @@ class _QueryBodyState extends State<QueryBody> {
 
   void _query() async {
     // Global.cookie = {};
-    print(AppData.persistentData["username"]);
-    if (!isLoggedIn()) {
+    print(AppData.studentName);
+    if (!AppData.isLoggedIn) {
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(jwSnackBarAction(
         false,
@@ -176,147 +176,151 @@ class _QueryBodyState extends State<QueryBody> {
   Widget build(BuildContext context) {
     // TODO: implement build
     return CustomScrollView(
-        physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
-        slivers: [
-          publicTopBarWithInfoIcon(
-              "成绩查询",
-              InkWell(
-                child: Icon(
-                  Remix.close_line,
-                  size: 24,
-                  color: Colors.white,
-                ),
-                onTap: () {
-                  Navigator.of(context).pop();
-                },
+      physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+      slivers: [
+        publicTopBarWithInfoIcon(
+            "成绩查询",
+            InkWell(
+              child: Icon(
+                Remix.close_line,
+                size: 24,
+                color: Colors.white,
               ),
-              () => infoDialog(context,
-                  "2019级及以后的平均学分绩点计算方式:\n\n绩点 = ∑(课程学分 × 绩点) / ∑课程学分\n\n1.参与计算的课程仅为选课属性必修课和集中性实践教学环节, 体育等素质类必修课不参与学分绩点计算\n\n2.采用五级记分制的课程和集中性实践性教学环节、毕业设计(论文)成绩折算成百分制后再进行计算, 不及格为40分"),
-              readListPageTopAreaBackgroundColor(),
-              Colors.white,
-              0),
-          SliverToBoxAdapter(
-            child: Transform.translate(
-              offset: const Offset(0, -1),
-              child: Container(
-                padding: EdgeInsets.fromLTRB(16, 8, 16, 16),
-                color: readListPageTopAreaBackgroundColor(),
-                margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            DropdownButton(
-                              enableFeedback: true,
-                              icon: Icon(Remix.arrow_down_s_line),
-                              iconSize: 16,
-                              iconEnabledColor: Colors.white,
-                              elevation: 0,
-                              hint: SizedBox(
-                                width: 40,
-                                child: Text(
-                                  AppData.persistentData["queryYear"] ?? "",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                  ),
+              onTap: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            () => infoDialog(context,
+                "2019级及以后的平均学分绩点计算方式:\n\n绩点 = ∑(课程学分 × 绩点) / ∑课程学分\n\n1.参与计算的课程仅为选课属性必修课和集中性实践教学环节, 体育等素质类必修课不参与学分绩点计算\n\n2.采用五级记分制的课程和集中性实践性教学环节、毕业设计(论文)成绩折算成百分制后再进行计算, 不及格为40分"),
+            readListPageTopAreaBackgroundColor(),
+            Colors.white,
+            0),
+        SliverToBoxAdapter(
+          child: Transform.translate(
+            offset: const Offset(0, -1),
+            child: Container(
+              padding: EdgeInsets.fromLTRB(16, 8, 16, 16),
+              color: readListPageTopAreaBackgroundColor(),
+              margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          DropdownButton(
+                            enableFeedback: true,
+                            icon: Icon(Remix.arrow_down_s_line),
+                            iconSize: 16,
+                            iconEnabledColor: Colors.white,
+                            elevation: 0,
+                            hint: SizedBox(
+                              width: 40,
+                              child: Text(
+                                AppData.queryYear,
+                                style: TextStyle(
+                                  color: Colors.white,
                                 ),
                               ),
-                              items: yearList(0),
-                              underline: Container(height: 0),
-                              onChanged: (value) {
+                            ),
+                            items: yearList(0),
+                            underline: Container(height: 0),
+                            onChanged: (String? value) {
+                              if (value != null) {
                                 setState(() {
-                                  AppData.persistentData["queryYear"] = value.toString();
+                                  AppData.queryYear = value;
                                 });
-                              },
-                            ),
-                            SizedBox(
-                              width: 25,
-                            ),
-                            DropdownButton(
-                              enableFeedback: true,
-                              icon: Icon(Remix.arrow_down_s_line),
-                              iconSize: 16,
-                              iconEnabledColor: Colors.white,
-                              elevation: 0,
-                              hint: SizedBox(
-                                width: 40,
-                                child: Text(
-                                  AppData.persistentData["querySemester"] ?? "",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                  ),
+                              }
+                            },
+                          ),
+                          SizedBox(
+                            width: 25,
+                          ),
+                          DropdownButton(
+                            enableFeedback: true,
+                            icon: Icon(Remix.arrow_down_s_line),
+                            iconSize: 16,
+                            iconEnabledColor: Colors.white,
+                            elevation: 0,
+                            hint: SizedBox(
+                              width: 40,
+                              child: Text(
+                                AppData.querySemester,
+                                style: TextStyle(
+                                  color: Colors.white,
                                 ),
                               ),
-                              underline: Container(height: 0),
-                              items: [
-                                DropdownMenuItem(child: Text("全部"), value: "全部"),
-                                DropdownMenuItem(child: Text("春"), value: "春"),
-                                DropdownMenuItem(child: Text("秋"), value: "秋"),
-                              ],
-                              onChanged: (String? value) {
-                                setState(() {
-                                  if (value != null) AppData.persistentData["querySemester"] = value;
-                                });
-                              },
                             ),
-                          ],
-                        ),
-                        InkWell(
-                          onTap: () {
-                            _query();
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.all(Radius.circular(6.0)),
-                              color: Color(0x1ff1f1f1),
-                            ),
-                            padding: EdgeInsets.fromLTRB(16, 8, 16, 8),
-                            child: Text(
-                              "查询",
-                              style: TextStyle(color: Colors.white),
-                            ),
+                            underline: Container(height: 0),
+                            items: [
+                              DropdownMenuItem(child: Text("全部"), value: "全部"),
+                              DropdownMenuItem(child: Text("春"), value: "春"),
+                              DropdownMenuItem(child: Text("秋"), value: "秋"),
+                            ],
+                            onChanged: (String? value) {
+                              setState(() {
+                                if (value != null) {
+                                  AppData.querySemester = value;
+                                }
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                      InkWell(
+                        onTap: () {
+                          _query();
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(6.0)),
+                            color: Color(0x1ff1f1f1),
+                          ),
+                          padding: EdgeInsets.fromLTRB(16, 8, 16, 8),
+                          child: Text(
+                            "查询",
+                            style: TextStyle(color: Colors.white),
                           ),
                         ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 8,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "平均绩点: ${scores[0]}",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        Text(
-                          "|",
-                          style: TextStyle(color: Colors.transparent),
-                        ),
-                        Text(
-                          "算术平均分: ${scores[1]}",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        Text(
-                          "|",
-                          style: TextStyle(color: Colors.transparent),
-                        ),
-                        Text(
-                          "加权平均分: ${scores[1]}",
-                          style: TextStyle(color: Colors.transparent),
-                        )
-                      ],
-                    )
-                  ],
-                ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 8,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "平均绩点: ${scores[0]}",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      Text(
+                        "|",
+                        style: TextStyle(color: Colors.transparent),
+                      ),
+                      Text(
+                        "算术平均分: ${scores[1]}",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      Text(
+                        "|",
+                        style: TextStyle(color: Colors.transparent),
+                      ),
+                      Text(
+                        "加权平均分: ${scores[1]}",
+                        style: TextStyle(color: Colors.transparent),
+                      )
+                    ],
+                  )
+                ],
               ),
             ),
           ),
-          ScoreList(),
-        ],
-      );
+        ),
+        ScoreList(),
+      ],
+    );
   }
 }
