@@ -9,14 +9,14 @@ import '/widget/bars.dart';
 import '/widget/dialog.dart';
 import '../config.dart';
 
-class RowHeader extends StatefulWidget {
-  RowHeader({Key? key}) : super(key: key);
+class _Header extends StatefulWidget {
+  _Header({Key? key}) : super(key: key);
 
   @override
-  RowHeaderState createState() => RowHeaderState();
+  _HeaderState createState() => _HeaderState();
 }
 
-class RowHeaderState extends State<RowHeader> {
+class _HeaderState extends State<_Header> {
   int _week = weekInt(exclusionZero: true);
 
   @override
@@ -122,7 +122,7 @@ List<Widget> _loopRowHeader2(DateTime current, int currentWeek) {
   return list;
 }
 
-Widget _leftGrid(String title) {
+Widget _LeftGrid(String title) {
   return Container(
       width: 20,
       height: AppConfig.schedulePageGridHeight,
@@ -146,10 +146,10 @@ Widget _leftGrid(String title) {
       ));
 }
 
-List<Widget> _loopLeftGrid() {
+List<Widget> _LeftGrids() {
   List<Widget> list = [];
   for (int i = 1; i < 12; i++) {
-    list.add(_leftGrid(i.toString()));
+    list.add(_LeftGrid(i.toString()));
   }
   return list;
 }
@@ -165,12 +165,12 @@ GlobalKey<SchedulePageState> schedulePageKey = GlobalKey();
 EventBus reState = EventBus();
 
 class SchedulePageState extends State<SchedulePage> with AutomaticKeepAliveClientMixin {
-  late double _startPositionX;
-  late double _startPositionY;
-  int _currentScheduleWeek = weekInt(exclusionZero: true);
-  GlobalKey<SchedulePageColumnsState> weekKey = GlobalKey();
-  GlobalKey<ScheduleTopBarState> barKey = GlobalKey();
-  GlobalKey<RowHeaderState> rowHeaderKey = GlobalKey();
+  late double startPositionX;
+  late double startPositionY;
+  int currentScheduleWeek = weekInt(exclusionZero: true);
+  GlobalKey<_ContentState> weekKey = GlobalKey();
+  GlobalKey<ScheduleTopBarState> topBarKey = GlobalKey();
+  GlobalKey<_HeaderState> rowHeaderKey = GlobalKey();
   late StreamSubscription<ReloadSchedulePageState> eventBusListener;
 
   @override
@@ -180,58 +180,58 @@ class SchedulePageState extends State<SchedulePage> with AutomaticKeepAliveClien
 
     if (AppData.schedulePagePromptCount < 5) {
       Timer(Duration(milliseconds: 500), () {
-        _showPrompt();
+        showTip();
         AppData.schedulePagePromptCount++;
       });
     }
 
     eventBusListener = eventBus.on<ReloadSchedulePageState>().listen((event) {
       setState(() {});
-      if (AppData.week != _currentScheduleWeek) {
-        _currentScheduleWeek = weekInt(exclusionZero: true);
+      if (AppData.week != currentScheduleWeek) {
+        currentScheduleWeek = weekInt(exclusionZero: true);
         weekKey.currentState!.onPressed(weekInt(exclusionZero: true));
-        barKey.currentState!.onPressed(weekInt(exclusionZero: true));
+        topBarKey.currentState!.onPressed(weekInt(exclusionZero: true));
         rowHeaderKey.currentState!.onPressed(weekInt(exclusionZero: true));
       }
     });
   }
 
-  void _warning1() {
+  void showWarningTip() {
     ScaffoldMessenger.of(context).removeCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, "已经没了!", 1));
   }
 
-  void _showWeekSnackBar() {
+  void showCurrentWeekTip() {
     ScaffoldMessenger.of(context).removeCurrentSnackBar();
-    ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(3, "第" + _currentScheduleWeek.toString() + "周", 0));
+    ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(3, "第" + currentScheduleWeek.toString() + "周", 0));
   }
 
-  void _showPrompt() {
+  void showTip() {
     ScaffoldMessenger.of(context).removeCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(3, "左右划动 ~", 2));
   }
 
-  void _touchListen(double eX, double eY) {
+  void onTouchMove(double eX, double eY) {
     double minValue = AppConfig.schedulePageTouchMovesMinValue;
-    double sX = _startPositionX;
-    double sY = _startPositionY;
+    double sX = startPositionX;
+    double sY = startPositionY;
     if (eY - sY < minValue || eY + sY < minValue) {
       if (sX - eX > minValue) {
-        if (_currentScheduleWeek == 25) {
-          _warning1();
+        if (currentScheduleWeek == 25) {
+          showWarningTip();
         } else {
           print("下一页");
-          _currentScheduleWeek++;
-          _showWeekSnackBar();
+          currentScheduleWeek++;
+          showCurrentWeekTip();
           _findNewSchedule();
         }
       } else if (eX - sX > minValue) {
-        if (_currentScheduleWeek == 1) {
-          _warning1();
+        if (currentScheduleWeek == 1) {
+          showWarningTip();
         } else {
           print("上一页");
-          _currentScheduleWeek--;
-          _showWeekSnackBar();
+          currentScheduleWeek--;
+          showCurrentWeekTip();
           _findNewSchedule();
         }
       }
@@ -239,9 +239,9 @@ class SchedulePageState extends State<SchedulePage> with AutomaticKeepAliveClien
   }
 
   void _findNewSchedule() {
-    weekKey.currentState!.onPressed(_currentScheduleWeek);
-    barKey.currentState!.onPressed(_currentScheduleWeek);
-    rowHeaderKey.currentState!.onPressed(_currentScheduleWeek);
+    weekKey.currentState!.onPressed(currentScheduleWeek);
+    topBarKey.currentState!.onPressed(currentScheduleWeek);
+    rowHeaderKey.currentState!.onPressed(currentScheduleWeek);
   }
 
   @override
@@ -256,16 +256,16 @@ class SchedulePageState extends State<SchedulePage> with AutomaticKeepAliveClien
       color: readBackgroundColor(),
       child: Column(
         children: [
-          ScheduleTopBar(key: barKey),
-          RowHeader(key: rowHeaderKey),
+          ScheduleTopBar(key: topBarKey),
+          _Header(key: rowHeaderKey),
           Expanded(
             child: Listener(
               onPointerDown: (e) {
-                _startPositionX = e.position.dx;
-                _startPositionY = e.position.dy;
+                startPositionX = e.position.dx;
+                startPositionY = e.position.dy;
               },
               onPointerUp: (e) {
-                _touchListen(e.position.dx, e.position.dy);
+                onTouchMove(e.position.dx, e.position.dy);
               },
               child: SingleChildScrollView(
                 physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
@@ -281,10 +281,10 @@ class SchedulePageState extends State<SchedulePage> with AutomaticKeepAliveClien
                         ),
                       ),
                       child: Column(
-                        children: _loopLeftGrid(),
+                        children: _LeftGrids(),
                       ),
                     ),
-                    SchedulePageColumns(key: weekKey),
+                    _Content(key: weekKey),
                   ],
                 ),
               ),
@@ -301,40 +301,40 @@ class SchedulePageState extends State<SchedulePage> with AutomaticKeepAliveClien
 }
 
 //星期几
-class SchedulePageColumns extends StatefulWidget {
-  SchedulePageColumns({Key? key}) : super(key: key);
+class _Content extends StatefulWidget {
+  _Content({Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => SchedulePageColumnsState();
+  State<StatefulWidget> createState() => _ContentState();
 }
 
-class SchedulePageColumnsState extends State<SchedulePageColumns> {
-  int _findWeek = weekInt(exclusionZero: true);
+class _ContentState extends State<_Content> {
+  int currentWeek = weekInt(exclusionZero: true);
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
       child: Row(
         mainAxisSize: MainAxisSize.min,
-        children: _loopWeekDayCol(_findWeek > 20 ? "20" : _findWeek.toString()),
+        children: _Columns(currentWeek > 20 ? "20" : currentWeek.toString()),
       ),
     );
   }
 
   void onPressed(int week) {
-    setState(() => _findWeek = week);
+    setState(() => currentWeek = week);
   }
 }
 
-List<Widget> _loopWeekDayCol(String week) {
+List<Widget> _Columns(String week) {
   List<Widget> list = [];
   for (int i = 1; i < 8; i++) {
-    list.add(_col(week, i.toString()));
+    list.add(_Column(week, i.toString()));
   }
   return list;
 }
 
-Widget _col(String week, String weekDay) {
+Widget _Column(String week, String weekDay) {
   return Expanded(
     child: Container(
       decoration: BoxDecoration(
@@ -345,55 +345,56 @@ Widget _col(String week, String weekDay) {
         ),
       ),
       child: Column(
-        children: _loopWeekDayColGrid(week, weekDay),
+        children: _Grids(week, weekDay),
       ),
     ),
   );
 }
 
-List<Widget> _loopWeekDayColGrid(String week, String weekDay) {
+List<Widget> _Grids(String week, String weekDay) {
   List<Widget> list = [];
   Map _schedule = AppData.schedule[week][weekDay];
-  int s = 1;
-  for (int i = 1; i < 12; i++) {
-    String courseName = courseLongText2Short(_schedule[i.toString()][0]);
-    String studyArea = _schedule[i.toString()][2];
-    String teacher = _schedule[i.toString()][1];
+  int start = 1;
+  for (int end = 1; end < 12; end++) {
+    String courseName = courseLongText2Short(_schedule[end.toString()][0]);
+    String studyArea = _schedule[end.toString()][2];
+    String teacher = _schedule[end.toString()][1];
     bool courseNameNotNull() => courseName != "null";
     if (courseNameNotNull()) {
-      bool courseNameIsPreviousCourseName() => courseName == courseLongText2Short(_schedule[(i - 1).toString()][0]);
-      bool courseNameNotIsNextCourseName() => courseName != courseLongText2Short(_schedule[(i + 1).toString()][0]);
-      bool studyAreaNotIsNextStudyArea() => studyArea != _schedule[(i + 1).toString()][2];
-      bool studyAreaIsPreviousStudyArea() => studyArea == _schedule[(i - 1).toString()][2];
+      bool courseNameIsPreviousCourseName() => courseName == courseLongText2Short(_schedule[(end - 1).toString()][0]);
+      bool courseNameNotIsNextCourseName() => courseName != courseLongText2Short(_schedule[(end + 1).toString()][0]);
+      bool studyAreaNotIsNextStudyArea() => studyArea != _schedule[(end + 1).toString()][2];
+      bool studyAreaIsPreviousStudyArea() => studyArea == _schedule[(end - 1).toString()][2];
 
-      if (i == 1) {
-        s = i;
+      if (end == 1) {
+        start = end;
       } else if (studyAreaIsPreviousStudyArea() && courseNameIsPreviousCourseName()) {
-        double height = AppConfig.schedulePageGridHeight * (i - s + 1);
-        if (i == 11 || studyAreaNotIsNextStudyArea() || courseNameNotIsNextCourseName()) {
-          list.add(Grid(week, weekDay, i, s, courseName, studyArea, teacher, randomColors(), height));
+        double height = AppConfig.schedulePageGridHeight * (end - start + 1);
+        if (end == 11 || studyAreaNotIsNextStudyArea() || courseNameNotIsNextCourseName()) {
+          list.add(_Grid(week, weekDay,start,  end, courseName, studyArea, teacher, randomColors(), height));
         }
       } else {
-        s = i;
+        start = end;
       }
-    } else
-      list.add(Grid(week, weekDay, i, 0, "", "", "", readBackgroundColor()));
+    } else {
+      list.add(_Grid(week, weekDay, 0, end, "", "", "", readBackgroundColor()));
+    }
   }
   return list;
 }
 
-class Grid extends StatelessWidget {
-  final int index;
-  final int index2;
+class _Grid extends StatelessWidget {
+  final int start;
+  final int end;
   final String title;
-  final String studyArea;
+  final String classroomNumber;
   final String teacher;
   final Color color;
   final double height;
   final String week;
   final String weekDay;
 
-  Grid(this.week, this.weekDay, this.index, this.index2, this.title, this.studyArea, this.teacher, this.color,
+  _Grid(this.week, this.weekDay, this.start, this.end, this.title, this.classroomNumber, this.teacher, this.color,
       [this.height = 60.0]);
 
   @override
@@ -401,7 +402,7 @@ class Grid extends StatelessWidget {
     // TODO: implement build
     TextStyle style = TextStyle(fontSize: 12, color: Colors.white);
     late BoxDecoration decoration;
-    if (index % 2 == 0) {
+    if (start % 2 == 0) {
       decoration = BoxDecoration(
         border: Border(
           bottom: BorderSide(
@@ -422,10 +423,10 @@ class Grid extends StatelessWidget {
     }
     return InkWell(
         onTap: () {
-          if (index != 0 && index2 != 0) {
-            print(index2);
-            print(index);
-            scheduleDialog(context, week, weekDay, index.toString());
+          if (start != 0 && end != 0) {
+            print(start);
+            print(end);
+            scheduleDialog(context, week, weekDay, start.toString());
             // ScaffoldMessenger.of(context).removeCurrentSnackBar();
             // ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(1, teacher, 2));
           }
@@ -464,7 +465,7 @@ class Grid extends StatelessWidget {
                         //   style: style,
                         // ),
                         Text(
-                          studyArea,
+                          classroomNumber,
                           textAlign: TextAlign.center,
                           softWrap: true,
                           style: style,
