@@ -80,10 +80,13 @@ class AppData {
 
   static bool isLoggedIn = false;
   static bool isDarkTheme = false;
+  static bool isInitialized = false;
   static bool startSoon = false;
   static late BuildContext homeContext;
   static bool canCheckImportantUpdate = true;
   static bool hasNewVersion = false;
+  static bool hasReadConfigError = false;
+
   static final bool isReleaseMode = const bool.fromEnvironment("dart.vm.product");
   static Map schedule = {};
   static Map<String, String> persistentData = {
@@ -370,7 +373,4 @@ void setSystemNavigationBarColor(Color color) {
     systemNavigationBarIconBrightness: readNavigationBarIconBrightness(),
   ));
 }
-
-late bool isDark;
-
 // todo 开发模式, 自定义时间

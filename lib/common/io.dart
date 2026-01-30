@@ -111,8 +111,18 @@ Future<File> endTimeLocalSupportFile() async {
   final dir = await getApplicationSupportDirectory();
   return File('${dir.path}/endTime.json');
 }
+Future<void> writeConfig2(String jsonString) async {
+  final file = await configLocalSupportFile();
 
+  try {
+    await file.writeAsString(jsonString);
+    print("writeConfig End");
+  } catch (e) {
+    print(e);
+  }
+}
 Future<void> writeConfig() async {
+  if (AppData.hasReadConfigError) return print("hasReadConfigError");
   print("writeConfig");
   final now = DateTime.now();
 
@@ -196,8 +206,20 @@ Future<void> readConfig() async {
     // 存在
     if (result.isNotEmpty) {
       print("缓存文件存在");
+      print(result);
       jsonDecode(result).forEach((key, value) {
         AppData.persistentData[key] = value.toString();
+        print(key);
+        if (value == null || value == "") {
+          return print("skip " + key);
+        }
+        int parseInt(dynamic value) {
+          if (value is String) {
+            return int.parse(value);
+          }
+          return value;
+        }
+
         bool parseBool(dynamic value) {
           return value == "1" || value == true;
         }
@@ -205,11 +227,11 @@ Future<void> readConfig() async {
         switch (key) {
           case "prompt":
           case "schedulePagePromptCount":
-            AppData.schedulePagePromptCount = value;
+            AppData.schedulePagePromptCount = parseInt(value);
             break;
 
           case "baseWeek":
-            AppData.baseWeek = value;
+            AppData.baseWeek = parseInt(value);
             break;
 
           case "setBaseWeekTime":
@@ -226,13 +248,15 @@ Future<void> readConfig() async {
             AppData.password = value;
             break;
 
+          case "name":
           case "studentName":
             AppData.studentName = value;
             break;
 
           case "year":
-            AppData.year = int.parse(value);
-            AppData.queryYear = value.toString();
+            int year = parseInt(value);
+            AppData.year = year;
+            AppData.queryYear = year.toString();
             break;
 
           case "semester":
@@ -241,6 +265,7 @@ Future<void> readConfig() async {
             break;
 
           case "color":
+          case "theme":
             AppData.theme = value;
             break;
 
@@ -258,7 +283,7 @@ Future<void> readConfig() async {
 
           case "threshold":
           case "programBackendSurvivalThreshold":
-            AppData.programBackendSurvivalThreshold = int.parse(value);
+            AppData.programBackendSurvivalThreshold = parseInt(value);
             break;
         }
       });
@@ -279,5 +304,6 @@ Future<void> readConfig() async {
     print("readConfig End");
   } catch (e) {
     print(e);
+    throw e;
   }
 }

@@ -20,8 +20,8 @@ void main() async {
     print("startApp...");
 
     await readConfig();
-    isDark = AppData.theme == "dark";
     AppData.isDarkTheme = AppData.theme == "dark";
+    AppData.isLoggedIn = AppData.studentID != "";
     runApp(App());
   }
 

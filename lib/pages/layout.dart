@@ -119,6 +119,7 @@ class _LayoutState extends State<Layout> with RouteAware {
   @override
   void initState() {
     super.initState();
+    AppData.isInitialized = true;
     _listener = AppLifecycleListener(
       onStateChange: didChangeAppLifecycleState,
     );
@@ -178,6 +179,9 @@ class _LayoutState extends State<Layout> with RouteAware {
   @override
   void didPush() {
     print('PageView 被 push');
+    if (AppData.isInitialized) {
+      setSystemNavigationBarColor(readCardBackgroundColor());
+    }
   }
 
   @override
