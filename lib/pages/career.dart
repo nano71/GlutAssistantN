@@ -63,6 +63,13 @@ class _CareerPageBodyState extends State<CareerPageBody> {
   void initState() {
     // TODO: implement initState
     super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (login) {
+        ScaffoldMessenger.of(context).removeCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "获取数据...", AppConfig.timeOutSec * 2));
+      }
+    });
     print("type:");
     print(type);
     eventBusListener = eventBus.on<ReloadCareerPageState>().listen((event) {
@@ -167,12 +174,6 @@ class _CareerPageBodyState extends State<CareerPageBody> {
 
   @override
   Widget build(BuildContext context) {
-    Future.delayed(Duration(seconds: 0), () {
-      if (login) {
-        ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "获取数据...", AppConfig.timeOutSec * 2));
-      }
-    });
     return CustomScrollView(
       physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
       slivers: [

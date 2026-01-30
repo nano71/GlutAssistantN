@@ -325,8 +325,14 @@ class ExamsTipsBar extends StatefulWidget {
 
 class ExamsTipsBarState extends State<ExamsTipsBar> {
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    // TODO: implement initState
+    super.initState();
     getRecentExam();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Column(
       children: [
         Align(

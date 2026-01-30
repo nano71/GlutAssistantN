@@ -4,7 +4,6 @@ import 'dart:core';
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
 
-import '/common/io.dart';
 import '/data.dart';
 import '/widget/bars.dart';
 import '/widget/dialog.dart';
@@ -314,13 +313,10 @@ class SchedulePageColumnsState extends State<SchedulePageColumns> {
 
   @override
   Widget build(BuildContext context) {
-    if (_findWeek > 20) {
-      _findWeek = 20;
-    }
     return Expanded(
       child: Row(
         mainAxisSize: MainAxisSize.min,
-        children: _loopWeekDayCol(_findWeek.toString()),
+        children: _loopWeekDayCol(_findWeek > 20 ? "20" : _findWeek.toString()),
       ),
     );
   }

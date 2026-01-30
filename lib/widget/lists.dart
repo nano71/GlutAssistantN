@@ -474,13 +474,6 @@ class ScoreList extends StatefulWidget {
 class ScoreListState extends State<ScoreList> {
   @override
   Widget build(BuildContext context) {
-    if (queryScore.length == 1) {
-      if (queryScore[0] == AppConfig.socketError ||
-          queryScore[0] == AppConfig.timeOutError ||
-          queryScore[0] == "登录过期") {
-        return Container();
-      }
-    }
     return SliverList(
       delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
         return Column(

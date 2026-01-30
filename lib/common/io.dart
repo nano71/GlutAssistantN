@@ -209,7 +209,7 @@ Future<void> readConfig() async {
       print(result);
       jsonDecode(result).forEach((key, value) {
         AppData.persistentData[key] = value.toString();
-        print(key);
+        // print(key);
         if (value == null || value == "") {
           return print("skip " + key);
         }

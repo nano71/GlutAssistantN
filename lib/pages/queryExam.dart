@@ -46,10 +46,17 @@ class _QueryExamBodyState extends State<QueryExamBody> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (login) {
+        ScaffoldMessenger.of(context).removeCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "获取数据...", 6));
+        getExam().then(process);
+      }
+    });
+
     eventBusListener = eventBus.on<ReloadExamListState>().listen((event) {
       getExam().then(process);
     });
-    getExam().then(process);
   }
 
   @override
@@ -91,12 +98,6 @@ class _QueryExamBodyState extends State<QueryExamBody> {
 
   @override
   Widget build(BuildContext context) {
-    Future.delayed(Duration(seconds: 0), () {
-      if (login) {
-        ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "获取数据...", 6));
-      }
-    });
     // TODO: implement build
     return CustomScrollView(
       physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),

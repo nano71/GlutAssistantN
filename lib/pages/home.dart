@@ -48,12 +48,26 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   bool _clickCooldown = false;
   Timer _updateIntervalTimer = Timer(Duration(), () {});
   Timer _rotationAnimationTimer = Timer(Duration(), () {});
-  bool _firstBuild = true;
   late StreamSubscription<ReloadHomePageState> eventBusListener;
 
   @override
   void initState() {
     super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      DateTime now = DateTime.now();
+      if (now.minute == 59 && now.hour == 23) {
+        ScaffoldMessenger.of(context).removeCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, "明天再来!", 3));
+        Future.delayed(Duration(seconds: 3), () {
+          exit(0);
+        });
+      } else if (widget.refresh) {
+        _refresh();
+      }
+    });
+
+
     _animationControllerForLeftCard = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 150),
@@ -257,21 +271,6 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     AppData.homeContext = context;
-    Future.delayed(Duration(seconds: 0), () {
-      if (DateTime.now().minute == 59 && DateTime.now().hour == 23) {
-        ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, "明天再来!", 3));
-        Future.delayed(Duration(seconds: 3), () {
-          exit(0);
-        });
-      }
-    });
-    if (widget.refresh && _firstBuild) {
-      Future.delayed(Duration(seconds: 0), () {
-        _refresh();
-        _firstBuild = false;
-      });
-    }
     double width = MediaQuery.of(context).size.width;
     // print("HomePage create");
     return CustomScrollView(

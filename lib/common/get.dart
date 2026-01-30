@@ -84,10 +84,17 @@ Future<void> getWeek() async {
     print("getWeek End else");
     return;
   }
+
   AppData.year = int.parse(year);
-  AppData.queryYear = year;
   AppData.semester = semester;
-  AppData.querySemester = semester;
+
+  if (AppData.queryYear == "") {
+    AppData.queryYear = year;
+  }
+
+  if (AppData.querySemester == "") {
+    AppData.querySemester = semester;
+  }
 
   print(AppData.persistentData);
   print("getWeek Save");
@@ -786,61 +793,35 @@ Future<dynamic> getUpdate({bool isRetry = false}) async {
     }
     return getUpdate(isRetry: true);
   }
-  if (response.body.toString().contains('"message":"API rate limit exceeded for')) {
+  if (response.body.contains('"message":"API rate limit exceeded for')) {
     print("getUpdate End");
     return "频繁的请求!";
   }
-  print(jsonDecode(response.body));
-  Map<String, String> result = {
-    "newVersion": jsonDecode(response.body)["name"].split("_")[1],
-    "newBody": jsonDecode(response.body)["body"],
-    "githubDownload": jsonDecode(response.body)["assets"][0]["browser_download_url"].toString().trim()
-  };
-  print(result);
+
+  final decodeData = jsonDecode(response.body);
+  // print(decodeData);
+
+  AppData.newVersionNumber = decodeData["name"].split("_")[1];
+  AppData.newVersionChangelog = decodeData["body"];
+  AppData.newVersionDownloadUrl = decodeData["assets"][0]["browser_download_url"].toString().trim();
+
   print("getUpdate End");
-  return result;
+  return true;
 }
 
 Future getUpdateForEveryday() async {
   print("getUpdateForEveryday");
   // ignore: dead_code
-  if (true ||
-      "${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}" != AppData.persistentData["newTime"]) {
-    Response response;
-    try {
-      response = await get(AppConfig.getUpdateUrl);
-    } on TimeoutException catch (e) {
-      print("getUpdate Error");
-      print(e);
-      return AppConfig.timeOutError;
-    } on SocketException catch (e) {
-      print("getUpdate Error");
-      print(e);
-      return AppConfig.socketError;
-    } catch (e) {
-      print("连接失败");
-      print(e);
-      return "未知异常";
-    }
-    print('statusCode');
-    print(response.statusCode);
-    if (!response.body.toString().contains('"message":"API rate limit exceeded for')) {
-      List list = jsonDecode(response.body)["name"].split("_");
-      list.add(jsonDecode(response.body)["body"]);
-      AppData.persistentData["newVersion"] = list[1];
-      AppData.persistentData["newBody"] = list[3];
-      AppData.persistentData["newTime"] = "${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}";
-      writeConfig();
-      checkNewVersion();
-      if (AppData.hasNewVersion && AppData.canCheckImportantUpdate) {
-        Future.delayed(Duration(seconds: 1), () {
-          checkImportantUpdate();
-        });
-      }
-      return print("getUpdateForEveryday End");
-    }
+  await getUpdate();
+
+  checkNewVersion();
+  if (AppData.hasNewVersion && AppData.canCheckImportantUpdate) {
+    Future.delayed(Duration(seconds: 1), () {
+      checkImportantUpdate();
+    });
   }
-  print("getUpdateForEveryday Skip");
+
+  print("getUpdateForEveryday End");
 }
 
 Future<Response> request(String method, Uri uri, {Map<String, String>? body, Encoding? encoding}) async {

@@ -86,6 +86,10 @@ class AppData {
   static bool canCheckImportantUpdate = true;
   static bool hasNewVersion = false;
   static bool hasReadConfigError = false;
+  static String newVersionChangelog = "";
+  static String newVersionNumber = "";
+  static String newVersionDownloadUrl = "";
+
 
   static final bool isReleaseMode = const bool.fromEnvironment("dart.vm.product");
   static Map schedule = {};

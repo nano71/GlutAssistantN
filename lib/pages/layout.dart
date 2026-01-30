@@ -203,7 +203,6 @@ class _LayoutState extends State<Layout> with RouteAware {
 
   @override
   Widget build(BuildContext context) {
-    print("View build");
     return Scaffold(
       backgroundColor: readBackgroundColor(),
       body: PageView(

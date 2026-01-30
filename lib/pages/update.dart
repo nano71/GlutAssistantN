@@ -7,7 +7,6 @@ import 'package:remixicon/remixicon.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '/common/get.dart';
-import '/common/io.dart';
 import '/config.dart';
 import '/data.dart';
 import '/widget/bars.dart';
@@ -45,35 +44,41 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
 
   @override
   void initState() {
+    // TODO: implement initState
     super.initState();
-    getUpdate().then((dynamic result) => _next(result));
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if(!AppData.hasNewVersion){
+        checkUpdate();
+      }
+    });
   }
 
-  _next(dynamic result) {
-    print(result);
-    updating = true;
+
+  checkUpdate(){
+    ScaffoldMessenger.of(context).removeCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "获取更新...", 24));
+    if (!updating) {
+      updating = true;
+      getUpdate().then(next);
+    }
+  }
+
+  next(dynamic result) {
     if (result is String) {
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, result, 5));
       networkError = true;
+    } else {
+      checkNewVersion(false, context);
+      networkError = false;
     }
-    setState(() {
-      AppData.persistentData["newVersion"] = result["newVersion"];
-      AppData.persistentData["newBody"] = result["newBody"];
-      AppData.persistentData["githubDownload"] = result["githubDownload"];
-    });
-    writeConfig();
-    checkNewVersion(false, context);
+
+    setState(() {});
+    updating = false;
   }
 
   @override
   Widget build(BuildContext context) {
-    Future.delayed(Duration(seconds: 0), () {
-      if (!AppData.hasNewVersion && !updating) {
-        ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "获取更新...", 24));
-      }
-    });
     return CustomScrollView(
       physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
       slivers: [
@@ -111,9 +116,7 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
                   ),
                   child: InkWell(
                     onTap: () {
-                      ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                      ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "获取更新...", 24));
-                      getUpdate().then((value) => _next(value));
+                      checkUpdate();
                       // throw UnimplementedError();
                     },
                     child: Image.asset(
@@ -147,12 +150,12 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
                             width: double.infinity,
                             margin: EdgeInsets.fromLTRB(0, 0, 0, 7),
                             child: Text(
-                              "版本号:" + PackageInfo.version + "  >  " + (AppData.persistentData["newVersion"] ?? ""),
+                              "版本号:" + PackageInfo.version + "  >  " + AppData.newVersionNumber,
                               style: TextStyle(color: readTextColor2()),
                             ),
                           ),
                           Text(
-                            AppData.persistentData["newBody"] ?? "",
+                            AppData.newVersionChangelog,
                             style: TextStyle(color: Colors.grey),
                           ),
                           Container(
@@ -167,8 +170,7 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
                               "https://nano71.com/gan/GlutAssistantN.apk", Remix.download_2_line, "直接下载", readColor()),
                           // coolapk(),
                           customInkWell("", Remix.earth_line, "学校官网（暂不可用）", Colors.blueAccent),
-                          customInkWell(AppData.persistentData["githubDownload"] ?? "", Remix.github_line, "Github",
-                              Colors.blueGrey)
+                          customInkWell(AppData.newVersionDownloadUrl, Remix.github_line, "Github", Colors.blueGrey)
                         ],
                       )
                     : Container(),
@@ -186,7 +188,7 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
                             ),
                           ),
                           Text(
-                            AppData.persistentData["newBody"] ?? "",
+                            AppData.newVersionChangelog,
                             style: TextStyle(color: Colors.grey),
                           ),
                           Container(
@@ -234,7 +236,7 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
 void checkImportantUpdate() {
   print("checkImportantUpdate");
   AppData.canCheckImportantUpdate = false;
-  if (AppData.persistentData["newBody"]?.contains("重要更新") ?? false) {
+  if (AppData.newVersionChangelog.contains("重要更新")) {
     eventBus.fire(SetPageIndex(index: AppConfig.pageIndex));
     importantUpdateDialog(AppData.homeContext);
   }
@@ -242,14 +244,16 @@ void checkImportantUpdate() {
 
 void checkNewVersion([bool skipShowSnackBar = true, BuildContext? context]) {
   print('checkNewVersion');
-  if ((AppData.persistentData["newVersion"] ?? "").isNotEmpty) {
-    print('AppData.writeData["newVersion"]:');
-    print(AppData.persistentData["newVersion"] ?? "空");
+  if (AppData.newVersionNumber.isNotEmpty) {
+    print('newVersion:' + AppData.newVersionNumber);
     // print(AppData.persistentData);
-    if (!skipShowSnackBar) ScaffoldMessenger.of(context!).removeCurrentSnackBar();
+    if (!skipShowSnackBar && context != null) {
+      ScaffoldMessenger.of(context).removeCurrentSnackBar();
+    }
     late String message;
     int currentVersion = int.parse(PackageInfo.version.replaceAll(".", ""));
-    int compareVersion = int.parse(AppData.persistentData["newVersion"]!.replaceAll(".", ""));
+    int compareVersion = int.parse(AppData.newVersionNumber.replaceAll(".", ""));
+
     if (currentVersion < compareVersion) {
       AppData.hasNewVersion = true;
       message = "发现新版本!";
@@ -260,7 +264,9 @@ void checkNewVersion([bool skipShowSnackBar = true, BuildContext? context]) {
       AppData.hasNewVersion = false;
       message = "测试版本!";
     }
-    if (!skipShowSnackBar) ScaffoldMessenger.of(context!).showSnackBar(jwSnackBar(1, message, 5));
+    if (!skipShowSnackBar && context != null) {
+      ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(1, message, 5));
+    }
   }
   print('checkNewVersion end');
 }
