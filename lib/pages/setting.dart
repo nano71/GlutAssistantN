@@ -91,7 +91,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                             Remix.calendar_line,
                             "当前学年",
                             Text(
-                              AppData.persistentData["yearBk"] ?? "",
+                              AppData.persistentData["year"] ?? "",
                               style: TextStyle(
                                 color: readColor(),
                               ),

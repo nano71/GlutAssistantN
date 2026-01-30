@@ -57,7 +57,7 @@ Future<void> getWeek() async {
   } catch (e) {
     print("失败");
     print(e);
-    return readWeek();
+    return;
   }
   Map<String, String> persistentData = Map.from(AppData.persistentData);
   Document document = parse(getHtml(response));
@@ -67,36 +67,33 @@ Future<void> getWeek() async {
     weekHtml = span.text.trim();
   } else {
     print("getWeek End else");
-    return readWeek();
+    return;
   }
-  String week;
-  if (weekHtml.contains("第"))
-    week = weekHtml.substring(weekHtml.indexOf("第") + 1, weekHtml.indexOf("周")).trim();
-  else
-    week = "0";
-  String n = weekHtml.substring(0, 4).trim();
-  String q = weekHtml.substring(4, 5);
-  persistentData["semester"] = q;
-  persistentData["year"] = n;
-  persistentData["week"] = week;
-  persistentData["baseWeek"] = week;
-  persistentData["setBaseWeekTime"] = "${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}";
+  String week = "0";
+  String year = "";
+  String semester = "";
+  if (weekHtml.length >= 5 && weekHtml.contains("第") && weekHtml.contains("周")) {
+    week = weekHtml
+        .substring(
+          weekHtml.indexOf("第") + 1,
+          weekHtml.indexOf("周"),
+        )
+        .trim();
+    year = weekHtml.substring(0, 4).trim();
+    semester = weekHtml.substring(4, 5);
+  } else {
+    print("getWeek End else");
+    return;
+  }
 
-  print(persistentData["yearBk"]);
-  if (persistentData["yearBk"] == "") {
-    persistentData["yearBk"] = "0";
-  } else if (int.parse(persistentData["year"]!) > int.parse(persistentData["yearBk"]!)) {
-    persistentData["yearBk"] = n;
-  }
-  if (persistentData["semesterBk"] == "" && persistentData["yearBk"] == "") {
-    persistentData["semesterBk"] = q;
-    persistentData["yearBk"] = n;
-  }
-  if (persistentData["querySemester"] == "" && persistentData["queryYear"] == "") {
-    persistentData["querySemester"] = q;
-    persistentData["queryYear"] = n;
-  }
+  final now = DateTime.now();
+
+  persistentData.addAll({"semester": semester, "year": year, "week": week, "baseWeek": week, "setBaseWeekTime": "${now.year}-${now.month}-${now.day}"});
+  persistentData["querySemester"] ??= semester;
+  persistentData["queryYear"] ??= year;
+
   AppData.persistentData = persistentData;
+  print(AppData.persistentData);
   print("getWeek Save");
   print(week + "周");
   await writeConfig();
