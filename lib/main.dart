@@ -21,7 +21,7 @@ void main() async {
 
     await readConfig();
     AppData.isDarkTheme = AppData.theme == "dark";
-    AppData.isLoggedIn = AppData.studentID != "";
+    AppData.isLoggedIn = AppData.studentId != "";
     runApp(App());
   }
 
@@ -96,7 +96,7 @@ class _AppState extends State<App> {
     return MaterialApp(
         key: appKey,
         debugShowCheckedModeBanner: false,
-        navigatorObservers: [routeObserver],
+        navigatorObservers: [PageStackObserver()],
         theme: ThemeData(
           useMaterial3: false,
           navigationBarTheme: NavigationBarThemeData(

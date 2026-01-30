@@ -108,12 +108,13 @@ class _LayoutState extends State<Layout> with RouteAware {
   late final AppLifecycleListener appLifecycleListener;
   bool isResumed = true;
   late StreamSubscription<ErrorEvent> eventBusListener;
+  bool subscribed = false;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     // 必须在这里订阅 RouteObserver
-    routeObserver.subscribe(this, ModalRoute.of(context)!);
+    // routeObserver.subscribe(this, ModalRoute.of(context)!);
   }
 
   @override
@@ -171,7 +172,7 @@ class _LayoutState extends State<Layout> with RouteAware {
     // 注销监听器
     appLifecycleListener.dispose();
     eventBusListener.cancel();
-    routeObserver.unsubscribe(this);
+    // routeObserver.unsubscribe(this);
 
     super.dispose();
   }
@@ -231,4 +232,42 @@ Future<void> updateAppwidget() async {
   }
 }
 
-final RouteObserver<ModalRoute<void>> routeObserver = RouteObserver<ModalRoute<void>>();
+// final RouteObserver<ModalRoute<void>> routeObserver = RouteObserver<ModalRoute<void>>();
+
+class PageStackObserver extends NavigatorObserver {
+  int pageCount = 0;
+
+  bool get isSinglePage => pageCount <= 1;
+
+  bool isPage(Route<dynamic>? route) => route is PageRoute;
+
+  @override
+  void didPush(Route route, Route? previousRoute) {
+    if (isPage(route)) {
+      pageCount++;
+    }
+    check();
+  }
+
+  @override
+  void didPop(Route route, Route? previousRoute) {
+    if (isPage(route)) {
+      pageCount--;
+    }
+    check();
+  }
+
+  @override
+  void didReplace({Route? newRoute, Route? oldRoute}) {
+    if (isPage(oldRoute)) pageCount--;
+    if (isPage(newRoute)) pageCount++;
+    check();
+  }
+
+  check() {
+    if (isSinglePage)
+      setSystemNavigationBarColor(readCardBackgroundColor());
+    else
+      setSystemNavigationBarColor(readBackgroundColor());
+  }
+}

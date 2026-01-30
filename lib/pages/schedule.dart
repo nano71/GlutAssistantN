@@ -47,6 +47,7 @@ class _HeaderState extends State<_Header> {
   }
 
   void onPressed(int week) {
+    print("onPressed");
     setState(() => _week = week);
   }
 }
@@ -170,7 +171,7 @@ class SchedulePageState extends State<SchedulePage> with AutomaticKeepAliveClien
   int currentScheduleWeek = weekInt(exclusionZero: true);
   GlobalKey<_ContentState> weekKey = GlobalKey();
   GlobalKey<ScheduleTopBarState> topBarKey = GlobalKey();
-  GlobalKey<_HeaderState> rowHeaderKey = GlobalKey();
+  GlobalKey<_HeaderState> headerKey = GlobalKey();
   late StreamSubscription<ReloadSchedulePageState> eventBusListener;
 
   @override
@@ -186,12 +187,13 @@ class SchedulePageState extends State<SchedulePage> with AutomaticKeepAliveClien
     }
 
     eventBusListener = eventBus.on<ReloadSchedulePageState>().listen((event) {
+      print(1742);
       setState(() {});
       if (AppData.week != currentScheduleWeek) {
         currentScheduleWeek = weekInt(exclusionZero: true);
         weekKey.currentState!.onPressed(weekInt(exclusionZero: true));
         topBarKey.currentState!.onPressed(weekInt(exclusionZero: true));
-        rowHeaderKey.currentState!.onPressed(weekInt(exclusionZero: true));
+        headerKey.currentState!.onPressed(weekInt(exclusionZero: true));
       }
     });
   }
@@ -223,7 +225,7 @@ class SchedulePageState extends State<SchedulePage> with AutomaticKeepAliveClien
           print("下一页");
           currentScheduleWeek++;
           showCurrentWeekTip();
-          _findNewSchedule();
+          updateState();
         }
       } else if (eX - sX > minValue) {
         if (currentScheduleWeek == 1) {
@@ -232,16 +234,16 @@ class SchedulePageState extends State<SchedulePage> with AutomaticKeepAliveClien
           print("上一页");
           currentScheduleWeek--;
           showCurrentWeekTip();
-          _findNewSchedule();
+          updateState();
         }
       }
     }
   }
 
-  void _findNewSchedule() {
+  void updateState() {
     weekKey.currentState!.onPressed(currentScheduleWeek);
     topBarKey.currentState!.onPressed(currentScheduleWeek);
-    rowHeaderKey.currentState!.onPressed(currentScheduleWeek);
+    headerKey.currentState!.onPressed(currentScheduleWeek);
   }
 
   @override
@@ -257,7 +259,7 @@ class SchedulePageState extends State<SchedulePage> with AutomaticKeepAliveClien
       child: Column(
         children: [
           ScheduleTopBar(key: topBarKey),
-          _Header(key: rowHeaderKey),
+          _Header(key: headerKey),
           Expanded(
             child: Listener(
               onPointerDown: (e) {
@@ -313,6 +315,8 @@ class _ContentState extends State<_Content> {
 
   @override
   Widget build(BuildContext context) {
+    print("Rebuilding _Grid for _Content");
+
     return Expanded(
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -322,6 +326,7 @@ class _ContentState extends State<_Content> {
   }
 
   void onPressed(int week) {
+    print("onPressed2");
     setState(() => currentWeek = week);
   }
 }
@@ -335,13 +340,14 @@ List<Widget> _Columns(String week) {
 }
 
 Widget _Column(String week, String weekDay) {
+  Color borderColor = readBorderColor();
   return Expanded(
     child: Container(
       decoration: BoxDecoration(
         border: Border(
-          right: BorderSide(width: 1, color: readBorderColor()),
-          top: BorderSide(width: 1, color: readBorderColor()),
-          bottom: BorderSide(width: 1, color: readBorderColor()),
+          right: BorderSide(width: 1, color: borderColor),
+          top: BorderSide(width: 1, color: borderColor),
+          bottom: BorderSide(width: 1, color: borderColor),
         ),
       ),
       child: Column(
@@ -355,6 +361,7 @@ List<Widget> _Grids(String week, String weekDay) {
   List<Widget> list = [];
   Map _schedule = AppData.schedule[week][weekDay];
   int start = 1;
+  Color defaultColor = readBackgroundColor();
   for (int end = 1; end < 12; end++) {
     String courseName = courseLongText2Short(_schedule[end.toString()][0]);
     String studyArea = _schedule[end.toString()][2];
@@ -377,7 +384,7 @@ List<Widget> _Grids(String week, String weekDay) {
         start = end;
       }
     } else {
-      list.add(_Grid(week, weekDay, 0, end, "", "", "", readBackgroundColor()));
+      list.add(_Grid(week, weekDay, 0, end, "", "", "", defaultColor));
     }
   }
   return list;
@@ -399,7 +406,7 @@ class _Grid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
+    print("Rebuilding _Grid for _Grid");
     TextStyle style = TextStyle(fontSize: 12, color: Colors.white);
     late BoxDecoration decoration;
     if (start % 2 == 0) {
@@ -458,12 +465,6 @@ class _Grid extends StatelessWidget {
                     ),
                     Column(
                       children: [
-                        // Text(
-                        //   teacher,
-                        //   textAlign: TextAlign.center,
-                        //   softWrap: true,
-                        //   style: style,
-                        // ),
                         Text(
                           classroomNumber,
                           textAlign: TextAlign.center,
@@ -478,76 +479,3 @@ class _Grid extends StatelessWidget {
         ));
   }
 }
-
-// Widget _grid(int index, int index2, String title, String studyArea, String teacher, Color color,
-//     [double height = 60.0]) {
-//   TextStyle style =  TextStyle(fontSize: 12, color: Colors.white);
-//   return InkWell(
-//     onTap: () {
-//       if (index != 0) {
-//         print(index2);
-//         print(index);
-//         // ScaffoldMessenger.of(context).removeCurrentSnackBar();
-//         // ScaffoldMessenger.of(context)
-//         //     .showSnackBar(jwSnackBar(1, "第" + _currentScheduleWeek.toString() + "周", 0));
-//       }
-//     },
-//     child: Container(
-//         height: height,
-//         decoration: BoxDecoration(
-//           color: color,
-//           border: Border(
-//             top: BorderSide(
-//               width: 1, //宽度
-//               color: Colors.white, //边框颜色
-//             ),
-//             right: BorderSide(
-//               width: 1, //宽度
-//               color: Colors.white, //边框颜色
-//             ),
-//             bottom: BorderSide(
-//               width: 1, //宽度
-//               color: Colors.white, //边框颜色
-//             ),
-//             left: BorderSide(
-//               width: 1, //宽度
-//               color: Colors.white, //边框颜色
-//             ),
-//           ),
-//           borderRadius:  BorderRadius.all(Radius.circular(6.0)),
-//         ),
-//         padding:  EdgeInsets.only(left: 5, right: 5, top: 5, bottom: 5),
-//         alignment: Alignment.center,
-//         child: Column(
-//           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//           mainAxisSize: MainAxisSize.max,
-//           children: [
-//             Text(
-//               title,
-//               textAlign: TextAlign.center,
-//               softWrap: true,
-//               style: style,
-//             ),
-//              SizedBox(
-//               height: 10,
-//             ),
-//             Column(
-//               children: [
-//                 // Text(
-//                 //   teacher,
-//                 //   textAlign: TextAlign.center,
-//                 //   softWrap: true,
-//                 //   style: style,
-//                 // ),
-//                 Text(
-//                   studyArea,
-//                   textAlign: TextAlign.center,
-//                   softWrap: true,
-//                   style: style,
-//                 ),
-//               ],
-//             ),
-//           ],
-//         )),
-//   );
-// }
