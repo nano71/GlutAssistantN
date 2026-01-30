@@ -72,6 +72,7 @@ class AppData {
     "name": "",
     "semester": "",
     "year": "",
+    "startSoon": "",
     "color": "blue",
     "querySemester": "",
     "queryYear": "",
@@ -349,6 +350,7 @@ void setSystemNavigationBarColor(Color color) {
     systemNavigationBarIconBrightness: readNavigationBarIconBrightness(),
   ));
 }
+
 late bool isDark;
 
 // todo 开发模式, 自定义时间

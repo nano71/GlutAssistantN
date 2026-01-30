@@ -88,7 +88,13 @@ Future<void> getWeek() async {
 
   final now = DateTime.now();
 
-  persistentData.addAll({"semester": semester, "year": year, "week": week, "baseWeek": week, "setBaseWeekTime": "${now.year}-${now.month}-${now.day}"});
+  persistentData.addAll({
+    "semester": semester,
+    "year": year,
+    "week": week,
+    "baseWeek": week,
+    "setBaseWeekTime": "${now.year}-${now.month}-${now.day}"
+  });
   persistentData["querySemester"] ??= semester;
   persistentData["queryYear"] ??= year;
 
@@ -104,9 +110,19 @@ Future<dynamic> getSchedule() async {
   if (!await checkLoginValidity()) return false;
   print("getSchedule");
   Map _schedule = Map.from(AppData.schedule);
-  Map<String, String> _dayNumberMapping = {"星期一": "1", "星期二": "2", "星期三": "3", "星期四": "4", "星期五": "5", "星期六": "6", "星期日": "7"};
-  Uri uri = Uri.http(AppConfig.getScheduleUrl[0], AppConfig.getScheduleUrl[1],
-      {"year": ((int.parse(AppData.persistentData["year"]!)) - 1980).toString(), "term": AppData.persistentData["semester"] == "秋" ? "3" : "1"});
+  Map<String, String> _dayNumberMapping = {
+    "星期一": "1",
+    "星期二": "2",
+    "星期三": "3",
+    "星期四": "4",
+    "星期五": "5",
+    "星期六": "6",
+    "星期日": "7"
+  };
+  Uri uri = Uri.http(AppConfig.getScheduleUrl[0], AppConfig.getScheduleUrl[1], {
+    "year": ((int.parse(AppData.persistentData["year"]!)) - 1980).toString(),
+    "term": AppData.persistentData["semester"] == "秋" ? "3" : "1"
+  });
   Response response;
   try {
     response = await request("", uri);
@@ -342,7 +358,13 @@ Future<Map> getScheduleChanges(String id, Map schedule) async {
       final Map<String, bool> rowInfo = {"standard": length == 17, "extension": length == 10};
       // print(rowInfo);
       String remark(String teachWeek, String courseVenue, int i, int j) {
-        return "第" + teachWeek.replaceAll(RegExp(r'[第周]'), "") + "周;" + innerHtmlTrim(cellList[i]) + ";" + innerHtmlTrim(cellList[j]) + " - 调课/补课;$courseVenue";
+        return "第" +
+            teachWeek.replaceAll(RegExp(r'[第周]'), "") +
+            "周;" +
+            innerHtmlTrim(cellList[i]) +
+            ";" +
+            innerHtmlTrim(cellList[j]) +
+            " - 调课/补课;$courseVenue";
       }
 
       if (rowInfo["standard"]!) {
@@ -361,15 +383,20 @@ Future<Map> getScheduleChanges(String id, Map schedule) async {
         course = innerHtmlTrim(cellList[2]);
 
         if (before["teachWeek"] != "&nbsp;") {
-          for (int lesson = int.parse(before["lessonList"][0]); lesson <= int.parse(before["lessonList"][1]); lesson++) {
+          for (int lesson = int.parse(before["lessonList"][0]);
+              lesson <= int.parse(before["lessonList"][1]);
+              lesson++) {
             print("删除$before, $lesson");
             schedule[before["teachWeek"]][before["week"]][lesson.toString()] = ["null", "null", "null", "null"];
           }
         }
         if (latest["teachWeek"] != "&nbsp;") {
-          for (int lesson = int.parse(latest["lessonList"][0]); lesson <= int.parse(latest["lessonList"][1]); lesson++) {
+          for (int lesson = int.parse(latest["lessonList"][0]);
+              lesson <= int.parse(latest["lessonList"][1]);
+              lesson++) {
             print("添加$latest, $lesson");
-            schedule[latest["teachWeek"]][latest["week"]][lesson.toString()] = [course, teacher, courseVenue, remark(latest["teachWeek"], courseVenue, 14, 15)];
+            schedule[latest["teachWeek"]][latest["week"]]
+                [lesson.toString()] = [course, teacher, courseVenue, remark(latest["teachWeek"], courseVenue, 14, 15)];
           }
         }
       } else if (rowInfo["extension"]!) {
@@ -392,7 +419,8 @@ Future<Map> getScheduleChanges(String id, Map schedule) async {
         }
         if (_addWeek != "&nbsp;") {
           for (int i = int.parse(_addTime[0]); i <= int.parse(_addTime[1]); i++) {
-            schedule[_addWeek][_addWeekDay][i.toString()] = [course, teacher, _addRoom, remark(_addWeek, _addRoom, 7, 8)];
+            schedule[_addWeek][_addWeekDay]
+                [i.toString()] = [course, teacher, _addRoom, remark(_addWeek, _addRoom, 7, 8)];
           }
         }
       }
@@ -432,7 +460,15 @@ Future getScore() async {
   if (AppData.persistentData["querySemester"] != "全部") {
     _term = (AppData.persistentData["querySemester"] == "秋" ? 3 : 1).toString();
   }
-  Map<String, String> postData = {"year": _year, "term": _term, "prop": "", "groupName": "", "para": "0", "sortColumn": "", "Submit": "查询"};
+  Map<String, String> postData = {
+    "year": _year,
+    "term": _term,
+    "prop": "",
+    "groupName": "",
+    "para": "0",
+    "sortColumn": "",
+    "Submit": "查询"
+  };
   Response response;
   try {
     response = await request("post", AppConfig.getScoreUrl, body: postData);
@@ -505,7 +541,8 @@ Future<dynamic> getExam() async {
     } else {
       try {
         DateTime startDate = DateTime.now();
-        DateTime endDate = DateTime(int.parse(timeList[0].substring(0, 4)), int.parse(timeList[1].substring(0, 2)), int.parse(timeList[2].substring(0, 2)));
+        DateTime endDate = DateTime(int.parse(timeList[0].substring(0, 4)), int.parse(timeList[1].substring(0, 2)),
+            int.parse(timeList[2].substring(0, 2)));
         int days = endDate.difference(startDate).inDays;
         if (days < 0) {
           examListC.add(true);
@@ -532,8 +569,10 @@ Future getCareer() async {
   Future _next(List url) async {
     Response response;
     try {
-      response =
-          await request("get", Uri.http(AppConfig.jwUrl, "/academic/manager/studyschedule/studentScheduleShowByTerm.do", {"z": "z", "studentId": url[0], "classId": url[1]}));
+      response = await request(
+          "get",
+          Uri.http(AppConfig.jwUrl, "/academic/manager/studyschedule/studentScheduleShowByTerm.do",
+              {"z": "z", "studentId": url[0], "classId": url[1]}));
     } on TimeoutException catch (e) {
       return timeOutError(e);
     } on SocketException catch (e) {
@@ -550,7 +589,8 @@ Future getCareer() async {
         //重修&&不及格
         careerCount[0]++;
       }
-      if (element.parent!.innerHtml.contains("/academic/styles/images/course_pass.png") || element.parent!.innerHtml.contains("/academic/styles/images/course_pass_reelect.png")) {
+      if (element.parent!.innerHtml.contains("/academic/styles/images/course_pass.png") ||
+          element.parent!.innerHtml.contains("/academic/styles/images/course_pass_reelect.png")) {
         //合格
         careerCount[1]++;
       }
@@ -615,10 +655,13 @@ Future getCareer() async {
 
   Document document = parse(html);
   String url = document.querySelectorAll("a")[3].parent!.innerHtml.trim();
-  String urlA = url.substring(url.indexOf('修读顺序：按照课组及学年学期的顺序，用二维表方式显示教学计划课组及课程"></a>') + '修读顺序：按照课组及学年学期的顺序，用二维表方式显示教学计划课组及课程"></a>'.length);
+  String urlA = url.substring(
+      url.indexOf('修读顺序：按照课组及学年学期的顺序，用二维表方式显示教学计划课组及课程"></a>') + '修读顺序：按照课组及学年学期的顺序，用二维表方式显示教学计划课组及课程"></a>'.length);
   String urlB = urlA
       .replaceAll('<a href="', "")
-      .replaceAll('" target="_blank"><img src="/academic/styles/images/Sort_Ascending.png" title="学期模式：按照学年学期的顺序，显示教学计划课程"></a>', "")
+      .replaceAll(
+          '" target="_blank"><img src="/academic/styles/images/Sort_Ascending.png" title="学期模式：按照学年学期的顺序，显示教学计划课程"></a>',
+          "")
       .replaceAll("amp;", "")
       .replaceAll('/academic/manager/studyschedule/scheduleJump.jsp?link=studentScheduleShowByTerm.do&studentId=', "")
       .trim();
@@ -693,7 +736,14 @@ Future getEmptyClassroom({
             j++;
           }
         }
-        result.add({"classroom": text(0), "seats": text(1), "examSeats": text(3), "type": text(5), "occupancyList": cache, "todayEmpty": j == 11});
+        result.add({
+          "classroom": text(0),
+          "seats": text(1),
+          "examSeats": text(3),
+          "type": text(5),
+          "occupancyList": cache,
+          "todayEmpty": j == 11
+        });
       }
     });
     print(result[result.length - 1]);
@@ -765,7 +815,8 @@ Future<dynamic> getUpdate({bool isRetry = false}) async {
 Future getUpdateForEveryday() async {
   print("getUpdateForEveryday");
   // ignore: dead_code
-  if (true || "${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}" != AppData.persistentData["newTime"]) {
+  if (true ||
+      "${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}" != AppData.persistentData["newTime"]) {
     Response response;
     try {
       response = await get(AppConfig.getUpdateUrl);
@@ -806,7 +857,8 @@ Future getUpdateForEveryday() async {
 Future<Response> request(String method, Uri uri, {Map<String, String>? body, Encoding? encoding}) async {
   Map<String, String>? headers = {"cookie": mapCookieToString()};
   if (method == "post") {
-    return await post(uri, body: body, headers: headers, encoding: encoding).timeout(Duration(seconds: AppConfig.timeOutSec));
+    return await post(uri, body: body, headers: headers, encoding: encoding)
+        .timeout(Duration(seconds: AppConfig.timeOutSec));
   } else {
     return await get(uri, headers: headers).timeout(Duration(seconds: AppConfig.timeOutSec));
   }
