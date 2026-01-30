@@ -41,7 +41,7 @@ SliverAppBar homeTopBar(BuildContext context) {
                 color: readTextColor(),
               ),
               onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) => SettingPage(title: "设置")));
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) => SettingPage()));
               },
             )
           ],

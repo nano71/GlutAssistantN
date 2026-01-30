@@ -120,7 +120,7 @@ class _MinePageState extends State<MinePage> {
                   ColumnGap(),
                   InkWell(
                     onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => SettingPage(title: "设置2")));
+                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => SettingPage()));
                     },
                     child: LinkItem(Remix.settings_3_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "设置", readColor()),
                   ),

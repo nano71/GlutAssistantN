@@ -14,7 +14,7 @@ import '../widget/lists.dart';
 import 'layout.dart';
 import 'mine.dart';
 
-List<DropdownMenuItem<String>> dropdownMenuColorItems() {
+List<DropdownMenuItem<String>> _DropdownMenuColorItems() {
   List<DropdownMenuItem<String>> widgets = [];
   for (var color in colorTexts) {
     widgets.add(DropdownMenuItem(
@@ -28,20 +28,14 @@ List<DropdownMenuItem<String>> dropdownMenuColorItems() {
 }
 
 class SettingPage extends StatefulWidget {
-  final String title;
-
-  SettingPage({Key? key, this.title = "设置"}) : super(key: key);
+  SettingPage({Key? key}) : super(key: key);
 
   @override
   State<SettingPage> createState() => _SettingPageState();
 }
 
 class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
-  FocusNode focusNode = FocusNode();
-  FocusNode focusNode2 = FocusNode();
-  bool _isExpanded = false;
-  bool focusNode2Type = false;
-  bool focusNodeType = false;
+  bool isExpanded = false;
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +70,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                     CustomCard(
                       child: Column(
                         children: [
-                          settingItem(
+                          _SettingItem(
                             Remix.calendar_line,
                             "当前学年",
                             Text(
@@ -87,7 +81,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                             ),
                           ),
                           ColumnGap(),
-                          settingItem(
+                          _SettingItem(
                             Remix.mickey_line,
                             "当前学期",
                             Text(
@@ -98,7 +92,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                             ),
                           ),
                           ColumnGap(),
-                          settingItem(
+                          _SettingItem(
                             Remix.game_line,
                             "当前周数",
                             Text(
@@ -114,7 +108,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                     ColumnGap(16),
                     CustomCard(
                       child: Column(children: [
-                        settingItem(
+                        _SettingItem(
                           Remix.palette_line,
                           "主题颜色",
                           Builder(
@@ -128,7 +122,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                                 enableFeedback: true,
                                 iconEnabledColor: readColor(),
                                 elevation: 0,
-                                items: dropdownMenuColorItems(),
+                                items: _DropdownMenuColorItems(),
                                 underline: Container(),
                                 onChanged: (value) {
                                   setState(() {
@@ -149,7 +143,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                           ),
                         ),
                         ColumnGap(),
-                        settingItem(Remix.apps_2_line, "程序生命", Builder(builder: (BuildContext context) {
+                        _SettingItem(Remix.apps_2_line, "程序生命", Builder(builder: (BuildContext context) {
                           return DropdownButton<int>(
                             icon: Icon(
                               Remix.arrow_down_s_line,
@@ -163,7 +157,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                               AppData.programBackendSurvivalThreshold.toString() + "分钟",
                               style: TextStyle(color: readColor(), fontSize: 14),
                             ),
-                            items: thresholdItemList(),
+                            items: _ProgramBackendSurvivalThresholdItemList(),
                             underline: Container(height: 0),
                             onChanged: (value) {
                               setState(() {
@@ -174,7 +168,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                           );
                         })),
                         ColumnGap(),
-                        settingItem(
+                        _SettingItem(
                           Remix.timer_2_line,
                           "小节时间",
                           Builder(
@@ -218,7 +212,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                           ),
                         ),
                         ColumnGap(),
-                        settingItem(
+                        _SettingItem(
                           Remix.calendar_2_line,
                           "课表日期",
                           Builder(
@@ -263,7 +257,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                           ),
                         ),
                         ColumnGap(),
-                        settingItem(Remix.exchange_2_line, "调课补课", Builder(builder: (BuildContext context) {
+                        _SettingItem(Remix.exchange_2_line, "调课补课", Builder(builder: (BuildContext context) {
                           return DropdownButton<bool>(
                             icon: Icon(
                               Remix.arrow_down_s_line,
@@ -331,7 +325,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                           CustomExpansionTile.ExpansionTile(
                             onExpansionChanged: (e) {
                               setState(() {
-                                _isExpanded = !_isExpanded;
+                                isExpanded = !isExpanded;
                               });
                             },
                             collapsedIconColor: Colors.black45,
@@ -339,14 +333,14 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                             tilePadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                             title: Row(
                               children: [
-                                Icon(_isExpanded ? Remix.alarm_warning_line : Remix.delete_bin_2_line,
-                                    color: _isExpanded ? Colors.redAccent : readColor()),
+                                Icon(isExpanded ? Remix.alarm_warning_line : Remix.delete_bin_2_line,
+                                    color: isExpanded ? Colors.redAccent : readColor()),
                                 Container(
                                   padding: EdgeInsets.fromLTRB(16, 14, 0, 14),
                                   child: Text(
                                     "清除数据",
                                     style: TextStyle(
-                                        fontSize: 16, color: _isExpanded ? Colors.redAccent : readTextColor()),
+                                        fontSize: 16, color: isExpanded ? Colors.redAccent : readTextColor()),
                                   ),
                                 )
                               ],
@@ -358,7 +352,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                                   Text(
                                     "此操作不可逆",
                                     style: TextStyle(
-                                      color: _isExpanded ? Colors.redAccent : Colors.black,
+                                      color: isExpanded ? Colors.redAccent : Colors.black,
                                     ),
                                   ),
                                   TextButton(
@@ -369,7 +363,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                                     child: Text(
                                       "确定清除",
                                       style: TextStyle(
-                                        color: _isExpanded ? Colors.redAccent : Colors.black,
+                                        color: isExpanded ? Colors.redAccent : Colors.black,
                                       ),
                                     ),
                                   )
@@ -413,7 +407,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
   }
 }
 
-Widget settingItem(IconData icon, String title, Widget rightWidget) {
+Widget _SettingItem(IconData icon, String title, Widget rightWidget) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
@@ -456,7 +450,7 @@ List<DropdownMenuItem<String>>? yearList(int type) {
   return list;
 }
 
-List<DropdownMenuItem<int>> thresholdItemList() {
+List<DropdownMenuItem<int>> _ProgramBackendSurvivalThresholdItemList() {
   List<DropdownMenuItem<int>> list = [];
   Map<String, int> cache = const {"5分钟": 5, "10分钟": 10, "20分钟": 20, "40分钟": 40, "不限": -1};
 

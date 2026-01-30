@@ -198,12 +198,6 @@ class TimeManagerItemState extends State<TimeManagerItem> {
   double height = 14;
 
   @override
-  void dispose() {
-    // TODO: implement dispose
-    super.dispose();
-  }
-
-  @override
   void initState() {
     // TODO: implement initState
     super.initState();

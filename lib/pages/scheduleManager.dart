@@ -5,21 +5,13 @@ import '/widget/bars.dart';
 import '../config.dart';
 
 class ScheduleManagePage extends StatefulWidget {
-  final String title;
-
-  ScheduleManagePage({Key? key, this.title = "生涯"}) : super(key: key);
+  ScheduleManagePage({Key? key}) : super(key: key);
 
   @override
   State<ScheduleManagePage> createState() => _ScheduleManagePageState();
 }
 
 class _ScheduleManagePageState extends State<ScheduleManagePage> {
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    // getScore();
-  }
 
   @override
   Widget build(BuildContext context) {
