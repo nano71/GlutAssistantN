@@ -1,7 +1,7 @@
 import 'package:html/dom.dart' as dom;
 
-List<String> teachTimeParser(dom.Element element) {
-  return element.innerHtml.trim().replaceAll(RegExp(r'([第节周单双])'), "").split('-');
+List<int> teachTimeParser(dom.Element element) {
+  return element.innerHtml.trim().replaceAll(RegExp(r'([第节周单双])'), "").split('-').map(int.parse).toList();
 }
 
 String innerHtmlTrim(dom.Element element) {

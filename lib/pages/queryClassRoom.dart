@@ -35,7 +35,7 @@ class _QueryRoomPageState extends State<QueryRoomPage> {
       body: CustomScrollView(
         physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
         slivers: [
-          publicTopBar(
+          TopNavigationBar(
             "教室查询",
             InkWell(
               child: Icon(
@@ -99,7 +99,7 @@ class _FormCardState extends State<_FormCard> {
     setState(() {
       for (int i = 0; i < 7; i++) {
         String value = (i + 1).toString();
-        query["dayOfWeek"]![value] = "周" + weekList4CN[i];
+        query["dayOfWeek"]![value] = "周" + weekTextList[i];
       }
       weekSelect = DateTime.now().weekday.toString();
       print('weekSelect');
@@ -162,7 +162,7 @@ class _FormCardState extends State<_FormCard> {
     } else if (value is bool) {
       if (!value) {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        ScaffoldMessenger.of(context).showSnackBar(jwSnackBarAction(
+        ScaffoldMessenger.of(context).showSnackBar(CustomSnackBarWithAction(
           false,
           "需要验证",
           context,
@@ -171,24 +171,24 @@ class _FormCardState extends State<_FormCard> {
             getEmptyClassroom().then(process);
             Navigator.pop(context);
           },
-          hideSnackBarSeconds: AppConfig.timeoutSecond,
+          duration: AppConfig.timeoutSecond,
         ));
       }
     } else if (value is String) {
       print(value);
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
-      ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, value, 4));
+      ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(0, value, 4));
     }
   }
 
   void precheck() {
     if (buildingSelect != "-1") {
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
-      ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "查询中...", 10));
+      ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(2, "查询中...", 10));
       getEmptyClassroom(dayOfWeek: weekSelect, weekOfSemester: whichWeekSelect, building: buildingSelect).then(process);
     } else {
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
-      ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, "请选择教学楼", 4));
+      ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(0, "请选择教学楼", 4));
     }
   }
 

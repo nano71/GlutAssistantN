@@ -169,7 +169,7 @@ class LoginPageState extends State<LoginPage> {
         controller: scrollController,
         physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
         slivers: [
-          publicTopBar(
+          TopNavigationBar(
               "桂工助手N",
               InkWell(
                 child: Icon(

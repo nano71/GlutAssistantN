@@ -27,7 +27,7 @@ class _QueryExamsPageState extends State<QueryExamsPage> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
-      ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "获取数据...", 6));
+      ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(2, "获取数据...", 6));
       getExam().then(process);
     });
 
@@ -46,13 +46,13 @@ class _QueryExamsPageState extends State<QueryExamsPage> {
     if (value is bool) {
       if (value) {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "处理数据...", 10));
+        ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(2, "处理数据...", 10));
         setState(() {});
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(1, "数据已更新!", 1));
+        ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(1, "数据已更新!", 1));
       } else {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        ScaffoldMessenger.of(context).showSnackBar(jwSnackBarAction(
+        ScaffoldMessenger.of(context).showSnackBar(CustomSnackBarWithAction(
           false,
           "需要验证",
           context,
@@ -62,13 +62,13 @@ class _QueryExamsPageState extends State<QueryExamsPage> {
             eventBus.fire(ReloadExamListState());
             Navigator.pop(context);
           },
-          hideSnackBarSeconds: 10,
+          duration: 10,
         ));
       }
     } else if (value is String) {
       print(value);
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
-      ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, value, 4));
+      ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(0, value, 4));
     }
   }
 
@@ -79,7 +79,7 @@ class _QueryExamsPageState extends State<QueryExamsPage> {
         body:  CustomScrollView(
       physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
       slivers: [
-        publicTopBar(
+        TopNavigationBar(
             "我的考试",
             InkWell(
               child: Icon(

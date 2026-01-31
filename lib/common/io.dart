@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:glutassistantn/type/schedule.dart';
 import 'package:path_provider/path_provider.dart';
 
+import '../type/course.dart';
 import '/common/init.dart';
 import '/config.dart';
 import '../data.dart';
@@ -49,7 +51,10 @@ Future<void> readCookie() async {
   }
 }
 
-Future<void> writeSchedule(String str) async {
+Future<void> writeSchedule() async {
+  String str = jsonEncode(
+    AppData.schedule.map((w) => w.map((d) => d.map((c) => c.toJson()).toList()).toList()).toList(),
+  );
   print("writeSchedule");
   final file = await scheduleLocalSupportFile();
   bool dirBool = await file.exists();
@@ -89,11 +94,19 @@ Future<void> readSchedule() async {
 
   final result = await file.readAsString();
   if (result.isNotEmpty) {
-    AppData.schedule = jsonDecode(result);
-    print("readSchedule End");
+    dynamic raw = jsonDecode(result);
+    print(raw);
+    if (raw is List) {
+      AppData.schedule = parseNewSchedule(raw);
+      // 新格式
+    } else if (raw is Map) {
+      // 旧格式
+      AppData.schedule = migrateOldSchedule(raw);
+    }
   } else {
     await initSchedule();
   }
+  print("readSchedule End");
 }
 
 Future<File> configLocalSupportFile() async {
@@ -172,14 +185,14 @@ Future<void> readWeek() async {
   int y = DateTime.now().year;
   int m = DateTime.now().month;
   int d = DateTime.now().day;
-  int _currentWeek = weekInt(customWeek: AppData.baseWeek) +
+  int realWeek = weekInt(customWeek: AppData.baseWeek) +
       weekDifference(DateTime(y, m, d), DateTime(_timeList[0], _timeList[1], _timeList[2]));
-  if (_currentWeek < 0) {
+  if (realWeek < 0) {
     AppData.week = 1;
     return;
   }
-  AppData.week = _currentWeek;
-  if (_currentWeek > 20) {
+  AppData.week = 11;
+  if (realWeek > 20) {
     AppData.startSoon = true;
   }
 }

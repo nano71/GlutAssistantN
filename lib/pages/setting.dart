@@ -46,7 +46,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
         child: CustomScrollView(
           physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
           slivers: [
-            publicTopBar(
+            TopNavigationBar(
                 "设置",
                 InkWell(
                   child: Icon(
@@ -67,7 +67,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                 child: Column(
                   textDirection: TextDirection.ltr,
                   children: [
-                    CustomCard(
+                    OptionsCard(
                       child: Column(
                         children: [
                           _SettingItem(
@@ -106,7 +106,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                       ),
                     ),
                     ColumnGap(16),
-                    CustomCard(
+                    OptionsCard(
                       child: Column(children: [
                         _SettingItem(
                           Remix.palette_line,
@@ -297,7 +297,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                       ]),
                     ),
                     ColumnGap(16),
-                    CustomCard(
+                    OptionsCard(
                       child: Column(
                         children: [
                           InkWell(
@@ -310,7 +310,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                           InkWell(
                             onTap: () async {
                               ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                              ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "准备文件中...", 4));
+                              ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(2, "准备文件中...", 4));
                               shareLogFile();
                             },
                             child: LinkItem(Remix.bug_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "导出日志", readColor()),

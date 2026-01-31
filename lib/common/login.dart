@@ -7,7 +7,6 @@ import 'package:http/http.dart';
 import '/common/cookie.dart';
 import '../config.dart';
 import 'encode.dart';
-import 'io.dart';
 
 Future<String> checkVerificationCode(String code) async {
   print("codeCheck...");

@@ -43,7 +43,7 @@ class _TimeManagePageState extends State<TimeManagePage> {
     }
 
     ScaffoldMessenger.of(context).removeCurrentSnackBar();
-    ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(1, "已经恢复!", 2));
+    ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(1, "已经恢复!", 2));
     print(startTimeListRestore);
     print(endTimeListRestore);
     print(startTimeList);
@@ -62,7 +62,7 @@ class _TimeManagePageState extends State<TimeManagePage> {
   void _save() {
     if (_isError) {
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
-      ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, "请认真检查!", 2));
+      ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(0, "请认真检查!", 2));
       return;
     }
 
@@ -70,7 +70,7 @@ class _TimeManagePageState extends State<TimeManagePage> {
     startTimeList = startTimeListBk;
     endTimeList = endTimeListBk;
     ScaffoldMessenger.of(context).removeCurrentSnackBar();
-    ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "已经更改!", 2));
+    ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(2, "已经更改!", 2));
     print(startTimeListRestore);
     print(endTimeListRestore);
     print(startTimeList);
@@ -96,7 +96,7 @@ class _TimeManagePageState extends State<TimeManagePage> {
         child: CustomScrollView(
           physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
           slivers: [
-            publicTopBar(
+            TopNavigationBar(
               "时间定义",
               InkWell(
                 child: Icon(Remix.close_line, size: 24),

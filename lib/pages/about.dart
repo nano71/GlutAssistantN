@@ -24,7 +24,7 @@ class _AboutPageState extends State<AboutPage> {
         body: CustomScrollView(
           physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
           slivers: [
-            publicTopBar(
+            TopNavigationBar(
               "说明",
               InkWell(
                 child: Icon(
@@ -52,7 +52,7 @@ class _AboutPageState extends State<AboutPage> {
                 child: Container(
                     width: double.infinity,
                     padding: EdgeInsets.fromLTRB(16, 32, 16, 64),
-                    child: CustomCard(
+                    child: OptionsCard(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -158,7 +158,7 @@ class _AboutPageState extends State<AboutPage> {
                                                 onPressed: () {
                                                   Clipboard.setData(ClipboardData(text: "1742968988"));
                                                   ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                                                  ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(1, "复制成功!"));
+                                                  ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(1, "复制成功!"));
                                                 },
                                                 child: Text(
                                                   "1742968988",
@@ -180,7 +180,7 @@ class _AboutPageState extends State<AboutPage> {
                                               onPressed: () {
                                                 Clipboard.setData(ClipboardData(text: "13520944872"));
                                                 ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                                                ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(1, "复制成功!"));
+                                                ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(1, "复制成功!"));
                                               },
                                               child: Text(
                                                 "13520944872",

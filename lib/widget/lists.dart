@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:glutassistantn/type/course.dart';
 import 'package:remixicon/remixicon.dart';
 
 import '/config.dart';
@@ -51,7 +52,6 @@ List timeUntilNextClass(dynamic index) {
     return returnList;
   }
 }
-
 
 class TodayCourseList extends StatefulWidget {
   TodayCourseList({Key? key}) : super(key: key);
@@ -140,7 +140,7 @@ class TodayCourseListItem extends StatefulWidget {
 
 class TodayCourseListItemState extends State<TodayCourseListItem> {
   Color timeColors(int index) {
-    String result = timeUntilNextClass(AppData.todaySchedule[index][4])[3];
+    String result = timeUntilNextClass(AppData.todaySchedule[index].index)[3];
     if (result == "before") {
       return readColor();
     } else {
@@ -151,9 +151,10 @@ class TodayCourseListItemState extends State<TodayCourseListItem> {
       }
     }
   }
+
   String timeText(int index) {
     if (index == -1) return "-1";
-    List value = timeUntilNextClass(AppData.todaySchedule[index][4]);
+    List value = timeUntilNextClass(AppData.todaySchedule[index].index);
     if (value[0] >= 1) {
       return "";
     } else if (value[1] >= 4) {
@@ -175,8 +176,9 @@ class TodayCourseListItemState extends State<TodayCourseListItem> {
       return "${value[2]}分后上课";
     }
   }
+
   IconData icon(int index) {
-    String result = timeUntilNextClass(AppData.todaySchedule[index][4])[3];
+    String result = timeUntilNextClass(AppData.todaySchedule[index].index)[3];
     if (result == "before") {
       return Remix.timer_2_line;
     } else {
@@ -188,10 +190,8 @@ class TodayCourseListItemState extends State<TodayCourseListItem> {
     }
   }
 
-
-
   Color textColorsTop(int index) {
-    String result = timeUntilNextClass(AppData.todaySchedule[index][4])[3];
+    String result = timeUntilNextClass(AppData.todaySchedule[index].index)[3];
     if (result == "before") {
       return readScheduleListTextColor();
     } else {
@@ -204,7 +204,7 @@ class TodayCourseListItemState extends State<TodayCourseListItem> {
   }
 
   Color textColorsDown(int index) {
-    String result = timeUntilNextClass(AppData.todaySchedule[index][4])[3];
+    String result = timeUntilNextClass(AppData.todaySchedule[index].index)[3];
     if (result == "before") {
       return readScheduleListTextColor2();
     } else {
@@ -216,7 +216,7 @@ class TodayCourseListItemState extends State<TodayCourseListItem> {
     }
   }
 
-  List courseInfo() {
+  Course currentCourse() {
     return AppData.todaySchedule[widget.index];
   }
 
@@ -270,13 +270,13 @@ class TodayCourseListItemState extends State<TodayCourseListItem> {
                 children: [
                   Row(
                     children: [
-                      Text((courseInfo()[2] + " ").replaceAll("未知 ", ""), style: normTextStyle()),
-                      Text(courseLongText2Short(courseInfo()[0]), style: normTextStyle()),
+                      Text((currentCourse().location + " ").replaceAll("未知 ", ""), style: normTextStyle()),
+                      Text(courseLongText2Short(currentCourse().name), style: normTextStyle()),
                     ],
                   ),
                   Row(
                     children: [
-                      Text('第${courseInfo()[4]}节', style: smallTextStyle()),
+                      Text('第${currentCourse().index}节', style: smallTextStyle()),
                       Baseline(
                           baseline: 12,
                           baselineType: TextBaseline.ideographic,
@@ -286,7 +286,7 @@ class TodayCourseListItemState extends State<TodayCourseListItem> {
                               baseline: 13,
                               baselineType: TextBaseline.ideographic,
                               child: Text(
-                                  ('${timePreprocessor(startTimeList[int.parse(courseInfo()[4]) - 1].join(":"))} - ${timePreprocessor(endTimeList[int.parse(courseInfo()[4]) - 1].join(":"))}'),
+                                  ('${timePreprocessor(startTimeList[currentCourse().index - 1].join(":"))} - ${timePreprocessor(endTimeList[currentCourse().index - 1].join(":"))}'),
                                   style: smallTextStyle()))
                           : Container(),
                       AppData.showLessonTimeInList
@@ -295,7 +295,7 @@ class TodayCourseListItemState extends State<TodayCourseListItem> {
                               baselineType: TextBaseline.ideographic,
                               child: Text(" | ", style: smallTextStyle()))
                           : Container(),
-                      Text(courseInfo()[1], style: smallTextStyle()),
+                      Text(currentCourse().teacher, style: smallTextStyle()),
                     ],
                   ),
                 ],
@@ -321,7 +321,7 @@ class TodayCourseListItemState extends State<TodayCourseListItem> {
 }
 
 class TomorrowCourseListState extends State<TomorrowCourseList> {
-  List tomorrowSchedule = AppData.tomorrowSchedule;
+  List<Course> tomorrowSchedule = AppData.tomorrowSchedule;
   late StreamSubscription<ReloadTomorrowListState> eventBusListener;
 
   @override
@@ -350,12 +350,12 @@ class TomorrowCourseListState extends State<TomorrowCourseList> {
   Widget build(BuildContext context) {
     return SliverList(
       delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
-        bool isFirstClass = tomorrowSchedule[index][4] == "1" && index == 0;
+        bool isFirstClass = tomorrowSchedule[index].index == 1 && index == 0;
         Color iconColor = readColor();
         Color topTextColor = readScheduleListTextColor();
         Color bottomTextColor = readScheduleListTextColor2();
         return Container(
-          padding: tomorrowSchedule[index][3] == "1" && index == 0
+          padding: tomorrowSchedule[index].index == 1 && index == 0
               ? EdgeInsets.fromLTRB(16, 0, 16, 4)
               : EdgeInsets.fromLTRB(16, 0, 16, 0),
           margin: EdgeInsets.fromLTRB(0, 0, 0, 16),
@@ -384,7 +384,7 @@ class TomorrowCourseListState extends State<TomorrowCourseList> {
                       Row(
                         children: [
                           Text(
-                            tomorrowSchedule[index][2] + " ",
+                            tomorrowSchedule[index].location + " ",
                             style: TextStyle(
                               decoration: TextDecoration.none,
                               fontSize: 14,
@@ -392,7 +392,7 @@ class TomorrowCourseListState extends State<TomorrowCourseList> {
                             ),
                           ),
                           Text(
-                            courseLongText2Short(tomorrowSchedule[index][0]),
+                            courseLongText2Short(tomorrowSchedule[index].name),
                             style: TextStyle(
                               decoration: TextDecoration.none,
                               fontSize: 16,
@@ -404,7 +404,7 @@ class TomorrowCourseListState extends State<TomorrowCourseList> {
                       Row(
                         children: [
                           Text(
-                            '第${tomorrowSchedule[index][4]}节 | ',
+                            '第${tomorrowSchedule[index].index}节 | ',
                             style: TextStyle(
                               decoration: TextDecoration.none,
                               fontSize: 12,
@@ -412,7 +412,7 @@ class TomorrowCourseListState extends State<TomorrowCourseList> {
                             ),
                           ),
                           Text(
-                            tomorrowSchedule[index][1],
+                            tomorrowSchedule[index].teacher,
                             style: TextStyle(
                               decoration: TextDecoration.none,
                               fontSize: 12,
@@ -633,7 +633,7 @@ class ClassroomListState extends State<ClassroomList> {
         _classroomList = classroomList;
       });
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
-      ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(1, "数据已更新!", 1));
+      ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(1, "数据已更新!", 1));
     });
   }
 
@@ -717,7 +717,7 @@ class ClassroomListItem extends StatelessWidget {
                 ),
                 onTap: () {
                   ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                  ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(3, "敬请期待!"));
+                  ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(3, "敬请期待!"));
                 },
               ),
               Text(
@@ -770,7 +770,7 @@ class ClassroomListItem extends StatelessWidget {
                       onTap: () {
                         ScaffoldMessenger.of(context).removeCurrentSnackBar();
                         ScaffoldMessenger.of(context).showSnackBar(
-                            jwSnackBar(2, ClassroomListState.promptMessage(item["occupancyList"]), 4, 22));
+                            CustomSnackBar(2, ClassroomListState.promptMessage(item["occupancyList"]), 4, 22));
                       },
                     )
                   ],

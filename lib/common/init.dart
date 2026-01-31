@@ -1,23 +1,16 @@
-import 'dart:convert';
+import 'package:glutassistantn/type/schedule.dart';
 
 import '../data.dart';
+import '../type/course.dart';
 import 'io.dart';
 
 initSchedule({withWriteFile = false}) async {
   print("initSchedule");
-  Map _schedule = {};
-  for (var i = 0; i < 21; i++) {
-    _schedule[i.toString()] = {};
-    for (var j = 1; j < 8; j++) {
-      _schedule[i.toString()]?[j.toString()] = {};
-      for (var k = 1; k < 12; k++) {
-        _schedule[i.toString()]?[j.toString()]?[k.toString()] = ["null", "null", "null"];
-      }
-    }
-  }
-  AppData.schedule = _schedule;
+  AppData.schedule = createEmptySchedule();
   print("initSchedule End");
-  if (withWriteFile) await writeSchedule(jsonEncode(_schedule));
+  if (withWriteFile) {
+    await writeSchedule();
+  }
 }
 
 initTodaySchedule() async {
@@ -31,23 +24,15 @@ initTodaySchedule() async {
 
   print('当前日期: $year 年 $month 月 $day 日');
   print(now.toIso8601String());
-  final int _week = AppData.week;
-  Map _schedule = Map.from(AppData.schedule);
-  print(_week);
-  List<List> toDay = [];
-  if (_week < 21 && _week != 0) {
-    Map weekOfSemester = _schedule[_week.toString()];
-    Map dayOfWeek = weekOfSemester[weekday.toString()];
-    dayOfWeek.forEach((key, value) {
-      if (value is List && value.length > 1 && value[1] != "null") {
-        if (value.length < 5) {
-          value.add(key);
-        }
-        toDay.add(value);
-      }
-    });
+  final int week = AppData.week;
+  List<List<List<Course>>> schedule = List.from(AppData.schedule);
+  List<Course> toDay = [];
+
+  if (week < 21 && week != 0) {
+    toDay = schedule[week][weekday];
   }
-  AppData.todaySchedule = toDay;
+
+  AppData.todaySchedule = toDay.where((c) => !c.isEmpty).toList();
   if (toDay.isNotEmpty) {
     todayScheduleTitle = "今天的";
   } else {
@@ -61,36 +46,23 @@ initTodaySchedule() async {
 
 initTomorrowSchedule() async {
   print("initTomorrowSchedule");
-  final int _week = AppData.week;
+  final int week = AppData.week;
   DateTime now = DateTime.now();
   int weekday = now.weekday;
-  String weekdayString = "1";
 
-  Map _schedule = Map.from(AppData.schedule);
-  List<List> tomorrow = [];
-
-  if (weekday <= 6) {
-    weekdayString = (weekday + 1).toString();
-  }
-
-  if (weekday <= 6) {
-    if (_week < 21 && _week != 0)
-      await _schedule[_week.toString()][weekdayString].forEach((key, value) {
-        if (value[1] != "null") {
-          value.add(key);
-          tomorrow.add(value);
-        }
-      });
+  List<List<List<Course>>> schedule = List.from(AppData.schedule);
+  List<Course> tomorrow = [];
+  if (now.weekday != 7) {
+    if (week < 21 && week != 0) {
+      tomorrow = schedule[week][weekday + 1];
+    }
   } else {
-    if (_week < 20)
-      await _schedule[(_week + 1).toString()][weekdayString].forEach((key, value) {
-        if (value[1] != "null") {
-          value.add(key);
-          tomorrow.add(value);
-        }
-      });
+    if (week < 20) {
+      tomorrow = schedule[week + 1][1];
+    }
   }
-  AppData.tomorrowSchedule = tomorrow;
+
+  AppData.tomorrowSchedule = tomorrow.where((c) => !c.isEmpty).toList();
   if (tomorrow.isNotEmpty) {
     tomorrowScheduleTitle = "明天的";
   } else {

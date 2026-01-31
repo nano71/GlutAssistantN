@@ -3,6 +3,7 @@ import 'package:glutassistantn/widget/lists.dart';
 import 'package:http/http.dart';
 import 'package:remixicon/remixicon.dart';
 
+import '../type/course.dart';
 import '/common/cookie.dart';
 import '/common/login.dart';
 import '/common/noripple.dart';
@@ -11,12 +12,6 @@ import '/data.dart';
 import '../config.dart';
 import '../pages/update.dart';
 import 'bars.dart';
-
-class CodeCheckDialog {
-  static final checkCodeController = TextEditingController();
-  static String message = "不辜负每一次相遇";
-  static Color messageColor = Colors.grey;
-}
 
 importantUpdateDialog(BuildContext context) {
   showGeneralDialog(
@@ -71,7 +66,7 @@ importantUpdateDialog(BuildContext context) {
                 child: Column(
                   children: [
                     Text(
-                      AppData.persistentData["newBody"]!.trim(),
+                      AppData.newVersionChangelog,
                       style: TextStyle(color: Color(0xFF666666)),
                     ),
                     SizedBox(height: 16),
@@ -197,10 +192,10 @@ infoDialog(BuildContext context, String text) {
       });
 }
 
-codeCheckDialog(BuildContext context, Function callback) async {
+verificationCodeDialog(BuildContext context, Function callback) async {
   TextEditingController textFieldController = TextEditingController();
   var response = await get(AppConfig.getCodeUrl).timeout(Duration(seconds: 3));
-  bool clicked = false;
+  bool checking = false;
   getCode(Function fn) async {
     response = await get(AppConfig.getCodeUrl).timeout(Duration(seconds: 3));
     parseRawCookies(response.headers['set-cookie']);
@@ -208,42 +203,41 @@ codeCheckDialog(BuildContext context, Function callback) async {
   }
 
   parseRawCookies(response.headers['set-cookie']);
-  void _codeCheck(Function fn) async {
-    Future<void> _next2(String value) async {
+
+  void check(Function fn) async {
+    Future<void> next2(String value) async {
       if (value == "success") {
         callback();
       } else {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, value, 4));
+        ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(0, value, 4));
         Navigator.pop(context);
       }
     }
 
-    Future<void> _next(String value) async {
+    Future<void> next(String value) async {
       print(value);
       if (value == "success") {
-        await login(AppData.studentId, AppData.password,
-                textFieldController.text)
-            .then((String value) => _next2(value));
+        await login(AppData.studentId, AppData.password, textFieldController.text).then(next2);
       } else if (value == "fail") {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, "验证码错误!"));
+        ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(0, "验证码错误!"));
         fn(() {
-          clicked = !clicked;
+          checking = !checking;
         });
       } else {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, value, 4));
+        ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(0, value, 4));
         Navigator.pop(context);
       }
     }
 
-    if (!clicked) {
+    if (!checking) {
       fn(() {
-        clicked = !clicked;
+        checking = !checking;
       });
       print(textFieldController.text);
-      await checkVerificationCode(textFieldController.text).then((String value) => _next(value));
+      await checkVerificationCode(textFieldController.text).then(next);
     }
   }
 
@@ -307,7 +301,7 @@ codeCheckDialog(BuildContext context, Function callback) async {
                 endIndent: 24,
               ),
               Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-                !clicked
+                !checking
                     ? Container(
                         margin: EdgeInsets.fromLTRB(0, 8, 0, 0),
                         child: TextButton(
@@ -328,10 +322,10 @@ codeCheckDialog(BuildContext context, Function callback) async {
                   child: TextButton(
                     style: buttonStyle(),
                     onPressed: () {
-                      _codeCheck(setState);
+                      check(setState);
                     },
                     child: Text(
-                      !clicked ? "继续" : "稍等...",
+                      !checking ? "继续" : "稍等...",
                       style: TextStyle(color: readColor()),
                     ),
                   ),
@@ -345,8 +339,8 @@ codeCheckDialog(BuildContext context, Function callback) async {
   );
 }
 
-scheduleDialogItem(title, time, teacher, position) {
-  List _list = time.split(",");
+_CourseInfoDialogContent(title, time, teacher, position) {
+  List infos = time.split(",");
   return Container(
     padding: EdgeInsets.fromLTRB(8, 8, 8, 8),
     margin: EdgeInsets.fromLTRB(8, 0, 8, 8),
@@ -390,15 +384,15 @@ scheduleDialogItem(title, time, teacher, position) {
               height: 8,
             ),
             Text(
-              "周数: " + _list[0],
+              "周数: " + infos[0],
               style: TextStyle(color: Colors.white),
             ),
             Text(
-              "时间: " + _list[1],
+              "时间: " + infos[1],
               style: TextStyle(color: Colors.white),
             ),
             Text(
-              "课节: " + _list[2],
+              "课节: " + infos[2],
               style: TextStyle(color: Colors.white),
             ),
           ],
@@ -408,18 +402,18 @@ scheduleDialogItem(title, time, teacher, position) {
   );
 }
 
-scheduleDialog(BuildContext context, String week, String weekDay, String index) {
+CourseInfoDialog(BuildContext context, int week, int weekDay, int index) {
   showDialog(
     context: context,
     builder: (BuildContext context) {
-      List _schedule = AppData.schedule[week][weekDay][index];
-      List<String> _temp = _schedule[3].split(";").toSet().toList();
-      String _time = "";
+      Course course = AppData.schedule[week][weekDay][index];
+      List<String> _temp = course.extra.split(";").toSet().toList();
+      String time = "";
       _temp.removeLast();
       _temp.forEach((element) {
         if (element.trim() != "") {
           // _list.add(element);
-          _time += element.trim() + ",";
+          time += element.trim() + ",";
         }
       });
       return SimpleDialog(
@@ -458,7 +452,7 @@ scheduleDialog(BuildContext context, String week, String weekDay, String index) 
         ),
         contentPadding: EdgeInsets.only(left: 0, right: 0, bottom: 0),
         backgroundColor: readCardBackgroundColor(),
-        children: [scheduleDialogItem(_schedule[0], _time, _schedule[1], _schedule[2])],
+        children: [_CourseInfoDialogContent(course.name, time, course.teacher, course.location)],
       );
     },
   );

@@ -128,7 +128,7 @@ class _LayoutState extends State<Layout> with RouteAware {
       if (!mounted) return;
       Future.microtask(() {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, event.message, 4));
+        ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(0, event.message, 4));
       });
     });
 
@@ -211,7 +211,7 @@ class _LayoutState extends State<Layout> with RouteAware {
         controller: AppConfig.pageControl,
         children: [HomePage(refresh: widget.refresh), SchedulePage(), MinePage()],
       ),
-      bottomNavigationBar: BottomNavBar(),
+      bottomNavigationBar: CustomBottomNavigationBar(),
     );
   }
 }

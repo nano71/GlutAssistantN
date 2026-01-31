@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:glutassistantn/type/course.dart';
 
 import 'config.dart';
 
@@ -71,8 +72,8 @@ class AppData {
   static String studentName = "";
   static String password = "";
   static String studentId = "";
-  static  String queryYear = "";
-  static  String querySemester = "";
+  static String queryYear = "";
+  static String querySemester = "";
   static int programBackendSurvivalThreshold = 5;
   static String baseWeekTime = "";
   static int baseWeek = -1;
@@ -90,9 +91,9 @@ class AppData {
   static String newVersionNumber = "";
   static String newVersionDownloadUrl = "";
 
-
   static final bool isReleaseMode = const bool.fromEnvironment("dart.vm.product");
-  static Map schedule = {};
+  static late List<List<List<Course>>> schedule;
+
   static Map<String, String> persistentData = {
     "username": "",
     "password": "",
@@ -111,8 +112,8 @@ class AppData {
     "newTime": "",
     "githubDownload": ""
   };
-  static List<List> tomorrowSchedule = [];
-  static List<List> todaySchedule = [];
+  static List<Course> tomorrowSchedule = [];
+  static List<Course> todaySchedule = [];
 }
 
 List queryScore = [];
@@ -135,7 +136,7 @@ String todayScheduleTitle = "";
 String tomorrowScheduleTitle = "";
 List<List<int>> startTimeListBk = [];
 List<List<int>> endTimeListBk = [];
-final List<String> weekList4CN = const ["一", "二", "三", "四", "五", "六", "日"];
+final List<String> weekTextList = const ["一", "二", "三", "四", "五", "六", "日"];
 
 List<List<int>> startTimeList = [
   [8, 40],
@@ -333,11 +334,8 @@ String levelToNumber(String value) {
       .replaceAll("不合格", "40");
 }
 
-String weekCN2Number(String value) {
-  weekList4CN.forEach((word) {
-    value = value.replaceAll("周" + word, (weekList4CN.indexOf(word) + 1).toString());
-  });
-  return value;
+int weekTextToNumber(String text) {
+  return weekTextList.indexOf(text.replaceAll("周", "")) + 1;
 }
 
 int weekInt({bool exclusionZero = false, int customWeek = -1}) {

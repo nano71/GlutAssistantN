@@ -4,6 +4,7 @@ import 'dart:core';
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
 
+import '../type/course.dart';
 import '/data.dart';
 import '/widget/bars.dart';
 import '/widget/dialog.dart';
@@ -200,17 +201,17 @@ class SchedulePageState extends State<SchedulePage> with AutomaticKeepAliveClien
 
   void showWarningTip() {
     ScaffoldMessenger.of(context).removeCurrentSnackBar();
-    ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, "已经没了!", 1));
+    ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(0, "已经没了!", 1));
   }
 
   void showCurrentWeekTip() {
     ScaffoldMessenger.of(context).removeCurrentSnackBar();
-    ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(3, "第" + currentScheduleWeek.toString() + "周", 0));
+    ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(3, "第" + currentScheduleWeek.toString() + "周", 0));
   }
 
   void showTip() {
     ScaffoldMessenger.of(context).removeCurrentSnackBar();
-    ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(3, "左右划动 ~", 2));
+    ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(3, "左右划动 ~", 2));
   }
 
   void onTouchMove(double eX, double eY) {
@@ -315,12 +316,10 @@ class _ContentState extends State<_Content> {
 
   @override
   Widget build(BuildContext context) {
-    print("Rebuilding _Grid for _Content");
-
     return Expanded(
       child: Row(
         mainAxisSize: MainAxisSize.min,
-        children: _Columns(currentWeek > 20 ? "20" : currentWeek.toString()),
+        children: _Columns(currentWeek > 20 ? 20 : currentWeek),
       ),
     );
   }
@@ -331,15 +330,15 @@ class _ContentState extends State<_Content> {
   }
 }
 
-List<Widget> _Columns(String week) {
+List<Widget> _Columns(int week) {
   List<Widget> list = [];
   for (int i = 1; i < 8; i++) {
-    list.add(_Column(week, i.toString()));
+    list.add(_Column(week, i));
   }
   return list;
 }
 
-Widget _Column(String week, String weekDay) {
+Widget _Column(int week, int weekDay) {
   Color borderColor = readBorderColor();
   return Expanded(
     child: Container(
@@ -357,21 +356,21 @@ Widget _Column(String week, String weekDay) {
   );
 }
 
-List<Widget> _Grids(String week, String weekDay) {
+List<Widget> _Grids(int week, int weekDay) {
   List<Widget> list = [];
-  Map _schedule = AppData.schedule[week][weekDay];
+  List<Course> daySchedule = AppData.schedule[week][weekDay];
   int start = 1;
   Color defaultColor = readBackgroundColor();
   for (int end = 1; end < 12; end++) {
-    String courseName = courseLongText2Short(_schedule[end.toString()][0]);
-    String studyArea = _schedule[end.toString()][2];
-    String teacher = _schedule[end.toString()][1];
+    String courseName = courseLongText2Short(daySchedule[end].name);
+    String studyArea = daySchedule[end].location;
+    String teacher = daySchedule[end].teacher;
     bool courseNameNotNull() => courseName != "null";
     if (courseNameNotNull()) {
-      bool courseNameIsPreviousCourseName() => courseName == courseLongText2Short(_schedule[(end - 1).toString()][0]);
-      bool courseNameNotIsNextCourseName() => courseName != courseLongText2Short(_schedule[(end + 1).toString()][0]);
-      bool studyAreaNotIsNextStudyArea() => studyArea != _schedule[(end + 1).toString()][2];
-      bool studyAreaIsPreviousStudyArea() => studyArea == _schedule[(end - 1).toString()][2];
+      bool courseNameIsPreviousCourseName() => courseName == courseLongText2Short(daySchedule[end - 1].name);
+      bool courseNameNotIsNextCourseName() => courseName != courseLongText2Short(daySchedule[end + 1].name);
+      bool studyAreaNotIsNextStudyArea() => studyArea != daySchedule[end + 1].location;
+      bool studyAreaIsPreviousStudyArea() => studyArea == daySchedule[end - 1].location;
 
       if (end == 1) {
         start = end;
@@ -398,16 +397,16 @@ class _Grid extends StatelessWidget {
   final String teacher;
   final Color color;
   final double height;
-  final String week;
-  final String weekDay;
+  final int week;
+  final int weekDay;
 
   _Grid(this.week, this.weekDay, this.start, this.end, this.title, this.classroomNumber, this.teacher, this.color,
       [this.height = 60.0]);
 
+  final TextStyle style = TextStyle(fontSize: 12, color: Colors.white);
+
   @override
   Widget build(BuildContext context) {
-    print("Rebuilding _Grid for _Grid");
-    TextStyle style = TextStyle(fontSize: 12, color: Colors.white);
     late BoxDecoration decoration;
     if (start % 2 == 0) {
       decoration = BoxDecoration(
@@ -433,7 +432,7 @@ class _Grid extends StatelessWidget {
           if (start != 0 && end != 0) {
             print(start);
             print(end);
-            scheduleDialog(context, week, weekDay, start.toString());
+            CourseInfoDialog(context, week, weekDay, start);
             // ScaffoldMessenger.of(context).removeCurrentSnackBar();
             // ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(1, teacher, 2));
           }

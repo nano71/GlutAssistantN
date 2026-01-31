@@ -1,6 +1,5 @@
 // ignore_for_file: deprecated_member_use
 
-import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:remixicon/remixicon.dart';
@@ -22,23 +21,6 @@ class UpdatePage extends StatefulWidget {
 }
 
 class _UpdatePageState extends State<UpdatePage> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: readBackgroundColor(),
-      body: UpdatePageBody(),
-    );
-  }
-}
-
-class UpdatePageBody extends StatefulWidget {
-  UpdatePageBody({Key? key}) : super(key: key);
-
-  @override
-  State<StatefulWidget> createState() => UpdatePageBodyState();
-}
-
-class UpdatePageBodyState extends State<UpdatePageBody> {
   bool networkError = false;
   bool updating = false;
 
@@ -56,7 +38,7 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
 
   checkUpdate(){
     ScaffoldMessenger.of(context).removeCurrentSnackBar();
-    ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "获取更新...", 24));
+    ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(2, "获取更新...", 24));
     if (!updating) {
       updating = true;
       getUpdate().then(next);
@@ -66,7 +48,7 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
   next(dynamic result) {
     if (result is String) {
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
-      ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, result, 5));
+      ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(0, result, 5));
       networkError = true;
     } else {
       checkNewVersion(false, context);
@@ -79,10 +61,12 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
 
   @override
   Widget build(BuildContext context) {
-    return CustomScrollView(
+    return Scaffold(
+        backgroundColor: readBackgroundColor(),
+        body:  CustomScrollView(
       physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
       slivers: [
-        publicTopBar(
+        TopNavigationBar(
             "获取新版本",
             InkWell(
               child: Icon(
@@ -166,11 +150,11 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
                               style: TextStyle(color: readTextColor()),
                             ),
                           ),
-                          customInkWell(
+                          _CustomInkWell(
                               "https://nano71.com/gan/GlutAssistantN.apk", Remix.download_2_line, "直接下载", readColor()),
                           // coolapk(),
-                          customInkWell("", Remix.earth_line, "学校官网（暂不可用）", Colors.blueAccent),
-                          customInkWell(AppData.newVersionDownloadUrl, Remix.github_line, "Github", Colors.blueGrey)
+                          _CustomInkWell("", Remix.earth_line, "学校官网（暂不可用）", Colors.blueAccent),
+                          _CustomInkWell(AppData.newVersionDownloadUrl, Remix.github_line, "Github", Colors.blueGrey)
                         ],
                       )
                     : Container(),
@@ -200,9 +184,9 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
                             ),
                           ),
                           // coolapk(),
-                          customInkWell(
+                          _CustomInkWell(
                               "https://github.com/nano71/GlutAssistantN", Remix.github_line, "Github", Colors.blueGrey),
-                          customInkWell("https://nano71.com/gan", Remix.earth_line, "项目官网", Colors.blueAccent)
+                          _CustomInkWell("https://nano71.com/gan", Remix.earth_line, "项目官网", Colors.blueAccent)
                         ],
                       )
                     : Container(),
@@ -217,9 +201,9 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
                               style: TextStyle(color: Colors.black),
                             ),
                           ),
-                          customInkWell("https://github.com/nano71/GlutAssistantN/releases/latest", Remix.github_line,
+                          _CustomInkWell("https://github.com/nano71/GlutAssistantN/releases/latest", Remix.github_line,
                               "Github", Colors.blueGrey),
-                          customInkWell("https://nano71.com/gan", Remix.earth_line, "项目官网", Colors.blueAccent)
+                          _CustomInkWell("https://nano71.com/gan", Remix.earth_line, "项目官网", Colors.blueAccent)
                           // coolapk(),
                         ],
                       )
@@ -229,7 +213,7 @@ class UpdatePageBodyState extends State<UpdatePageBody> {
           ),
         ),
       ],
-    );
+    ),);
   }
 }
 
@@ -265,17 +249,17 @@ void checkNewVersion([bool skipShowSnackBar = true, BuildContext? context]) {
       message = "测试版本!";
     }
     if (!skipShowSnackBar && context != null) {
-      ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(1, message, 5));
+      ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(1, message, 5));
     }
   }
   print('checkNewVersion end');
 }
 
 InkWell coolapk() {
-  return customInkWell("https://www.coolapk.com/apk/289253", Remix.store_2_line, "酷安", Colors.green);
+  return _CustomInkWell("https://www.coolapk.com/apk/289253", Remix.store_2_line, "酷安", Colors.green);
 }
 
-InkWell customInkWell(String url, IconData icon, String title, Color color) {
+InkWell _CustomInkWell(String url, IconData icon, String title, Color color) {
   final EdgeInsets padding = EdgeInsets.fromLTRB(16, 14, 0, 14);
   return InkWell(
     onTap: () {

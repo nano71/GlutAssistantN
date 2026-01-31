@@ -38,10 +38,10 @@ class _QueryScoresPageState extends State<QueryScoresPage> {
   void preprocess(value) {
     if (value is String) {
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
-      ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, value, 4));
+      ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(0, value, 4));
     } else if (value is bool) {
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
-      ScaffoldMessenger.of(context).showSnackBar(jwSnackBarAction(
+      ScaffoldMessenger.of(context).showSnackBar(CustomSnackBarWithAction(
         false,
         "需要验证",
         context,
@@ -50,12 +50,12 @@ class _QueryScoresPageState extends State<QueryScoresPage> {
           eventBus.fire(ReloadScoreListState());
           Navigator.pop(context);
         },
-        hideSnackBarSeconds: 10,
+        duration: 10,
       ));
     } else if (value is List) {
       if (value.isEmpty) {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(1, "没有结果!", 5));
+        ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(1, "没有结果!", 5));
       } else {
         process(value);
       }
@@ -125,7 +125,7 @@ class _QueryScoresPageState extends State<QueryScoresPage> {
 
     scores = [gradePointAverage, scoreAverage];
     ScaffoldMessenger.of(context).removeCurrentSnackBar();
-    ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(1, "数据已更新!", 1));
+    ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(1, "数据已更新!", 1));
     setState(() {});
   }
 
@@ -134,7 +134,7 @@ class _QueryScoresPageState extends State<QueryScoresPage> {
     print(AppData.studentName);
     if (!AppData.isLoggedIn) {
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
-      ScaffoldMessenger.of(context).showSnackBar(jwSnackBarAction(
+      ScaffoldMessenger.of(context).showSnackBar(CustomSnackBarWithAction(
         false,
         AppConfig.notLoginError,
         context,
@@ -145,12 +145,12 @@ class _QueryScoresPageState extends State<QueryScoresPage> {
                 builder: (context) => LoginPage(),
               ));
         },
-        hideSnackBarSeconds: 10,
+        duration: 10,
         isDialogCallback: true,
       ));
     } else {
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
-      ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "查询中...", 10));
+      ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(2, "查询中...", 10));
       await getScore().then(preprocess);
     }
   }

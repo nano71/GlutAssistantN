@@ -20,7 +20,7 @@ class _ScheduleManagePageState extends State<ScheduleManagePage> {
       body: CustomScrollView(
         physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
         slivers: [
-          publicTopBar(
+          TopNavigationBar(
             "课程管理",
             InkWell(
               child: Icon(Remix.close_line, size: 24),

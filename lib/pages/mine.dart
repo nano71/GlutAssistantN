@@ -1,5 +1,4 @@
 import 'package:badges/badges.dart' as badges;
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:glutassistantn/widget/cards.dart';
 import 'package:glutassistantn/widget/lists.dart';
@@ -14,7 +13,6 @@ import '/widget/icons.dart';
 import '../config.dart';
 import '../data.dart';
 import 'about.dart';
-import 'layout.dart';
 import 'login.dart';
 
 class MinePage extends StatefulWidget {
@@ -42,7 +40,7 @@ class _MinePageState extends State<MinePage> {
       text = "请先登录教务";
     }
     return CustomScrollView(physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()), slivers: [
-      publicTopBar(text, Text(""), readBackgroundColor(), readTextColor()),
+      TopNavigationBar(text, Text(""), readBackgroundColor(), readTextColor()),
       SliverToBoxAdapter(
           child: Container(
         width: double.infinity,
@@ -50,7 +48,7 @@ class _MinePageState extends State<MinePage> {
         child: Column(
           textDirection: TextDirection.ltr,
           children: [
-            CustomCard(
+            OptionsCard(
                 child: Column(
               children: [
                 InkWell(
@@ -95,7 +93,7 @@ class _MinePageState extends State<MinePage> {
               ],
             )),
             ColumnGap(16),
-            CustomCard(
+            OptionsCard(
               child: Column(
                 children: [
                   InkWell(

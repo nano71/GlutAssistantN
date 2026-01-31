@@ -58,7 +58,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       DateTime now = DateTime.now();
       if (now.minute == 59 && now.hour == 23) {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, "明天再来!", 3));
+        ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(0, "明天再来!", 3));
         Future.delayed(Duration(seconds: 3), () {
           exit(0);
         });
@@ -145,10 +145,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       updateButtonClickCount++;
       if (updateButtonClickCount == 7) {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, "你太快了!"));
+        ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(0, "你太快了!"));
       } else if (updateButtonClickCount == 1) {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "准备更新...", 10));
+        ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(2, "准备更新...", 10));
       }
       scrollController.animateTo(
         scrollController.position.minScrollExtent,
@@ -159,16 +159,14 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         print('HomePageState.afterSuccess');
         await readSchedule();
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "清除缓存...", 10));
-        Map schedule = Map.from(AppData.schedule);
-        AppData.schedule = {};
+        ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(2, "清除缓存...", 10));
+
         AppData.todaySchedule = [];
         AppData.tomorrowSchedule = [];
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "处理数据...", 10));
+        ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(2, "处理数据...", 10));
         await initSchedule();
-        AppData.schedule = schedule;
-        await writeSchedule(jsonEncode(schedule));
+        await writeSchedule();
         await initTodaySchedule();
         await initTomorrowSchedule();
         eventBus.fire(ReloadSchedulePageState());
@@ -178,7 +176,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         maxRotationCount = 0;
         print("刷新结束${DateTime.now()}");
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(1, "数据已更新!", 1));
+        ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(1, "数据已更新!", 1));
         HomeWidgetUtils.updateWidgetContent();
         // throw Error();
         // throw UnimplementedError();
@@ -192,11 +190,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             if (!AppData.isLoggedIn) {
               // codeCheckDialog(context),
               ScaffoldMessenger.of(context).removeCurrentSnackBar();
-              ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, AppConfig.notLoginError));
+              ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(0, AppConfig.notLoginError));
               rotationAnimationTimer.cancel();
             } else {
               ScaffoldMessenger.of(context).removeCurrentSnackBar();
-              ScaffoldMessenger.of(context).showSnackBar(jwSnackBarAction(
+              ScaffoldMessenger.of(context).showSnackBar(CustomSnackBarWithAction(
                 false,
                 "需要验证",
                 context,
@@ -206,14 +204,14 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     Navigator.pushAndRemoveUntil(context, AppRouter(Layout(refresh: true)), (route) => false);
                   }
                 },
-                hideSnackBarSeconds: 10,
+                duration: 10,
               ));
               rotationAnimationTimer.cancel();
             }
           }
         } else {
           ScaffoldMessenger.of(context).removeCurrentSnackBar();
-          ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, result, 4));
+          ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(0, result, 4));
           rotationAnimationTimer.cancel();
         }
       }
@@ -221,10 +219,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       updateIntervalTimer = Timer(Duration(seconds: 1), () async {
         print("更新开始");
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "连接教务...", 10));
+        ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(2, "连接教务...", 10));
         await getWeek();
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "获取课表...", 10));
+        ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(2, "获取课表...", 10));
         await scheduleParser(await getSchedule());
         isTimeout = true;
         updateButtonClickCount = 0;
@@ -245,7 +243,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       }
       clickCooldown = true;
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
-      ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, "你慢一点!"));
+      ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(0, "你慢一点!"));
       updateIntervalTimer.cancel();
       updateIntervalTimer = Timer(Duration(seconds: 5), () {
         Future.delayed(Duration(seconds: 5), () {
@@ -276,7 +274,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       controller: scrollController,
       physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
       slivers: [
-        homeTopBar(context),
+        HomePageTopNavigationBar(context),
         SliverToBoxAdapter(
             child: Container(
           width: double.infinity,
@@ -291,7 +289,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   eventBus.fire(SetPageIndex(index: 1));
                   eventBus.fire(ReloadSchedulePageState());
                 },
-                child: HomeCard(),
+                child: HomePageSemesterProgressCard(),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -324,15 +322,15 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         children: [
                           Align(
                             child: Container(
-                              margin: HomeCardsState.iconMargin,
+                              margin: HomePageCardsState.iconMargin,
                               child: RefreshIconWidgetDynamic(key: iconKey),
                             ),
                           ),
                           Align(
                             child: Container(
-                              margin: HomeCardsState.textMargin,
+                              margin: HomePageCardsState.textMargin,
                               child: Text(
-                                HomeCardsState.iconTexts[0],
+                                HomePageCardsState.iconTexts[0],
                                 style: TextStyle(color: readHomePageSmallCardTextColor()),
                               ),
                             ),
@@ -368,18 +366,18 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         children: [
                           Align(
                             child: Container(
-                              margin: HomeCardsState.iconMargin,
+                              margin: HomePageCardsState.iconMargin,
                               child: Icon(
-                                HomeCardsState.icons[1],
+                                HomePageCardsState.icons[1],
                                 color: readColor(),
-                                size: HomeCardsState.iconSize,
+                                size: HomePageCardsState.iconSize,
                               ),
                             ),
                           ),
                           Align(
                             child: Container(
-                              margin: HomeCardsState.textMargin,
-                              child: Text(HomeCardsState.iconTexts[1],
+                              margin: HomePageCardsState.textMargin,
+                              child: Text(HomePageCardsState.iconTexts[1],
                                   style: TextStyle(color: readHomePageSmallCardTextColor())),
                             ),
                           ),
@@ -414,18 +412,18 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         children: [
                           Align(
                             child: Container(
-                              margin: HomeCardsState.iconMargin,
+                              margin: HomePageCardsState.iconMargin,
                               child: Icon(
-                                HomeCardsState.icons[2],
+                                HomePageCardsState.icons[2],
                                 color: readColor(),
-                                size: HomeCardsState.iconSize,
+                                size: HomePageCardsState.iconSize,
                               ),
                             ),
                           ),
                           Align(
                             child: Container(
-                              margin: HomeCardsState.textMargin,
-                              child: Text(HomeCardsState.iconTexts[2],
+                              margin: HomePageCardsState.textMargin,
+                              child: Text(HomePageCardsState.iconTexts[2],
                                   style: TextStyle(color: readHomePageSmallCardTextColor())),
                             ),
                           ),

@@ -49,7 +49,7 @@ class _CareerPageState extends State<CareerPage> {
 
   getData() {
     ScaffoldMessenger.of(context).removeCurrentSnackBar();
-    ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "获取数据...", AppConfig.timeoutSecond * 2));
+    ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(2, "获取数据...", AppConfig.timeoutSecond * 2));
     getCareer().then(process);
   }
 
@@ -65,14 +65,14 @@ class _CareerPageState extends State<CareerPage> {
     if (value is String) {
       print(value);
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
-      ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(0, value, 4));
+      ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(0, value, 4));
     } else {
       if (value) {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(2, "处理数据...", AppConfig.timeoutSecond));
+        ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(2, "处理数据...", AppConfig.timeoutSecond));
         setState(() {});
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(1, "数据已更新!", 1));
+        ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(1, "数据已更新!", 1));
         totalExamCount = 0;
         totalCourseCount = 0;
         totalMajorCourseCount = 0;
@@ -92,7 +92,7 @@ class _CareerPageState extends State<CareerPage> {
         _weekProgressAnimation();
       } else {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        ScaffoldMessenger.of(context).showSnackBar(jwSnackBarAction(
+        ScaffoldMessenger.of(context).showSnackBar(CustomSnackBarWithAction(
           false,
           "需要验证",
           context,
@@ -101,7 +101,7 @@ class _CareerPageState extends State<CareerPage> {
             eventBus.fire(ReloadCareerPageState());
             Navigator.pop(context);
           },
-          hideSnackBarSeconds: AppConfig.timeoutSecond,
+          duration: AppConfig.timeoutSecond,
         ));
       }
     }
@@ -174,7 +174,7 @@ class _CareerPageState extends State<CareerPage> {
       body: CustomScrollView(
         physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
         slivers: [
-          publicTopBar(
+          TopNavigationBar(
             "我的大学生涯",
             InkWell(
               child: Icon(

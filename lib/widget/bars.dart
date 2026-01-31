@@ -14,7 +14,7 @@ import '../data.dart';
 import 'dialog.dart';
 import 'icons.dart';
 
-SliverAppBar homeTopBar(BuildContext context) {
+SliverAppBar HomePageTopNavigationBar(BuildContext context) {
   return SliverAppBar(
     pinned: true,
     collapsedHeight: 56.00,
@@ -50,17 +50,20 @@ SliverAppBar homeTopBar(BuildContext context) {
   );
 }
 
-SliverAppBar publicTopBar(String title,
-    [dynamic inkWell = const Text(""), color = Colors.white, color2 = Colors.black, double e = 0.3]) {
+SliverAppBar TopNavigationBar(String title,
+    [dynamic inkWell = const Text(""),
+    backgroundColor = Colors.white,
+    textColor = Colors.black,
+    double shadowSize = 0.3]) {
   return SliverAppBar(
     pinned: true,
-    shadowColor: color,
+    shadowColor: backgroundColor,
     collapsedHeight: 56.00,
     primary: true,
-    backgroundColor: color,
+    backgroundColor: backgroundColor,
     stretch: true,
     expandedHeight: 125.0,
-    elevation: e,
+    elevation: shadowSize,
     automaticallyImplyLeading: false,
     flexibleSpace: FlexibleSpaceBar(
       title: Row(
@@ -69,7 +72,7 @@ SliverAppBar publicTopBar(String title,
           Text(
             (title),
             style: TextStyle(
-              color: color2,
+              color: textColor,
             ),
           ),
           inkWell,
@@ -83,18 +86,18 @@ SliverAppBar publicTopBar(String title,
 SliverAppBar TopNavigationBarWithTipIcon(String title,
     [dynamic inkWell = const Text(""),
     Function()? onPressed,
-    color = Colors.white,
-    color2 = Colors.black,
-    double e = 0.3]) {
+    backgroundColor = Colors.white,
+    textColor = Colors.black,
+    double shadowSize = 0.3]) {
   return SliverAppBar(
     pinned: true,
-    shadowColor: color,
+    shadowColor: backgroundColor,
     collapsedHeight: 56.00,
     primary: true,
-    backgroundColor: color,
+    backgroundColor: backgroundColor,
     stretch: true,
     expandedHeight: 125.0,
-    elevation: e,
+    elevation: shadowSize,
     automaticallyImplyLeading: false,
     flexibleSpace: FlexibleSpaceBar(
       title: Row(
@@ -104,7 +107,7 @@ SliverAppBar TopNavigationBarWithTipIcon(String title,
             children: [
               Text(
                 title,
-                style: TextStyle(color: color2),
+                style: TextStyle(color: textColor),
               ),
               SizedBox(
                 height: 28,
@@ -137,11 +140,11 @@ class ScheduleTopBar extends StatefulWidget {
 }
 
 class ScheduleTopBarState extends State<ScheduleTopBar> {
-  int _week = weekInt(exclusionZero: true);
+  int week = weekInt(exclusionZero: true);
 
   void back() {
     ScaffoldMessenger.of(context).removeCurrentSnackBar();
-    ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(3, "回到当前!", 1));
+    ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(3, "回到当前!", 1));
     eventBus.fire(ReloadSchedulePageState());
   }
 
@@ -167,7 +170,7 @@ class ScheduleTopBarState extends State<ScheduleTopBar> {
 
   String month() {
     if (AppData.showDayByWeekDay) {
-      int difference = _week - AppData.week;
+      int difference = week - AppData.week;
       return months[DateTime.now().add(Duration(days: difference * 7)).month - 1] + ", ";
     }
     return "";
@@ -184,7 +187,7 @@ class ScheduleTopBarState extends State<ScheduleTopBar> {
         children: [
           InkWell(
             child: Text(
-              month() + "Week $_week",
+              month() + "Week $week",
               style: TextStyle(color: readTextColor()),
             ),
             onTap: () {
@@ -210,19 +213,19 @@ class ScheduleTopBarState extends State<ScheduleTopBar> {
     );
   }
 
-  void onPressed(int week) {
-    setState(() => _week = week);
+  void onPressed(int newWeek) {
+    setState(() => week = newWeek);
   }
 }
 
-class BottomNavBar extends StatefulWidget {
-  BottomNavBar({Key? key}) : super(key: key);
+class CustomBottomNavigationBar extends StatefulWidget {
+  CustomBottomNavigationBar({Key? key}) : super(key: key);
 
   @override
-  BottomNavBarState createState() => BottomNavBarState();
+  _CustomBottomNavigationBarState createState() => _CustomBottomNavigationBarState();
 }
 
-class BottomNavBarState extends State<BottomNavBar> {
+class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
   late StreamSubscription<SetPageIndex> eventBusListener;
 
   @override
@@ -401,8 +404,8 @@ class ExamsTipsBarState extends State<ExamsTipsBar> {
   }
 }
 
-SnackBar jwSnackBar(int type, String text, [int hideSnackBarSeconds = 2, double margin = 100]) {
-  Widget setIcon() {
+SnackBar CustomSnackBar(int type, String text, [int duration = 2, double margin = 100]) {
+  Widget LeftIcon() {
     if (type == 0)
       return Icon(
         Remix.error_warning_line,
@@ -424,8 +427,6 @@ SnackBar jwSnackBar(int type, String text, [int hideSnackBarSeconds = 2, double 
     );
   }
 
-  Widget resultIcon = setIcon();
-
   return SnackBar(
     margin: EdgeInsets.fromLTRB(margin, 0, margin, 50),
     padding: EdgeInsets.all(12),
@@ -433,11 +434,11 @@ SnackBar jwSnackBar(int type, String text, [int hideSnackBarSeconds = 2, double 
       borderRadius: BorderRadius.circular(50.0),
     ),
     elevation: 0,
-    duration: Duration(seconds: hideSnackBarSeconds),
+    duration: Duration(seconds: duration),
     content: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
-        resultIcon,
+        LeftIcon(),
         Padding(
           padding: EdgeInsets.only(bottom: 2, right: 4),
           child: Text(
@@ -451,17 +452,20 @@ SnackBar jwSnackBar(int type, String text, [int hideSnackBarSeconds = 2, double 
   );
 }
 
-SnackBar jwSnackBarAction(bool result, String text, BuildContext context, Function callback,
-    {int hideSnackBarSeconds = 2, bool isDialogCallback = true}) {
-  Widget resultIcon = result
-      ? Icon(
-          Remix.checkbox_circle_line,
-          color: Colors.green,
-        )
-      : Icon(
-          Remix.error_warning_line,
-          color: Colors.red,
-        );
+SnackBar CustomSnackBarWithAction(bool result, String text, BuildContext context, Function callback,
+    {int duration = 2, bool isDialogCallback = true}) {
+  Widget LeftIcon() {
+    return result
+        ? Icon(
+            Remix.checkbox_circle_line,
+            color: Colors.green,
+          )
+        : Icon(
+            Remix.error_warning_line,
+            color: Colors.red,
+          );
+  }
+
   return SnackBar(
       elevation: 0,
       margin: EdgeInsets.fromLTRB(100, 0, 100, 50),
@@ -469,17 +473,17 @@ SnackBar jwSnackBarAction(bool result, String text, BuildContext context, Functi
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(50.0),
       ),
-      duration: Duration(seconds: hideSnackBarSeconds),
+      duration: Duration(seconds: duration),
       content: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          resultIcon,
+          LeftIcon(),
           InkWell(
             highlightColor: Colors.transparent, // 透明色
             splashColor: Colors.transparent, // 透明色
             onTap: () {
               if (isDialogCallback) {
-                codeCheckDialog(context, callback);
+                verificationCodeDialog(context, callback);
               } else {
                 callback();
               }
