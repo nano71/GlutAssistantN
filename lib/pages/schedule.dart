@@ -376,7 +376,7 @@ List<Widget> _Grids(int week, int weekDay) {
       } else if (studyAreaIsPreviousStudyArea() && courseNameIsPreviousCourseName()) {
         double height = AppConfig.schedulePageGridHeight * (end - start + 1);
         if (end == 11 || studyAreaNotIsNextStudyArea() || courseNameNotIsNextCourseName()) {
-          list.add(_Grid(week, weekDay,start,  end, courseName, studyArea, teacher, randomColors(), height));
+          list.add(_Grid(week, weekDay,start,  end, courseName, course.location, course.teacher, randomColors(), height));
         }
       } else {
         start = end;
