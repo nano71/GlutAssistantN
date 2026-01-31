@@ -177,30 +177,30 @@ class _LayoutState extends State<Layout> with RouteAware {
     super.dispose();
   }
 
-  @override
-  void didPush() {
-    print('PageView 被 push');
-    if (AppData.isInitialized) {
-      setSystemNavigationBarColor(readCardBackgroundColor());
-    }
-  }
-
-  @override
-  void didPopNext() {
-    print('PageView 覆盖的页面被 pop，自己重新显示');
-    setSystemNavigationBarColor(readCardBackgroundColor());
-  }
-
-  @override
-  void didPop() {
-    print('PageView 被 pop');
-  }
-
-  @override
-  void didPushNext() {
-    print('PageView 上有新页面 push 进来');
-    setSystemNavigationBarColor(readBackgroundColor());
-  }
+  // @override
+  // void didPush() {
+  //   print('PageView 被 push');
+  //   if (AppData.isInitialized) {
+  //     setSystemNavigationBarColor(readCardBackgroundColor());
+  //   }
+  // }
+  //
+  // @override
+  // void didPopNext() {
+  //   print('PageView 覆盖的页面被 pop，自己重新显示');
+  //   setSystemNavigationBarColor(readCardBackgroundColor());
+  // }
+  //
+  // @override
+  // void didPop() {
+  //   print('PageView 被 pop');
+  // }
+  //
+  // @override
+  // void didPushNext() {
+  //   print('PageView 上有新页面 push 进来');
+  //   setSystemNavigationBarColor(readBackgroundColor());
+  // }
 
   @override
   Widget build(BuildContext context) {

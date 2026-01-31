@@ -153,7 +153,10 @@ Future<void> writeConfig() async {
     "showScheduleChange": AppData.showScheduleChange,
     "schedulePagePromptCount": AppData.schedulePagePromptCount,
     "baseWeek": AppData.week,
-    "baseWeekTime": "${now.year}-${now.month}-${now.day}"
+    "baseWeekTime": "${now.year}-${now.month}-${now.day}",
+    "newVersionChangelog": AppData.newVersionChangelog,
+    "newVersionNumber": AppData.newVersionNumber,
+    "newVersionDownloadUrl": AppData.newVersionDownloadUrl
   };
 
   String str = jsonEncode(preEncodeData);
@@ -301,6 +304,16 @@ Future<void> readConfig() async {
           case "threshold":
           case "programBackendSurvivalThreshold":
             AppData.programBackendSurvivalThreshold = parseInt(value);
+            break;
+
+          case "newVersionChangelog":
+            AppData.newVersionChangelog = value;
+            break;
+          case "newVersionNumber":
+            AppData.newVersionNumber = value;
+            break;
+          case "newVersionDownloadUrl":
+            AppData.newVersionDownloadUrl = value;
             break;
         }
       });

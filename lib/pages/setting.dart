@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:glutassistantn/common/log.dart';
 import 'package:remixicon/remixicon.dart';
+import 'package:restart_app/restart_app.dart';
 
 import '/common/io.dart';
 import '/common/style.dart';
@@ -13,7 +14,6 @@ import '../widget/cards.dart';
 import '../widget/lists.dart';
 import 'layout.dart';
 import 'mine.dart';
-import 'package:restart_app/restart_app.dart';
 
 List<DropdownMenuItem<String>> _DropdownMenuColorItems() {
   List<DropdownMenuItem<String>> widgets = [];
@@ -343,8 +343,8 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                                   padding: EdgeInsets.fromLTRB(16, 14, 0, 14),
                                   child: Text(
                                     "清除数据",
-                                    style: TextStyle(
-                                        fontSize: 16, color: isExpanded ? Colors.redAccent : readTextColor()),
+                                    style:
+                                        TextStyle(fontSize: 16, color: isExpanded ? Colors.redAccent : readTextColor()),
                                   ),
                                 )
                               ],
@@ -390,15 +390,8 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
   }
 
   void clear() async {
-    // await clearAll();
-    Restart.restartApp(
-      /// In Web Platform, Fill webOrigin only when your new origin is different than the app's origin
-      // webOrigin: 'http://example.com',
-
-      // Customizing the restart notification message (only needed on iOS)
-      notificationTitle: 'Restarting App',
-      notificationBody: 'Please tap here to open the app again.',
-    );
+    await clearAll();
+    Restart.restartApp();
     // eventBus.fire(ReloadTodayListState());
     // eventBus.fire(ReloadTomorrowListState());
     // await Global.todayCourseListKey.currentState!.reloadState();
@@ -439,16 +432,14 @@ Widget _SettingItem(IconData icon, String title, Widget rightWidget) {
 }
 
 List<DropdownMenuItem<String>>? yearList(int type) {
-  final int year= AppData.year;
+  final int year = AppData.year;
   List<DropdownMenuItem<String>>? list = [];
   if (type == 0) {
     list.add(
       DropdownMenuItem(child: Text("全部"), value: "全部"),
     );
   } else {
-    list.add(DropdownMenuItem(
-        child: Text((year + 1).toString()),
-        value: (year + 1).toString()));
+    list.add(DropdownMenuItem(child: Text((year + 1).toString()), value: (year + 1).toString()));
   }
 
   for (int i = year; i > year - 5; i--) {
