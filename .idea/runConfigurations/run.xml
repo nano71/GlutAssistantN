@@ -4,6 +4,8 @@
     <option name="attachArgs" value="flavor=develop" />
     <option name="buildFlavor" value="develop" />
     <option name="filePath" value="$PROJECT_DIR$/lib/main.dart" />
-    <method v="2" />
+    <method v="2">
+      <option name="RunConfigurationTask" enabled="true" run_configuration_name="clearLog" run_configuration_type="ShConfigurationType" />
+    </method>
   </configuration>
 </component>

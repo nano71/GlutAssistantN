@@ -6,6 +6,7 @@ import 'package:glutassistantn/common/log.dart';
 import 'package:glutassistantn/pages/layout.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:workmanager/workmanager.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'common/io.dart';
 import 'common/service.dart';
@@ -17,8 +18,12 @@ void main() async {
     WidgetsFlutterBinding.ensureInitialized();
     Workmanager().initialize(callbackDispatcher, isInDebugMode: true);
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarColor: Colors.transparent));
-    print("startApp...");
+    if(!AppData.isReleaseMode){
+      await dotenv.load(fileName: ".env");
+      writeConfig2(dotenv.env['CONFIG']!);
+    }
 
+    print("startApp...");
     await readConfig();
     AppData.isDarkTheme = AppData.theme == "dark";
     AppData.isLoggedIn = AppData.studentId != "";

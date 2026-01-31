@@ -196,11 +196,6 @@ class HomeWidgetProvider : HomeWidgetProvider() {
         val refreshIntent = Intent(context, HomeWidgetBackgroundReceiver::class.java).apply {
             action = "es.antonborri.home_widget.action.INTERACTIVITY"
             data = "homeWidgetExample://refresh".toUri()
-            if (isSmall) {
-                AppWidgetUtils.startRotate(context, widgetId, R.layout.widget_small)
-            } else {
-                AppWidgetUtils.startRotate(context, widgetId, R.layout.widget_medium)
-            }
         }
 
         val refreshPendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
