@@ -191,7 +191,7 @@ Future<void> readWeek() async {
     AppData.week = 1;
     return;
   }
-  AppData.week = 11;
+  AppData.week = realWeek;
   if (realWeek > 20) {
     AppData.startSoon = true;
   }

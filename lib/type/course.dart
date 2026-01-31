@@ -5,7 +5,7 @@ class Course {
   final String extra;
   final int index;
 
-  bool get isEmpty => name.isEmpty;
+  bool get isEmpty => name.isEmpty || name == "null";
 
   const Course({
     this.name = "",

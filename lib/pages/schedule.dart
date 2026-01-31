@@ -362,15 +362,14 @@ List<Widget> _Grids(int week, int weekDay) {
   int start = 1;
   Color defaultColor = readBackgroundColor();
   for (int end = 1; end < 12; end++) {
-    String courseName = courseLongText2Short(daySchedule[end].name);
-    String studyArea = daySchedule[end].location;
-    String teacher = daySchedule[end].teacher;
-    bool courseNameNotNull() => courseName != "null";
-    if (courseNameNotNull()) {
+    Course course = daySchedule[end];
+    String courseName = courseLongText2Short(course.name);
+
+    if (!course.isEmpty) {
       bool courseNameIsPreviousCourseName() => courseName == courseLongText2Short(daySchedule[end - 1].name);
       bool courseNameNotIsNextCourseName() => courseName != courseLongText2Short(daySchedule[end + 1].name);
-      bool studyAreaNotIsNextStudyArea() => studyArea != daySchedule[end + 1].location;
-      bool studyAreaIsPreviousStudyArea() => studyArea == daySchedule[end - 1].location;
+      bool studyAreaNotIsNextStudyArea() => course.location != daySchedule[end + 1].location;
+      bool studyAreaIsPreviousStudyArea() => course.location == daySchedule[end - 1].location;
 
       if (end == 1) {
         start = end;
