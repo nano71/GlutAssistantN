@@ -33,7 +33,7 @@ initTodaySchedule() async {
   }
 
   AppData.todaySchedule = toDay.where((c) => !c.isEmpty).toList();
-  if (toDay.isNotEmpty) {
+  if (AppData.todaySchedule.isNotEmpty) {
     todayScheduleTitle = "今天的";
   } else {
     todayScheduleTitle = "今天没课";
@@ -63,7 +63,7 @@ initTomorrowSchedule() async {
   }
 
   AppData.tomorrowSchedule = tomorrow.where((c) => !c.isEmpty).toList();
-  if (tomorrow.isNotEmpty) {
+  if (AppData.tomorrowSchedule.isNotEmpty) {
     tomorrowScheduleTitle = "明天的";
   } else {
     tomorrowScheduleTitle = "明天没课嗷";

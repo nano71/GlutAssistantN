@@ -13,6 +13,7 @@ import '../widget/cards.dart';
 import '../widget/lists.dart';
 import 'layout.dart';
 import 'mine.dart';
+import 'package:restart_app/restart_app.dart';
 
 List<DropdownMenuItem<String>> _DropdownMenuColorItems() {
   List<DropdownMenuItem<String>> widgets = [];
@@ -205,6 +206,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                                   setState(() {
                                     AppData.showLessonTimeInList = value!;
                                   });
+                                  eventBus.fire(ReloadTodayListState());
                                   writeConfig();
                                 },
                               );
@@ -291,6 +293,8 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                                 AppData.showScheduleChange = value!;
                               });
                               writeConfig();
+                              ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                              ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(1, "记得刷新一下课表噢!", 1));
                             },
                           );
                         })),
@@ -386,24 +390,27 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
   }
 
   void clear() async {
-    await clearAll();
-    AppData.studentId = "";
-    AppData.studentName = "";
-    AppData.password = "";
-    AppData.todaySchedule = [];
-    AppData.tomorrowSchedule = [];
-    eventBus.fire(ReloadTodayListState());
-    eventBus.fire(ReloadTomorrowListState());
+    // await clearAll();
+    Restart.restartApp(
+      /// In Web Platform, Fill webOrigin only when your new origin is different than the app's origin
+      // webOrigin: 'http://example.com',
+
+      // Customizing the restart notification message (only needed on iOS)
+      notificationTitle: 'Restarting App',
+      notificationBody: 'Please tap here to open the app again.',
+    );
+    // eventBus.fire(ReloadTodayListState());
+    // eventBus.fire(ReloadTomorrowListState());
     // await Global.todayCourseListKey.currentState!.reloadState();
     // await Global.tomorrowCourseListKey.currentState!.reloadState();
-    eventBus.fire(SetPageIndex());
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(
-        builder: (context) => DataPreloadPage(),
-      ),
-      (route) => false,
-    );
+    // eventBus.fire(SetPageIndex());
+    // Navigator.pushAndRemoveUntil(
+    //   context,
+    //   MaterialPageRoute(
+    //     builder: (context) => DataPreloadPage(),
+    //   ),
+    //   (route) => false,
+    // );
   }
 }
 

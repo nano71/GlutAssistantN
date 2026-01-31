@@ -57,17 +57,17 @@ class TodayCourseList extends StatefulWidget {
   TodayCourseList({Key? key}) : super(key: key);
 
   @override
-  TodayCourseListState createState() => TodayCourseListState();
+  _TodayCourseListState createState() => _TodayCourseListState();
 }
 
 class TomorrowCourseList extends StatefulWidget {
   TomorrowCourseList({Key? key}) : super(key: key);
 
   @override
-  TomorrowCourseListState createState() => TomorrowCourseListState();
+  _TomorrowCourseListState createState() => _TomorrowCourseListState();
 }
 
-class TodayCourseListState extends State<TodayCourseList> {
+class _TodayCourseListState extends State<TodayCourseList> {
   List todaySchedule = AppData.todaySchedule;
   bool isTimerInit = false;
   int thresholdCount = 0;
@@ -123,22 +123,22 @@ class TodayCourseListState extends State<TodayCourseList> {
     return SliverList(
       delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
         refreshTimer(index);
-        return TodayCourseListItem(index: index);
+        return _TodayCourseListItem(index: index);
       }, childCount: todaySchedule.length),
     );
   }
 }
 
-class TodayCourseListItem extends StatefulWidget {
+class _TodayCourseListItem extends StatefulWidget {
   final int index;
 
-  TodayCourseListItem({Key? key, this.index = -1}) : super(key: key);
+  _TodayCourseListItem({Key? key, this.index = -1}) : super(key: key);
 
   @override
-  TodayCourseListItemState createState() => TodayCourseListItemState();
+  _TodayCourseListItemState createState() => _TodayCourseListItemState();
 }
 
-class TodayCourseListItemState extends State<TodayCourseListItem> {
+class _TodayCourseListItemState extends State<_TodayCourseListItem> {
   Color timeColors(int index) {
     String result = timeUntilNextClass(AppData.todaySchedule[index].index)[3];
     if (result == "before") {
@@ -320,7 +320,7 @@ class TodayCourseListItemState extends State<TodayCourseListItem> {
   }
 }
 
-class TomorrowCourseListState extends State<TomorrowCourseList> {
+class _TomorrowCourseListState extends State<TomorrowCourseList> {
   List<Course> tomorrowSchedule = AppData.tomorrowSchedule;
   late StreamSubscription<ReloadTomorrowListState> eventBusListener;
 
@@ -444,10 +444,10 @@ class TomorrowCourseListState extends State<TomorrowCourseList> {
 }
 
 class ScoreList extends StatefulWidget {
-  ScoreListState createState() => ScoreListState();
+  _ScoreListState createState() => _ScoreListState();
 }
 
-class ScoreListState extends State<ScoreList> {
+class _ScoreListState extends State<ScoreList> {
   @override
   Widget build(BuildContext context) {
     return SliverList(

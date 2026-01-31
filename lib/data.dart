@@ -377,4 +377,7 @@ void setSystemNavigationBarColor(Color color) {
     systemNavigationBarIconBrightness: readNavigationBarIconBrightness(),
   ));
 }
-// todo 开发模式, 自定义时间
+
+String onlyDigits(String input) {
+  return input.replaceAll(RegExp(r'\D'), '');
+}

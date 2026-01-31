@@ -45,6 +45,8 @@ dependencies:
   share_plus: ^10.1.2
   encrypt: ^5.0.3
   shared_preferences: ^2.5.3
+  synchronized: ^3.3.0+3
+  restart_app: ^1.3.2
 dev_dependencies:
   sentry_dart_plugin: ^2.1.0
   flutter_test:

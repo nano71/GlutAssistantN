@@ -86,7 +86,7 @@ Future<void> getWeek() async {
     print("getWeek End else");
     return;
   }
-
+  AppData.week = int.tryParse(week) ?? 0;
   AppData.year = int.parse(year);
   AppData.semester = semester;
 
@@ -103,14 +103,13 @@ Future<void> getWeek() async {
   print(week + "周");
   await writeConfig();
   print("getWeek End");
-  await readWeek();
 }
 
 Future<dynamic> getSchedule() async {
   if (!await checkLoginValidity()) return false;
   print("getSchedule");
   List<List<List<Course>>> schedule = List.from(AppData.schedule);
-  Map<String, int> _dayNumberMapping = {
+  Map<String, int> weekTextMap = {
     "星期一": 1,
     "星期二": 2,
     "星期三": 3,
@@ -150,7 +149,7 @@ Future<dynamic> getSchedule() async {
   List<Element> tableCells(Element element) => element.querySelectorAll("td");
 
   int getWeek(int i, int j) {
-    return _dayNumberMapping[innerHtmlTrim(tableCells(tableRows(i)[j])[1])]!;
+    return weekTextMap[innerHtmlTrim(tableCells(tableRows(i)[j])[1])]!;
   }
 
   String remark(int i, int j) => tableRows(i)[j].text.trim().replaceAll(" ", ";");
@@ -166,7 +165,8 @@ Future<dynamic> getSchedule() async {
       //周次区间
       String weekInterval = innerHtmlTrimReplace(tableCells(tableRows(i)[j])[0]);
       //课节
-      List<int> lessonList = lessonInterval.split("-").map(int.parse).toList();
+
+      List<int> lessonList = lessonInterval.split("-").map((lesson) => int.tryParse(lesson) ?? 0).toList();
       //周次 1-9周 = [1,9]
       List<int> weekList = [];
       String weekCN = innerHtmlTrimReplace(tableCells(tableRows(i)[j])[1]);
@@ -183,7 +183,7 @@ Future<dynamic> getSchedule() async {
       //   return list;
       // }
 
-      void step3ForSection(String section) {
+      void step3BySection(String section) {
         List<String> range = section.split("-");
         if (range.length == 2) {
           for (int i = int.parse(range[0]); i <= int.parse(range[1]); i++) {
@@ -197,7 +197,7 @@ Future<dynamic> getSchedule() async {
       void step3() {
         List<String> cache = weekInterval.split(",");
         for (String section in cache) {
-          step3ForSection(section);
+          step3BySection(section);
         }
       }
 
@@ -230,7 +230,7 @@ Future<dynamic> getSchedule() async {
           } else if (section.contains("双")) {
             handleSingleOrDouble(section, true); // 处理“双”周
           } else {
-            step3ForSection(section); // 处理普通区间
+            step3BySection(section); // 处理普通区间
           }
         }
       }
@@ -260,7 +260,7 @@ Future<dynamic> getSchedule() async {
         step3(); // 普通区间处理
       } else {
         specialWeek = false;
-        weekList = weekInterval.split("-").map(int.parse).toList();
+        weekList = weekInterval.split("-").map((source) => int.tryParse(source) ?? 0).toList();
       }
 
       if (lessonList.length > 1 && weekCN != "&nbsp;")
@@ -281,7 +281,7 @@ Future<dynamic> getSchedule() async {
             }
             // 一周模式
           } else {
-            schedule[int.parse(weekInterval)][getWeek(i, j)][lesson] = course;
+            schedule[int.tryParse(weekInterval) ?? 0][getWeek(i, j)][lesson] = course;
           }
         }
     }
@@ -295,11 +295,17 @@ Future<dynamic> getSchedule() async {
 }
 
 class Course2 {
-  final String teachWeek;
-  final int week;
+  final String week;
+  final int weekDay;
   final List<int> lessonList;
 
-  const Course2({required this.teachWeek, required this.week, required this.lessonList});
+  const Course2({required this.week, required this.weekDay, required this.lessonList});
+
+  Map<String, dynamic> toJson() => {
+        "week": week,
+        "weekDay": weekDay,
+        "lessonList": lessonList,
+      };
 }
 
 Future<List<List<List<Course>>>> getScheduleChanges(String id, List<List<List<Course>>> schedule) async {
@@ -354,31 +360,31 @@ Future<List<List<List<Course>>>> getScheduleChanges(String id, List<List<List<Co
         String location = teachLocation(innerHtmlTrim(cellList[16]));
 
         Course2 latest = Course2(
-            teachWeek: innerHtmlTrim(cellList[13]),
-            week: weekTextToNumber(innerHtmlTrim(cellList[14])),
+            week: innerHtmlTrim(cellList[13]),
+            weekDay: weekTextToNumber(innerHtmlTrim(cellList[14])),
             lessonList: teachTimeParser(cellList[15]));
         Course2 before = Course2(
-            teachWeek: innerHtmlTrim(cellList[8]),
-            week: weekTextToNumber(innerHtmlTrim(cellList[9])),
+            week: innerHtmlTrim(cellList[8]),
+            weekDay: weekTextToNumber(innerHtmlTrim(cellList[9])),
             lessonList: teachTimeParser(cellList[10]));
 
         teacher = innerHtmlTrim(cellList[4]);
         course = innerHtmlTrim(cellList[2]);
 
-        if (before.teachWeek != "&nbsp;") {
+        if (before.week != "&nbsp;") {
           for (int lesson = before.lessonList[0]; lesson <= before.lessonList[1]; lesson++) {
-            print("删除$before, $lesson");
-            schedule[int.parse(before.teachWeek)][before.week][lesson] = Course(index: lesson);
+            print("删除${before.toJson()}");
+            schedule[int.tryParse(before.week) ?? 0][before.weekDay][lesson] = Course(index: lesson);
           }
         }
-        if (latest.teachWeek != "&nbsp;") {
+        if (latest.week != "&nbsp;") {
           for (int lesson = latest.lessonList[0]; lesson <= latest.lessonList[1]; lesson++) {
-            print("添加$latest, $lesson");
-            schedule[int.parse(latest.teachWeek)][latest.week][lesson] = Course(
+            print("添加${latest.toJson()}");
+            schedule[int.tryParse(latest.week) ?? 0][latest.weekDay][lesson] = Course(
                 name: course,
                 teacher: teacher,
                 location: location,
-                extra: remark(latest.teachWeek, location, 14, 15),
+                extra: remark(latest.week, location, 14, 15),
                 index: lesson);
           }
         }
@@ -397,12 +403,12 @@ Future<List<List<List<Course>>>> getScheduleChanges(String id, List<List<List<Co
 
         if (oldCourseWeek != "&nbsp;") {
           for (int i = oldCourseLessonList[0]; i <= oldCourseLessonList[1]; i++) {
-            schedule[int.parse(oldCourseWeek)][oldCourseWeekDay][i] = Course(index: i);
+            schedule[int.tryParse(oldCourseWeek) ?? 0][oldCourseWeekDay][i] = Course(index: i);
           }
         }
         if (newCourseWeek != "&nbsp;") {
           for (int i = newCourseLessonList[0]; i <= newCourseLessonList[1]; i++) {
-            schedule[int.parse(newCourseWeek)][newWeekDay][i] = Course(
+            schedule[int.tryParse(newCourseWeek) ?? 0][newWeekDay][i] = Course(
                 name: course,
                 teacher: teacher,
                 location: newLocation,

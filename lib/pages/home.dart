@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -157,15 +156,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       );
       afterSuccess() async {
         print('HomePageState.afterSuccess');
-        await readSchedule();
-        ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(2, "清除缓存...", 10));
-
-        AppData.todaySchedule = [];
-        AppData.tomorrowSchedule = [];
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(2, "处理数据...", 10));
-        await initSchedule();
         await writeSchedule();
         await initTodaySchedule();
         await initTomorrowSchedule();

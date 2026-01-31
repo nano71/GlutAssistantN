@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:glutassistantn/type/schedule.dart';
 import 'package:path_provider/path_provider.dart';
 
-import '../type/course.dart';
 import '/common/init.dart';
 import '/config.dart';
 import '../data.dart';
@@ -95,7 +94,7 @@ Future<void> readSchedule() async {
   final result = await file.readAsString();
   if (result.isNotEmpty) {
     dynamic raw = jsonDecode(result);
-    print(raw);
+    // print(raw);
     if (raw is List) {
       AppData.schedule = parseNewSchedule(raw);
       // 新格式
@@ -124,6 +123,7 @@ Future<File> endTimeLocalSupportFile() async {
   final dir = await getApplicationSupportDirectory();
   return File('${dir.path}/endTime.json');
 }
+
 Future<void> writeConfig2(String jsonString) async {
   final file = await configLocalSupportFile();
 
@@ -134,6 +134,7 @@ Future<void> writeConfig2(String jsonString) async {
     print(e);
   }
 }
+
 Future<void> writeConfig() async {
   if (AppData.hasReadConfigError) return print("hasReadConfigError");
   print("writeConfig");
@@ -192,6 +193,9 @@ Future<void> readWeek() async {
     return;
   }
   AppData.week = realWeek;
+  if (!AppData.isReleaseMode) {
+    AppData.week = 11;
+  }
   if (realWeek > 20) {
     AppData.startSoon = true;
   }

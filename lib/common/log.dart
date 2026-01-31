@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:synchronized/synchronized.dart';
 
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
@@ -14,52 +15,41 @@ Directory? directory;
 void record(String line) {
   stdout.writeln("record");
   final currentTime = DateTime.now().toIso8601String();
-  final logMessage = {"datetime": currentTime, "message": line};
-  if (isWritingLog) {
-    backupLogList.add(logMessage);
-  } else {
-    logList.add(logMessage);
-  }
+  logList.add({
+    "datetime": currentTime,
+    "message": line,
+  });
 }
+final _logLock = Lock();
 
 Future<void> writeLog() async {
-  print('writeLog');
-  if (isWritingLog) {
-    return;
-  }
+  return _logLock.synchronized(() async {
+    try {
+      directory ??= await getApplicationSupportDirectory();
+      final file = File('${directory!.path}/log.jsonl');
 
-  isWritingLog = true;
+      if (logList.isEmpty) return;
 
-  directory ??= await getApplicationSupportDirectory();
+      final buffer = StringBuffer();
+      for (final log in logList) {
+        buffer.writeln(jsonEncode(log));
+      }
 
-  final file = File('${directory!.path}/log.json');
+      await file.writeAsString(
+        buffer.toString(),
+        mode: FileMode.append,
+        flush: true,
+      );
 
-  if (await file.exists()) {
-    print("readAsString");
-    final fileContent = await file.readAsString();
-    List<dynamic> jsonList = [];
-    if (fileContent.length > 2) {
-      jsonList = jsonDecode(fileContent);
+      logList.clear();
+    } catch (e, s) {
+      print('writeLog error: $e');
+      print(s);
     }
+  });
 
-    jsonList.addAll(logList);
-    print("日志长度: ${jsonList.length}");
-    if (jsonList.length > maxLogCount) {
-      jsonList.removeRange(0, jsonList.length - maxLogCount);
-    }
-
-    final jsonString = jsonEncode(jsonList);
-    await file.writeAsString(jsonString);
-  } else {
-    final jsonString = jsonEncode(logList);
-    await file.writeAsString(jsonString);
-  }
-
-  logList.clear(); // 清空备用日志列表
-  logList.addAll(backupLogList);
-  isWritingLog = false; // 写入完成，恢复为非写入状态
-  print('writeLog end');
 }
+
 
 Future<bool> shareLogFile() async {
   if (sharing) return false;
@@ -69,7 +59,7 @@ Future<bool> shareLogFile() async {
   await writeLog();
   final logFilePath = await gzipJsonFile();
   final file = XFile(logFilePath);
-  final result = await Share.shareXFiles([file], subject: '导出日志', text: '一份 JSON 格式的日志文件');
+  final result = await Share.shareXFiles([file], subject: '导出日志', text: '一份 JSONL 格式的日志文件');
   File(logFilePath).delete();
   print('shareLogFile end');
   sharing = false;
@@ -79,7 +69,7 @@ Future<bool> shareLogFile() async {
 Future<String> gzipJsonFile() async {
   // 获取应用的支持目录（可以用来存放日志或其他文件）
 
-  final file = File('${directory!.path}/log.json');
+  final file = File('${directory!.path}/log.jsonl');
 
   // 读取文件内容（假设是 JSON 格式）
   String fileContent = await file.readAsString();
@@ -91,7 +81,7 @@ Future<String> gzipJsonFile() async {
   // 使用 archive 包压缩数据为 GZIP
   List<int> compressedData = encoder.encode(byteData);
   final currentTime = DateTime.now().toIso8601String();
-  final path = '${directory!.path}/${currentTime}.log.json.gz';
+  final path = '${directory!.path}/${currentTime}.log.jsonl.gz';
   // 创建压缩后的文件（以 .gz 为后缀）
   final compressedFile = File(path);
 

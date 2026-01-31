@@ -7,6 +7,7 @@ import 'package:home_widget/home_widget.dart';
 
 import '../config.dart';
 import '../data.dart';
+import '../type/course.dart';
 import '../widget/lists.dart';
 import 'log.dart';
 
@@ -34,49 +35,64 @@ Future<void> backstageRefresh() async {
   );
 }
 
-List<List> _customParser(List<List> originalData, [bool isTodaySchedule = true]) {
-  List<List> processedData = [];
+List<List<String>> _customParser(List<Course> originalData, [bool isTodaySchedule = true]) {
+  print('_customParser');
+  List<List<String>> processedData = [];
 
   for (int i = 0; i < originalData.length; i++) {
-    List item = originalData[i];
+    Course course = originalData[i];
     if (!isTodaySchedule) {
-      item.removeAt(1);
-      item.removeAt(2);
-      processedData.add(item);
+
+      processedData.add([
+        course.name,
+        course.location,
+        course.index.toString(),
+      ]);
       continue;
     }
-    List status = timeUntilNextClass(item.last);
+    List status = timeUntilNextClass(course.index);
     if (status.last == "after") {
       if (i < originalData.length - 1 && i % 2 == 0) {
-        List nextItem = originalData[i + 1];
-        List lastStatus = timeUntilNextClass(nextItem.last);
-        if (nextItem[0] == item[0] &&
-            nextItem[1] == item[1] &&
-            nextItem[2] == item[2] &&
+        Course nextCourse = originalData[i + 1];
+        List lastStatus = timeUntilNextClass(nextCourse.index);
+        if (nextCourse.name == course.name &&
+            nextCourse.teacher == course.teacher &&
+            nextCourse.location == course.location &&
             (lastStatus.last == "before" || lastStatus[2] > 0)) {
-          item.removeAt(1);
-          item.removeAt(2);
-          processedData.add(item);
-          nextItem.removeAt(1);
-          nextItem.removeAt(2);
-          processedData.add(nextItem);
+
+          processedData.add([
+            course.name,
+            course.location,
+            course.index.toString(),
+          ]);
+          processedData.add([
+            nextCourse.name,
+            nextCourse.location,
+            nextCourse.index.toString(),
+          ]);
           i++;
           continue;
         }
       }
       if (status.last != "before" && status[2] > 0) {
-        item.removeAt(1);
-        item.removeAt(2);
-        processedData.add(item);
+        processedData.add([
+          course.name,
+          course.location,
+          course.index.toString(),
+        ]);
       }
     } else {
-      item.removeAt(1);
-      item.removeAt(2);
-      processedData.add(item);
+      processedData.add([
+        course.name,
+        course.location,
+        course.index.toString(),
+      ]);
     }
   }
   print("preSendData:");
   print(processedData);
+  print('_customParser End');
+
   return processedData;
 }
 
@@ -102,13 +118,12 @@ class HomeWidgetUtils {
     //   return;
     // }
 
-    List<List> deepCopy(List list) {
-      return list.map((item) => List.from(item)).toList();
+    List<Course> deepCopy(List<Course> list) {
+      return List.from(list);
     }
-
+    deepCopy(AppData.todaySchedule);
     String title = "今天的课表";
     List<List> originalData = _customParser(deepCopy(AppData.todaySchedule));
-
     if (originalData.isEmpty) {
       title = "明天的课表";
       originalData = _customParser(deepCopy(AppData.tomorrowSchedule), false);
