@@ -2,11 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:glutassistantn/common/log.dart';
 import 'package:glutassistantn/pages/layout.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:workmanager/workmanager.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'common/io.dart';
 import 'common/service.dart';
@@ -18,7 +18,7 @@ void main() async {
     WidgetsFlutterBinding.ensureInitialized();
     Workmanager().initialize(callbackDispatcher);
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarColor: Colors.transparent));
-    if(!AppData.isReleaseMode){
+    if (!AppData.isReleaseMode) {
       await dotenv.load(fileName: ".env");
       writeConfig2(dotenv.env['CONFIG']!);
     }
@@ -104,6 +104,11 @@ class _AppState extends State<App> {
         navigatorObservers: [PageStackObserver()],
         theme: ThemeData(
           useMaterial3: false,
+          pageTransitionsTheme: PageTransitionsTheme(
+            builders: {
+              TargetPlatform.android: FadeForwardsPageTransitionsBuilder(backgroundColor: readBackgroundColor()),
+            },
+          ),
           navigationBarTheme: NavigationBarThemeData(
             labelTextStyle: WidgetStateProperty.resolveWith<TextStyle>(
               (states) {

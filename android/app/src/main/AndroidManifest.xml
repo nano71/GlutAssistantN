@@ -8,6 +8,7 @@
     <application
             android:label="桂工助手N"
             android:icon="@mipmap/ic_launcher"
+            android:enableOnBackInvokedCallback="true"
             android:theme="@style/AppTheme">
         <activity
                 android:name=".MainActivity"
