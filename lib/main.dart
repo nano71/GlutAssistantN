@@ -35,8 +35,8 @@ void main() async {
       SentryFlutter.init((options) {
         options.tracesSampleRate = 1.0;
         options.profilesSampleRate = 1.0;
-        options.experimental.replay.sessionSampleRate = 1.0;
-        options.experimental.replay.onErrorSampleRate = 1.0;
+        options.replay.onErrorSampleRate = 1.0;
+        options.replay.sessionSampleRate = 1.0;
         options.beforeSend = (SentryEvent event, Hint? hint) {
           final isRealError = event.throwable != null || (event.exceptions?.isNotEmpty ?? false);
           if (isRealError) {

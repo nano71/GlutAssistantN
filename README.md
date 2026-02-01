@@ -80,9 +80,9 @@
 Android SDK 26-35  
 Gradle 8.11.1  
 OpenJDK 17.0.8.1 2023-08-24  
-Kotlin 2.0.21
-Flutter 3.24.3  
-Dart 3.5.3  
+Kotlin 2.3.0
+Flutter 3.89.9  
+Dart 3.10.8  
 
 #### 编译项目:
 
