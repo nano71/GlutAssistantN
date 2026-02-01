@@ -27,21 +27,22 @@
 |-- lib 主体
 |   |-- main.dart 入口
 |   |-- config.dart 配置项
-|   |-- data.dart 必要的数据
+|   |-- data.dart 运行时数据
 |   |-- test.dart
 |   |
 |   |-- common 函数
+|   |   |-- aes.dart
 |   |   |-- animation.dart 动画
 |   |   |-- cookie.dart cookie
 |   |   |-- day.dart 日期处理
 |   |   |-- encode.dart 密码编码
-|   |   |-- get.dart http请求
+|   |   |-- get.dart 数据获取
 |   |   |-- homeWidget.dart 桌面微件
 |   |   |-- init.dart 初始化
 |   |   |-- io.dart 文件操作
 |   |   |-- login.dart 登录
 |   |   |-- noripple.dart 取消涟漪动画
-|   |   |-- parser.dart html解析
+|   |   |-- parser.dart HTML解析
 |   |   |-- service.dart 后台服务
 |   |   `-- style.dart 样式
 |   |
@@ -54,15 +55,20 @@
 |   |   |-- home.dart 主页
 |   |   |-- layout.dart 主体
 |   |   |-- login.dart 登录
-|   |   |-- person.dart 个人
-|   |   |-- queryClassRoom.dart 查询教室
-|   |   |-- queryScore.dart 查询成绩
-|   |   |-- queryExam.dart 查询考试
+|   |   |-- mine.dart 个人
+|   |   |-- queryClassrooms.dart 查询教室
+|   |   |-- queryScores.dart 查询成绩
+|   |   |-- queryExams.dart 查询考试
 |   |   |-- schedule.dart 课表
 |   |   |-- scheduleManager.dart 课表管理
 |   |   |-- setting.dart 设置
 |   |   |-- timeManager.dart 课时管理
 |   |   `-- update.dart 更新
+|   |
+|   |-- type 特别的类
+|   |   |-- course.dart 课程
+|   |   |-- packageInfo.dart 包信息
+|   |   `-- schedule.dart 课表存储结构
 |   |
 |   `-- widget 组件
 |       |-- bars.dart 条

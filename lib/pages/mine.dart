@@ -5,7 +5,7 @@ import 'package:glutassistantn/widget/lists.dart';
 import 'package:remixicon/remixicon.dart';
 
 import '/pages/career.dart';
-import '/pages/queryClassRoom.dart';
+import '/pages/queryClassrooms.dart';
 import '/pages/setting.dart';
 import '/pages/update.dart';
 import '/widget/bars.dart';
