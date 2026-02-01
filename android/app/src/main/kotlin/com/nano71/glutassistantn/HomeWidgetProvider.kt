@@ -12,7 +12,6 @@ import android.view.View
 import android.widget.RemoteViews
 import androidx.annotation.RequiresApi
 import androidx.core.net.toUri
-import es.antonborri.home_widget.HomeWidgetBackgroundReceiver
 import es.antonborri.home_widget.HomeWidgetProvider
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
@@ -181,28 +180,25 @@ class HomeWidgetProvider : HomeWidgetProvider() {
 
     private fun bindOnClickEvent(context: Context, remoteViews: RemoteViews, isSmall: Boolean, widgetId: Int) {
         println("HomeWidgetExampleProvider.bindOnClickEvent")
+        var flags = PendingIntent.FLAG_UPDATE_CURRENT
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            flags = PendingIntent.FLAG_IMMUTABLE
+        }
 
         val intent = Intent(context, MainActivity::class.java).apply {
             action = Intent.ACTION_VIEW
             data = "homeWidgetExample://open".toUri()
         }
 
-        val pendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            PendingIntent.getActivity(context, widgetId, intent, PendingIntent.FLAG_IMMUTABLE)
-        } else {
-            PendingIntent.getActivity(context, widgetId, intent, PendingIntent.FLAG_UPDATE_CURRENT)
-        }
+        val pendingIntent = PendingIntent.getActivity(context, widgetId, intent, flags)
 
-        val refreshIntent = Intent(context, HomeWidgetBackgroundReceiver::class.java).apply {
+        val refreshIntent = Intent(context, com.nano71.glutassistantn.HomeWidgetBackgroundReceiver::class.java).apply {
             action = "es.antonborri.home_widget.action.INTERACTIVITY"
             data = "homeWidgetExample://refresh".toUri()
         }
 
-        val refreshPendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            PendingIntent.getBroadcast(context, 0, refreshIntent, PendingIntent.FLAG_IMMUTABLE)
-        } else {
-            PendingIntent.getBroadcast(context, 0, refreshIntent, PendingIntent.FLAG_UPDATE_CURRENT)
-        }
+        val refreshPendingIntent = PendingIntent.getBroadcast(context, 1742968988, refreshIntent, flags)
 
         remoteViews.setOnClickPendingIntent(R.id.widget_container, pendingIntent)
         remoteViews.setOnClickPendingIntent(R.id.refresh_icon, refreshPendingIntent)
@@ -210,6 +206,13 @@ class HomeWidgetProvider : HomeWidgetProvider() {
 
     }
 
+    override fun onReceive(context: Context?, intent: Intent?) {
+        super.onReceive(context, intent)
+        Log.d(TAG, "HomeWidgetExampleProvider.onReceive")
+
+        Log.d(TAG, intent?.action.toString())
+
+    }
 
     @RequiresApi(Build.VERSION_CODES.S)
     private fun updateContent(widgetData: SharedPreferences, remoteViews: RemoteViews, isSmall: Boolean) {
@@ -244,13 +247,6 @@ class HomeWidgetProvider : HomeWidgetProvider() {
         remoteViews.setViewVisibility(R.id.refresh_icon, View.VISIBLE)
     }
 
-    override fun onReceive(context: Context?, intent: Intent?) {
-        super.onReceive(context, intent)
-        Log.d(TAG, "HomeWidgetExampleProvider.onReceive")
-
-        Log.d(TAG, intent?.action.toString())
-
-    }
 
     @RequiresApi(Build.VERSION_CODES.S)
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray, widgetData: SharedPreferences) {

@@ -1,4 +1,5 @@
 # GlutAssistantN / 桂工助手N
+
 <img src="https://github.com/nano71/Images/blob/main/ic_launcher-playstore%20-%20副本.png" width="72" /><img src="https://github.com/nano71/Images/blob/master/gan/ic_launcher-playstore.png" width="72" /><img src="https://github.com/nano71/Images/blob/master/gan/ic_launcher-playstore2.png" width="72" /><img src="https://github.com/nano71/Images/blob/master/gan/logo2-01-01-01-01-01-01-01-01.png" width="72" /><img src="https://github.com/nano71/Images/blob/master/gan/G1.png" width="72" /><img src="https://github.com/nano71/Images/blob/master/gan/G2.png" width="72" /><img src="https://github.com/nano71/Images/blob/master/gan/G3.png" width="72" />
 
 桂林理工大学空港校区(分校)专属的教务工具APP  
@@ -77,12 +78,27 @@
 ```
 
 #### 推荐环境：
+
 Android SDK 26-35  
 Gradle 8.11.1  
 OpenJDK 17.0.8.1 2023-08-24  
 Kotlin 2.3.0
 Flutter 3.89.9  
-Dart 3.10.8  
+Dart 3.10.8
+
+#### 编译之前:
+
+请将 `es.antonborri.home_widget.HomeWidgetBackgroundReceiver` 插件类转成可继承的类
+
+```kotlin
+class HomeWidgetBackgroundReceiver : BroadcastReceiver()
+```
+
+添加 `open` 关键字
+
+```kotlin
+open class HomeWidgetBackgroundReceiver : BroadcastReceiver()
+```
 
 #### 编译项目:
 

@@ -8,8 +8,7 @@
     <application
             android:label="桂工助手N"
             android:icon="@mipmap/ic_launcher"
-            android:theme="@style/AppTheme"
-            >
+            android:theme="@style/AppTheme">
         <activity
                 android:name=".MainActivity"
                 android:exported="true"
@@ -32,6 +31,14 @@
                 <action android:name="es.antonborri.home_widget.action.LAUNCH" />
             </intent-filter>
         </activity>
+
+        <receiver
+                android:name=".HomeWidgetBackgroundReceiver"
+                android:exported="true">
+            <intent-filter>
+                <action android:name="es.antonborri.home_widget.action.INTERACTIVITY" />
+            </intent-filter>
+        </receiver>
 
         <receiver
                 android:name=".HomeWidgetProvider"
