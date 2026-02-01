@@ -244,6 +244,14 @@ class HomeWidgetProvider : HomeWidgetProvider() {
         remoteViews.setViewVisibility(R.id.refresh_icon, View.VISIBLE)
     }
 
+    override fun onReceive(context: Context?, intent: Intent?) {
+        super.onReceive(context, intent)
+        Log.d(TAG, "HomeWidgetExampleProvider.onReceive")
+
+        Log.d(TAG, intent?.action.toString())
+
+    }
+
     @RequiresApi(Build.VERSION_CODES.S)
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray, widgetData: SharedPreferences) {
         Log.d(TAG, "HomeWidgetExampleProvider.onUpdate")

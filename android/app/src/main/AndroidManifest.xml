@@ -32,13 +32,7 @@
                 <action android:name="es.antonborri.home_widget.action.LAUNCH" />
             </intent-filter>
         </activity>
-        <receiver
-                android:name=".HomeWidgetBackgroundReceiver"
-                android:exported="false" >
-            <intent-filter>
-                <action android:name="es.antonborri.home_widget.action.INTERACTIVITY" />
-            </intent-filter>
-        </receiver>
+
         <receiver
                 android:name=".HomeWidgetProvider"
                 android:exported="true">

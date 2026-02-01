@@ -16,7 +16,7 @@ import 'data.dart';
 void main() async {
   Future<void> run() async {
     WidgetsFlutterBinding.ensureInitialized();
-    Workmanager().initialize(callbackDispatcher, isInDebugMode: true);
+    Workmanager().initialize(callbackDispatcher);
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarColor: Colors.transparent));
     if(!AppData.isReleaseMode){
       await dotenv.load(fileName: ".env");
