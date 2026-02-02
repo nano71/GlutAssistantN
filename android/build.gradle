@@ -1,33 +1,3 @@
-allprojects {
-    repositories {
-        maven {
-            url 'https://maven.aliyun.com/repository/google'
-        }
-        maven {
-            url 'https://maven.aliyun.com/repository/public'
-        }
-        maven {
-            url 'https://maven.aliyun.com/repository/jcenter'
-        }
-        maven {
-            url 'https://repo.huaweicloud.com/repository/maven/'
-        }
-        maven{
-            url 'https://mirrors.cloud.tencent.com/nexus/repository/maven-public/'
-        }
-        maven{
-            url 'https://mirrors.163.com/maven/repository/maven-public/'
-        }
-        maven {
-            url "https://kotlin.bintray.com/kotlinx"
-        }
-        google()
-        mavenCentral()
-        mavenLocal()
-        gradlePluginPortal()
-    }
-}
-
 layout.buildDirectory.set(file("../build"))
 
 subprojects {

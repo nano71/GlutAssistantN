@@ -25,13 +25,13 @@ android {
     namespace "com.nano71.glutassistantn"
     ndkVersion "28.2.13676358"
     buildToolsVersion "35.0.0"
-    compileSdkVersion 35
+    compileSdkVersion 36
     flavorDimensions "version"
 
     defaultConfig {
         applicationId "com.nano71.glutassistantn"
         minSdkVersion flutter.minSdkVersion
-        targetSdkVersion 35
+        targetSdkVersion 36
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         multiDexEnabled true
