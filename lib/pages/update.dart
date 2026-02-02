@@ -9,7 +9,6 @@ import '/common/get.dart';
 import '/config.dart';
 import '/data.dart';
 import '/widget/bars.dart';
-import '../type/packageInfo.dart';
 import '../widget/dialog.dart';
 import 'mine.dart';
 
@@ -113,11 +112,11 @@ class _UpdatePageState extends State<UpdatePage> {
                   height: 16,
                 ),
                 Text(
-                  PackageInfo.appName,
+                  AppData.packageInfo.appName,
                   style: TextStyle(fontSize: 20, color: readTextColor()),
                 ),
                 Text(
-                  PackageInfo.version,
+                  AppData.packageInfo.version,
                   style: TextStyle(fontSize: 14, color: Colors.grey),
                 ),
                 Container(
@@ -134,7 +133,7 @@ class _UpdatePageState extends State<UpdatePage> {
                             width: double.infinity,
                             margin: EdgeInsets.fromLTRB(0, 0, 0, 7),
                             child: Text(
-                              "版本号:" + PackageInfo.version + "  >  " + AppData.newVersionNumber,
+                              "版本号:" + AppData.packageInfo.version + "  >  " + AppData.newVersionNumber,
                               style: TextStyle(color: readTextColor2()),
                             ),
                           ),
@@ -167,7 +166,7 @@ class _UpdatePageState extends State<UpdatePage> {
                             width: double.infinity,
                             margin: EdgeInsets.fromLTRB(0, 0, 0, 7),
                             child: Text(
-                              "版本号:" + PackageInfo.version,
+                              "版本号:" + AppData.packageInfo.version,
                               style: TextStyle(color: readTextColor2()),
                             ),
                           ),
@@ -235,7 +234,7 @@ void checkNewVersion([bool skipShowSnackBar = true, BuildContext? context]) {
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
     }
     late String message;
-    int currentVersion = int.parse(PackageInfo.version.replaceAll(".", ""));
+    int currentVersion = int.parse(AppData.packageInfo.version.replaceAll(".", ""));
     int compareVersion = int.parse(AppData.newVersionNumber.replaceAll(".", ""));
 
     if (currentVersion < compareVersion) {

@@ -1,9 +1,11 @@
 import 'dart:math';
 
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:glutassistantn/type/course.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 import 'config.dart';
 
@@ -92,6 +94,9 @@ class AppData {
   static String newVersionDownloadUrl = "";
 
   static final bool isReleaseMode = const bool.fromEnvironment("dart.vm.product");
+  static late PackageInfo packageInfo;
+  static late AndroidDeviceInfo deviceInfo;
+
   static late List<List<List<Course>>> schedule;
 
   static Map<String, String> persistentData = {
@@ -380,4 +385,32 @@ void setSystemNavigationBarColor(Color color) {
 
 String onlyDigits(String input) {
   return input.replaceAll(RegExp(r'\D'), '');
+}
+
+Future<void> readPackageInfo() async {
+  AppData.packageInfo = await PackageInfo.fromPlatform();
+}
+Future<void> readDeviceInfo() async {
+  DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+  AppData.deviceInfo = await deviceInfo.androidInfo;
+}
+
+bool isChinaRom() {
+  print(AppData.deviceInfo);
+  final brand = AppData.deviceInfo.brand.toLowerCase();
+  final manu = AppData.deviceInfo.manufacturer.toLowerCase();
+
+  const chinaBrands = [
+    'xiaomi',
+    'huawei',
+    'honor',
+    'oppo',
+    'vivo',
+    'realme',
+    'oneplus',
+    'meizu',
+  ];
+
+  return chinaBrands.any((b) =>
+  brand.contains(b) || manu.contains(b));
 }

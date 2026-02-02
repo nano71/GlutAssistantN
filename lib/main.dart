@@ -25,6 +25,7 @@ void main() async {
 
     print("startApp...");
     await readConfig();
+    await readDeviceInfo();
     AppData.isDarkTheme = AppData.theme == "dark";
     AppData.isLoggedIn = AppData.studentId != "";
     runApp(App());
@@ -73,6 +74,8 @@ class _AppState extends State<App> {
   late StreamSubscription<UpdateAppThemeState> eventBusListener;
   Color labelTextColor = readTextColor();
   Color selectedLabelTextColor = readColor();
+  PageTransitionsBuilder pageTransitionsBuilder =
+      FadeForwardsPageTransitionsBuilder(backgroundColor: readBackgroundColor());
 
   void restartApp() {
     setState(() {
@@ -106,7 +109,7 @@ class _AppState extends State<App> {
           useMaterial3: false,
           pageTransitionsTheme: PageTransitionsTheme(
             builders: {
-              TargetPlatform.android: FadeForwardsPageTransitionsBuilder(backgroundColor: readBackgroundColor()),
+              TargetPlatform.android: isChinaRom() ? pageTransitionsBuilder : PredictiveBackPageTransitionsBuilder(),
             },
           ),
           navigationBarTheme: NavigationBarThemeData(

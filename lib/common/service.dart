@@ -1,4 +1,3 @@
-import 'package:synchronized/extension.dart';
 import 'package:workmanager/workmanager.dart';
 
 import 'homeWidget.dart';

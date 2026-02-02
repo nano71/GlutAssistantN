@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:glutassistantn/common/log.dart';
 import 'package:home_widget/home_widget.dart';
@@ -18,7 +19,6 @@ import '/widget/bars.dart';
 import '../common/aes.dart';
 import '../common/homeWidget.dart';
 import '../data.dart';
-import '../type/packageInfo.dart';
 
 class AppRouter extends PageRouteBuilder {
   final Widget widget;
@@ -58,12 +58,6 @@ Future<void> reinitialize({refreshState = false, ignoreReadConfig = false}) asyn
 }
 
 class _DataPreloadPageState extends State<DataPreloadPage> {
-  Future<void> readPackageInfo() async {
-    PackageInfoPlus.PackageInfo packageInfo = await PackageInfoPlus.PackageInfo.fromPlatform();
-    PackageInfo.appName = packageInfo.appName;
-    PackageInfo.packageName = packageInfo.packageName;
-    PackageInfo.version = packageInfo.version;
-  }
 
   void initialize() async {
     // initService();
