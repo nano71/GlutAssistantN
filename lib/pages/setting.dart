@@ -315,7 +315,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
                             onTap: () async {
                               ScaffoldMessenger.of(context).removeCurrentSnackBar();
                               ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(2, "准备文件中...", 4));
-                              shareLogFile();
+                              Log.shareLogFile();
                             },
                             child: LinkItem(Remix.bug_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "导出日志", readColor()),
                           ),

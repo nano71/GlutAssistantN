@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:glutassistantn/type/teachingPlan.dart';
 import 'package:glutassistantn/widget/lists.dart';
 import 'package:http/http.dart';
 import 'package:remixicon/remixicon.dart';
 
-import '../type/course.dart';
 import '/common/cookie.dart';
 import '/common/login.dart';
 import '/common/noripple.dart';
@@ -11,9 +11,10 @@ import '/common/style.dart';
 import '/data.dart';
 import '../config.dart';
 import '../pages/update.dart';
+import '../type/course.dart';
 import 'bars.dart';
 
-importantUpdateDialog(BuildContext context) {
+showImportantUpdateDialog(BuildContext context) {
   showGeneralDialog(
       context: context,
       transitionBuilder:
@@ -101,7 +102,7 @@ importantUpdateDialog(BuildContext context) {
       });
 }
 
-infoDialog(BuildContext context, String text) {
+showInfoDialog(BuildContext context, String text) {
   showGeneralDialog(
       context: context,
       transitionBuilder:
@@ -192,7 +193,7 @@ infoDialog(BuildContext context, String text) {
       });
 }
 
-verificationCodeDialog(BuildContext context, Function callback) async {
+showCaptchaDialog(BuildContext context, Function callback) async {
   TextEditingController textFieldController = TextEditingController();
   var response = await get(AppConfig.captchaUri).timeout(Duration(seconds: 3));
   bool checking = false;
@@ -237,7 +238,7 @@ verificationCodeDialog(BuildContext context, Function callback) async {
         checking = !checking;
       });
       print(textFieldController.text);
-      await checkVerificationCode(textFieldController.text).then(next);
+      await checkCaptcha(textFieldController.text).then(next);
     }
   }
 
@@ -402,7 +403,7 @@ _CourseInfoDialogContent(title, time, teacher, position) {
   );
 }
 
-CourseInfoDialog(BuildContext context, int week, int weekDay, int index) {
+showCourseInfoDialog(BuildContext context, int week, int weekDay, int index) {
   showDialog(
     context: context,
     builder: (BuildContext context) {
@@ -458,7 +459,7 @@ CourseInfoDialog(BuildContext context, int week, int weekDay, int index) {
   );
 }
 
-careerDialog(context, index, type, year) {
+showCourseListDialog(BuildContext context, int academicYearNumber, int semesterNumber) {
   showDialog(
     context: context,
     builder: (BuildContext context) {
@@ -474,9 +475,9 @@ careerDialog(context, index, type, year) {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("$year - ${type == 2 ? "春" : "秋"}学期"),
+                Text("$academicYearNumber - ${semesterNumber % 2 == 0 ? "春" : "秋"}学期"),
                 Text(
-                  "课程计数: ${careerList2[(index * 2 + type / 2 >= 1 ? index * 2 + type / 2 : 0).toInt()].length} 门",
+                  "课程计数: ${TeachingPlan.courseInfoListBySemester[semesterNumber].length} 门",
                   style: TextStyle(color: Colors.grey, fontSize: 14),
                 )
               ],
@@ -499,63 +500,56 @@ careerDialog(context, index, type, year) {
           fontSize: 25,
         ),
         contentPadding: EdgeInsets.only(left: 0, right: 0, bottom: 0),
-        children: careerDialogLoop(index, type),
+        children: _CourseList(semesterNumber),
       ));
     },
   );
 }
 
-careerDialogLoop(int index, int semester) {
-  List<Widget> list = [];
-  double newIndex = 0;
-  newIndex = index * 2 + semester / 2 >= 1 ? index * 2 + semester / 2 : 0;
-  careerList2[newIndex.toInt()].forEach((element) {
-    list.add(careerDialogItem(element));
-  });
-  return list;
-}
-
-careerDialogItem(element) {
-  return Container(
-    padding: EdgeInsets.fromLTRB(8, 8, 8, 8),
-    margin: EdgeInsets.fromLTRB(8, 0, 8, 8),
-    decoration: BoxDecoration(
-      color: randomColors(),
-      borderRadius: BorderRadius.all(
-        Radius.circular(12.0),
+List<Widget> _CourseList(int semesterNumber) {
+  List<Widget> result = [];
+  for (CourseInfo courseInfo in TeachingPlan.courseInfoListBySemester[semesterNumber]) {
+    result.add(Container(
+      padding: EdgeInsets.fromLTRB(8, 8, 8, 8),
+      margin: EdgeInsets.fromLTRB(8, 0, 8, 8),
+      decoration: BoxDecoration(
+        color: randomColors(),
+        borderRadius: BorderRadius.all(
+          Radius.circular(12.0),
+        ),
       ),
-    ),
-    height: 150,
-    child: Stack(
-      children: [
-        Align(
-          alignment: Alignment.bottomRight,
-          child: Container(
-            child: Text(
-              element[1][0],
-              style: TextStyle(fontSize: 128, color: Color(0x66f1f1f1)),
+      height: 150,
+      child: Stack(
+        children: [
+          Align(
+            alignment: Alignment.bottomRight,
+            child: Container(
+              child: Text(
+                courseInfo.name[0],
+                style: TextStyle(fontSize: 128, color: Color(0x66f1f1f1)),
+              ),
             ),
           ),
-        ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              courseLongText2Short(element[1]),
-              style: TextStyle(fontSize: 18, color: Colors.white),
-            ),
-            SizedBox(
-              height: 8,
-            ),
-            Text(element[0], style: TextStyle(color: Colors.white)),
-            Text(element[5], style: TextStyle(color: Colors.white)),
-            Text("性质: " + element[2], style: TextStyle(color: Colors.white)),
-            Text("学分: " + element[3], style: TextStyle(color: Colors.white)),
-            Text("学时: " + element[4].toString().replaceAll(" ", "").replaceAll(RegExp(r"\s+\b|\b\s\n"), "").trim(),
-                style: TextStyle(color: Colors.white)),
-          ],
-        ),
-      ],
-    ),
-  );
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                courseLongText2Short(courseInfo.name),
+                style: TextStyle(fontSize: 18, color: Colors.white),
+              ),
+              SizedBox(
+                height: 8,
+              ),
+              Text(courseInfo.number, style: TextStyle(color: Colors.white)),
+              Text(courseInfo.category, style: TextStyle(color: Colors.white)),
+              Text("性质: " + courseInfo.evaluationMethod, style: TextStyle(color: Colors.white)),
+              Text("学分: " + courseInfo.creditPoints, style: TextStyle(color: Colors.white)),
+              Text("学时: " + courseInfo.hours, style: TextStyle(color: Colors.white)),
+            ],
+          ),
+        ],
+      ),
+    ));
+  }
+  return result;
 }

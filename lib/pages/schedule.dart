@@ -431,7 +431,7 @@ class _Grid extends StatelessWidget {
           if (start != 0 && end != 0) {
             print(start);
             print(end);
-            CourseInfoDialog(context, week, weekDay, start);
+            showCourseInfoDialog(context, week, weekDay, start);
             // ScaffoldMessenger.of(context).removeCurrentSnackBar();
             // ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(1, teacher, 2));
           }

@@ -174,7 +174,7 @@ class _QueryScoresPageState extends State<QueryScoresPage> {
                   Navigator.of(context).pop();
                 },
               ),
-              () => infoDialog(context,
+              () => showInfoDialog(context,
                   "2019级及以后的平均学分绩点计算方式:\n\n绩点 = ∑(课程学分 × 绩点) / ∑课程学分\n\n1.参与计算的课程仅为选课属性必修课和集中性实践教学环节, 体育等素质类必修课不参与学分绩点计算\n\n2.采用五级记分制的课程和集中性实践性教学环节、毕业设计(论文)成绩折算成百分制后再进行计算, 不及格为40分"),
               readListPageTopAreaBackgroundColor(),
               Colors.white,

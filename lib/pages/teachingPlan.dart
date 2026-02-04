@@ -10,27 +10,28 @@ import '/widget/bars.dart';
 import '/widget/dialog.dart';
 import '../config.dart';
 import '../data.dart';
+import '../type/teachingPlan.dart';
 
-class CareerPage extends StatefulWidget {
+class teachingPlanPage extends StatefulWidget {
   final int type;
 
-  CareerPage({Key? key, this.type = 0}) : super(key: key);
+  teachingPlanPage({Key? key, this.type = 0}) : super(key: key);
 
   @override
-  State<CareerPage> createState() => _CareerPageState(type: this.type);
+  State<teachingPlanPage> createState() => _teachingPlanPageState(type: this.type);
 }
 
-class _CareerPageState extends State<CareerPage> {
+class _teachingPlanPageState extends State<teachingPlanPage> {
   final int type;
 
-  _CareerPageState({this.type = 0});
+  _teachingPlanPageState({this.type = 0});
 
   // ignore: cancel_subscriptions
   late StreamSubscription<ReloadCareerPageState> eventBusListener;
   GlobalKey<_DynamicCircularProgressBarState> indicatorKey = GlobalKey();
   GlobalKey<_DynamicProgressTextState> textKey = GlobalKey();
-  int year = 0;
-  int allYear = 0;
+  int grade = 0;
+  int schoolingLength = 0;
 
   @override
   void initState() {
@@ -73,20 +74,7 @@ class _CareerPageState extends State<CareerPage> {
         setState(() {});
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(1, "数据已更新!", 1));
-        totalExamCount = 0;
-        totalCourseCount = 0;
-        totalMajorCourseCount = 0;
-        careerList.forEach((element) {
-          if (element.contains("考试")) {
-            totalExamCount++;
-          }
-          if (element.length > 3) {
-            totalCourseCount++;
-            if (element[5].contains("专业")) {
-              totalMajorCourseCount++;
-            }
-          }
-        });
+
         // Navigator.of(context).pop();
 
         _weekProgressAnimation();
@@ -112,7 +100,7 @@ class _CareerPageState extends State<CareerPage> {
   void _weekProgressAnimation() {
     double count = 0.0;
     const period = Duration(milliseconds: 10);
-    final max = _weekProgressDouble();
+    final max = progress();
 
     _weekTimer?.cancel();
 
@@ -142,29 +130,28 @@ class _CareerPageState extends State<CareerPage> {
     });
   }
 
-  double _weekProgressDouble() {
-    if (careerInfo[2] != "" && careerInfo[3] != "") {
+  double progress() {
+    if (TeachingPlan.grade != 0) {
       //年级
-      year = int.parse(careerInfo[2].replaceAll("级", "").trim());
+      grade = TeachingPlan.grade;
       // 全部学年
-
-      allYear = int.parse(careerInfo[3].substring(careerInfo[3].toString().indexOf("年") - 1).replaceAll("年", ""));
+      schoolingLength = TeachingPlan.schoolingLength;
       setState(() {});
-    }
-    print(year.toString() + "年9月开学," + (year + allYear).toString() + "年6月毕业");
-    _next() {
-      var d6 = new DateTime(year, 9);
-      var d7 = new DateTime(year + allYear, 6);
-      var d8 = new DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
-      var difference = d7.difference(d6);
-      var difference2 = d8.difference(d6);
-      var difference3 = d8.difference(d7);
-      if (difference3.inDays > 1) return 1.00;
-      return difference2.inDays / difference.inDays;
-    }
+      print("$grade年9月开学, ${grade + schoolingLength}年6月毕业");
+      next() {
+        var d6 = new DateTime(grade, 9);
+        var d7 = new DateTime(grade + schoolingLength, 6);
+        var d8 = new DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+        var difference = d7.difference(d6);
+        var difference2 = d8.difference(d6);
+        var difference3 = d8.difference(d7);
+        if (difference3.inDays > 1) return 1.00;
+        return difference2.inDays / difference.inDays;
+      }
 
-    if (careerInfo[2] == "" && careerInfo[3] == "") return 0.0;
-    return _next();
+      return next();
+    }
+    return 0.0;
   }
 
   @override
@@ -244,7 +231,7 @@ class _CareerPageState extends State<CareerPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  totalCourseCount.toString() + "",
+                                  TeachingPlan.totalCourseCount.toString(),
                                   style: TextStyle(fontSize: 38, color: Colors.white, fontWeight: FontWeight.w300),
                                 ),
                                 Text("全部课程", style: TextStyle(color: Colors.white)),
@@ -255,7 +242,7 @@ class _CareerPageState extends State<CareerPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  totalMajorCourseCount.toString() + "",
+                                  TeachingPlan.totalMajorCourseCount.toString(),
                                   style: TextStyle(fontSize: 38, color: Colors.white, fontWeight: FontWeight.w300),
                                 ),
                                 Text("专业课程", style: TextStyle(color: Colors.white)),
@@ -284,19 +271,19 @@ class _CareerPageState extends State<CareerPage> {
                     children: [
                       Column(
                         children: [
-                          Text("${courseCounts[1]} 门", style: TextStyle(color: Colors.white)),
+                          Text("${courseCountsByScore[1]} 门", style: TextStyle(color: Colors.white)),
                           Text("成绩合格", style: TextStyle(color: Colors.white)),
                         ],
                       ),
                       Column(
                         children: [
-                          Text("${courseCounts[0]} 门", style: TextStyle(color: Colors.white)),
+                          Text("${courseCountsByScore[0]} 门", style: TextStyle(color: Colors.white)),
                           Text("重修/补考", style: TextStyle(color: Colors.white)),
                         ],
                       ),
                       Column(
                         children: [
-                          Text("${courseCounts[2]} 门", style: TextStyle(color: Colors.white)),
+                          Text("${courseCountsByScore[2]} 门", style: TextStyle(color: Colors.white)),
                           Text("成绩未知", style: TextStyle(color: Colors.white)),
                         ],
                       ),
@@ -308,8 +295,8 @@ class _CareerPageState extends State<CareerPage> {
           ),
           SliverList(
             delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
-              return _AcademicYearList(index);
-            }, childCount: allYear),
+              return _CollapsePanel(index);
+            }, childCount: schoolingLength),
           ),
         ],
       ),
@@ -317,35 +304,32 @@ class _CareerPageState extends State<CareerPage> {
   }
 }
 
-class _AcademicYearList extends StatefulWidget {
+class _CollapsePanel extends StatefulWidget {
   final int index;
 
-  _AcademicYearList(this.index, {Key? key}) : super(key: key);
+  _CollapsePanel(this.index, {Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _AcademicYearListState(index);
+  State<StatefulWidget> createState() => _CollapsePanelState(index);
 }
 
-class _AcademicYearListState extends State<_AcademicYearList> {
-  bool _isExpanded = false;
-  String title = "";
+class _CollapsePanelState extends State<_CollapsePanel> {
+  bool isExpanded = false;
   final int index;
-  final int startYear = int.parse(careerInfo[2].replaceAll("级", "").trim());
+  final int startYear = TeachingPlan.grade;
 
-  _AcademicYearListState(this.index);
+  _CollapsePanelState(this.index);
 
   @override
   initState() {
     super.initState();
   }
 
-  String titleProcess() {
-    // List chineseNumberCapitalization = ["一", "二", "三", "四", "五", "六", "七", "八"];
-    //波浪号取整
+  String title() {
     return " ${startYear + index} - ${startYear + 1 + index} 学年";
   }
 
-  IconData iconProcess(index) {
+  IconData NumberIcon(index) {
     List<IconData> icons = [
       Icons.looks_one,
       Icons.looks_two,
@@ -362,7 +346,7 @@ class _AcademicYearListState extends State<_AcademicYearList> {
       child: CustomExpansionTile.ExpansionTile(
         onExpansionChanged: (e) {
           setState(() {
-            _isExpanded = !_isExpanded;
+            isExpanded = !isExpanded;
           });
         },
         collapsedIconColor: Colors.black45,
@@ -371,16 +355,16 @@ class _AcademicYearListState extends State<_AcademicYearList> {
         title: Row(
           children: [
             Icon(
-              _isExpanded ? Icons.school : iconProcess(index),
-              color: _isExpanded ? readColor() : randomColors2(),
+              isExpanded ? Icons.school : NumberIcon(index),
+              color: isExpanded ? readColor() : randomColors2(),
             ),
             Container(
               padding: EdgeInsets.fromLTRB(16, 14, 0, 14),
               child: Text(
-                titleProcess(),
+                title(),
                 style: TextStyle(
                   fontSize: 16,
-                  color: _isExpanded ? readColor() : readTextColor(),
+                  color: isExpanded ? readColor() : readTextColor(),
                 ),
               ),
             )
@@ -404,7 +388,7 @@ class _AcademicYearListState extends State<_AcademicYearList> {
               TextButton(
                 style: buttonStyle(),
                 onPressed: () {
-                  careerDialog(context, index, 1, startYear + index);
+                  showCourseListDialog(context, startYear + index, index * 2 + 1);
                 },
                 child: Text(
                   "view",
@@ -437,7 +421,7 @@ class _AcademicYearListState extends State<_AcademicYearList> {
               TextButton(
                 style: buttonStyle(),
                 onPressed: () {
-                  careerDialog(context, index, 2, startYear + index + 1);
+                  showCourseListDialog(context, startYear + index, index * 2 + 2);
                 },
                 child: Text(
                   "view",

@@ -30,7 +30,7 @@ class LoginPageState extends State<LoginPage> {
   final checkCodeController = TextEditingController();
   String message = "不辜负每一次相遇";
   Color messageColor = Colors.grey;
-  Uint8List verificationCodeImageBytes = Base64Decoder().convert(
+  Uint8List captchaImageBytes = Base64Decoder().convert(
       "iVBORw0KGgoAAAANSUhEUgAAAEgAAAAeCAYAAACPOlitAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAHYcAAB2HAY/l8WUAAABYSURBVGhD7dChAcAgEMDAb/ffGSpqIQvcmfg86zMcvX85MCgYFAwKBgWDgkHBoGBQMCgYFAwKBgWDgkHBoGBQMCgYFAwKBgWDgkHBoGBQMCgYFAwKBl3NbAiZBDiX3e/AAAAAAElFTkSuQmCC");
   String buttonTitle = "即刻登录";
   bool logged = false;
@@ -44,7 +44,7 @@ class LoginPageState extends State<LoginPage> {
     super.initState();
     studentIdController.text = AppData.studentId;
     passwordController.text = AppData.password;
-    getVerificationCode();
+    getCaptcha();
   }
 
   void precheck() {
@@ -71,13 +71,13 @@ class LoginPageState extends State<LoginPage> {
     }
   }
 
-  void getVerificationCode() async {
+  void getCaptcha() async {
     try {
       print("getCode...");
       var response = await get(AppConfig.captchaUri).timeout(Duration(milliseconds: 6000));
       parseRawCookies(response.headers['set-cookie']);
       setState(() {
-        verificationCodeImageBytes = response.bodyBytes;
+        captchaImageBytes = response.bodyBytes;
       });
     } catch (e) {
       print('LoginPageState._getCode Error');
@@ -105,7 +105,7 @@ class LoginPageState extends State<LoginPage> {
       }
     }
 
-    await checkVerificationCode(checkCodeController.text).then(next);
+    await checkCaptcha(checkCodeController.text).then(next);
   }
 
   void logging() async {
@@ -137,14 +137,14 @@ class LoginPageState extends State<LoginPage> {
           message = "学号或密码有误";
           buttonTitle = "请检查后再试一次";
         });
-        getVerificationCode();
+        getCaptcha();
       } else {
         if (AppData.isLoggedIn) {
           setState(() {
             messageColor = Colors.yellow;
             message = "登录成功,但应用程序发生了异常";
           });
-          getVerificationCode();
+          getCaptcha();
         }
       }
     }
@@ -267,16 +267,16 @@ class LoginPageState extends State<LoginPage> {
                           ),
                         ),
                         InkWell(
-                          child: verificationCodeImageBytes.length > 1
+                          child: captchaImageBytes.length > 1
                               ? Image.memory(
-                                  verificationCodeImageBytes,
+                                  captchaImageBytes,
                                   height: 25,
                                   width: 80,
                                 )
                               : Container(
                                   height: 25,
                                 ),
-                          onTap: getVerificationCode,
+                          onTap: getCaptcha,
                         ),
                       ],
                     ),

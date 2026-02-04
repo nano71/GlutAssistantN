@@ -8,7 +8,7 @@ import '/common/cookie.dart';
 import '../config.dart';
 import 'encode.dart';
 
-Future<String> checkVerificationCode(String code) async {
+Future<String> checkCaptcha(String code) async {
   print("codeCheck...");
   final _url = Uri.http(AppConfig.serverHost, AppConfig.captchaCheckPath, {"captchaCode": code});
   var postData = {

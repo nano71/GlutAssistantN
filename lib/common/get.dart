@@ -16,6 +16,7 @@ import '../config.dart';
 import '../data.dart';
 import '../pages/update.dart';
 import '../type/course.dart';
+import '../type/teachingPlan.dart';
 
 Future getRecentExams() async {
   print("getRecentExam");
@@ -294,20 +295,6 @@ Future<dynamic> getSchedule() async {
   return true;
 }
 
-class Course2 {
-  final String week;
-  final int weekDay;
-  final List<int> lessonList;
-
-  const Course2({required this.week, required this.weekDay, required this.lessonList});
-
-  Map<String, dynamic> toJson() => {
-        "week": week,
-        "weekDay": weekDay,
-        "lessonList": lessonList,
-      };
-}
-
 Future<List<List<List<Course>>>> getScheduleChanges(String id, List<List<List<Course>>> schedule) async {
   if (!AppData.showScheduleChange) {
     return schedule;
@@ -359,26 +346,26 @@ Future<List<List<List<Course>>>> getScheduleChanges(String id, List<List<List<Co
       if (rowInfo["standard"]!) {
         String location = teachLocation(innerHtmlTrim(cellList[16]));
 
-        Course2 latest = Course2(
+        CourseTimeSlot latest = CourseTimeSlot(
             week: innerHtmlTrim(cellList[13]),
             weekDay: weekTextToNumber(innerHtmlTrim(cellList[14])),
-            lessonList: teachTimeParser(cellList[15]));
-        Course2 before = Course2(
+            periods: teachTimeParser(cellList[15]));
+        CourseTimeSlot before = CourseTimeSlot(
             week: innerHtmlTrim(cellList[8]),
             weekDay: weekTextToNumber(innerHtmlTrim(cellList[9])),
-            lessonList: teachTimeParser(cellList[10]));
+            periods: teachTimeParser(cellList[10]));
 
         teacher = innerHtmlTrim(cellList[4]);
         course = innerHtmlTrim(cellList[2]);
 
         if (before.week != "&nbsp;") {
-          for (int lesson = before.lessonList[0]; lesson <= before.lessonList[1]; lesson++) {
+          for (int lesson = before.periods[0]; lesson <= before.periods[1]; lesson++) {
             print("删除${before.toJson()}");
             schedule[int.tryParse(before.week) ?? 0][before.weekDay][lesson] = Course(index: lesson);
           }
         }
         if (latest.week != "&nbsp;") {
-          for (int lesson = latest.lessonList[0]; lesson <= latest.lessonList[1]; lesson++) {
+          for (int lesson = latest.periods[0]; lesson <= latest.periods[1]; lesson++) {
             print("添加${latest.toJson()}");
             schedule[int.tryParse(latest.week) ?? 0][latest.weekDay][lesson] = Course(
                 name: course,
@@ -574,47 +561,59 @@ Future getCareer() async {
 
     Document document = parse(response.bodyBytes);
     List<List<String>> list = [];
-    courseCounts = [0, 0, 0, 0];
+    courseCountsByScore = [0, 0, 0, 0];
 
     document.querySelectorAll("img.no_output").forEach((Element element) {
       if (element.parent!.innerHtml.contains("/academic/styles/images/course_failed.png") ||
           element.parent!.innerHtml.contains("/academic/styles/images/course_failed_reelect.png")) {
         //重修&&不及格
-        courseCounts[0]++;
+        courseCountsByScore[0]++;
       }
       if (element.parent!.innerHtml.contains("/academic/styles/images/course_pass.png") ||
           element.parent!.innerHtml.contains("/academic/styles/images/course_pass_reelect.png")) {
         //合格
-        courseCounts[1]++;
+        courseCountsByScore[1]++;
       }
       if (element.parent!.innerHtml.contains("/academic/styles/images/course_unknown_pass.png")) {
         //成绩未知
-        courseCounts[2]++;
+        courseCountsByScore[2]++;
       }
     });
+
+    int i = 0;
+    List<List<CourseInfo>> courseInfoListBySemester = [];
+    int semesterCount = 0;
     document.querySelectorAll("table.datalist tbody tr").forEach((Element row) {
       List<Element> tds = row.querySelectorAll("td");
+      if (i == 0) {
+        TeachingPlan.department = tds[0].text;
+        TeachingPlan.major = tds[1].text;
+        TeachingPlan.grade = int.parse(onlyDigits(tds[2].text));
+        TeachingPlan.educationalLevel = tds[3].text;
+        return;
+      }
       if (tds.length > 1) {
-        List<String> _list = [];
-        tds.forEach((element) {
-          _list.add(element.text.trim());
-        });
-        list.add(_list);
-      } else if (tds.length == 1) {
-        List<String> _list = [];
-        List<String> title = tds[0].text.trim().split("学年");
-        if (title.length > 1) {
-          _list.add(title[0].trim() + " 学年");
-          _list.add(title[1].trim());
-          list.add(_list);
+        TeachingPlan.totalCourseCount++;
+        if (tds[2].text.contains("考试")) {
+          TeachingPlan.totalExamCount++;
         }
+        if (tds[5].text.contains("专业")) {
+          TeachingPlan.totalMajorCourseCount++;
+        }
+        courseInfoListBySemester.last.add(CourseInfo(
+            number: tds[0].text,
+            name: tds[1].text,
+            evaluationMethod: tds[2].text,
+            creditPoints: tds[3].text,
+            hours: tds[4].text,
+            category: tds[5].text));
+      } else if (tds.length == 1) {
+        semesterCount += 1;
+        courseInfoListBySemester.add([]);
       }
     });
-
-    careerInfo = list[0];
-    list.removeAt(0);
-    careerList = list;
-
+    TeachingPlan.schoolingLength = (semesterCount / 2).ceil();
+    TeachingPlan.courseInfoListBySemester = courseInfoListBySemester;
     int start = 1;
     List newList = [];
 
@@ -758,7 +757,8 @@ Future<dynamic> getUpdate({bool isRetry = false}) async {
   print("getUpdate");
   Response response;
   try {
-    response = await get(isRetry ? AppConfig.appUpdateCheckUri : AppConfig.githubLatestReleaseUri).timeout(Duration(seconds: 4));
+    response = await get(isRetry ? AppConfig.appUpdateCheckUri : AppConfig.githubLatestReleaseUri)
+        .timeout(Duration(seconds: 4));
   } on TimeoutException catch (e) {
     print("getUpdate Error");
     print(e);
@@ -791,7 +791,7 @@ Future<dynamic> getUpdate({bool isRetry = false}) async {
 
   AppData.newVersionNumber = decodeData["name"].split("_")[1];
   AppData.newVersionChangelog = decodeData["body"];
-  AppData.newVersionDownloadUrl = decodeData["assets"][0]["browser_download_url"].toString().trim();
+  AppData.newVersionDownloadUrl = decodeData["assets"][0]["browser_download_url"].toString();
 
   print("getUpdate End");
   return true;

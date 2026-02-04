@@ -3,12 +3,13 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:remixicon/remixicon.dart';
 
+import '../type/teachingPlan.dart';
 import '/common/get.dart';
 import '/config.dart';
 import '/widget/bars.dart';
 import '/widget/lists.dart';
 import '../data.dart';
-import 'career.dart';
+import 'teachingPlan.dart';
 
 class QueryExamsPage extends StatefulWidget {
 
@@ -130,13 +131,13 @@ class _QueryExamsPageState extends State<QueryExamsPage> {
                               child: InkWell(
                                 onTap: () {
                                   Navigator.of(context)
-                                      .push(MaterialPageRoute(builder: (context) => CareerPage(type: 1)))
+                                      .push(MaterialPageRoute(builder: (context) => teachingPlanPage(type: 1)))
                                       .then((result) {
                                     setState(() {});
                                   });
                                 },
                                 child: Text(
-                                  (totalExamCount == 0 ? "获取" : totalExamCount.toString()),
+                                  (TeachingPlan.totalExamCount == 0 ? "获取" : TeachingPlan.totalExamCount.toString()),
                                   textAlign: TextAlign.center,
                                   style: TextStyle(color: Colors.white, fontSize: 24),
                                 ),

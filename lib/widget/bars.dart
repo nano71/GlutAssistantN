@@ -483,7 +483,7 @@ SnackBar CustomSnackBarWithAction(bool result, String text, BuildContext context
             splashColor: Colors.transparent, // 透明色
             onTap: () {
               if (isDialogCallback) {
-                verificationCodeDialog(context, callback);
+                showCaptchaDialog(context, callback);
               } else {
                 callback();
               }

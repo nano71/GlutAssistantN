@@ -132,10 +132,7 @@ List<double> scores = [0.0, 0.0, 0.0];
 List careerList = [];
 List careerList2 = [];
 List<String> careerInfo = ["", "", "", "", "", "", "", "", "", ""];
-List<int> courseCounts = [0, 0, 0, 0];
-int totalCourseCount = 0;
-int totalMajorCourseCount = 0;
-int totalExamCount = 0;
+List<int> courseCountsByScore = [0, 0, 0, 0];
 List<List<String>> examList = [];
 List<bool> examList2 = [];
 

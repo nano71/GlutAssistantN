@@ -1,10 +1,8 @@
 import 'dart:async';
 
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:glutassistantn/common/log.dart';
 import 'package:home_widget/home_widget.dart';
-import 'package:package_info_plus/package_info_plus.dart' as PackageInfoPlus;
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:workmanager/workmanager.dart';
 
@@ -145,10 +143,10 @@ class _LayoutState extends State<Layout> with RouteAware {
         // TODO: Handle this case.
         break;
       case AppLifecycleState.inactive:
-        if (!isResumed || sharing) return;
+        if (!isResumed || Log.sharing) return;
         isResumed = false;
         print("AppLifecycleState.inactive");
-        writeLog();
+        Log.writeToFile();
         // TODO: Handle this case.
         break;
       case AppLifecycleState.paused:

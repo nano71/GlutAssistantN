@@ -4,7 +4,7 @@ import 'package:glutassistantn/widget/cards.dart';
 import 'package:glutassistantn/widget/lists.dart';
 import 'package:remixicon/remixicon.dart';
 
-import '/pages/career.dart';
+import '/pages/teachingPlan.dart';
 import '/pages/queryClassrooms.dart';
 import '/pages/setting.dart';
 import '/pages/update.dart';
@@ -73,10 +73,10 @@ class _MinePageState extends State<MinePage> {
                       // Navigator.push(context, SlideTopRoute(page: LoginPage()));
                       Navigator.of(context).push(MaterialPageRoute(builder: (context) => LoginPage()));
                     } else {
-                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => CareerPage()));
+                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => teachingPlanPage()));
                     }
                   },
-                  child: LinkItem(Remix.timer_flash_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "课程生涯", readColor()),
+                  child: LinkItem(Remix.timer_flash_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "教学计划", readColor()),
                 ),
                 ColumnGap(),
                 InkWell(

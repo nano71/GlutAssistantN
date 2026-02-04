@@ -26,11 +26,11 @@ Future<void> backstageRefresh() async {
       print('backstageRefresh');
       await reinitialize();
       HomeWidgetUtils.updateWidgetContent();
-      await writeLog();
+      await Log.writeToFile();
     },
     zoneSpecification: new ZoneSpecification(print: (Zone self, ZoneDelegate parent, Zone zone, String line) {
       parent.print(zone, line);
-      record(line);
+      Log.record(line);
     }),
   );
 }
