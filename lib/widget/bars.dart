@@ -233,8 +233,8 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
     super.initState();
     eventBusListener = eventBus.on<SetPageIndex>().listen((event) {
       setState(() {
-        AppConfig.pageControl.jumpToPage(event.index);
-        AppConfig.pageIndex = event.index;
+        AppData.pageControl.jumpToPage(event.index);
+        AppData.pageIndex = event.index;
       });
     });
   }
@@ -258,11 +258,11 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
       backgroundColor: readCardBackgroundColor(),
       indicatorColor: readColorEnd(),
       shadowColor: Colors.transparent,
-      selectedIndex: AppConfig.pageIndex,
+      selectedIndex: AppData.pageIndex,
       onDestinationSelected: (int index) {
-        if (AppConfig.pageIndex != index) {
-          AppConfig.pageControl.jumpToPage(index);
-          AppConfig.pageIndex = index;
+        if (AppData.pageIndex != index) {
+          AppData.pageControl.jumpToPage(index);
+          AppData.pageIndex = index;
         }
         setState(() {});
       },
@@ -331,7 +331,7 @@ class ExamsTipsBarState extends State<ExamsTipsBar> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    getRecentExam();
+    getRecentExams();
   }
 
   @override

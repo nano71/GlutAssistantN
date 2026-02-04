@@ -220,7 +220,7 @@ void checkImportantUpdate() {
   print("checkImportantUpdate");
   AppData.canCheckImportantUpdate = false;
   if (AppData.newVersionChangelog.contains("重要更新")) {
-    eventBus.fire(SetPageIndex(index: AppConfig.pageIndex));
+    eventBus.fire(SetPageIndex(index: AppData.pageIndex));
     importantUpdateDialog(AppData.homeContext);
   }
 }

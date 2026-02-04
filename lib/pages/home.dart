@@ -182,7 +182,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             if (!AppData.isLoggedIn) {
               // codeCheckDialog(context),
               ScaffoldMessenger.of(context).removeCurrentSnackBar();
-              ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(0, AppConfig.notLoginError));
+              ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(0, AppConfig.notLoggedInErrorMessage));
               rotationAnimationTimer.cancel();
             } else {
               ScaffoldMessenger.of(context).removeCurrentSnackBar();

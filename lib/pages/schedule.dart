@@ -215,7 +215,7 @@ class SchedulePageState extends State<SchedulePage> with AutomaticKeepAliveClien
   }
 
   void onTouchMove(double eX, double eY) {
-    double minValue = AppConfig.schedulePageTouchMovesMinValue;
+    double minValue = AppConfig.schedulePageMinSwipeDistance;
     double sX = startPositionX;
     double sY = startPositionY;
     if (eY - sY < minValue || eY + sY < minValue) {

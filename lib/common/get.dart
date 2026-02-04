@@ -17,11 +17,11 @@ import '../data.dart';
 import '../pages/update.dart';
 import '../type/course.dart';
 
-Future getRecentExam() async {
+Future getRecentExams() async {
   print("getRecentExam");
   Response response;
   try {
-    response = await request("get", Uri.http(AppConfig.jwUrl, AppConfig.getRecentExam));
+    response = await request("get", Uri.http(AppConfig.serverHost, AppConfig.recentExamsPath));
     Document document = parse(getHtml(response));
     List<Element> items = document.querySelectorAll("tr.infolist_common");
     if (items.length > 0) {
@@ -55,7 +55,7 @@ Future<void> getWeek() async {
   print("getWeek");
   Response response;
   try {
-    response = await request("get", AppConfig.getWeekUrl);
+    response = await request("get", AppConfig.currentWeekUri);
   } catch (e) {
     print("失败");
     print(e);
@@ -118,7 +118,7 @@ Future<dynamic> getSchedule() async {
     "星期六": 6,
     "星期日": 7,
   };
-  Uri uri = Uri.http(AppConfig.getScheduleUrl[0], AppConfig.getScheduleUrl[1],
+  Uri uri = Uri.http(AppConfig.serverHost, AppConfig.schedulePath,
       {"year": (AppData.year - 1980).toString(), "term": AppData.semester == "秋" ? "3" : "1"});
   Response response;
   try {
@@ -133,7 +133,7 @@ Future<dynamic> getSchedule() async {
     return "未知异常";
   }
   String html = getHtml(response);
-  if (html == "") return AppConfig.dataError;
+  if (html == "") return AppConfig.unknownDataErrorMessage;
   print('1742');
   Document document = parse(html);
   List<Element> list = document.querySelectorAll(".infolist_common");
@@ -315,7 +315,7 @@ Future<List<List<List<Course>>>> getScheduleChanges(String id, List<List<List<Co
   print('getScheduleChanges');
   print("获取课表变更(调课/停课/补课)");
   print('id: ' + id);
-  Uri uri = Uri.http(AppConfig.getScheduleNextUrl[0], AppConfig.getScheduleNextUrl[1], {
+  Uri uri = Uri.http(AppConfig.serverHost, AppConfig.classReschedulePath, {
     "id": id,
     "yearid": (AppData.year - 1980).toString(),
     "termid": AppData.semester == "秋" ? "3" : "1",
@@ -426,7 +426,7 @@ Future<List<List<List<Course>>>> getScheduleChanges(String id, List<List<List<Co
 Future<void> getStudentName() async {
   print('getName');
   try {
-    Response response = await request("get", AppConfig.getNameUrl);
+    Response response = await request("get", AppConfig.studentInfoUri);
     AppData.studentName = parse(response.body).querySelector('[name="realname"]')!.parentNode!.text ?? "";
     print('getName End');
   } catch (e) {
@@ -442,20 +442,20 @@ List getSemester() {
   ];
 }
 
-Future getScore() async {
+Future getScores() async {
   if (!await checkLoginValidity()) return false;
   print("getScore");
-  String _year = "";
-  String _term = "";
+  String year = "";
+  String semesterNumber = "";
   if (AppData.queryYear != "全部") {
-    _year = (int.parse(AppData.queryYear) - 1980).toString();
+    year = (int.parse(AppData.queryYear) - 1980).toString();
   }
   if (AppData.querySemester != "全部") {
-    _term = (AppData.querySemester == "秋" ? 3 : 1).toString();
+    semesterNumber = (AppData.querySemester == "秋" ? 3 : 1).toString();
   }
   Map<String, String> postData = {
-    "year": _year,
-    "term": _term,
+    "year": year,
+    "term": semesterNumber,
     "prop": "",
     "groupName": "",
     "para": "0",
@@ -464,7 +464,7 @@ Future getScore() async {
   };
   Response response;
   try {
-    response = await request("post", AppConfig.getScoreUrl, body: postData);
+    response = await request("post", AppConfig.scoreQueryUri, body: postData);
   } on TimeoutException catch (e) {
     return timeOutError(e);
   } on SocketException catch (e) {
@@ -475,8 +475,8 @@ Future getScore() async {
     return "未知异常";
   }
   String html = response.body;
-  if (html == "") return AppConfig.dataError;
-  if (html.contains("提示信息")) return AppConfig.retryError;
+  if (html == "") return AppConfig.unknownDataErrorMessage;
+  if (html.contains("提示信息")) return AppConfig.retryErrorMessage;
   Document document = parse(html);
   List<Element> dataList = document.querySelectorAll(".datalist > tbody > tr");
   String parseData(int i, int number) => dataList[i].querySelectorAll("td")[number].text.trim();
@@ -492,12 +492,12 @@ Future getScore() async {
   return scoreRows;
 }
 
-Future<dynamic> getExam() async {
+Future<dynamic> getExams() async {
   if (!await checkLoginValidity()) return false;
   print("getExam");
   Response response;
   try {
-    response = await request("post", AppConfig.getExamUrl);
+    response = await request("post", AppConfig.examListUri);
   } on TimeoutException catch (e) {
     return timeOutError(e);
   } on SocketException catch (e) {
@@ -508,7 +508,7 @@ Future<dynamic> getExam() async {
     return "未知异常";
   }
   String html = getHtml(response);
-  if (html == "") return AppConfig.dataError;
+  if (html == "") return AppConfig.unknownDataErrorMessage;
   Document document = parse(html);
   examList = [];
   examList2 = [];
@@ -518,15 +518,15 @@ Future<dynamic> getExam() async {
   examList = [];
   var _row = document.querySelectorAll(".datalist> tbody > tr");
   for (int i = 1; i < _row.length; i++) {
-    List<String> _list = [];
+    List<String> examInfos = [];
     String time = _row[i].querySelectorAll("td")[2].text;
     List<String> timeList = time.split("-");
-    _list.add(_row[i].querySelectorAll("td")[1].text);
-    _list.add(time);
+    examInfos.add(_row[i].querySelectorAll("td")[1].text);
+    examInfos.add(time);
     String examAddress = _row[i].querySelectorAll("td")[3].text;
     print(examAddress);
-    _list.add(examAddress.replaceAll(RegExp(r'\s'), " ").split(" ").last);
-    _list.add(_row[i].querySelectorAll("td")[4].text);
+    examInfos.add(examAddress.replaceAll(RegExp(r'\s'), " ").split(" ").last);
+    examInfos.add(_row[i].querySelectorAll("td")[4].text);
 
     if (timeList.indexOf("未公布") != -1) {
       upcomingExamCount++;
@@ -550,7 +550,7 @@ Future<dynamic> getExam() async {
       }
     }
 
-    examList.add(_list);
+    examList.add(examInfos);
   }
   print("getExam End");
   return true;
@@ -559,13 +559,13 @@ Future<dynamic> getExam() async {
 Future getCareer() async {
   if (!await checkLoginValidity()) return false;
   print("getCareer");
-  Future _next(List url) async {
+  Future next(String studentId, String classId) async {
     Response response;
     try {
       response = await request(
           "get",
-          Uri.http(AppConfig.jwUrl, "/academic/manager/studyschedule/studentScheduleShowByTerm.do",
-              {"z": "z", "studentId": url[0], "classId": url[1]}));
+          Uri.http(AppConfig.serverHost, AppConfig.studySchedulePath,
+              {"z": "z", "studentId": studentId, "classId": classId}));
     } on TimeoutException catch (e) {
       return timeOutError(e);
     } on SocketException catch (e) {
@@ -574,35 +574,35 @@ Future getCareer() async {
 
     Document document = parse(response.bodyBytes);
     List<List<String>> list = [];
-    careerCount = [0, 0, 0, 0];
+    courseCounts = [0, 0, 0, 0];
 
     document.querySelectorAll("img.no_output").forEach((Element element) {
       if (element.parent!.innerHtml.contains("/academic/styles/images/course_failed.png") ||
           element.parent!.innerHtml.contains("/academic/styles/images/course_failed_reelect.png")) {
         //重修&&不及格
-        careerCount[0]++;
+        courseCounts[0]++;
       }
       if (element.parent!.innerHtml.contains("/academic/styles/images/course_pass.png") ||
           element.parent!.innerHtml.contains("/academic/styles/images/course_pass_reelect.png")) {
         //合格
-        careerCount[1]++;
+        courseCounts[1]++;
       }
       if (element.parent!.innerHtml.contains("/academic/styles/images/course_unknown_pass.png")) {
         //成绩未知
-        careerCount[2]++;
+        courseCounts[2]++;
       }
     });
-    document.querySelectorAll("table.datalist tbody tr").forEach((Element element) {
-      var td = element.querySelectorAll("td");
-      if (td.length > 1) {
+    document.querySelectorAll("table.datalist tbody tr").forEach((Element row) {
+      List<Element> tds = row.querySelectorAll("td");
+      if (tds.length > 1) {
         List<String> _list = [];
-        td.forEach((element) {
+        tds.forEach((element) {
           _list.add(element.text.trim());
         });
         list.add(_list);
-      } else if (td.length == 1) {
+      } else if (tds.length == 1) {
         List<String> _list = [];
-        List<String> title = td[0].text.trim().split("学年");
+        List<String> title = tds[0].text.trim().split("学年");
         if (title.length > 1) {
           _list.add(title[0].trim() + " 学年");
           _list.add(title[1].trim());
@@ -633,7 +633,7 @@ Future getCareer() async {
 
   Response response;
   try {
-    response = await request("get", AppConfig.getCareerUrl);
+    response = await request("get", AppConfig.studyScheduleUri);
   } on TimeoutException catch (e) {
     return timeOutError(e);
   } on SocketException catch (e) {
@@ -644,24 +644,15 @@ Future getCareer() async {
     return "未知异常";
   }
   String html = getHtml(response);
-  if (html == "") return AppConfig.dataError;
+  if (html == "") return AppConfig.unknownDataErrorMessage;
 
   Document document = parse(html);
-  String url = document.querySelectorAll("a")[3].parent!.innerHtml.trim();
-  String urlA = url.substring(
-      url.indexOf('修读顺序：按照课组及学年学期的顺序，用二维表方式显示教学计划课组及课程"></a>') + '修读顺序：按照课组及学年学期的顺序，用二维表方式显示教学计划课组及课程"></a>'.length);
-  String urlB = urlA
-      .replaceAll('<a href="', "")
-      .replaceAll(
-          '" target="_blank"><img src="/academic/styles/images/Sort_Ascending.png" title="学期模式：按照学年学期的顺序，显示教学计划课程"></a>',
-          "")
-      .replaceAll("amp;", "")
-      .replaceAll('/academic/manager/studyschedule/scheduleJump.jsp?link=studentScheduleShowByTerm.do&studentId=', "")
-      .trim();
-  List urlC = urlB.split('&classId=');
-  print(urlC);
-  if (await _next(urlC) is String) {
-    return false;
+  Element link = document.querySelector("table.broken_tab a:last-child")!;
+  String url = link.attributes["href"]!;
+  Map<String, String> queryParameters = Uri.parse(url).queryParameters;
+  dynamic result = await next(queryParameters["studentId"]!, queryParameters["classId"]!);
+  if (result is String) {
+    return result;
   }
   print("getCareer End");
   return true;
@@ -689,9 +680,9 @@ Future getEmptyClassroom({
   bool weekMode = weekOfSemester != "-1" && dayOfWeek != "-1";
   try {
     if (weekMode) {
-      response = await request("post", AppConfig.getEmptyClassroomUrl2, body: postData);
+      response = await request("post", AppConfig.emptyClassroomWeekUri, body: postData);
     } else {
-      response = await request("post", AppConfig.getEmptyClassroomUrl, body: postData);
+      response = await request("post", AppConfig.emptyClassroomDayUri, body: postData);
     }
   } on TimeoutException catch (e) {
     return timeOutError(e);
@@ -703,7 +694,7 @@ Future getEmptyClassroom({
     return "未知异常";
   }
   String html = getHtml(response);
-  if (html == "") return AppConfig.dataError;
+  if (html == "") return AppConfig.unknownDataErrorMessage;
   Document document = parse(html);
   if (weekMode) {
     List<Element> classrooms = document.querySelectorAll("tr.infolist_common");
@@ -767,19 +758,19 @@ Future<dynamic> getUpdate({bool isRetry = false}) async {
   print("getUpdate");
   Response response;
   try {
-    response = await get(isRetry ? AppConfig.getUpdateUrl2 : AppConfig.getUpdateUrl).timeout(Duration(seconds: 4));
+    response = await get(isRetry ? AppConfig.appUpdateCheckUri : AppConfig.githubLatestReleaseUri).timeout(Duration(seconds: 4));
   } on TimeoutException catch (e) {
     print("getUpdate Error");
     print(e);
     if (isRetry) {
-      return AppConfig.timeOutError;
+      return AppConfig.timeoutErrorMessage;
     }
     return getUpdate(isRetry: true);
   } on SocketException catch (e) {
     print("getUpdate Error");
     print(e);
     if (isRetry) {
-      return AppConfig.socketError;
+      return AppConfig.networkErrorMessage;
     }
     return getUpdate(isRetry: true);
   } catch (e) {
@@ -825,9 +816,9 @@ Future<Response> request(String method, Uri uri, {Map<String, String>? body, Enc
   Map<String, String>? headers = {"cookie": mapCookieToString()};
   if (method == "post") {
     return await post(uri, body: body, headers: headers, encoding: encoding)
-        .timeout(Duration(seconds: AppConfig.timeoutSecond));
+        .timeout(Duration(seconds: AppConfig.requestTimeoutSeconds));
   } else {
-    return await get(uri, headers: headers).timeout(Duration(seconds: AppConfig.timeoutSecond));
+    return await get(uri, headers: headers).timeout(Duration(seconds: AppConfig.requestTimeoutSeconds));
   }
 }
 
@@ -838,20 +829,20 @@ String getHtml(Response response) {
 String timeOutError(e) {
   print("超时");
   print(e);
-  return AppConfig.timeOutError;
+  return AppConfig.timeoutErrorMessage;
 }
 
 String socketError(e) {
   print("连接失败");
   print(e);
-  return AppConfig.socketError;
+  return AppConfig.networkErrorMessage;
 }
 
 void getPermissions() async {
   print("getPermissions");
   Response response;
   try {
-    response = await request("get", Uri.https(AppConfig.authorUrl, AppConfig.controlUrl));
+    response = await request("get", Uri.https(AppConfig.authorUrl, AppConfig.controlConfigPath));
     Map result = jsonDecode(response.body);
     if (!result["permissions"]["all"]) {
       // exit(0);
@@ -868,12 +859,12 @@ Future<bool> checkLoginValidity() async {
   print("checkLoginSituation");
   Response response;
   try {
-    response = await request("get", AppConfig.checkLoginValidityUri);
+    response = await request("get", AppConfig.loginValidityCheckUri);
   } catch (e) {
     print('checkLoginValidity Error');
     print(e);
     return false;
   }
   String html = getHtml(response);
-  return !html.contains(AppConfig.reLoginErrorText);
+  return !html.contains("请重新登录");
 }

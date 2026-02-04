@@ -202,7 +202,7 @@ class _LayoutState extends State<Layout> with RouteAware {
       backgroundColor: readBackgroundColor(),
       body: PageView(
         physics: NeverScrollableScrollPhysics(),
-        controller: AppConfig.pageControl,
+        controller: AppData.pageControl,
         children: [HomePage(refresh: widget.refresh), SchedulePage(), MinePage()],
       ),
       bottomNavigationBar: CustomBottomNavigationBar(),

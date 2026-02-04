@@ -31,7 +31,7 @@ class _QueryScoresPageState extends State<QueryScoresPage> {
     // TODO: implement initState
     super.initState();
     eventBusListener = eventBus.on<ReloadScoreListState>().listen((ReloadScoreListState event) async {
-      await getScore().then(preprocess);
+      await getScores().then(preprocess);
     });
   }
 
@@ -136,7 +136,7 @@ class _QueryScoresPageState extends State<QueryScoresPage> {
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(CustomSnackBarWithAction(
         false,
-        AppConfig.notLoginError,
+        AppConfig.notLoggedInErrorMessage,
         context,
         () {
           Navigator.push(
@@ -151,7 +151,7 @@ class _QueryScoresPageState extends State<QueryScoresPage> {
     } else {
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(2, "查询中...", 10));
-      await getScore().then(preprocess);
+      await getScores().then(preprocess);
     }
   }
 

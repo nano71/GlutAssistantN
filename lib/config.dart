@@ -9,49 +9,46 @@ class AppConfig {
     initialPage: 0,
     keepPage: true,
   );
-  static String timeOutError = "教务无响应!";
-  static String socketError = "网络错误!";
-  static String dataError = "教务未知错误!";
-  static String notLoginError = "请先登录!";
-  static String retryError = "未知错误,请重试!";
-  static int timeoutSecond = 12;
+  static String timeoutErrorMessage = "教务无响应!";
+  static String networkErrorMessage = "网络错误!";
+  static String unknownDataErrorMessage = "教务未知错误!";
+  static String notLoggedInErrorMessage = "请先登录!";
+  static String retryErrorMessage = "未知错误,请重试!";
+  static int requestTimeoutSeconds = 12;
   static double listLeftIconSize = 18;
-  static Map cookie = {};
-  static String jwUrl = "jw.glutnn.cn";
-  static String authorUrl = "nano71.com";
-  static String controlUrl = "/gan/control.json";
-  static String updateApiUrl = "api.github.com";
-  static Uri getCodeUrl = httpUri("/academic/getCaptcha.do");
-  static Uri loginUrl = httpUri("/academic/j_acegi_security_check");
-  static Uri loginUrl2 = httpUri("/academic/index_new.jsp");
-  static Uri getWeekUrl = httpUri("/academic/listLeft.do");
-  static String getRecentExam = "/academic/student/exam/index.jsdo";
-  static Uri getExamUrl = httpUri("/academic/manager/examstu/studentQueryAllExam.do");
-  static Uri getNameUrl =
-      httpUri("/academic/student/studentinfo/studentInfoModifyIndex.do", {"frombase": "0", "wantTag": "0"});
-  static Uri getScoreUrl = httpUri("/academic/manager/score/studentOwnScore.do");
-  static Uri getCareerUrl = httpUri("/academic/manager/studyschedule/studentSelfSchedule.jsdo");
-  static Uri getUpdateUrl = Uri.https(updateApiUrl, "/repos/nano71/GlutAssistantN/releases/latest");
-  static Uri getUpdateUrl2 = Uri.https(authorUrl, "/gan/check");
-  static Uri getEmptyClassroomUrl = httpUri("/academic/teacher/teachresource/roomschedulequery.jsdo");
-  static Uri getEmptyClassroomUrl2 = httpUri("/academic/teacher/teachresource/roomschedule_week.jsdo");
-  static List<String> getScheduleUrl = [jwUrl, "/academic/student/currcourse/currcourse.jsdo"];
-  static List<String> getScheduleNextUrl = [jwUrl, "/academic/manager/coursearrange/showTimetable.do"];
-  static List<String> codeCheckUrl = [jwUrl, "/academic/checkCaptcha.do"];
-  static Uri checkLoginValidityUri = httpUri("/academic/showPersonalInfo.do");
-  static double schedulePageTouchMovesMinValue = 70.0;
+  static double schedulePageMinSwipeDistance = 70.0;
   static double schedulePageGridHeight = 60.0;
-  static String careerErrorText = "用户名不能为空";
-  static String examErrorText = "<title>提示信息</title>";
-  static String scheduleErrorText = "j_username";
-  static String reLoginErrorText = "请重新登录";
+  static const Map<String, String> cookies = {};
+  static String serverHost = "jw.glutnn.cn";
+  static String authorUrl = "nano71.com";
+  static String controlConfigPath = "/gan/control.json";
+  static String recentExamsPath = "/academic/student/exam/index.jsdo";
+  static String schedulePath =  "/academic/student/currcourse/currcourse.jsdo";
+  static String classReschedulePath =  "/academic/manager/coursearrange/showTimetable.do";
+  static String studySchedulePath = "/academic/manager/studyschedule/studentScheduleShowByTerm.do";
+  static String captchaCheckPath =  "/academic/checkCaptcha.do";
+  static Uri captchaUri = httpUri("/academic/getCaptcha.do");
+  static Uri loginUri = httpUri("/academic/j_acegi_security_check");
+  static Uri loginValidityCheckUri = httpUri("/academic/showPersonalInfo.do");
+  static Uri loginRedirectUri = httpUri("/academic/index_new.jsp");
+  static Uri currentWeekUri = httpUri("/academic/listLeft.do");
+  static Uri examListUri = httpUri("/academic/manager/examstu/studentQueryAllExam.do");
+  static Uri studentInfoUri =
+      httpUri("/academic/student/studentinfo/studentInfoModifyIndex.do", {"frombase": "0", "wantTag": "0"});
+  static Uri scoreQueryUri = httpUri("/academic/manager/score/studentOwnScore.do");
+  static Uri studyScheduleUri = httpUri("/academic/manager/studyschedule/studentSelfSchedule.jsdo");
+  static Uri githubLatestReleaseUri = Uri.https("api.github.com", "/repos/nano71/GlutAssistantN/releases/latest");
+  static Uri appUpdateCheckUri = Uri.https(authorUrl, "/gan/check");
+  static Uri emptyClassroomDayUri = httpUri("/academic/teacher/teachresource/roomschedulequery.jsdo");
+  static Uri emptyClassroomWeekUri = httpUri("/academic/teacher/teachresource/roomschedule_week.jsdo");
+
 }
 
 Uri httpUri(
   path, [
   Map<String, dynamic>? queryParameters,
 ]) {
-  return Uri.http(AppConfig.jwUrl, path, queryParameters);
+  return Uri.http(AppConfig.serverHost, path, queryParameters);
 }
 
 readHomePageSmallCardTextColor() {

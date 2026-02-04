@@ -119,6 +119,12 @@ class AppData {
   };
   static List<Course> tomorrowSchedule = [];
   static List<Course> todaySchedule = [];
+
+  static int pageIndex = 0;
+  static PageController pageControl = PageController(
+    initialPage: 0,
+    keepPage: true,
+  );
 }
 
 List queryScore = [];
@@ -126,7 +132,7 @@ List<double> scores = [0.0, 0.0, 0.0];
 List careerList = [];
 List careerList2 = [];
 List<String> careerInfo = ["", "", "", "", "", "", "", "", "", ""];
-List<int> careerCount = [0, 0, 0, 0];
+List<int> courseCounts = [0, 0, 0, 0];
 int totalCourseCount = 0;
 int totalMajorCourseCount = 0;
 int totalExamCount = 0;

@@ -10,7 +10,7 @@ import 'encode.dart';
 
 Future<String> checkVerificationCode(String code) async {
   print("codeCheck...");
-  final _url = Uri.http(AppConfig.codeCheckUrl[0], AppConfig.codeCheckUrl[1], {"captchaCode": code});
+  final _url = Uri.http(AppConfig.serverHost, AppConfig.captchaCheckPath, {"captchaCode": code});
   var postData = {
     "captchaCode": code,
   };
@@ -23,11 +23,11 @@ Future<String> checkVerificationCode(String code) async {
   } on TimeoutException catch (e) {
     print("getExam Error");
     print(e);
-    return AppConfig.timeOutError;
+    return AppConfig.timeoutErrorMessage;
   } on SocketException catch (e) {
     print("getExam Error");
     print(e);
-    return AppConfig.socketError;
+    return AppConfig.networkErrorMessage;
   } catch (e) {
     print("getExam Error");
     print(e);
@@ -39,7 +39,7 @@ Future<String> login(String studentId, String password, String code) async {
   try {
     print("loginJW...");
     var postData = {"j_username": studentId, "j_password": submitHexMd5(password), "j_captcha": code};
-    var response = await post(AppConfig.loginUrl, body: postData, headers: {"cookie": mapCookieToString()})
+    var response = await post(AppConfig.loginUri, body: postData, headers: {"cookie": mapCookieToString()})
         .timeout(Duration(seconds: 3));
     if (response.headers['location'] == "/academic/index_new.jsp") {
       await parseRawCookies(response.headers['set-cookie']);
@@ -51,10 +51,10 @@ Future<String> login(String studentId, String password, String code) async {
   } on TimeoutException catch (e) {
     print("getExam Error");
     print(e);
-    return AppConfig.timeOutError;
+    return AppConfig.timeoutErrorMessage;
   } on SocketException catch (e) {
     print("getExam Error");
     print(e);
-    return AppConfig.socketError;
+    return AppConfig.networkErrorMessage;
   }
 }

@@ -171,7 +171,7 @@ class _FormCardState extends State<_FormCard> {
             getEmptyClassroom().then(process);
             Navigator.pop(context);
           },
-          duration: AppConfig.timeoutSecond,
+          duration: AppConfig.requestTimeoutSeconds,
         ));
       }
     } else if (value is String) {

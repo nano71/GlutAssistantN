@@ -194,10 +194,10 @@ infoDialog(BuildContext context, String text) {
 
 verificationCodeDialog(BuildContext context, Function callback) async {
   TextEditingController textFieldController = TextEditingController();
-  var response = await get(AppConfig.getCodeUrl).timeout(Duration(seconds: 3));
+  var response = await get(AppConfig.captchaUri).timeout(Duration(seconds: 3));
   bool checking = false;
   getCode(Function fn) async {
-    response = await get(AppConfig.getCodeUrl).timeout(Duration(seconds: 3));
+    response = await get(AppConfig.captchaUri).timeout(Duration(seconds: 3));
     parseRawCookies(response.headers['set-cookie']);
     fn(() {});
   }

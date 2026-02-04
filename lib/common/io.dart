@@ -26,9 +26,9 @@ Future<void> writeCookie() async {
   if (!dirBool) {
     await file.create(recursive: true);
   }
-  print(AppConfig.cookie);
+  print(AppConfig.cookies);
   try {
-    await file.writeAsString(jsonEncode(AppConfig.cookie));
+    await file.writeAsString(jsonEncode(AppConfig.cookies));
     print("writeCookie End");
   } catch (e) {
     print(e);
@@ -44,8 +44,8 @@ Future<void> readCookie() async {
   }
   final result = await file.readAsString();
   if (result.isNotEmpty) {
-    AppConfig.cookie = jsonDecode(result);
-    print(AppConfig.cookie);
+    AppConfig.cookies = jsonDecode(result);
+    print(AppConfig.cookies);
     print("readCookie End");
   }
 }

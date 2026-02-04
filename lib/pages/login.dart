@@ -74,7 +74,7 @@ class LoginPageState extends State<LoginPage> {
   void getVerificationCode() async {
     try {
       print("getCode...");
-      var response = await get(AppConfig.getCodeUrl).timeout(Duration(milliseconds: 6000));
+      var response = await get(AppConfig.captchaUri).timeout(Duration(milliseconds: 6000));
       parseRawCookies(response.headers['set-cookie']);
       setState(() {
         verificationCodeImageBytes = response.bodyBytes;
@@ -84,7 +84,7 @@ class LoginPageState extends State<LoginPage> {
       print(e);
       setState(() {
         messageColor = Colors.red;
-        message = AppConfig.retryError;
+        message = AppConfig.retryErrorMessage;
       });
     }
   }

@@ -28,11 +28,11 @@ class _QueryExamsPageState extends State<QueryExamsPage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(2, "获取数据...", 6));
-      getExam().then(process);
+      getExams().then(process);
     });
 
     eventBusListener = eventBus.on<ReloadExamListState>().listen((event) {
-      getExam().then(process);
+      getExams().then(process);
     });
   }
 

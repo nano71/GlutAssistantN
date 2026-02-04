@@ -49,7 +49,7 @@ class _CareerPageState extends State<CareerPage> {
 
   getData() {
     ScaffoldMessenger.of(context).removeCurrentSnackBar();
-    ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(2, "获取数据...", AppConfig.timeoutSecond * 2));
+    ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(2, "获取数据...", AppConfig.requestTimeoutSeconds * 2));
     getCareer().then(process);
   }
 
@@ -69,7 +69,7 @@ class _CareerPageState extends State<CareerPage> {
     } else {
       if (value) {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(2, "处理数据...", AppConfig.timeoutSecond));
+        ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(2, "处理数据...", AppConfig.requestTimeoutSeconds));
         setState(() {});
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(1, "数据已更新!", 1));
@@ -101,7 +101,7 @@ class _CareerPageState extends State<CareerPage> {
             eventBus.fire(ReloadCareerPageState());
             Navigator.pop(context);
           },
-          duration: AppConfig.timeoutSecond,
+          duration: AppConfig.requestTimeoutSeconds,
         ));
       }
     }
@@ -284,19 +284,19 @@ class _CareerPageState extends State<CareerPage> {
                     children: [
                       Column(
                         children: [
-                          Text("${careerCount[1]} 门", style: TextStyle(color: Colors.white)),
+                          Text("${courseCounts[1]} 门", style: TextStyle(color: Colors.white)),
                           Text("成绩合格", style: TextStyle(color: Colors.white)),
                         ],
                       ),
                       Column(
                         children: [
-                          Text("${careerCount[0]} 门", style: TextStyle(color: Colors.white)),
+                          Text("${courseCounts[0]} 门", style: TextStyle(color: Colors.white)),
                           Text("重修/补考", style: TextStyle(color: Colors.white)),
                         ],
                       ),
                       Column(
                         children: [
-                          Text("${careerCount[2]} 门", style: TextStyle(color: Colors.white)),
+                          Text("${courseCounts[2]} 门", style: TextStyle(color: Colors.white)),
                           Text("成绩未知", style: TextStyle(color: Colors.white)),
                         ],
                       ),
