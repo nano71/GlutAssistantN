@@ -390,6 +390,11 @@ String onlyDigits(String input) {
   return input.replaceAll(RegExp(r'\D'), '');
 }
 
+String removeSpace(String input){
+  return input.replaceAll(RegExp(r'\s+'), '');
+
+}
+
 Future<void> readPackageInfo() async {
   AppData.packageInfo = await PackageInfo.fromPlatform();
 }

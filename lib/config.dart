@@ -18,7 +18,7 @@ class AppConfig {
   static double listLeftIconSize = 18;
   static double schedulePageMinSwipeDistance = 70.0;
   static double schedulePageGridHeight = 60.0;
-  static Map<String, String> cookies = {};
+  static Map cookies = {};
   static String serverHost = "jw.glutnn.cn";
   static String authorUrl = "nano71.com";
   static String controlConfigPath = "/gan/control.json";

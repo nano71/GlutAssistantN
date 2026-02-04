@@ -463,8 +463,7 @@ showCourseListDialog(BuildContext context, int academicYearNumber, int semesterN
   showDialog(
     context: context,
     builder: (BuildContext context) {
-      return NoRippleOverScroll(
-          child: SimpleDialog(
+      return SimpleDialog(
         backgroundColor: readCardBackgroundColor(),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16.0),
@@ -477,7 +476,7 @@ showCourseListDialog(BuildContext context, int academicYearNumber, int semesterN
               children: [
                 Text("$academicYearNumber - ${semesterNumber % 2 == 0 ? "春" : "秋"}学期"),
                 Text(
-                  "课程计数: ${TeachingPlan.courseInfoListBySemester[semesterNumber].length} 门",
+                  "课程计数: ${TeachingPlan.courseInfoListBySemester[semesterNumber - 1].length} 门",
                   style: TextStyle(color: Colors.grey, fontSize: 14),
                 )
               ],
@@ -501,14 +500,14 @@ showCourseListDialog(BuildContext context, int academicYearNumber, int semesterN
         ),
         contentPadding: EdgeInsets.only(left: 0, right: 0, bottom: 0),
         children: _CourseList(semesterNumber),
-      ));
+      );
     },
   );
 }
 
 List<Widget> _CourseList(int semesterNumber) {
   List<Widget> result = [];
-  for (CourseInfo courseInfo in TeachingPlan.courseInfoListBySemester[semesterNumber]) {
+  for (CourseInfo courseInfo in TeachingPlan.courseInfoListBySemester[semesterNumber - 1]) {
     result.add(Container(
       padding: EdgeInsets.fromLTRB(8, 8, 8, 8),
       margin: EdgeInsets.fromLTRB(8, 0, 8, 8),

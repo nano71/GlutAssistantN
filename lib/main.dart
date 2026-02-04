@@ -9,6 +9,7 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:workmanager/workmanager.dart';
 
 import 'common/io.dart';
+import 'common/noripple.dart';
 import 'common/service.dart';
 import 'config.dart';
 import 'data.dart';
@@ -105,6 +106,7 @@ class _AppState extends State<App> {
         key: appKey,
         debugShowCheckedModeBanner: false,
         navigatorObservers: [PageStackObserver()],
+        scrollBehavior: NoGlowScrollBehavior(),
         theme: ThemeData(
           useMaterial3: false,
           pageTransitionsTheme: PageTransitionsTheme(

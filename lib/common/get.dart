@@ -580,38 +580,42 @@ Future getCareer() async {
       }
     });
 
-    int i = 0;
+    List<Element> baseInfos = document.querySelectorAll("table.datalist tr:last-child > td");
+    TeachingPlan.department = baseInfos[0].text;
+    TeachingPlan.major = baseInfos[1].text;
+    TeachingPlan.grade = int.parse(onlyDigits(baseInfos[2].text));
+    TeachingPlan.educationalLevel = baseInfos[3].text;
+
     List<List<CourseInfo>> courseInfoListBySemester = [];
     int semesterCount = 0;
-    document.querySelectorAll("table.datalist tbody tr").forEach((Element row) {
-      List<Element> tds = row.querySelectorAll("td");
-      if (i == 0) {
-        TeachingPlan.department = tds[0].text;
-        TeachingPlan.major = tds[1].text;
-        TeachingPlan.grade = int.parse(onlyDigits(tds[2].text));
-        TeachingPlan.educationalLevel = tds[3].text;
+
+    document.querySelectorAll("table.datalist.output_ctx tbody tr").forEach((Element row) {
+      List<String> rowTexts = row.querySelectorAll("td").map((element) => removeSpace(element.text).trim()).toList();
+      if (rowTexts.length == 1 && rowTexts[0].contains("学年")) {
+        semesterCount += 1;
+        courseInfoListBySemester.add([]);
         return;
       }
-      if (tds.length > 1) {
+
+      if (rowTexts.length > 1) {
         TeachingPlan.totalCourseCount++;
-        if (tds[2].text.contains("考试")) {
+        if (rowTexts[2].contains("考试")) {
           TeachingPlan.totalExamCount++;
         }
-        if (tds[5].text.contains("专业")) {
+        if (rowTexts[5].contains("专业")) {
           TeachingPlan.totalMajorCourseCount++;
         }
         courseInfoListBySemester.last.add(CourseInfo(
-            number: tds[0].text,
-            name: tds[1].text,
-            evaluationMethod: tds[2].text,
-            creditPoints: tds[3].text,
-            hours: tds[4].text,
-            category: tds[5].text));
-      } else if (tds.length == 1) {
-        semesterCount += 1;
-        courseInfoListBySemester.add([]);
+          number: rowTexts[0],
+          name: rowTexts[1],
+          evaluationMethod: rowTexts[2],
+          creditPoints: rowTexts[3],
+          hours: rowTexts[4].replaceAll(".0", ""),
+          category: rowTexts[5],
+        ));
       }
     });
+    print("semesterCount: $semesterCount");
     TeachingPlan.schoolingLength = (semesterCount / 2).ceil();
     TeachingPlan.courseInfoListBySemester = courseInfoListBySemester;
     int start = 1;

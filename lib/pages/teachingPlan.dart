@@ -342,7 +342,7 @@ class _CollapsePanelState extends State<_CollapsePanel> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.fromLTRB(16, 0, 16, 0),
+      margin: EdgeInsets.fromLTRB(16, 0, 16, index == TeachingPlan.schoolingLength - 1 ? 16 : 0),
       child: CustomExpansionTile.ExpansionTile(
         onExpansionChanged: (e) {
           setState(() {
