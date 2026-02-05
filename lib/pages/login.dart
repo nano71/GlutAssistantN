@@ -72,15 +72,15 @@ class LoginPageState extends State<LoginPage> {
   }
 
   void getCaptcha() async {
+    print('LoginPageState.getCaptcha');
     try {
-      print("getCode...");
       var response = await get(AppConfig.captchaUri).timeout(Duration(milliseconds: 6000));
       parseRawCookies(response.headers['set-cookie']);
       setState(() {
         captchaImageBytes = response.bodyBytes;
       });
     } catch (e) {
-      print('LoginPageState._getCode Error');
+      print('LoginPageState.getCaptcha Error');
       print(e);
       setState(() {
         messageColor = Colors.red;
@@ -109,9 +109,11 @@ class LoginPageState extends State<LoginPage> {
   }
 
   void logging() async {
+    print('LoginPageState.logging');
     String studentId = studentIdController.text;
     String password = passwordController.text;
     Future<void> next(String value) async {
+      print('LoginPageState.next: $value');
       if (value == "success") {
         AppData.isLoggedIn = true;
         logged = true;
@@ -124,7 +126,6 @@ class LoginPageState extends State<LoginPage> {
         AppData.password = password;
         await getStudentName();
         await writeConfig();
-        print("initSchedule End");
         eventBus.fire(SetPageIndex());
         Navigator.pushAndRemoveUntil(
           context,

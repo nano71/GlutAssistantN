@@ -24,7 +24,7 @@ void main() async {
       writeConfig2(dotenv.env['CONFIG']!);
     }
 
-    print("startApp...");
+    print("start...");
     await readConfig();
     await readDeviceInfo();
     AppData.isDarkTheme = AppData.theme == "dark";
@@ -43,8 +43,7 @@ void main() async {
           final isRealError = event.throwable != null || (event.exceptions?.isNotEmpty ?? false);
           if (isRealError) {
             final errorMessage = event.throwable.toString();
-            print("意外错误:");
-            print(errorMessage);
+            print("意外错误: $errorMessage");
             eventBus.fire(ErrorEvent("意外错误"));
           }
           return event;

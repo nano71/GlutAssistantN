@@ -19,7 +19,7 @@ import '../type/course.dart';
 import '../type/teachingPlan.dart';
 
 Future getRecentExams() async {
-  print("getRecentExam");
+  print("getRecentExams");
   Response response;
   try {
     response = await request("get", Uri.http(AppConfig.serverHost, AppConfig.recentExamsPath));
@@ -43,6 +43,7 @@ Future getRecentExams() async {
         examList.add(cache);
       }
       print(examList);
+      print("getRecentExams End");
     } else {
       print("未登录教务");
     }
@@ -84,7 +85,7 @@ Future<void> getWeek() async {
     year = weekHtml.substring(0, 4).trim();
     semester = weekHtml.substring(4, 5);
   } else {
-    print("getWeek End else");
+    print("getWeek End else 2");
     return;
   }
   AppData.week = int.tryParse(week) ?? 0;
@@ -99,9 +100,8 @@ Future<void> getWeek() async {
     AppData.querySemester = semester;
   }
 
-  print(AppData.persistentData);
-  print("getWeek Save");
-  print(week + "周");
+  // print(AppData.persistentData);
+  print("getWeek Save: ${week + "周"}");
   await writeConfig();
   print("getWeek End");
 }
@@ -135,7 +135,6 @@ Future<dynamic> getSchedule() async {
   }
   String html = getHtml(response);
   if (html == "") return AppConfig.unknownDataErrorMessage;
-  print('1742');
   Document document = parse(html);
   List<Element> list = document.querySelectorAll(".infolist_common");
   List<Element> infoList(int index) => list[index].querySelectorAll("a.infolist");
@@ -301,7 +300,6 @@ Future<List<List<List<Course>>>> getScheduleChanges(String id, List<List<List<Co
   }
   print('getScheduleChanges');
   print("获取课表变更(调课/停课/补课)");
-  print('id: ' + id);
   Uri uri = Uri.http(AppConfig.serverHost, AppConfig.classReschedulePath, {
     "id": id,
     "yearid": (AppData.year - 1980).toString(),
@@ -422,16 +420,9 @@ Future<void> getStudentName() async {
   }
 }
 
-List getSemester() {
-  int y = DateTime.now().year;
-  return [
-    (y - 1980).toString(),
-  ];
-}
-
 Future getScores() async {
   if (!await checkLoginValidity()) return false;
-  print("getScore");
+  print("getScores");
   String year = "";
   String semesterNumber = "";
   if (AppData.queryYear != "全部") {
@@ -475,13 +466,13 @@ Future getScores() async {
     }
     scoreRows.add(elementColumns);
   }
-  print("getScore End");
+  print("getScores End");
   return scoreRows;
 }
 
 Future<dynamic> getExams() async {
   if (!await checkLoginValidity()) return false;
-  print("getExam");
+  print("getExams");
   Response response;
   try {
     response = await request("post", AppConfig.examListUri);
@@ -539,13 +530,13 @@ Future<dynamic> getExams() async {
 
     examList.add(examInfos);
   }
-  print("getExam End");
+  print("getExams End");
   return true;
 }
 
-Future getCareer() async {
+Future getTeachingPlan() async {
   if (!await checkLoginValidity()) return false;
-  print("getCareer");
+  print("getTeachingPlan");
   Future next(String studentId, String classId) async {
     Response response;
     try {
@@ -657,7 +648,7 @@ Future getCareer() async {
   if (result is String) {
     return result;
   }
-  print("getCareer End");
+  print("getTeachingPlan End");
   return true;
 }
 
@@ -678,7 +669,7 @@ Future getEmptyClassroom({
     "week": dayOfWeek, //星期
     "Submit": "确 定"
   };
-  print(postData);
+  print("params: $postData");
   Response response;
   bool weekMode = weekOfSemester != "-1" && dayOfWeek != "-1";
   try {
@@ -702,9 +693,8 @@ Future getEmptyClassroom({
   if (weekMode) {
     List<Element> classrooms = document.querySelectorAll("tr.infolist_common");
     List<Map> result = [];
-    print("classrooms.length");
-    print(classrooms.length);
-    print('--');
+    print("classrooms.length: ${classrooms.length}");
+
     classrooms.forEach((element) {
       List<Element> tds = element.querySelectorAll("td");
       List<Element> occupancyList = element.querySelectorAll("td tbody > tr:nth-child(2) > td");
@@ -771,14 +761,14 @@ Future<dynamic> getUpdate({bool isRetry = false}) async {
     }
     return getUpdate(isRetry: true);
   } on SocketException catch (e) {
-    print("getUpdate Error");
+    print("getUpdate Error 2");
     print(e);
     if (isRetry) {
       return AppConfig.networkErrorMessage;
     }
     return getUpdate(isRetry: true);
   } catch (e) {
-    print("getUpdate Error");
+    print("getUpdate Error 3");
     print(e);
     if (isRetry) {
       return "未知异常";
@@ -786,7 +776,7 @@ Future<dynamic> getUpdate({bool isRetry = false}) async {
     return getUpdate(isRetry: true);
   }
   if (response.body.contains('"message":"API rate limit exceeded for')) {
-    print("getUpdate End");
+    print("getUpdate Error 4");
     return "频繁的请求!";
   }
 
@@ -801,8 +791,8 @@ Future<dynamic> getUpdate({bool isRetry = false}) async {
   return true;
 }
 
-Future getUpdateForEveryday() async {
-  print("getUpdateForEveryday");
+Future getUpdateByEveryday() async {
+  print("getUpdateByEveryday");
   // ignore: dead_code
   await getUpdate();
 
@@ -813,7 +803,7 @@ Future getUpdateForEveryday() async {
     });
   }
 
-  print("getUpdateForEveryday End");
+  print("getUpdateByEveryday End");
 }
 
 Future<Response> request(String method, Uri uri, {Map<String, String>? body, Encoding? encoding}) async {
@@ -860,7 +850,7 @@ void getPermissions() async {
 }
 
 Future<bool> checkLoginValidity() async {
-  print("checkLoginSituation");
+  print("checkLoginValidity");
   Response response;
   try {
     response = await request("get", AppConfig.loginValidityCheckUri);
@@ -870,5 +860,6 @@ Future<bool> checkLoginValidity() async {
     return false;
   }
   String html = getHtml(response);
+  print("checkLoginValidity End");
   return !html.contains("请重新登录");
 }

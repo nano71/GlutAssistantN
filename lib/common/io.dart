@@ -65,6 +65,7 @@ Future<void> writeSchedule() async {
     await file.writeAsString(str);
     print("writeSchedule End");
   } catch (e) {
+    print("writeSchedule Error");
     print(e);
   }
 }
@@ -125,11 +126,12 @@ Future<File> endTimeLocalSupportFile() async {
 }
 
 Future<void> writeConfig2(String jsonString) async {
+  print('writeConfig2');
   final file = await configLocalSupportFile();
 
   try {
     await file.writeAsString(jsonString);
-    print("writeConfig End");
+    print("writeConfig2 End");
   } catch (e) {
     print(e);
   }
@@ -202,6 +204,7 @@ Future<void> readWeek() async {
   if (realWeek > 20) {
     AppData.startSoon = true;
   }
+  print('readWeek End');
 }
 
 Future<void> readConfig() async {
@@ -226,12 +229,12 @@ Future<void> readConfig() async {
     // 存在
     if (result.isNotEmpty) {
       print("缓存文件存在");
-      print(result);
+      print("cache File: $result");
       jsonDecode(result).forEach((key, value) {
         AppData.persistentData[key] = value.toString();
         // print(key);
         if (value == null || value == "") {
-          return print("skip " + key);
+          return print("skip: $key");
         }
         int parseInt(dynamic value) {
           if (value is String) {

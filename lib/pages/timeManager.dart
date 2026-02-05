@@ -28,7 +28,7 @@ class _TimeManagePageState extends State<TimeManagePage> {
     startTimeListBk = startTimeList;
   }
 
-  void _reset() {
+  void reset() {
     startTimeList = [];
     startTimeListBk = [];
     endTimeList = [];
@@ -59,24 +59,17 @@ class _TimeManagePageState extends State<TimeManagePage> {
     );
   }
 
-  void _save() {
+  void save() {
     if (_isError) {
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(0, "请认真检查!", 2));
       return;
     }
 
-    print("save");
     startTimeList = startTimeListBk;
     endTimeList = endTimeListBk;
     ScaffoldMessenger.of(context).removeCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(2, "已经更改!", 2));
-    print(startTimeListRestore);
-    print(endTimeListRestore);
-    print(startTimeList);
-    print(endTimeList);
-    print(startTimeListBk);
-    print(endTimeListBk);
     writeConfig();
     eventBus.fire(SetPageIndex());
     Navigator.pushAndRemoveUntil(
@@ -123,7 +116,7 @@ class _TimeManagePageState extends State<TimeManagePage> {
                           ],
                         ),
                         InkWell(
-                          onTap: _reset,
+                          onTap: reset,
                           child: Container(
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.all(Radius.circular(6.0)),
@@ -137,7 +130,7 @@ class _TimeManagePageState extends State<TimeManagePage> {
                           ),
                         ),
                         InkWell(
-                          onTap: _save,
+                          onTap: save,
                           child: Container(
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.all(Radius.circular(6.0)),
@@ -161,7 +154,7 @@ class _TimeManagePageState extends State<TimeManagePage> {
             ),
             SliverList(
               delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
-                return TimeManagerItem(index);
+                return _TimeManagerItem(index);
               }, childCount: startTimeList.length),
             ),
           ],
@@ -177,22 +170,22 @@ class _TimeManagePageState extends State<TimeManagePage> {
   }
 }
 
-class TimeManagerItem extends StatefulWidget {
+class _TimeManagerItem extends StatefulWidget {
   final int index;
 
-  TimeManagerItem(this.index);
+  _TimeManagerItem(this.index);
 
   @override
-  State<StatefulWidget> createState() => TimeManagerItemState(index);
+  State<StatefulWidget> createState() => _TimeManagerItemState(index);
 }
 
-class TimeManagerItemState extends State<TimeManagerItem> {
+class _TimeManagerItemState extends State<_TimeManagerItem> {
   final int index;
 
-  TimeManagerItemState(this.index);
+  _TimeManagerItemState(this.index);
 
-  TextEditingController _controller = TextEditingController();
-  TextEditingController _controller2 = TextEditingController();
+  TextEditingController controller = TextEditingController();
+  TextEditingController controller2 = TextEditingController();
 
   double width = 56;
   double height = 14;
@@ -205,14 +198,13 @@ class TimeManagerItemState extends State<TimeManagerItem> {
     String endTime2 = endTimeList[index][1].toString();
     if (int.parse(endTime) < 10) endTime = "0" + endTime;
     if (int.parse(endTime2) < 10) endTime2 = "0" + endTime2;
-    _controller.text = startTimeList[index][0].toString() + ":" + endTime;
-    _controller2.text = endTimeList[index][0].toString() + ":" + endTime2;
+    controller.text = startTimeList[index][0].toString() + ":" + endTime;
+    controller2.text = endTimeList[index][0].toString() + ":" + endTime2;
     print(endTime2);
   }
 
-  void _setStartTime(String value) {
+  void setStartTime(String value) {
     if (!value.contains(":") || value[value.length - 1] == ":" || value.isEmpty) {
-      print("Error");
       _isError = true;
       return;
     }
@@ -257,10 +249,10 @@ class TimeManagerItemState extends State<TimeManagerItem> {
               SizedBox(
                 width: width,
                 child: TextField(
-                  onChanged: _setStartTime,
+                  onChanged: setStartTime,
                   textAlign: TextAlign.center,
                   textAlignVertical: TextAlignVertical.center,
-                  controller: _controller,
+                  controller: controller,
                   scrollPadding: EdgeInsets.zero,
                   decoration: InputDecoration(
                     contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 2),
@@ -281,7 +273,7 @@ class TimeManagerItemState extends State<TimeManagerItem> {
                   onChanged: _setEndTime,
                   textAlign: TextAlign.center,
                   textAlignVertical: TextAlignVertical.center,
-                  controller: _controller2,
+                  controller: controller2,
                   scrollPadding: EdgeInsets.zero,
                   decoration: InputDecoration(
                     contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 2),
@@ -295,11 +287,4 @@ class TimeManagerItemState extends State<TimeManagerItem> {
       ),
     );
   }
-}
-
-Widget doublePoint() {
-  return Text(
-    " : ",
-    style: TextStyle(color: readColor()),
-  );
 }

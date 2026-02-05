@@ -51,7 +51,7 @@ class _teachingPlanPageState extends State<teachingPlanPage> {
   getData() {
     ScaffoldMessenger.of(context).removeCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(2, "获取数据...", AppConfig.requestTimeoutSeconds * 2));
-    getCareer().then(process);
+    getTeachingPlan().then(process);
   }
 
   @override

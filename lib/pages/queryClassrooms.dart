@@ -102,11 +102,10 @@ class _FormCardState extends State<_FormCard> {
         query["dayOfWeek"]![value] = "周" + weekTextList[i];
       }
       weekSelect = DateTime.now().weekday.toString();
-      print('weekSelect');
-      print(weekSelect);
       query["dayOfWeek"]!.remove("-1");
     });
-    print(query["dayOfWeek"]);
+    print('_FormCardState.initWeek: $weekSelect');
+    print('_FormCardState.initWeek: ${query["dayOfWeek"]}');
   }
 
   void initWhichWeek() {
@@ -147,7 +146,6 @@ class _FormCardState extends State<_FormCard> {
   }
 
   void process(value) {
-    print('process');
     if (value is Map<String, Map>) {
       setState(() {
         value.forEach((key, value) {
@@ -175,7 +173,6 @@ class _FormCardState extends State<_FormCard> {
         ));
       }
     } else if (value is String) {
-      print(value);
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(0, value, 4));
     }
@@ -265,7 +262,6 @@ class _FormCardState extends State<_FormCard> {
                         style: TextStyle(fontSize: 14, color: readTextColor2())),
                     items: DropdownMenuItemList("weekOfSemester"),
                     onChanged: (value) {
-                      print(value);
                       setState(() {
                         whichWeekSelect = value!;
                       });
@@ -297,7 +293,6 @@ class _FormCardState extends State<_FormCard> {
                     // hint: Text(query["dayOfWeek"]?[weekSelect], style: TextStyle(fontSize: 14)),
                     items: DropdownMenuItemList("dayOfWeek"),
                     onChanged: (value) {
-                      print(value);
                       setState(() {
                         weekSelect = value!;
                       });

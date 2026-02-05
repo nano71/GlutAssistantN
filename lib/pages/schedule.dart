@@ -188,7 +188,6 @@ class SchedulePageState extends State<SchedulePage> with AutomaticKeepAliveClien
     }
 
     eventBusListener = eventBus.on<ReloadSchedulePageState>().listen((event) {
-      print(1742);
       setState(() {});
       if (AppData.week != currentScheduleWeek) {
         currentScheduleWeek = weekInt(exclusionZero: true);
@@ -325,7 +324,7 @@ class _ContentState extends State<_Content> {
   }
 
   void onPressed(int week) {
-    print("onPressed2");
+    print('_ContentState.onPressed');
     setState(() => currentWeek = week);
   }
 }
@@ -429,8 +428,6 @@ class _Grid extends StatelessWidget {
     return InkWell(
         onTap: () {
           if (start != 0 && end != 0) {
-            print(start);
-            print(end);
             showCourseInfoDialog(context, week, weekDay, start);
             // ScaffoldMessenger.of(context).removeCurrentSnackBar();
             // ScaffoldMessenger.of(context).showSnackBar(jwSnackBar(1, teacher, 2));

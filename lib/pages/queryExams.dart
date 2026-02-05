@@ -67,7 +67,6 @@ class _QueryExamsPageState extends State<QueryExamsPage> {
         ));
       }
     } else if (value is String) {
-      print(value);
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(0, value, 4));
     }

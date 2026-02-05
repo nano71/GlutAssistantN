@@ -217,7 +217,6 @@ showCaptchaDialog(BuildContext context, Function callback) async {
     }
 
     Future<void> next(String value) async {
-      print(value);
       if (value == "success") {
         await login(AppData.studentId, AppData.password, textFieldController.text).then(next2);
       } else if (value == "fail") {
@@ -237,7 +236,6 @@ showCaptchaDialog(BuildContext context, Function callback) async {
       fn(() {
         checking = !checking;
       });
-      print(textFieldController.text);
       await checkCaptcha(textFieldController.text).then(next);
     }
   }

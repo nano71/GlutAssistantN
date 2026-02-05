@@ -13,8 +13,7 @@ import 'log.dart';
 
 @pragma("vm:entry-point")
 void backgroundCallback(Uri? data) async {
-  print('backgroundCallback');
-  print(data?.host);
+  print("backgroundCallback: ${data?.host}");
   if (data?.host == "refresh") {
     backstageRefresh();
   }
@@ -89,8 +88,7 @@ List<List<String>> _customParser(List<Course> originalData, [bool isTodaySchedul
       ]);
     }
   }
-  print("preSendData:");
-  print(processedData);
+  print("preSendData: $processedData");
   print('_customParser End');
 
   return processedData;
@@ -111,7 +109,7 @@ class HomeWidgetUtils {
   }
 
   static void updateWidgetContent() {
-    print('Appwidget.updateWidgetContent');
+    print('HomeWidgetUtils.updateWidgetContent');
     // if (!AppData.isLoggedIn) {
     //   print('Appwidget.updateWidgetContent.!isLoggedIn');
     //   commitUpdateWidgetTask(title: AppConfig.appTitle, message: AppConfig.notLoginError);
@@ -128,7 +126,7 @@ class HomeWidgetUtils {
       title = "明天的课表";
       originalData = _customParser(deepCopy(AppData.tomorrowSchedule), false);
       if (originalData.isEmpty) {
-        print('Appwidget.updateWidgetContent.originalData.isEmpty');
+        print('HomeWidgetUtils.updateWidgetContent.originalData.isEmpty');
         removeSchedules();
         commitUpdateWidgetTask(title: AppConfig.appTitle, message: "真没课啦~");
         return;
@@ -141,7 +139,7 @@ class HomeWidgetUtils {
   }
 
   static commitUpdateWidgetTask({String title = "", String message = ""}) {
-    print('Appwidget.commitUpdateWidgetTask');
+    print('HomeWidgetUtils.commitUpdateWidgetTask');
     HomeWidget.saveWidgetData<String>("title", title);
     HomeWidget.saveWidgetData<String>("message", message);
     HomeWidget.updateWidget(
@@ -150,13 +148,12 @@ class HomeWidgetUtils {
   }
 
   static void updateTodaySchedule(List<List> originalData) {
-    print('Appwidget.updateTodaySchedule');
+    print('HomeWidgetUtils.updateTodaySchedule');
     updateTemplateOfList("todaySchedule", originalData);
   }
 
   static void updateTomorrowSchedule(List<List> originalData) {
-    print('Appwidget.updateTomorrowSchedule');
-    print(originalData);
+    print('HomeWidgetUtils.updateTomorrowSchedule');
     updateTemplateOfList("tomorrowSchedule", originalData);
   }
 

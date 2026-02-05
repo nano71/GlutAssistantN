@@ -63,7 +63,7 @@ class _DataPreloadPageState extends State<DataPreloadPage> {
     readPackageInfo();
     await reinitialize(ignoreReadConfig: true);
     await readCookie();
-    getUpdateForEveryday();
+    getUpdateByEveryday();
     updateAppwidget();
     Timer(Duration(seconds: 1), () {
       setSystemNavigationBarColor(readCardBackgroundColor());

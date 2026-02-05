@@ -355,22 +355,6 @@ int weekInt({bool exclusionZero = false, int customWeek = -1}) {
   return week;
 }
 
-Map emptySchedule() {
-  print("emptySchedule");
-  Map _schedule = {};
-  for (var i = 1; i < 21; i++) {
-    _schedule[i.toString()] = {};
-    for (var j = 1; j < 8; j++) {
-      _schedule[i.toString()]?[j.toString()] = {};
-      for (var k = 1; k < 12; k++) {
-        _schedule[i.toString()]?[j.toString()]?[k.toString()] = ["null", "null", "null"];
-      }
-    }
-  }
-  print("emptySchedule End");
-  return _schedule;
-}
-
 bool isContainCourse(String courseNumber, String courseType) {
   return containCourseTypes.contains(courseType) && !excludedCourseNumbers.contains(courseNumber);
 }
@@ -406,7 +390,7 @@ Future<void> readDeviceInfo() async {
 
 // 判断是否国产ROM
 bool isChinaRom() {
-  print(AppData.deviceInfo);
+  print("AppData.deviceInfo: ${AppData.deviceInfo}");
   final brand = AppData.deviceInfo.brand.toLowerCase();
   final manu = AppData.deviceInfo.manufacturer.toLowerCase();
 

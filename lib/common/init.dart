@@ -22,8 +22,7 @@ initTodaySchedule() async {
   int day = now.day;
   int weekday = now.weekday;
 
-  print('当前日期: $year 年 $month 月 $day 日');
-  print(now.toIso8601String());
+  print('当前日期: $year 年 $month 月 $day 日 / ${now.toIso8601String()}');
   final int week = AppData.week;
   List<List<List<Course>>> schedule = List.from(AppData.schedule);
   List<Course> toDay = [];

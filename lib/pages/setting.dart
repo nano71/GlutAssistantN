@@ -460,6 +460,5 @@ List<DropdownMenuItem<int>> _ProgramBackendSurvivalThresholdItemList() {
         ),
         value: value));
   });
-  print(list[0]);
   return list;
 }

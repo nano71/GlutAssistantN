@@ -129,18 +129,16 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 
   void launchedFromWidget(Uri? uri) {
-    print('HomePageState._launchedFromWidget');
-    print(uri?.host);
+    print('_HomePageState.launchedFromWidget: ${uri?.host}');
     if (uri?.host == "refresh") refresh();
   }
 
   void refresh() {
-    print('HomePageState._refresh');
+    print('_HomePageState.refresh');
     updateIntervalTimer.cancel();
     rotationAnimationTimer.cancel();
     if (updateButtonClickCount < 8) {
       int maxRotationCount = 10000;
-      print("刷新${DateTime.now()}");
       updateButtonClickCount++;
       if (updateButtonClickCount == 7) {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
@@ -155,7 +153,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         curve: Curves.linear,
       );
       afterSuccess() async {
-        print('HomePageState.afterSuccess');
+        print('_HomePageState.afterSuccess');
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(2, "处理数据...", 10));
         await writeSchedule();
@@ -166,7 +164,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         eventBus.fire(ReloadTomorrowListState());
         setState(() {});
         maxRotationCount = 0;
-        print("刷新结束${DateTime.now()}");
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(1, "数据已更新!", 1));
         HomeWidgetUtils.updateWidgetContent();

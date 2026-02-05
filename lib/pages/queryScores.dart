@@ -104,7 +104,6 @@ class _QueryScoresPageState extends State<QueryScoresPage> {
       } else {
         if (list[i].length > 5) {
           if (isContainCourse(courseNumber, courseType)) {
-            print(list[i]);
             gradePointSummary += gradePoint * credit;
             creditSummary += credit;
           }
@@ -114,9 +113,6 @@ class _QueryScoresPageState extends State<QueryScoresPage> {
         }
       }
     }
-
-    print(scoreSummary);
-
     double scoreAverage = double.parse((scoreSummary / (list.length - excluded)).toStringAsFixed(2));
     double gradePointAverage = double.parse((gradePointSummary / creditSummary).toStringAsFixed(2));
 
@@ -131,7 +127,6 @@ class _QueryScoresPageState extends State<QueryScoresPage> {
 
   void getData() async {
     // Global.cookie = {};
-    print(AppData.studentName);
     if (!AppData.isLoggedIn) {
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(CustomSnackBarWithAction(
