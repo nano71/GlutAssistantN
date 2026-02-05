@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:glutassistantn/widget/icons.dart';
 import 'package:remixicon/remixicon.dart';
 
+import '../type/classroom.dart';
 import '/common/get.dart';
 import '/data.dart';
 import '/widget/bars.dart';
@@ -92,7 +93,7 @@ class _FormCardState extends State<_FormCard> {
     super.initState();
     initWhichWeek();
     initWeek();
-    getEmptyClassroom().then(process);
+    getFreeClassrooms().then(process);
   }
 
   void initWeek() {
@@ -152,7 +153,7 @@ class _FormCardState extends State<_FormCard> {
           query[key] = value;
         });
       });
-    } else if (value is List<Map>) {
+    } else if (value is List<Classroom>) {
       setState(() {
         classroomList = value;
       });
@@ -166,7 +167,7 @@ class _FormCardState extends State<_FormCard> {
           context,
           () {
             ScaffoldMessenger.of(context).removeCurrentSnackBar();
-            getEmptyClassroom().then(process);
+            getFreeClassrooms().then(process);
             Navigator.pop(context);
           },
           duration: AppConfig.requestTimeoutSeconds,
@@ -182,7 +183,7 @@ class _FormCardState extends State<_FormCard> {
     if (buildingSelect != "-1") {
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(2, "查询中...", 10));
-      getEmptyClassroom(dayOfWeek: weekSelect, weekOfSemester: whichWeekSelect, building: buildingSelect).then(process);
+      getFreeClassrooms(dayOfWeek: weekSelect, weekOfSemester: whichWeekSelect, building: buildingSelect).then(process);
     } else {
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(0, "请选择教学楼", 4));
@@ -222,7 +223,7 @@ class _FormCardState extends State<_FormCard> {
                     items: DropdownMenuItemList("buildingCode"),
                     onTap: () {
                       if (query["buildingCode"]!.length == 1) {
-                        getEmptyClassroom().then(process);
+                        getFreeClassrooms().then(process);
                       }
                     },
                     onChanged: (value) {

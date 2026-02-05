@@ -3,11 +3,12 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_gbk2utf8/flutter_gbk2utf8.dart';
+import 'package:glutassistantn/type/classroom.dart';
+import 'package:glutassistantn/type/exam.dart';
 import 'package:glutassistantn/type/schedule.dart';
 import 'package:html/dom.dart';
 import 'package:html/parser.dart';
 import 'package:http/http.dart';
-import 'package:sentry_flutter/sentry_flutter.dart';
 
 import '/common/cookie.dart';
 import '/common/io.dart';
@@ -502,41 +503,34 @@ Future<dynamic> getExams() async {
   upcomingExamCount = 0;
   document = parse(response.body);
   examList = [];
-  var _row = document.querySelectorAll(".datalist> tbody > tr");
-  for (int i = 1; i < _row.length; i++) {
-    List<String> examInfos = [];
-    String time = _row[i].querySelectorAll("td")[2].text;
-    List<String> timeList = time.split("-");
-    examInfos.add(_row[i].querySelectorAll("td")[1].text);
-    examInfos.add(time);
-    String examAddress = _row[i].querySelectorAll("td")[3].text;
-    print(examAddress);
-    examInfos.add(examAddress.replaceAll(RegExp(r'\s'), " ").split(" ").last);
-    examInfos.add(_row[i].querySelectorAll("td")[4].text);
+  List<Element> rows = document.querySelectorAll(".datalist> tbody > tr");
 
-    if (timeList.indexOf("未公布") != -1) {
-      upcomingExamCount++;
-      examList2.add(false);
-    } else {
-      try {
-        DateTime startDate = DateTime.now();
-        DateTime endDate = DateTime(int.parse(timeList[0].substring(0, 4)), int.parse(timeList[1].substring(0, 2)),
-            int.parse(timeList[2].substring(0, 2)));
-        int days = endDate.difference(startDate).inDays;
-        if (days < 0) {
-          examList2.add(true);
-          completedExamCount++;
-        } else {
-          upcomingExamCount++;
-          examList2.add(false);
-        }
-      } catch (error, stackTrace) {
-        Sentry.captureException(error, stackTrace: stackTrace, hint: Hint.withMap({"time": time}));
-        continue;
-      }
+  for (int i = 1; i < rows.length; i++) {
+    List<String> texts = rows[i].children.map((element) => element.text.trim()).toList();
+    bool isPast = false;
+    try {
+      DateTime now = DateTime.now();
+      List<String> parts = texts[2].split(' ');
+      String datePart = parts[0];
+      List<String> times = parts[1].split('--');
+      DateTime endTime = DateTime.parse('$datePart ${times[1]}');
+      isPast = now.isAfter(endTime);
+    } catch (e) {
+      print("getExams Error: 解析失败:${texts[2]}");
     }
 
-    examList.add(examInfos);
+    if (isPast) {
+      completedExamCount++;
+    } else {
+      upcomingExamCount++;
+    }
+
+    examList.add(Exam(
+      courseName: texts[1],
+      timeRange: texts[2],
+      location: texts[3],
+      isPast: isPast,
+    ));
   }
   print("getExams End");
   return true;
@@ -660,7 +654,7 @@ Future getTeachingPlan() async {
   return true;
 }
 
-Future getEmptyClassroom({
+Future getFreeClassrooms({
   String dayOfWeek = "1",
   String weekOfSemester = "-1",
   String building = "-1",
@@ -700,38 +694,29 @@ Future getEmptyClassroom({
   Document document = parse(html);
   if (weekMode) {
     List<Element> classrooms = document.querySelectorAll("tr.infolist_common");
-    List<Map> result = [];
+    List<Classroom> result = [];
     print("classrooms.length: ${classrooms.length}");
 
     classrooms.forEach((element) {
-      List<Element> tds = element.querySelectorAll("td");
-      List<Element> occupancyList = element.querySelectorAll("td tbody > tr:nth-child(2) > td");
-      List<bool> cache = [];
-      String text(i) {
-        return tds[i].innerHtml;
-      }
-
-      int j = 0;
-      if (occupancyList.length == 11) {
-        for (int i = 0; i < 11; i++) {
-          if (!occupancyList[i].innerHtml.contains("&nbsp;")) {
-            cache.add(true);
-          } else {
-            cache.add(false);
-            j++;
-          }
+      int freeCount = 0;
+      List<String> texts = element.querySelectorAll("td").map((element) => element.text.trim()).toList();
+      List<bool> occupancy = element.querySelectorAll("td tbody > tr:nth-child(2) > td").map((element) {
+        bool isFree = element.innerHtml.contains("&nbsp;");
+        if (isFree) {
+          freeCount++;
         }
-        result.add({
-          "classroom": text(0),
-          "seats": text(1),
-          "examSeats": text(3),
-          "type": text(5),
-          "occupancyList": cache,
-          "todayEmpty": j == 11
-        });
-      }
+        return !isFree;
+      }).toList();
+
+      result.add(Classroom(
+        roomNumber: texts[0],
+        seatCount: int.tryParse(texts[1]) ?? 0,
+        examSeatCount: int.tryParse(texts[3]) ?? 0,
+        type: texts[5],
+        occupancy: occupancy,
+        isAllDayFree: freeCount == 11,
+      ));
     });
-    print(result[result.length - 1]);
     print('getEmptyClassroom end');
     return result;
   }

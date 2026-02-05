@@ -4,7 +4,9 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:glutassistantn/type/classroom.dart';
 import 'package:glutassistantn/type/course.dart';
+import 'package:glutassistantn/type/exam.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 import 'config.dart';
@@ -133,10 +135,10 @@ List careerList = [];
 List careerList2 = [];
 List<String> careerInfo = ["", "", "", "", "", "", "", "", "", ""];
 List<int> courseCountsByScore = [0, 0, 0, 0];
-List<List<String>> examList = [];
+List<Exam> examList = [];
 List<bool> examList2 = [];
 
-List<Map> classroomList = [];
+List<Classroom> classroomList = [];
 
 int completedExamCount = 0;
 int upcomingExamCount = 0;

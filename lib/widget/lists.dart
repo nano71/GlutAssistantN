@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:glutassistantn/type/course.dart';
 import 'package:remixicon/remixicon.dart';
 
+import '../type/classroom.dart';
+import '../type/exam.dart';
 import '/config.dart';
 import '../data.dart';
 import 'bars.dart';
@@ -452,6 +454,7 @@ class _ScoreListState extends State<ScoreList> {
   Widget build(BuildContext context) {
     return SliverList(
       delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
+        CourseScore courseScore = courseScores[index];
         return Column(
           children: [
             Container(
@@ -468,13 +471,13 @@ class _ScoreListState extends State<ScoreList> {
                           Container(
                             width: MediaQuery.of(context).size.width - 60 - 32,
                             child: Text(
-                              courseScores[index].courseName,
+                              courseScore.courseName,
                               style: TextStyle(fontSize: 16, color: readTextColor()),
                             ),
                           ),
                           Container(
                             child: Text(
-                              courseScores[index].teacher == "" ? "慕课成绩不会被统计" : courseScores[index].teacher,
+                              courseScore.teacher == "" ? "慕课成绩不会被统计" : courseScore.teacher,
                               style: TextStyle(color: readTextColor2(), fontSize: 12),
                             ),
                           ),
@@ -488,7 +491,7 @@ class _ScoreListState extends State<ScoreList> {
                       ScaffoldMessenger.of(context).removeCurrentSnackBar();
                       ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(
                         2,
-                        "总评: ${courseScores[index].rawScore}   绩点: ${courseScores[index].gradePoint}   学分: ${courseScores[index].credit}",
+                        "总评: ${courseScore.rawScore}   绩点: ${courseScore.gradePoint}   学分: ${courseScore.credit}",
                         4,
                         60
                       ));
@@ -500,14 +503,14 @@ class _ScoreListState extends State<ScoreList> {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.all(Radius.circular(6.0)),
                         // color: Global.homeCardsColor,
-                        color: readScoreColor(courseScores[index].score),
+                        color: readScoreColor(courseScore.score),
                       ),
                       child: Column(children: [
                         Text(
                             // "不及格",
-                            courseScores[index].rawScore,
+                            courseScore.rawScore,
                             style: TextStyle(fontSize: 16, color: Colors.white)),
-                        Text(courseScores[index].gradePoint.toString(),
+                        Text(courseScore.gradePoint.toString(),
                             style: TextStyle(color: Colors.white, fontSize: 12)),
                       ]),
                     ),
@@ -530,33 +533,33 @@ class _ScoreListState extends State<ScoreList> {
 }
 
 class ExamList extends StatefulWidget {
-  ExamListState createState() => ExamListState();
+  _ExamListState createState() => _ExamListState();
 }
 
-class ExamListState extends State<ExamList> {
-  _getColor(int index) {
-    if (examList2[index]) {
+class _ExamListState extends State<ExamList> {
+  iconColor(Exam exam) {
+    if (exam.isPast) {
       return readScheduleListTextColor3();
     }
     return readColor();
   }
 
-  _getColor2(int index) {
-    if (examList2[index]) {
+  examNameColor(Exam exam) {
+    if (exam.isPast) {
       return readScheduleListTextColor3();
     }
     return readTextColor();
   }
 
-  _getColor3(int index) {
-    if (examList2[index]) {
+  textColor(Exam exam) {
+    if (exam.isPast) {
       return readScheduleListTextColor3();
     }
     return readScheduleListTextColor2();
   }
 
-  _getIcon(int index) {
-    if (examList2[index]) {
+  LeftIcon(Exam exam) {
+    if (exam.isPast) {
       return Remix.check_line;
     }
     return Remix.timer_line;
@@ -566,6 +569,7 @@ class ExamListState extends State<ExamList> {
   Widget build(BuildContext context) {
     return SliverList(
       delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
+        Exam exam = examList[index];
         return Container(
           padding: EdgeInsets.fromLTRB(16, index == 0 ? 16 : 0, 16, 0),
           child: Column(
@@ -578,8 +582,8 @@ class ExamListState extends State<ExamList> {
                       Column(
                         children: [
                           Icon(
-                            _getIcon(index),
-                            color: _getColor(index),
+                            LeftIcon(exam),
+                            color: iconColor(exam),
                             size: AppConfig.listLeftIconSize,
                           )
                         ],
@@ -591,25 +595,24 @@ class ExamListState extends State<ExamList> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            courseLongText2Short(examList[index][0]),
-                            style: TextStyle(fontSize: 16, color: _getColor2(index)),
+                            courseLongText2Short(exam.courseName),
+                            style: TextStyle(fontSize: 16, color: examNameColor(exam)),
                           ),
                           SizedBox(
                             height: 8,
                           ),
                           Text(
-                            examList[index][1],
-                            style: TextStyle(fontSize: 12, color: _getColor3(index)),
+                            exam.timeRange,
+                            style: TextStyle(fontSize: 12, color: textColor(exam)),
                           ),
                         ],
                       ),
                     ],
                   ),
                   Text(
-                    examList[index][2],
-                    style: TextStyle(color: _getColor3(index)),
+                    exam.location,
+                    style: TextStyle(color: textColor(exam)),
                   ),
-                  // Text(examList[index][3]),
                 ],
               ),
               Container(
@@ -628,13 +631,12 @@ class ExamListState extends State<ExamList> {
 }
 
 class ClassroomList extends StatefulWidget {
-  ClassroomListState createState() => ClassroomListState();
+  _ClassroomListState createState() => _ClassroomListState();
 }
 
-class ClassroomListState extends State<ClassroomList> {
+class _ClassroomListState extends State<ClassroomList> {
   // ignore: cancel_subscriptions
   late StreamSubscription<ReloadClassroomListState> eventBusListener;
-  List<Map> _classroomList = classroomList;
 
   void initState() {
     // TODO: implement initState
@@ -642,7 +644,6 @@ class ClassroomListState extends State<ClassroomList> {
     eventBusListener = eventBus.on<ReloadClassroomListState>().listen((event) {
       print("reloadState");
       setState(() {
-        _classroomList = classroomList;
       });
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(1, "数据已更新!", 1));
@@ -656,11 +657,13 @@ class ClassroomListState extends State<ClassroomList> {
   }
 
   static String promptMessage(List<bool> boolList) {
+    print('_ClassroomListState.promptMessage');
+    print(boolList);
     String message = "第";
     int j = 0;
     for (int i = 0; i < boolList.length; i++) {
       if (boolList[i]) {
-        message += "${i + 1} , ";
+        message += " ${i + 1} ";
         j++;
       }
     }
@@ -669,7 +672,6 @@ class ClassroomListState extends State<ClassroomList> {
     } else if (j == 11) {
       message = "该教室全天满课状态";
     } else {
-      message = message.substring(0, message.length - 3);
       message += "节被占用";
     }
 
@@ -682,19 +684,19 @@ class ClassroomListState extends State<ClassroomList> {
     // throw UnimplementedError();
     return SliverList(
         delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
-      Map item = _classroomList[index];
+      Classroom classroom = classroomList[index];
       // print(632);
       // print(item);
-      return ClassroomListItem(item);
-    }, childCount: _classroomList.length));
+      return _ClassroomListItem(classroom);
+    }, childCount: classroomList.length));
   }
 }
 
-class ClassroomListItem extends StatelessWidget {
-  late final Map item;
+class _ClassroomListItem extends StatelessWidget {
+  late final Classroom classroom;
 
-  ClassroomListItem([item]) {
-    this.item = item;
+  _ClassroomListItem([classroom]) {
+    this.classroom = classroom;
   }
 
   @override
@@ -703,7 +705,7 @@ class ClassroomListItem extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(12.0)),
-        color: readClassRoomCardBackgroundColor(item["todayEmpty"]),
+        color: readClassRoomCardBackgroundColor(classroom.isAllDayFree),
       ),
       padding: EdgeInsets.fromLTRB(12, 12, 12, 12),
       margin: EdgeInsets.fromLTRB(16, 0, 16, 16),
@@ -717,7 +719,7 @@ class ClassroomListItem extends StatelessWidget {
                 child: Row(
                   children: [
                     Text(
-                      item["classroom"],
+                      classroom.roomNumber,
                       style: TextStyle(color: Colors.white, fontSize: 20),
                     ),
                     Icon(
@@ -733,7 +735,7 @@ class ClassroomListItem extends StatelessWidget {
                 },
               ),
               Text(
-                item["type"],
+                classroom.type,
                 style: TextStyle(color: Colors.white, fontSize: 12),
               ),
             ],
@@ -744,14 +746,14 @@ class ClassroomListItem extends StatelessWidget {
           Row(
             children: [
               Text(
-                "座位容量: " + item["seats"],
+                "座位容量: ${classroom.seatCount}",
                 style: TextStyle(color: Colors.white),
               ),
               SizedBox(
                 width: 16,
               ),
               Text(
-                "考试容量: " + item["examSeats"],
+                "考试容量: ${classroom.examSeatCount}",
                 style: TextStyle(color: Colors.white),
               )
             ],
@@ -759,7 +761,7 @@ class ClassroomListItem extends StatelessWidget {
           Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(12.0)),
-              color: readClassRoomCardTextContentBackgroundColor(item["todayEmpty"]),
+              color: readClassRoomCardTextContentBackgroundColor(classroom.isAllDayFree),
             ),
             padding: EdgeInsets.fromLTRB(12, 12, 12, 12),
             margin: EdgeInsets.fromLTRB(0, 16, 0, 0),
@@ -770,7 +772,7 @@ class ClassroomListItem extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      item["todayEmpty"] ? "占用情况 - 全天为空" : "占用情况",
+                      classroom.isAllDayFree ? "占用情况 - 全天为空" : "占用情况",
                       style: TextStyle(color: Colors.white),
                     ),
                     InkWell(
@@ -782,7 +784,7 @@ class ClassroomListItem extends StatelessWidget {
                       onTap: () {
                         ScaffoldMessenger.of(context).removeCurrentSnackBar();
                         ScaffoldMessenger.of(context).showSnackBar(
-                            CustomSnackBar(2, ClassroomListState.promptMessage(item["occupancyList"]), 4, 22));
+                            CustomSnackBar(2, _ClassroomListState.promptMessage(classroom.occupancy), 4, 22));
                       },
                     )
                   ],
@@ -792,7 +794,7 @@ class ClassroomListItem extends StatelessWidget {
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: occupancyList(item["occupancyList"]),
+                  children: _Occupancy(classroom.occupancy),
                 ),
                 Row(),
               ],
@@ -804,7 +806,7 @@ class ClassroomListItem extends StatelessWidget {
   }
 }
 
-List<Widget> occupancyList(List<bool> boolList) {
+List<Widget> _Occupancy(List<bool> boolList) {
   List<Widget> list = [];
   for (int i = 0; i < boolList.length; i++) {
     String text = (i + 1).toString();
