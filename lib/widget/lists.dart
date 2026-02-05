@@ -141,7 +141,7 @@ class _TodayCourseListItem extends StatefulWidget {
 }
 
 class _TodayCourseListItemState extends State<_TodayCourseListItem> {
-  Color timeColors(int index) {
+  Color timeColor(int index) {
     String result = timeUntilNextClass(AppData.todaySchedule[index].index)[3];
     if (result == "before") {
       return readColor();
@@ -192,7 +192,7 @@ class _TodayCourseListItemState extends State<_TodayCourseListItem> {
     }
   }
 
-  Color textColorsTop(int index) {
+  Color topTextColors(int index) {
     String result = timeUntilNextClass(AppData.todaySchedule[index].index)[3];
     if (result == "before") {
       return readScheduleListTextColor();
@@ -205,7 +205,7 @@ class _TodayCourseListItemState extends State<_TodayCourseListItem> {
     }
   }
 
-  Color textColorsDown(int index) {
+  Color bottomTextColors(int index) {
     String result = timeUntilNextClass(AppData.todaySchedule[index].index)[3];
     if (result == "before") {
       return readScheduleListTextColor2();
@@ -223,11 +223,11 @@ class _TodayCourseListItemState extends State<_TodayCourseListItem> {
   }
 
   TextStyle smallTextStyle() {
-    return TextStyle(decoration: TextDecoration.none, fontSize: 12, color: textColorsDown(widget.index));
+    return TextStyle(decoration: TextDecoration.none, fontSize: 12, color: bottomTextColors(widget.index));
   }
 
   TextStyle normTextStyle() {
-    return TextStyle(decoration: TextDecoration.none, color: textColorsTop(widget.index));
+    return TextStyle(decoration: TextDecoration.none, color: topTextColors(widget.index));
   }
 
   String timePreprocessor(String time) {
@@ -262,7 +262,7 @@ class _TodayCourseListItemState extends State<_TodayCourseListItem> {
                 margin: EdgeInsets.fromLTRB(0, 0, 8, 0),
                 child: Icon(
                   icon(widget.index),
-                  color: timeColors(widget.index),
+                  color: timeColor(widget.index),
                   size: AppConfig.listLeftIconSize,
                 ),
               ),
@@ -311,7 +311,7 @@ class _TodayCourseListItemState extends State<_TodayCourseListItem> {
                 alignment: Alignment.centerRight,
                 child: Text(
                   (timeText(widget.index - 1).contains("后") ? "" : timeText(widget.index)),
-                  style: TextStyle(decoration: TextDecoration.none, fontSize: 14, color: timeColors(widget.index)),
+                  style: TextStyle(decoration: TextDecoration.none, fontSize: 14, color: timeColor(widget.index)),
                 ),
               )
             ],
