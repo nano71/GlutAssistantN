@@ -4,7 +4,7 @@ import 'package:glutassistantn/config.dart';
 import 'package:glutassistantn/widget/cards.dart';
 import 'package:remixicon/remixicon.dart';
 
-import '/custom/expansiontile.dart' as CustomExpansionTile;
+import '/custom/expansionTile.dart' as CustomExpansionTile;
 import '/widget/bars.dart';
 
 class AboutPage extends StatefulWidget {

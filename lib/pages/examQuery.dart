@@ -11,15 +11,15 @@ import '/widget/lists.dart';
 import '../data.dart';
 import 'teachingPlan.dart';
 
-class QueryExamsPage extends StatefulWidget {
+class ExamQueryPage extends StatefulWidget {
 
-  QueryExamsPage({Key? key}) : super(key: key);
+  ExamQueryPage({Key? key}) : super(key: key);
 
   @override
-  State<QueryExamsPage> createState() => _QueryExamsPageState();
+  State<ExamQueryPage> createState() => _ExamQueryPageState();
 }
 
-class _QueryExamsPageState extends State<QueryExamsPage> {
+class _ExamQueryPageState extends State<ExamQueryPage> {
   // ignore: cancel_subscriptions
   late StreamSubscription<ReloadExamListState> eventBusListener;
 

@@ -6,8 +6,8 @@ import 'package:home_widget/home_widget.dart';
 
 import '/common/get.dart';
 import '/common/init.dart';
-import '/pages/queryExams.dart';
-import '/pages/queryScores.dart';
+import '/pages/examQuery.dart';
+import '/pages/scoreQuery.dart';
 import '/widget/bars.dart';
 import '/widget/cards.dart';
 import '/widget/icons.dart';
@@ -337,7 +337,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         if (!AppData.isLoggedIn) {
                           Navigator.of(context).push(MaterialPageRoute(builder: (context) => LoginPage()));
                         } else {
-                          Navigator.of(context).push(MaterialPageRoute(builder: (context) => QueryScoresPage()));
+                          Navigator.of(context).push(MaterialPageRoute(builder: (context) => ScoreQueryPage()));
                         }
                         animationControllerForCenterCard.reverse();
                       });
@@ -383,7 +383,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         if (!AppData.isLoggedIn) {
                           Navigator.of(context).push(MaterialPageRoute(builder: (context) => LoginPage()));
                         } else {
-                          Navigator.of(context).push(MaterialPageRoute(builder: (context) => QueryExamsPage()));
+                          Navigator.of(context).push(MaterialPageRoute(builder: (context) => ExamQueryPage()));
                         }
                         animationControllerForRightCard.reverse();
                       });

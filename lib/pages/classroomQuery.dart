@@ -8,16 +8,16 @@ import '/widget/bars.dart';
 import '/widget/lists.dart';
 import '../config.dart';
 
-class QueryRoomPage extends StatefulWidget {
+class ClassroomQueryPage extends StatefulWidget {
   final String title;
 
-  QueryRoomPage({Key? key, this.title = "空教室查询"}) : super(key: key);
+  ClassroomQueryPage({Key? key, this.title = "空教室查询"}) : super(key: key);
 
   @override
-  State<QueryRoomPage> createState() => _QueryRoomPageState();
+  State<ClassroomQueryPage> createState() => _ClassroomQueryPageState();
 }
 
-class _QueryRoomPageState extends State<QueryRoomPage> {
+class _ClassroomQueryPageState extends State<ClassroomQueryPage> {
   String message = "查询选择的教学楼全部教室";
   Color messageColor = Colors.grey;
 

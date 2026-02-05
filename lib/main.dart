@@ -9,7 +9,7 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:workmanager/workmanager.dart';
 
 import 'common/io.dart';
-import 'common/noripple.dart';
+import 'common/noRipple.dart';
 import 'common/service.dart';
 import 'config.dart';
 import 'data.dart';

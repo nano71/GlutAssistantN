@@ -5,7 +5,7 @@ import 'package:restart_app/restart_app.dart';
 
 import '/common/io.dart';
 import '/common/style.dart';
-import '/custom/expansiontile.dart' as CustomExpansionTile;
+import '/custom/expansionTile.dart' as CustomExpansionTile;
 import '/pages/timeManager.dart';
 import '/widget/bars.dart';
 import '../config.dart';

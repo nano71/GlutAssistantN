@@ -5,7 +5,7 @@ import 'package:remixicon/remixicon.dart';
 
 import '/common/get.dart';
 import '/common/style.dart';
-import '/custom/expansiontile.dart' as CustomExpansionTile;
+import '/custom/expansionTile.dart' as CustomExpansionTile;
 import '/widget/bars.dart';
 import '/widget/dialog.dart';
 import '../config.dart';

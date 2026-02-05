@@ -13,17 +13,17 @@ import '../config.dart';
 import '../data.dart';
 import 'login.dart';
 
-class QueryScoresPage extends StatefulWidget {
+class ScoreQueryPage extends StatefulWidget {
   final String title;
   final int type;
 
-  QueryScoresPage({Key? key, this.title = "查询", this.type = 0}) : super(key: key);
+  ScoreQueryPage({Key? key, this.title = "查询", this.type = 0}) : super(key: key);
 
   @override
-  State<QueryScoresPage> createState() => _QueryScoresPageState();
+  State<ScoreQueryPage> createState() => _ScoreQueryPageState();
 }
 
-class _QueryScoresPageState extends State<QueryScoresPage> {
+class _ScoreQueryPageState extends State<ScoreQueryPage> {
   // ignore: cancel_subscriptions
   late StreamSubscription<ReloadScoreListState> eventBusListener;
 

@@ -5,7 +5,7 @@ import 'package:glutassistantn/widget/lists.dart';
 import 'package:remixicon/remixicon.dart';
 
 import '/pages/teachingPlan.dart';
-import '/pages/queryClassrooms.dart';
+import '/pages/classroomQuery.dart';
 import '/pages/setting.dart';
 import '/pages/update.dart';
 import '/widget/bars.dart';
@@ -85,7 +85,7 @@ class _MinePageState extends State<MinePage> {
                       // Navigator.push(context, SlideTopRoute(page: LoginPage()));
                       Navigator.of(context).push(MaterialPageRoute(builder: (context) => LoginPage()));
                     } else {
-                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => QueryRoomPage()));
+                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => ClassroomQueryPage()));
                     }
                   },
                   child: LinkItem(Remix.building_4_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "教室查询", readColor()),

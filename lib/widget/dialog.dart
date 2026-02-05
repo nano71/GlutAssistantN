@@ -6,7 +6,7 @@ import 'package:remixicon/remixicon.dart';
 
 import '/common/cookie.dart';
 import '/common/login.dart';
-import '/common/noripple.dart';
+import '/common/noRipple.dart';
 import '/common/style.dart';
 import '/data.dart';
 import '../config.dart';

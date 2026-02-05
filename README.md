@@ -51,24 +51,24 @@
 |   |
 |   |-- pages 页面
 |   |   |-- about.dart 关于
-|   |   |-- career.dart 生涯
+|   |   |-- examQuery.dart 考试查询
+|   |   |-- classroomQuery.dart 教室查询
 |   |   |-- home.dart 主页
 |   |   |-- layout.dart 主体
 |   |   |-- login.dart 登录
 |   |   |-- mine.dart 个人
-|   |   |-- queryClassrooms.dart 查询教室
-|   |   |-- queryScores.dart 查询成绩
-|   |   |-- queryExams.dart 查询考试
 |   |   |-- schedule.dart 课表
 |   |   |-- scheduleManager.dart 课表管理
+|   |   |-- scoreQuery.dart 成绩查询
 |   |   |-- setting.dart 设置
+|   |   |-- teachingPlan.dart 教学计划
 |   |   |-- timeManager.dart 课时管理
 |   |   `-- update.dart 更新
 |   |
 |   |-- type 特别的类
 |   |   |-- course.dart 课程
-|   |   |-- packageInfo.dart 包信息
-|   |   `-- schedule.dart 课表存储结构
+|   |   |-- schedule.dart 课表存储结构
+|   |   `-- teachingPlan.dart 教学计划
 |   |
 |   `-- widget 组件
 |       |-- bars.dart 条
