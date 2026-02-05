@@ -390,15 +390,15 @@ Future<void> readDeviceInfo() async {
   AppData.deviceInfo = await deviceInfo.androidInfo;
 }
 
-// 判断是否国产ROM
-bool isChinaRom() {
+bool canEnableOnBackInvokedCallback() {
   print("AppData.deviceInfo: ${AppData.deviceInfo}");
   final brand = AppData.deviceInfo.brand.toLowerCase();
   final manu = AppData.deviceInfo.manufacturer.toLowerCase();
 
-  if (AppData.deviceInfo.version.sdkInt < 36) {
+  if (AppData.deviceInfo.version.sdkInt < 35) {
     return false;
   }
+
   const chinaBrands = [
     'xiaomi',
     'huawei',
@@ -410,5 +410,5 @@ bool isChinaRom() {
     'meizu',
   ];
 
-  return chinaBrands.any((b) => brand.contains(b) || manu.contains(b));
+  return !chinaBrands.any((b) => brand.contains(b) || manu.contains(b));
 }

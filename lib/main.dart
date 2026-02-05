@@ -110,7 +110,8 @@ class _AppState extends State<App> {
           useMaterial3: false,
           pageTransitionsTheme: PageTransitionsTheme(
             builders: {
-              TargetPlatform.android: isChinaRom() ? pageTransitionsBuilder : PredictiveBackPageTransitionsBuilder(),
+              TargetPlatform.android:
+                  canEnableOnBackInvokedCallback() ? PredictiveBackPageTransitionsBuilder() : pageTransitionsBuilder,
             },
           ),
           navigationBarTheme: NavigationBarThemeData(

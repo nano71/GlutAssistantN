@@ -15,7 +15,7 @@ publish_to: "https://pub.flutter-io.cn" # Remove this line if you wish to publis
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.7.260201+88
+version: 1.7.260205+89
 
 environment:
   sdk: ">=2.14.0 <4.0.0"
@@ -104,11 +104,14 @@ flutter:
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
 
-development—environment:
-  flutter: 3.24.3
-  dart: 3.5.3
-  kotlin: 2.0.0
-  gradle: 8.7.0
+requirements:
+  android_sdk: 26-36
+  android_gradle_plugin: 8.13.2
+  gradle: 8.13
+  jdk: 17.0.8.1
+  kotlin: 2.3.0
+  flutter: 3.89.9
+  dart: 3.10.8
 
 sentry:
   project: glut-assistant-n
