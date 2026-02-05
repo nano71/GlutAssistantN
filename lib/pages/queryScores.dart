@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:glutassistantn/type/course.dart';
 import 'package:glutassistantn/widget/dialog.dart';
 import 'package:remixicon/remixicon.dart';
 
@@ -39,7 +40,9 @@ class _QueryScoresPageState extends State<QueryScoresPage> {
     if (value is String) {
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(0, value, 4));
-    } else if (value is bool) {
+    }
+
+    if (value is bool) {
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(CustomSnackBarWithAction(
         false,
@@ -52,7 +55,9 @@ class _QueryScoresPageState extends State<QueryScoresPage> {
         },
         duration: 10,
       ));
-    } else if (value is List) {
+    }
+
+    if (value is List<CourseScore>) {
       if (value.isEmpty) {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(1, "没有结果!", 5));
@@ -68,58 +73,32 @@ class _QueryScoresPageState extends State<QueryScoresPage> {
     super.dispose();
   }
 
-  process(List list) {
-    queryScore = list;
-    // 绩点
-    double gradePointSummary = 0.0;
-    double scoreSummary = 0.0;
-    double creditSummary = 0.0;
+  process(List<CourseScore> list) {
+    courseScores = list;
 
-    int excluded = 0;
+    double totalGradePoint = 0.0;
+    double totalScore = 0.0;
+    double totalCredit = 0.0;
+    int totalExcluded = 0;
 
-    for (int i = 0; i < list.length; i++) {
-      int score;
-
-      if (list[i]![9] == "免修") {
-        list[i]![4] = "及格";
-      }
-
-      try {
-        score = int.parse(levelToNumber(list[i]![4]));
-      } catch (e) {
-        break;
-      }
-
-      // 学分
-      double credit = double.parse(list[i]![5]);
-      // 绩点
-      double gradePoint = double.parse(list[i]![6]);
-      String courseName = list[i]![2].toString();
-      String teacher = list[i]![3];
-      String courseType = list[i]![7];
-      String courseNumber = list[i]![8];
-
-      if ((courseName.contains("慕课") && teacher == "")) {
-        excluded++;
+    for (CourseScore courseScore in list) {
+      if (courseScore.courseName.contains("慕课") && courseScore.teacher == "") {
+        totalExcluded++;
       } else {
-        if (list[i].length > 5) {
-          if (isContainCourse(courseNumber, courseType)) {
-            gradePointSummary += gradePoint * credit;
-            creditSummary += credit;
-          }
+        if (isContainCourse(courseScore.courseCode, courseScore.courseCategory)) {
+          totalGradePoint += courseScore.gradePoint * courseScore.credit;
+          totalCredit += courseScore.credit;
         }
-        if (list[i].length > 4) {
-          scoreSummary += score;
-        }
+        totalScore += courseScore.score;
       }
     }
-    double scoreAverage = double.parse((scoreSummary / (list.length - excluded)).toStringAsFixed(2));
-    double gradePointAverage = double.parse((gradePointSummary / creditSummary).toStringAsFixed(2));
+    double scoreAverage = double.parse((totalScore / (list.length - totalExcluded)).toStringAsFixed(2));
+    double gradePointAverage = double.parse((totalGradePoint / totalCredit).toStringAsFixed(2));
 
-    if (gradePointAverage.isNaN) gradePointSummary = 0.0;
-    if (scoreAverage.isNaN) scoreSummary = 0.0;
+    if (gradePointAverage.isNaN) totalGradePoint = 0.0;
+    if (scoreAverage.isNaN) totalScore = 0.0;
 
-    scores = [gradePointAverage, scoreAverage];
+    scores = [gradePointAverage, scoreAverage, 0.0];
     ScaffoldMessenger.of(context).removeCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(1, "数据已更新!", 1));
     setState(() {});

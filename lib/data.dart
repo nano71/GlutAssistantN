@@ -127,7 +127,7 @@ class AppData {
   );
 }
 
-List queryScore = [];
+List<CourseScore> courseScores = [];
 List<double> scores = [0.0, 0.0, 0.0];
 List careerList = [];
 List careerList2 = [];
@@ -199,8 +199,8 @@ final List<List<int>> endTimeListRestore = const [
   [21, 40]
 ];
 
-final List<String> containCourseTypes = ["实践教学环节", "专业核心课", "专业基础课", "公共必修课"];
-final List<String> excludedCourseNumbers = [
+final List<String> containCourseCategories = ["实践教学环节", "专业核心课", "专业基础课", "公共必修课"];
+final List<String> excludedCourseCodes = [
   "B83A000111",
   "B83A000112",
   "B83A000113",
@@ -355,8 +355,8 @@ int weekInt({bool exclusionZero = false, int customWeek = -1}) {
   return week;
 }
 
-bool isContainCourse(String courseNumber, String courseType) {
-  return containCourseTypes.contains(courseType) && !excludedCourseNumbers.contains(courseNumber);
+bool isContainCourse(String courseCode, String courseCategory) {
+  return containCourseCategories.contains(courseCategory) && !excludedCourseCodes.contains(courseCode);
 }
 
 String getAccount() {

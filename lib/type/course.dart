@@ -41,18 +41,40 @@ class CourseTimeSlot {
 }
 
 class CourseInfo {
-  final String number;
+  final String code;
   final String name;
-  final String evaluationMethod;
-  final String creditPoints;
+  final String assessmentType;
+  final String credit;
   final String hours;
   final String category;
 
   const CourseInfo(
-      {required this.number,
+      {required this.code,
       required this.name,
-      required this.evaluationMethod,
-      required this.creditPoints,
+      required this.assessmentType,
+      required this.credit,
       required this.hours,
       required this.category});
+}
+
+class CourseScore {
+  final String courseCode;
+  final String courseName;
+  final String teacher;
+  final double credit;
+  final double gradePoint;
+  final double score;
+  final String rawScore;
+  final String courseCategory;
+
+  const CourseScore({
+    required this.courseCode,
+    required this.courseName,
+    required this.teacher,
+    required this.credit,
+    required this.gradePoint,
+    required this.score,
+    required this.courseCategory,
+    required this.rawScore,
+  });
 }

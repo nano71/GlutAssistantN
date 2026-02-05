@@ -537,10 +537,10 @@ List<Widget> _CourseList(int semesterNumber) {
               SizedBox(
                 height: 8,
               ),
-              Text(courseInfo.number, style: TextStyle(color: Colors.white)),
+              Text(courseInfo.code, style: TextStyle(color: Colors.white)),
               Text(courseInfo.category, style: TextStyle(color: Colors.white)),
-              Text("性质: " + courseInfo.evaluationMethod, style: TextStyle(color: Colors.white)),
-              Text("学分: " + courseInfo.creditPoints, style: TextStyle(color: Colors.white)),
+              Text("性质: " + courseInfo.assessmentType, style: TextStyle(color: Colors.white)),
+              Text("学分: " + courseInfo.credit, style: TextStyle(color: Colors.white)),
               Text("学时: " + courseInfo.hours, style: TextStyle(color: Colors.white)),
             ],
           ),

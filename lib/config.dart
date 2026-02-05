@@ -79,8 +79,8 @@ readScheduleListTextColor3() {
   return Colors.black26;
 }
 
-readScoreColor(String score) {
-  int value = int.parse(levelToNumber(score));
+readScoreColor(double value) {
+
 
   if (value >= 95) {
     return Colors.blue;

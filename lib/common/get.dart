@@ -456,18 +456,26 @@ Future getScores() async {
   if (html == "") return AppConfig.unknownDataErrorMessage;
   if (html.contains("提示信息")) return AppConfig.retryErrorMessage;
   Document document = parse(html);
-  List<Element> dataList = document.querySelectorAll(".datalist > tbody > tr");
-  String parseData(int i, int number) => dataList[i].querySelectorAll("td")[number].text.trim();
-  List scoreRows = [];
-  for (int i = 1; i < dataList.length; i++) {
-    List elementColumns = [];
-    for (int j in [0, 1, 3, 4, 5, 7, 6, 11, 2, 8]) {
-      elementColumns.add(parseData(i, j));
+  List<Element> rows = document.querySelectorAll(".datalist > tbody > tr");
+  List<CourseScore> scores = [];
+  for (int i = 1; i < rows.length; i++) {
+    List<String> texts = rows[i].children.map((Element element) => element.text.trim()).toList();
+    if (texts[9].contains("免考")) {
+      texts[5] = "合格";
     }
-    scoreRows.add(elementColumns);
+    scores.add(CourseScore(
+      courseCode: texts[2],
+      courseName: texts[3],
+      teacher: texts[4],
+      score: double.tryParse(levelToNumber(texts[5])) ?? 0,
+      rawScore: texts[5],
+      gradePoint: double.tryParse(texts[6]) ?? 0,
+      credit: double.tryParse(texts[7]) ?? 0,
+      courseCategory: texts[11],
+    ));
   }
   print("getScores End");
-  return scoreRows;
+  return scores;
 }
 
 Future<dynamic> getExams() async {
@@ -597,10 +605,10 @@ Future getTeachingPlan() async {
           TeachingPlan.totalMajorCourseCount++;
         }
         courseInfoListBySemester.last.add(CourseInfo(
-          number: rowTexts[0],
+          code: rowTexts[0],
           name: rowTexts[1],
-          evaluationMethod: rowTexts[2],
-          creditPoints: rowTexts[3],
+          assessmentType: rowTexts[2],
+          credit: rowTexts[3],
           hours: rowTexts[4].replaceAll(".0", ""),
           category: rowTexts[5],
         ));

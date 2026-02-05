@@ -468,13 +468,13 @@ class _ScoreListState extends State<ScoreList> {
                           Container(
                             width: MediaQuery.of(context).size.width - 60 - 32,
                             child: Text(
-                              queryScore[index][2],
+                              courseScores[index].courseName,
                               style: TextStyle(fontSize: 16, color: readTextColor()),
                             ),
                           ),
                           Container(
                             child: Text(
-                              queryScore[index][3] == "" ? "慕课成绩不会被统计" : queryScore[index][3],
+                              courseScores[index].teacher == "" ? "慕课成绩不会被统计" : courseScores[index].teacher,
                               style: TextStyle(color: readTextColor2(), fontSize: 12),
                             ),
                           ),
@@ -483,22 +483,34 @@ class _ScoreListState extends State<ScoreList> {
                     ],
                   ),
                   //成绩
-                  Container(
-                    width: 60,
-                    padding: EdgeInsets.fromLTRB(0, 8, 0, 8),
-                    margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(6.0)),
-                      // color: Global.homeCardsColor,
-                      color: readScoreColor(queryScore[index][4]),
+                  InkWell(
+                    onTap: () {
+                      ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                      ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(
+                        2,
+                        "总评: ${courseScores[index].rawScore}   绩点: ${courseScores[index].gradePoint}   学分: ${courseScores[index].credit}",
+                        4,
+                        60
+                      ));
+                    },
+                    child: Container(
+                      width: 60,
+                      padding: EdgeInsets.fromLTRB(0, 8, 0, 8),
+                      margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(6.0)),
+                        // color: Global.homeCardsColor,
+                        color: readScoreColor(courseScores[index].score),
+                      ),
+                      child: Column(children: [
+                        Text(
+                            // "不及格",
+                            courseScores[index].rawScore,
+                            style: TextStyle(fontSize: 16, color: Colors.white)),
+                        Text(courseScores[index].gradePoint.toString(),
+                            style: TextStyle(color: Colors.white, fontSize: 12)),
+                      ]),
                     ),
-                    child: Column(children: [
-                      Text(
-                          // "不及格",
-                          queryScore[index][4],
-                          style: TextStyle(fontSize: 16, color: Colors.white)),
-                      Text(queryScore[index][5], style: TextStyle(color: Colors.white, fontSize: 12)),
-                    ]),
                   ),
                 ],
               ),
@@ -512,7 +524,7 @@ class _ScoreListState extends State<ScoreList> {
             )
           ],
         );
-      }, childCount: queryScore.length),
+      }, childCount: courseScores.length),
     );
   }
 }
