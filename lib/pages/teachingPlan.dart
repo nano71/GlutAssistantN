@@ -57,7 +57,7 @@ class _teachingPlanPageState extends State<teachingPlanPage> {
   @override
   void dispose() {
     eventBusListener.cancel();
-    _weekTimer?.cancel();
+    animationTimer?.cancel();
 
     super.dispose();
   }
@@ -95,16 +95,16 @@ class _teachingPlanPageState extends State<teachingPlanPage> {
     }
   }
 
-  Timer? _weekTimer;
+  Timer? animationTimer;
 
   void _weekProgressAnimation() {
     double count = 0.0;
     const period = Duration(milliseconds: 10);
     final max = progress();
 
-    _weekTimer?.cancel();
+    animationTimer?.cancel();
 
-    _weekTimer = Timer.periodic(period, (timer) {
+    animationTimer = Timer.periodic(period, (timer) {
       if (!mounted) {
         timer.cancel();
         return;

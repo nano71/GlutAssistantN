@@ -6,7 +6,6 @@ import 'package:remixicon/remixicon.dart';
 
 import '/common/cookie.dart';
 import '/common/login.dart';
-import '/common/noRipple.dart';
 import '/common/style.dart';
 import '/data.dart';
 import '../config.dart';
@@ -354,11 +353,9 @@ _CourseInfoDialogContent(title, time, teacher, position) {
       children: [
         Align(
           alignment: Alignment.bottomRight,
-          child: Container(
-            child: Text(
+          child: Text(
               title[0],
               style: TextStyle(fontSize: 128, color: Color(0x66f1f1f1)),
-            ),
           ),
         ),
         Column(
@@ -520,11 +517,9 @@ List<Widget> _CourseList(int semesterNumber) {
         children: [
           Align(
             alignment: Alignment.bottomRight,
-            child: Container(
-              child: Text(
-                courseInfo.name[0],
-                style: TextStyle(fontSize: 128, color: Color(0x66f1f1f1)),
-              ),
+            child: Text(
+              courseInfo.name[0],
+              style: TextStyle(fontSize: 128, color: Color(0x66f1f1f1)),
             ),
           ),
           Column(

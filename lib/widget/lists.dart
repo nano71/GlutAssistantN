@@ -784,7 +784,7 @@ class _ClassroomListItem extends StatelessWidget {
                       onTap: () {
                         ScaffoldMessenger.of(context).removeCurrentSnackBar();
                         ScaffoldMessenger.of(context).showSnackBar(
-                            CustomSnackBar(2, _ClassroomListState.promptMessage(classroom.occupancy), 4, 22));
+                            CustomSnackBar(2, _ClassroomListState.promptMessage(classroom.occupancy), 4, 34));
                       },
                     )
                   ],

@@ -526,7 +526,7 @@ Future<dynamic> getExams() async {
   List<Element> rows = document.querySelectorAll(".datalist> tbody > tr");
 
   for (int i = 1; i < rows.length; i++) {
-    List<String> texts = rows[i].children.map((element) => element.text.trim()).toList();
+    List<String> texts = rows[i].children.map((element) => element.innerHtml.trim().replaceAll("&nbsp;", " ")).toList();
     bool isPast = false;
     try {
       DateTime now = DateTime.now();
@@ -548,7 +548,7 @@ Future<dynamic> getExams() async {
     examList.add(Exam(
       courseName: texts[1],
       timeRange: texts[2],
-      location: texts[3],
+      location: texts[3].split(" ").last,
       isPast: isPast,
     ));
   }
