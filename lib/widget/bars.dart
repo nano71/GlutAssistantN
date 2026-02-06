@@ -4,6 +4,7 @@ import 'dart:async';
 import 'package:badges/badges.dart' as badges;
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper_view/flutter_swiper_view.dart';
+import 'package:glutassistantn/widget/lists.dart';
 import 'package:remixicon/remixicon.dart';
 
 import '/config.dart';
@@ -493,6 +494,65 @@ SnackBar CustomSnackBarWithAction(bool result, String text, BuildContext context
               style: TextStyle(color: Colors.blue),
             ),
           )
+        ],
+      ),
+      behavior: SnackBarBehavior.floating);
+}
+
+SnackBar CustomSnackBarWithActionText(
+    bool result, String text, String actionText, BuildContext context, Function callback,
+    {int duration = 2, bool isDialogCallback = true, double margin = 100}) {
+  Widget LeftIcon() {
+    return result
+        ? Icon(
+            Remix.checkbox_circle_line,
+            color: Colors.green,
+          )
+        : Icon(
+            Remix.error_warning_line,
+            color: Colors.red,
+          );
+  }
+
+  return SnackBar(
+      elevation: 0,
+      margin: EdgeInsets.fromLTRB(margin, 0, margin, 50),
+      padding: EdgeInsets.fromLTRB(12, 12, 16, 12),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(50.0),
+      ),
+      duration: Duration(seconds: duration),
+      content: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          LeftIcon(),
+          Padding(
+            padding: EdgeInsets.only(bottom: 2, right: 4),
+            child: Row(
+              children: [
+                Text(
+                  text,
+                  textAlign: TextAlign.center,
+                ),
+                RowGap(16),
+                InkWell(
+                  highlightColor: Colors.transparent, // 透明色
+                  splashColor: Colors.transparent, // 透明色
+                  onTap: () {
+                    if (isDialogCallback) {
+                      showCaptchaDialog(context, callback);
+                    } else {
+                      callback();
+                    }
+                  },
+                  child: Text(
+                    actionText,
+                    style: TextStyle(color: Colors.blue),
+                  ),
+                )
+              ],
+            ),
+          ),
         ],
       ),
       behavior: SnackBarBehavior.floating);

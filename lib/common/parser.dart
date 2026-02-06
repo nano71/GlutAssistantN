@@ -1,11 +1,10 @@
-import 'package:html/dom.dart' as dom;
 
-List<int> teachTimeParser(dom.Element element) {
-  return element.innerHtml.trim().replaceAll(RegExp(r'([第节周单双])'), "").split('-').map(int.parse).toList();
-}
 
-String innerHtmlTrim(dom.Element element) {
-  return element.innerHtml.trim();
+List<int> teachTimeParser(String value) {
+  if (value == "&nbsp;") {
+    return [];
+  }
+  return value.replaceAll(RegExp(r'([第节周单双])'), "").split('-').map(int.parse).toList();
 }
 
 String teachLocation(String location) {

@@ -198,7 +198,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               rotationAnimationTimer.cancel();
             }
           }
-        } else {
+        }
+        if (result is String) {
           ScaffoldMessenger.of(context).removeCurrentSnackBar();
           ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(0, result, 4));
           rotationAnimationTimer.cancel();
@@ -212,7 +213,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         await getWeek();
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(2, "获取课表...", 10));
-        await scheduleParser(await getSchedule());
+        await scheduleParser(await getSchedule(context));
         isTimeout = true;
         updateButtonClickCount = 0;
       });
