@@ -148,7 +148,7 @@ Future<dynamic> getSchedule([BuildContext? context]) async {
   }
   for (int i = 0; i < rowsLength; i++) {
     parse() {
-      List<String> texts = rows[i].children.map((element) => element.innerHtml.trim()).toList();
+      // List<String> texts = rows[i].children.map((element) => element.innerHtml.trim()).toList();
       List<String> texts2 = rows[i].children.map((element) => element.text.trim()).toList();
       List<Element> tableRows = rows[i].querySelectorAll("table.none > tbody > tr");
 

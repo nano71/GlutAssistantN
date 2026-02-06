@@ -356,7 +356,7 @@ class _CollapsePanelState extends State<_CollapsePanel> {
           children: [
             Icon(
               isExpanded ? Icons.school : NumberIcon(index),
-              color: isExpanded ? readColor() : randomColors2(),
+              color: isExpanded ? readColor() : randomColors(),
             ),
             Container(
               padding: EdgeInsets.fromLTRB(16, 14, 0, 14),

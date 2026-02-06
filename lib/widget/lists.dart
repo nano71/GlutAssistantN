@@ -471,7 +471,7 @@ class _ScoreListState extends State<ScoreList> {
                           Container(
                             width: MediaQuery.of(context).size.width - 60 - 32,
                             child: Text(
-                              courseScore.courseName,
+                              courseLongText2Short(courseScore.courseName),
                               style: TextStyle(fontSize: 16, color: readTextColor()),
                             ),
                           ),
@@ -784,7 +784,7 @@ class _ClassroomListItem extends StatelessWidget {
                       onTap: () {
                         ScaffoldMessenger.of(context).removeCurrentSnackBar();
                         ScaffoldMessenger.of(context).showSnackBar(
-                            CustomSnackBar(2, _ClassroomListState.promptMessage(classroom.occupancy), 4, 34));
+                            CustomSnackBar(2, _ClassroomListState.promptMessage(classroom.occupancy), 4, 40));
                       },
                     )
                   ],

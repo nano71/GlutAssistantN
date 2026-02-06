@@ -103,6 +103,7 @@ class _AppState extends State<App> {
   Widget build(BuildContext context) {
     return MaterialApp(
         key: appKey,
+        scaffoldMessengerKey: scaffoldMessengerKey,
         debugShowCheckedModeBanner: false,
         navigatorObservers: [PageStackObserver()],
         scrollBehavior: NoGlowScrollBehavior(),

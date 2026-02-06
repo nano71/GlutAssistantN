@@ -56,7 +56,6 @@ Future<void> reinitialize({refreshState = false, ignoreReadConfig = false}) asyn
 }
 
 class _DataPreloadPageState extends State<DataPreloadPage> {
-
   void initialize() async {
     // initService();
     getPermissions();
@@ -225,6 +224,7 @@ Future<void> updateAppwidget() async {
 }
 
 // final RouteObserver<ModalRoute<void>> routeObserver = RouteObserver<ModalRoute<void>>();
+final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
 
 class PageStackObserver extends NavigatorObserver {
   int pageCount = 0;
@@ -257,6 +257,7 @@ class PageStackObserver extends NavigatorObserver {
   }
 
   check() {
+    scaffoldMessengerKey.currentState?.removeCurrentSnackBar();
     if (isSinglePage)
       setSystemNavigationBarColor(readCardBackgroundColor());
     else
