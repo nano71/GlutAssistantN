@@ -86,7 +86,7 @@ class AppData {
   static bool isLoggedIn = false;
   static bool isDarkTheme = false;
   static bool isInitialized = false;
-  static bool startSoon = false;
+  static bool startSchoolSoon = false;
   static late BuildContext homeContext;
   static bool canCheckImportantUpdate = true;
   static bool hasNewVersion = false;
@@ -349,6 +349,9 @@ int weekTextToNumber(String text) {
 }
 
 int weekInt({bool exclusionZero = false, int customWeek = -1}) {
+  if(AppData.startSchoolSoon){
+    return 0;
+  }
   if (customWeek == -1) {
     customWeek = AppData.week;
   }

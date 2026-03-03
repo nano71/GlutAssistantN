@@ -123,8 +123,18 @@ Future<dynamic> getSchedule([BuildContext? context]) async {
     "星期六": 6,
     "星期日": 7,
   };
-  Uri uri = Uri.http(AppConfig.serverHost, AppConfig.schedulePath,
-      {"year": (AppData.year - 1980).toString(), "term": AppData.semester == "秋" ? "3" : "1"});
+  Map<String, String> params = {"year": (AppData.year - 1980).toString(), "term": AppData.semester == "秋" ? "3" : "1"};
+  if (AppData.week > 23) {
+    if (AppData.semester == "秋") {
+      params["year"] = (AppData.year + 1 - 1980).toString();
+      params["term"] = "1";
+    } else {
+      params["term"] = "3";
+    }
+  }
+
+  Uri uri = Uri.http(AppConfig.serverHost, AppConfig.schedulePath, params);
+
   Response response;
   try {
     response = await request("", uri);

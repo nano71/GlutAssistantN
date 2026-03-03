@@ -160,13 +160,13 @@ class SchedulePage extends StatefulWidget {
   SchedulePage({Key? key}) : super(key: key);
 
   @override
-  SchedulePageState createState() => SchedulePageState();
+  _SchedulePageState createState() => _SchedulePageState();
 }
 
-GlobalKey<SchedulePageState> schedulePageKey = GlobalKey();
+GlobalKey<_SchedulePageState> schedulePageKey = GlobalKey();
 EventBus reState = EventBus();
 
-class SchedulePageState extends State<SchedulePage> with AutomaticKeepAliveClientMixin {
+class _SchedulePageState extends State<SchedulePage> with AutomaticKeepAliveClientMixin {
   late double startPositionX;
   late double startPositionY;
   int currentScheduleWeek = weekInt(exclusionZero: true);
