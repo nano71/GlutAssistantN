@@ -27,7 +27,6 @@ plugins {
 include ":app"
 
 dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
 
     repositories {
         maven { url "https://storage.googleapis.com/download.flutter.io" }
