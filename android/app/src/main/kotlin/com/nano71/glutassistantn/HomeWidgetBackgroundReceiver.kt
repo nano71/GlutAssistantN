@@ -9,9 +9,11 @@ import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.widget.RemoteViews
-import es.antonborri.home_widget.HomeWidgetBackgroundReceiver
+import android.content.BroadcastReceiver
+import es.antonborri.home_widget.HomeWidgetBackgroundWorker
+import io.flutter.FlutterInjector
 
-class HomeWidgetBackgroundReceiver : HomeWidgetBackgroundReceiver() {
+class HomeWidgetBackgroundReceiver : HomeWidgetBackgroundReceiver2() {
     override fun onReceive(context: Context, intent: Intent) {
         Log.d("appwidget", "HomeWidgetBackgroundReceiver.onReceive")
         Log.d("appwidget", intent.action.toString())
@@ -45,5 +47,14 @@ class HomeWidgetBackgroundReceiver : HomeWidgetBackgroundReceiver() {
         }
         super.onReceive(context, intent)
 
+    }
+}
+
+open class HomeWidgetBackgroundReceiver2 : BroadcastReceiver() {
+    override fun onReceive(context: Context, intent: Intent) {
+        val flutterLoader = FlutterInjector.instance().flutterLoader()
+        flutterLoader.startInitialization(context)
+        flutterLoader.ensureInitializationComplete(context, null)
+        HomeWidgetBackgroundWorker.enqueueWork(context, intent)
     }
 }
