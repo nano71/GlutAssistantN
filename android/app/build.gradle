@@ -45,7 +45,7 @@ android {
 
     productFlavors {
         develop {
-            applicationId "com.develop.glutassistantn"
+            applicationId "com.nano71.glutassistantn.debug"
             manifestPlaceholders = [TD_CHANNEL_ID: "develop"]
         }
 

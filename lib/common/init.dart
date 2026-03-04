@@ -5,6 +5,7 @@ import '../type/course.dart';
 import 'io.dart';
 
 initSchedule({withWriteFile = false}) async {
+  if (AppData.startSchoolSoon) return;
   print("initSchedule");
   AppData.schedule = createEmptySchedule();
   print("initSchedule End");
@@ -14,6 +15,7 @@ initSchedule({withWriteFile = false}) async {
 }
 
 initTodaySchedule() async {
+  if (AppData.startSchoolSoon) return;
   print("initTodaySchedule");
   DateTime now = DateTime.now();
 
@@ -44,6 +46,7 @@ initTodaySchedule() async {
 }
 
 initTomorrowSchedule() async {
+  if (AppData.startSchoolSoon) return;
   print("initTomorrowSchedule");
   final int week = AppData.week;
   DateTime now = DateTime.now();

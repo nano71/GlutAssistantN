@@ -104,6 +104,9 @@ Future<void> getWeek() async {
     AppData.querySemester = semester;
   }
 
+  if (AppData.week <= 20 && AppData.startSchoolSoon) {
+    AppData.startSchoolSoon = false;
+  }
   // print(AppData.persistentData);
   print("getWeek Save: ${week + "周"}");
   await writeConfig();
@@ -164,8 +167,7 @@ Future<dynamic> getSchedule([BuildContext? context]) async {
 
       for (var j = 0; j < tableRows.length; j++) {
         Element row = tableRows[j];
-        List<String> texts3 =
-            row.children.map((element) => element.innerHtml.trim().replaceAll(RegExp(r'([第节周])'), "")).toList();
+        List<String> texts3 = row.children.map((element) => element.innerHtml.trim().replaceAll(RegExp(r'([第节周])'), "")).toList();
 
         if ((texts3[1] + texts3[2] + texts3[3]).contains("nbsp")) {
           continue;
@@ -278,12 +280,7 @@ Future<dynamic> getSchedule([BuildContext? context]) async {
           int? week = weekTextMap[weekText];
           if (week != null) {
             for (int lesson = lessonList[0]; lesson <= lessonList[1]; lesson++) {
-              Course course = Course(
-                  name: texts2[2],
-                  teacher: texts2[3],
-                  location: location,
-                  extra: row.text.trim().replaceAll(" ", ";"),
-                  index: lesson);
+              Course course = Course(name: texts2[2], teacher: texts2[3], location: location, extra: row.text.trim().replaceAll(" ", ";"), index: lesson);
 
               // 普通模式
               if ((weekList.length > 1 && specialWeek) || weekList.length >= 3) {
@@ -334,13 +331,8 @@ Future<List<List<List<Course>>>> getScheduleChanges(String id, List<List<List<Co
   }
   print('getScheduleChanges');
   print("获取课表变更(调课/停课/补课)");
-  Uri uri = Uri.http(AppConfig.serverHost, AppConfig.classReschedulePath, {
-    "id": id,
-    "yearid": (AppData.year - 1980).toString(),
-    "termid": AppData.semester == "秋" ? "3" : "1",
-    "timetableType": "CLASSES",
-    "sectionType": "COMBINE"
-  });
+  Uri uri = Uri.http(AppConfig.serverHost, AppConfig.classReschedulePath,
+      {"id": id, "yearid": (AppData.year - 1980).toString(), "termid": AppData.semester == "秋" ? "3" : "1", "timetableType": "CLASSES", "sectionType": "COMBINE"});
   Response response;
   try {
     response = await request("get", uri);
@@ -367,22 +359,14 @@ Future<List<List<List<Course>>>> getScheduleChanges(String id, List<List<List<Co
       final Map<String, bool> rowInfo = {"standard": length == 17, "extension": length == 10};
       // print(rowInfo);
       String remark(String teachWeek, String location, int i, int j) {
-        return "第" +
-            teachWeek.replaceAll(RegExp(r'[第周]'), "") +
-            "周;" +
-            texts[i] +
-            ";" +
-            texts[j] +
-            " - 调课/补课;$location";
+        return "第" + teachWeek.replaceAll(RegExp(r'[第周]'), "") + "周;" + texts[i] + ";" + texts[j] + " - 调课/补课;$location";
       }
 
       if (rowInfo["standard"]!) {
         String location = teachLocation(texts[16]);
 
-        CourseTimeSlot latest =
-            CourseTimeSlot(week: texts[13], weekDay: weekTextToNumber(texts[14]), periods: teachTimeParser(texts[15]));
-        CourseTimeSlot before =
-            CourseTimeSlot(week: texts[8], weekDay: weekTextToNumber(texts[9]), periods: teachTimeParser(texts[10]));
+        CourseTimeSlot latest = CourseTimeSlot(week: texts[13], weekDay: weekTextToNumber(texts[14]), periods: teachTimeParser(texts[15]));
+        CourseTimeSlot before = CourseTimeSlot(week: texts[8], weekDay: weekTextToNumber(texts[9]), periods: teachTimeParser(texts[10]));
 
         teacher = texts[4];
         course = texts[2];
@@ -396,12 +380,8 @@ Future<List<List<List<Course>>>> getScheduleChanges(String id, List<List<List<Co
         if (latest.week != "&nbsp;") {
           print("添加${latest.toJson()}");
           for (int lesson = latest.periods[0]; lesson <= latest.periods[1]; lesson++) {
-            schedule[int.tryParse(latest.week) ?? 0][latest.weekDay][lesson] = Course(
-                name: course,
-                teacher: teacher,
-                location: location,
-                extra: remark(latest.week, location, 14, 15),
-                index: lesson);
+            schedule[int.tryParse(latest.week) ?? 0][latest.weekDay][lesson] =
+                Course(name: course, teacher: teacher, location: location, extra: remark(latest.week, location, 14, 15), index: lesson);
           }
         }
       } else if (rowInfo["extension"]!) {
@@ -424,12 +404,8 @@ Future<List<List<List<Course>>>> getScheduleChanges(String id, List<List<List<Co
         }
         if (newCourseWeek != "&nbsp;") {
           for (int i = newCourseLessonList[0]; i <= newCourseLessonList[1]; i++) {
-            schedule[int.tryParse(newCourseWeek) ?? 0][newWeekDay][i] = Course(
-                name: course,
-                teacher: teacher,
-                location: newLocation,
-                extra: remark(newCourseWeek, newLocation, 7, 8),
-                index: i);
+            schedule[int.tryParse(newCourseWeek) ?? 0][newWeekDay][i] =
+                Course(name: course, teacher: teacher, location: newLocation, extra: remark(newCourseWeek, newLocation, 7, 8), index: i);
           }
         }
       }
@@ -462,15 +438,7 @@ Future getScores() async {
   if (AppData.querySemester != "全部") {
     semesterNumber = (AppData.querySemester == "秋" ? 3 : 1).toString();
   }
-  Map<String, String> postData = {
-    "year": year,
-    "term": semesterNumber,
-    "prop": "",
-    "groupName": "",
-    "para": "0",
-    "sortColumn": "",
-    "Submit": "查询"
-  };
+  Map<String, String> postData = {"year": year, "term": semesterNumber, "prop": "", "groupName": "", "para": "0", "sortColumn": "", "Submit": "查询"};
   Response response;
   try {
     response = await request("post", AppConfig.scoreQueryUri, body: postData);
@@ -572,10 +540,7 @@ Future getTeachingPlan() async {
   Future next(String studentId, String classId) async {
     Response response;
     try {
-      response = await request(
-          "get",
-          Uri.http(AppConfig.serverHost, AppConfig.studySchedulePath,
-              {"z": "z", "studentId": studentId, "classId": classId}));
+      response = await request("get", Uri.http(AppConfig.serverHost, AppConfig.studySchedulePath, {"z": "z", "studentId": studentId, "classId": classId}));
     } on TimeoutException catch (e) {
       return timeOutError(e);
     } on SocketException catch (e) {
@@ -592,8 +557,7 @@ Future getTeachingPlan() async {
         //重修&&不及格
         courseCountsByScore[0]++;
       }
-      if (element.parent!.innerHtml.contains("/academic/styles/images/course_pass.png") ||
-          element.parent!.innerHtml.contains("/academic/styles/images/course_pass_reelect.png")) {
+      if (element.parent!.innerHtml.contains("/academic/styles/images/course_pass.png") || element.parent!.innerHtml.contains("/academic/styles/images/course_pass_reelect.png")) {
         //合格
         courseCountsByScore[1]++;
       }
@@ -774,8 +738,7 @@ Future<dynamic> getUpdate({bool isRetry = false}) async {
   print("getUpdate");
   Response response;
   try {
-    response = await get(isRetry ? AppConfig.appUpdateCheckUri : AppConfig.githubLatestReleaseUri)
-        .timeout(Duration(seconds: 4));
+    response = await get(isRetry ? AppConfig.appUpdateCheckUri : AppConfig.githubLatestReleaseUri).timeout(Duration(seconds: 4));
   } on TimeoutException catch (e) {
     print("getUpdate Error");
     print(e);
@@ -820,11 +783,6 @@ Future getUpdateByEveryday() async {
   await getUpdate();
 
   checkNewVersion();
-  if (AppData.hasNewVersion && AppData.canCheckImportantUpdate) {
-    Future.delayed(Duration(seconds: 1), () {
-      checkImportantUpdate();
-    });
-  }
 
   print("getUpdateByEveryday End");
 }
@@ -832,8 +790,7 @@ Future getUpdateByEveryday() async {
 Future<Response> request(String method, Uri uri, {Map<String, String>? body, Encoding? encoding}) async {
   Map<String, String>? headers = {"cookie": mapCookieToString()};
   if (method == "post") {
-    return await post(uri, body: body, headers: headers, encoding: encoding)
-        .timeout(Duration(seconds: AppConfig.requestTimeoutSeconds));
+    return await post(uri, body: body, headers: headers, encoding: encoding).timeout(Duration(seconds: AppConfig.requestTimeoutSeconds));
   } else {
     return await get(uri, headers: headers).timeout(Duration(seconds: AppConfig.requestTimeoutSeconds));
   }

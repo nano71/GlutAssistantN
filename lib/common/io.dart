@@ -191,8 +191,7 @@ Future<void> readWeek() async {
   int y = DateTime.now().year;
   int m = DateTime.now().month;
   int d = DateTime.now().day;
-  int realWeek = weekInt(customWeek: AppData.baseWeek) +
-      weekDifference(DateTime(y, m, d), DateTime(_timeList[0], _timeList[1], _timeList[2]));
+  int realWeek = weekInt(customWeek: AppData.baseWeek) + weekDifference(DateTime(y, m, d), DateTime(_timeList[0], _timeList[1], _timeList[2]));
   if (realWeek < 0) {
     AppData.week = 1;
     return;

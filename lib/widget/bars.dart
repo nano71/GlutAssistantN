@@ -51,11 +51,7 @@ SliverAppBar HomePageTopNavigationBar(BuildContext context) {
   );
 }
 
-SliverAppBar TopNavigationBar(String title,
-    [dynamic inkWell = const Text(""),
-    backgroundColor = Colors.white,
-    textColor = Colors.black,
-    double shadowSize = 0.3]) {
+SliverAppBar TopNavigationBar(String title, [dynamic inkWell = const Text(""), backgroundColor = Colors.white, textColor = Colors.black, double shadowSize = 0.3]) {
   return SliverAppBar(
     pinned: true,
     shadowColor: backgroundColor,
@@ -85,11 +81,7 @@ SliverAppBar TopNavigationBar(String title,
 }
 
 SliverAppBar TopNavigationBarWithTipIcon(String title,
-    [dynamic inkWell = const Text(""),
-    Function()? onPressed,
-    backgroundColor = Colors.white,
-    textColor = Colors.black,
-    double shadowSize = 0.3]) {
+    [dynamic inkWell = const Text(""), Function()? onPressed, backgroundColor = Colors.white, textColor = Colors.black, double shadowSize = 0.3]) {
   return SliverAppBar(
     pinned: true,
     shadowColor: backgroundColor,
@@ -170,11 +162,15 @@ class ScheduleTopBarState extends State<ScheduleTopBar> {
   ];
 
   String month() {
+    String weekText = "Week $week";
+    if (AppData.startSchoolSoon) {
+      return "Next semester, $weekText";
+    }
     if (AppData.showDayByWeekDay) {
       int difference = week - AppData.week;
-      return months[DateTime.now().add(Duration(days: difference * 7)).month - 1] + ", ";
+      return months[DateTime.now().add(Duration(days: difference * 7)).month - 1] + ", $weekText";
     }
-    return "";
+    return weekText;
   }
 
   @override
@@ -188,27 +184,29 @@ class ScheduleTopBarState extends State<ScheduleTopBar> {
         children: [
           InkWell(
             child: Text(
-              month() + "Week $week",
+              month(),
               style: TextStyle(color: readTextColor()),
             ),
             onTap: () {
               back();
             },
           ),
-          InkWell(
-            child: Row(
-              children: [
-                Text(
-                  date(),
-                  style: TextStyle(color: readTextColor(), fontSize: 14),
-                ),
-                goCurrent()
-              ],
-            ),
-            onTap: () {
-              back();
-            },
-          )
+          !AppData.startSchoolSoon
+              ? InkWell(
+                  child: Row(
+                    children: [
+                      Text(
+                        date(),
+                        style: TextStyle(color: readTextColor(), fontSize: 14),
+                      ),
+                      goCurrent()
+                    ],
+                  ),
+                  onTap: () {
+                    back();
+                  },
+                )
+              : Container()
         ],
       ),
     );
@@ -453,8 +451,7 @@ SnackBar CustomSnackBar(int type, String text, [int duration = 2, double margin 
   );
 }
 
-SnackBar CustomSnackBarWithAction(bool result, String text, BuildContext context, Function callback,
-    {int duration = 2, bool isDialogCallback = true}) {
+SnackBar CustomSnackBarWithAction(bool result, String text, BuildContext context, Function callback, {int duration = 2, bool isDialogCallback = true}) {
   Widget LeftIcon() {
     return result
         ? Icon(
@@ -499,8 +496,7 @@ SnackBar CustomSnackBarWithAction(bool result, String text, BuildContext context
       behavior: SnackBarBehavior.floating);
 }
 
-SnackBar CustomSnackBarWithActionText(
-    bool result, String text, String actionText, BuildContext context, Function callback,
+SnackBar CustomSnackBarWithActionText(bool result, String text, String actionText, BuildContext context, Function callback,
     {int duration = 2, bool isDialogCallback = true, double margin = 100}) {
   Widget LeftIcon() {
     return result

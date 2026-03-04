@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:glutassistantn/common/log.dart';
+import 'package:glutassistantn/pages/update.dart';
 import 'package:home_widget/home_widget.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:workmanager/workmanager.dart';
@@ -17,22 +18,20 @@ import '/widget/bars.dart';
 import '../common/aes.dart';
 import '../common/homeWidget.dart';
 import '../data.dart';
+import '../widget/dialog.dart';
 
 class AppRouter extends PageRouteBuilder {
   final Widget widget;
 
   AppRouter(this.widget, [int milliseconds = 300])
       : super(
-            transitionDuration: Duration(milliseconds: milliseconds),
-            pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
-              return widget;
-            },
-            transitionsBuilder: (BuildContext context, Animation<double> animation,
-                Animation<double> secondaryAnimation, Widget child) {
-              return FadeTransition(
-                  opacity: Tween(begin: 0.0, end: 1.0).animate(CurvedAnimation(parent: animation, curve: Curves.ease)),
-                  child: child);
-            });
+      transitionDuration: Duration(milliseconds: milliseconds),
+      pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
+        return widget;
+      },
+      transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
+        return FadeTransition(opacity: Tween(begin: 0.0, end: 1.0).animate(CurvedAnimation(parent: animation, curve: Curves.ease)), child: child);
+      });
 }
 
 class DataPreloadPage extends StatefulWidget {
@@ -70,7 +69,7 @@ class _DataPreloadPageState extends State<DataPreloadPage> {
     Navigator.pushAndRemoveUntil(
       context,
       AppRouter(Layout(), 2000),
-      (route) => false,
+          (route) => false,
     );
   }
 
@@ -127,6 +126,19 @@ class _LayoutState extends State<Layout> with RouteAware {
       final encrypted = AESHelper.encryptText(getAccount());
       scope.setTag("encrypted", encrypted);
     });
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      Future.delayed(Duration(milliseconds: 500), () async {
+        if (AppData.startSchoolSoon) {
+          await showInfoDialog(context, "学期已经结束\n\n进行刷新可以获取下学期的课表\n\n正式开学时也请手动刷新一次", title: "提示", englishTitle: "Tips");
+        }
+
+        if (AppData.hasNewVersion && AppData.canCheckImportantUpdate) {
+          checkImportantUpdate();
+        }
+      });
+    });
   }
 
   Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
@@ -149,11 +161,11 @@ class _LayoutState extends State<Layout> with RouteAware {
         // TODO: Handle this case.
         break;
       case AppLifecycleState.paused:
-        // TODO: Handle this case.
+      // TODO: Handle this case.
         print("AppLifecycleState.paused");
         break;
       case AppLifecycleState.hidden:
-        // TODO: Handle this case.
+      // TODO: Handle this case.
         break;
     }
   }
@@ -215,8 +227,7 @@ Future<void> updateAppwidget() async {
 
   if (isAdded) {
     print("桌面微件已经添加");
-    Workmanager().registerPeriodicTask("com.nano71.glutassistantn.updateHomeWidget", "updateHomeWidget",
-        initialDelay: Duration(seconds: 0));
+    Workmanager().registerPeriodicTask("com.nano71.glutassistantn.updateHomeWidget", "updateHomeWidget", initialDelay: Duration(seconds: 0));
     HomeWidget.registerInteractivityCallback(backgroundCallback);
   } else {
     print("桌面微件尚未添加");

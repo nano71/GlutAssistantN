@@ -101,8 +101,8 @@ showImportantUpdateDialog(BuildContext context) {
       });
 }
 
-showInfoDialog(BuildContext context, String text) {
-  showGeneralDialog(
+Future showInfoDialog(BuildContext context, String text, {String title = "有必要的说明",String englishTitle="Necessary clarifications"}) {
+  return showGeneralDialog(
       context: context,
       transitionBuilder:
           (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
@@ -119,9 +119,9 @@ showInfoDialog(BuildContext context, String text) {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("有必要的说明"),
+                  Text(title),
                   Text(
-                    "Necessary clarifications",
+                    englishTitle,
                     style: TextStyle(color: Colors.grey, fontSize: 14),
                   )
                 ],

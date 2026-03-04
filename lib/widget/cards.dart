@@ -23,6 +23,11 @@ class _HomePageSemesterProgressCardState extends State<HomePageSemesterProgressC
   void initState() {
     super.initState();
     // _getWeek();
+    if(AppData.startSchoolSoon){
+      setState(() {
+        week = 0;
+      });
+    }
     circularProgressBarAnimation();
   }
 

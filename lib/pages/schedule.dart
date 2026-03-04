@@ -4,11 +4,11 @@ import 'dart:core';
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
 
-import '../type/course.dart';
 import '/data.dart';
 import '/widget/bars.dart';
 import '/widget/dialog.dart';
 import '../config.dart';
+import '../type/course.dart';
 
 class _Header extends StatefulWidget {
   _Header({Key? key}) : super(key: key);
@@ -34,7 +34,7 @@ class _HeaderState extends State<_Header> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: _loopRowHeader(AppData.week == _week),
               ),
-              AppData.showDayByWeekDay
+              AppData.showDayByWeekDay && !AppData.startSchoolSoon
                   ? Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: _loopRowHeader2(DateTime.now(), _week),
@@ -330,6 +330,7 @@ class _ContentState extends State<_Content> {
 }
 
 List<Widget> _Columns(int week) {
+  if (week == 0) week = 1;
   List<Widget> list = [];
   for (int i = 1; i < 8; i++) {
     list.add(_Column(week, i));
@@ -375,7 +376,7 @@ List<Widget> _Grids(int week, int weekDay) {
       } else if (studyAreaIsPreviousStudyArea() && courseNameIsPreviousCourseName()) {
         double height = AppConfig.schedulePageGridHeight * (end - start + 1);
         if (end == 11 || studyAreaNotIsNextStudyArea() || courseNameNotIsNextCourseName()) {
-          list.add(_Grid(week, weekDay,start,  end, courseName, course.location, course.teacher, randomColors(), height));
+          list.add(_Grid(week, weekDay, start, end, courseName, course.location, course.teacher, randomColors(), height));
         }
       } else {
         start = end;
@@ -398,8 +399,7 @@ class _Grid extends StatelessWidget {
   final int week;
   final int weekDay;
 
-  _Grid(this.week, this.weekDay, this.start, this.end, this.title, this.classroomNumber, this.teacher, this.color,
-      [this.height = 60.0]);
+  _Grid(this.week, this.weekDay, this.start, this.end, this.title, this.classroomNumber, this.teacher, this.color, [this.height = 60.0]);
 
   final TextStyle style = TextStyle(fontSize: 12, color: Colors.white);
 

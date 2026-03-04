@@ -350,7 +350,7 @@ int weekTextToNumber(String text) {
 
 int weekInt({bool exclusionZero = false, int customWeek = -1}) {
   if(AppData.startSchoolSoon){
-    return 0;
+    return 1;
   }
   if (customWeek == -1) {
     customWeek = AppData.week;

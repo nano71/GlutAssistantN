@@ -17,6 +17,7 @@ import '../common/io.dart';
 import '../common/style.dart';
 import '../config.dart';
 import '../data.dart';
+import '../widget/dialog.dart';
 import 'layout.dart';
 import 'login.dart';
 
@@ -306,8 +307,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       margin: EdgeInsets.fromLTRB(0, 8, 4, 16),
                       height: 110,
                       width: width / 3 - 48 / 3,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(12.0)), color: animationForLeftCard.value),
+                      decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(12.0)), color: animationForLeftCard.value),
                       child: Stack(
                         children: [
                           Align(
@@ -350,8 +350,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       margin: EdgeInsets.fromLTRB(4, 8, 4, 16),
                       height: 110,
                       width: width / 3 - 48 / 3,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(12.0)), color: animationForCenterCard.value),
+                      decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(12.0)), color: animationForCenterCard.value),
                       child: Stack(
                         children: [
                           Align(
@@ -367,8 +366,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                           Align(
                             child: Container(
                               margin: HomePageCardsState.textMargin,
-                              child: Text(HomePageCardsState.iconTexts[1],
-                                  style: TextStyle(color: readHomePageSmallCardTextColor())),
+                              child: Text(HomePageCardsState.iconTexts[1], style: TextStyle(color: readHomePageSmallCardTextColor())),
                             ),
                           ),
                         ],
@@ -396,8 +394,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       margin: EdgeInsets.fromLTRB(4, 8, 0, 16),
                       height: 110,
                       width: width / 3 - 48 / 3,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(12.0)), color: animationForRightCard.value),
+                      decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(12.0)), color: animationForRightCard.value),
                       child: Stack(
                         children: [
                           Align(
@@ -413,8 +410,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                           Align(
                             child: Container(
                               margin: HomePageCardsState.textMargin,
-                              child: Text(HomePageCardsState.iconTexts[2],
-                                  style: TextStyle(color: readHomePageSmallCardTextColor())),
+                              child: Text(HomePageCardsState.iconTexts[2], style: TextStyle(color: readHomePageSmallCardTextColor())),
                             ),
                           ),
                         ],
@@ -435,8 +431,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         SliverToBoxAdapter(
             child: Container(
           padding: EdgeInsets.fromLTRB(16, 16, 16, 16),
-          child: Align(
-              alignment: Alignment.centerLeft, child: Text(tomorrowScheduleTitle, style: tomorrowAndTodayTextStyle())),
+          child: Align(alignment: Alignment.centerLeft, child: Text(tomorrowScheduleTitle, style: tomorrowAndTodayTextStyle())),
         )),
         TomorrowCourseList(),
         !AppData.isLoggedIn ? _LoginTip() : SliverToBoxAdapter(child: Center()),
