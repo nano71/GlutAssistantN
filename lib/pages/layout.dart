@@ -63,14 +63,29 @@ class _DataPreloadPageState extends State<DataPreloadPage> {
     await readCookie();
     getUpdateByEveryday();
     updateAppwidget();
+
     Timer(Duration(seconds: 1), () {
       setSystemNavigationBarColor(readCardBackgroundColor());
     });
+
     Navigator.pushAndRemoveUntil(
       context,
       AppRouter(Layout(), 2000),
           (route) => false,
     );
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      Future.delayed(Duration(milliseconds: 500), () async {
+        if (AppData.startSchoolSoon) {
+          await showInfoDialog(context, "学期已经结束\n\n进行刷新可以获取下学期的课表\n\n正式开学时也请手动刷新一次", title: "提示", englishTitle: "Tips");
+        }
+
+        if (AppData.hasNewVersion && AppData.canCheckImportantUpdate) {
+          checkImportantUpdate();
+        }
+      });
+    });
   }
 
   @override
@@ -125,19 +140,6 @@ class _LayoutState extends State<Layout> with RouteAware {
     Sentry.configureScope((scope) {
       final encrypted = AESHelper.encryptText(getAccount());
       scope.setTag("encrypted", encrypted);
-    });
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted) return;
-      Future.delayed(Duration(milliseconds: 500), () async {
-        if (AppData.startSchoolSoon) {
-          await showInfoDialog(context, "学期已经结束\n\n进行刷新可以获取下学期的课表\n\n正式开学时也请手动刷新一次", title: "提示", englishTitle: "Tips");
-        }
-
-        if (AppData.hasNewVersion && AppData.canCheckImportantUpdate) {
-          checkImportantUpdate();
-        }
-      });
     });
   }
 
