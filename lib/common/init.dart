@@ -5,7 +5,6 @@ import '../type/course.dart';
 import 'io.dart';
 
 initSchedule({withWriteFile = false}) async {
-  if (AppData.startSchoolSoon) return;
   print("initSchedule");
   AppData.schedule = createEmptySchedule();
   print("initSchedule End");

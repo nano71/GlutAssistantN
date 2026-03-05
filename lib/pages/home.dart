@@ -17,7 +17,6 @@ import '../common/io.dart';
 import '../common/style.dart';
 import '../config.dart';
 import '../data.dart';
-import '../widget/dialog.dart';
 import 'layout.dart';
 import 'login.dart';
 
@@ -190,9 +189,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 context,
                 () async {
                   // Future<dynamic> getSchedule()
-                  if (await getSchedule() == true) {
-                    Navigator.pushAndRemoveUntil(context, AppRouter(Layout(refresh: true)), (route) => false);
-                  }
+                  Navigator.pushAndRemoveUntil(context, AppRouter(Layout(refresh: true)), (route) => false);
                 },
                 duration: 10,
               ));

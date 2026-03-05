@@ -85,6 +85,9 @@ Future<void> clearAll() async {
 }
 
 Future<void> readSchedule() async {
+  if(AppData.startSchoolSoon){
+    return await initSchedule();
+  }
   print("readSchedule");
   final file = await scheduleLocalSupportFile();
   bool dirBool = await file.exists();
