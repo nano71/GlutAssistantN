@@ -79,6 +79,7 @@ Future<void> getWeek() async {
   String week = "0";
   String year = "";
   String semester = "";
+
   if (weekHtml.length >= 5 && weekHtml.contains("第") && weekHtml.contains("周")) {
     week = weekHtml
         .substring(
@@ -86,12 +87,17 @@ Future<void> getWeek() async {
           weekHtml.indexOf("周"),
         )
         .trim();
-    year = weekHtml.substring(0, 4).trim();
-    semester = weekHtml.substring(4, 5);
+  } else if (weekHtml.length >= 5 && (weekHtml.contains("春") || weekHtml.contains("秋"))) {
+    print("getWeek End else if");
+    AppData.startSchoolSoon = true;
   } else {
-    print("getWeek End else 2");
+    print("getWeek End else");
     return;
   }
+
+  year = weekHtml.substring(0, 4);
+  semester = weekHtml.substring(4, 5);
+
   AppData.week = int.tryParse(week) ?? 0;
   AppData.year = int.parse(year);
   AppData.semester = semester;
@@ -104,7 +110,7 @@ Future<void> getWeek() async {
     AppData.querySemester = semester;
   }
 
-  if (AppData.week <= 20 && AppData.startSchoolSoon) {
+  if (AppData.week > 0 && AppData.week <= 20 && AppData.startSchoolSoon) {
     AppData.startSchoolSoon = false;
   }
   // print(AppData.persistentData);
