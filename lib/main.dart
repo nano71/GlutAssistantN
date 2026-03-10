@@ -74,7 +74,7 @@ class _AppState extends State<App> {
   late StreamSubscription<UpdateAppThemeState> eventBusListener;
   Color labelTextColor = readTextColor();
   Color selectedLabelTextColor = readColor();
-  PageTransitionsBuilder pageTransitionsBuilder =
+  PageTransitionsBuilder pageTransitionsBuilder() =>
       FadeForwardsPageTransitionsBuilder(backgroundColor: readBackgroundColor());
 
   void restartApp() {
@@ -112,7 +112,7 @@ class _AppState extends State<App> {
           pageTransitionsTheme: PageTransitionsTheme(
             builders: {
               TargetPlatform.android:
-                  canEnableOnBackInvokedCallback() ? PredictiveBackPageTransitionsBuilder() : pageTransitionsBuilder,
+                  canEnableOnBackInvokedCallback() ? PredictiveBackPageTransitionsBuilder() : pageTransitionsBuilder(),
             },
           ),
           navigationBarTheme: NavigationBarThemeData(
