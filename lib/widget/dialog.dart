@@ -52,7 +52,7 @@ showImportantUpdateDialog(BuildContext context) {
             fontSize: 25,
           ),
           contentPadding: EdgeInsets.only(left: 0, right: 0, bottom: 0),
-          backgroundColor: Colors.white,
+          backgroundColor: readCardBackgroundColor(),
           children: [
             Container(
                 padding: EdgeInsets.fromLTRB(12, 12, 12, 12),

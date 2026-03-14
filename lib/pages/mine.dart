@@ -103,7 +103,7 @@ class _MinePageState extends State<MinePage> {
                       Navigator.of(context).push(MaterialPageRoute(builder: (context) => UpdatePage()));
                     },
                     child: AppData.hasNewVersion
-                        ? mineItem5(
+                        ? MineItem5(
                             Remix.download_cloud_2_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "版本更新", readColor())
                         : LinkItem(
                             Remix.download_cloud_2_line, EdgeInsets.fromLTRB(16, 14, 0, 14), "版本更新", readColor()),
@@ -153,7 +153,7 @@ Widget LinkItem(IconData icon, EdgeInsets padding, String title, Color color) {
   );
 }
 
-Widget mineItem5(IconData icon, EdgeInsets padding, String title, Color color) {
+Widget MineItem5(IconData icon, EdgeInsets padding, String title, Color color) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
@@ -166,7 +166,7 @@ Widget mineItem5(IconData icon, EdgeInsets padding, String title, Color color) {
                 badgeContent: Text(''),
                 child: Text(
                   title,
-                  style: TextStyle(fontSize: 16),
+                  style: TextStyle(fontSize: 16, color: readTextColor()),
                 ),
               ))
         ],
