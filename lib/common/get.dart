@@ -175,7 +175,7 @@ Future<dynamic> getSchedule([BuildContext? context]) async {
         Element row = tableRows[j];
         List<String> texts3 = row.children.map((element) => element.innerHtml.trim().replaceAll(RegExp(r'([第节周])'), "")).toList();
 
-        if ((texts3[1] + texts3[2] + texts3[3]).contains("nbsp")) {
+        if ((texts3[1] + texts3[2]).contains("nbsp")) {
           continue;
         }
 

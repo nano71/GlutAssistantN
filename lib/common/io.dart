@@ -201,7 +201,7 @@ Future<void> readWeek() async {
   }
   AppData.week = realWeek;
   if (!AppData.isReleaseMode) {
-    AppData.week = 11;
+    // AppData.week = 11;
   }
   if (realWeek > 23) {
     AppData.startSchoolSoon = true;

@@ -101,7 +101,8 @@ showImportantUpdateDialog(BuildContext context) {
       });
 }
 
-Future showInfoDialog(BuildContext context, String text, {String title = "有必要的说明",String englishTitle="Necessary clarifications"}) {
+Future showInfoDialog(BuildContext context, String text,
+    {String title = "有必要的说明", String englishTitle = "Necessary clarifications"}) {
   return showGeneralDialog(
       context: context,
       transitionBuilder:
@@ -337,8 +338,7 @@ showCaptchaDialog(BuildContext context, Function callback) async {
   );
 }
 
-_CourseInfoDialogContent(title, time, teacher, position) {
-  List infos = time.split(",");
+_CourseInfoDialogContent(String title, List<String> infos, String teacher, String position) {
   return Container(
     padding: EdgeInsets.fromLTRB(8, 8, 8, 8),
     margin: EdgeInsets.fromLTRB(8, 0, 8, 8),
@@ -354,8 +354,8 @@ _CourseInfoDialogContent(title, time, teacher, position) {
         Align(
           alignment: Alignment.bottomRight,
           child: Text(
-              title[0],
-              style: TextStyle(fontSize: 128, color: Color(0x66f1f1f1)),
+            title[0],
+            style: TextStyle(fontSize: 128, color: Color(0x66f1f1f1)),
           ),
         ),
         Column(
@@ -403,15 +403,11 @@ showCourseInfoDialog(BuildContext context, int week, int weekDay, int index) {
     context: context,
     builder: (BuildContext context) {
       Course course = AppData.schedule[week][weekDay][index];
-      List<String> _temp = course.extra.split(";").toSet().toList();
-      String time = "";
-      _temp.removeLast();
-      _temp.forEach((element) {
-        if (element.trim() != "") {
-          // _list.add(element);
-          time += element.trim() + ",";
-        }
-      });
+      List<String> infos =
+          course.extra.split(";").map((string) => string.trim()).where((string) => string.isNotEmpty).toSet().toList();
+      if (week == 2 && weekDay == 2) {
+        print(infos);
+      }
       return SimpleDialog(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16.0),
@@ -448,7 +444,7 @@ showCourseInfoDialog(BuildContext context, int week, int weekDay, int index) {
         ),
         contentPadding: EdgeInsets.only(left: 0, right: 0, bottom: 0),
         backgroundColor: readCardBackgroundColor(),
-        children: [_CourseInfoDialogContent(course.name, time, course.teacher, course.location)],
+        children: [_CourseInfoDialogContent(course.name, infos, course.teacher, course.location)],
       );
     },
   );
